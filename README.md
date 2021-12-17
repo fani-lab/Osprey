@@ -1,19 +1,49 @@
-# pan12-predator-detection
-Link to datasets:
-https://1drv.ms/u/s!ArEDqamR0T0DjhTw6jMVibMfhmL2?e=4felff
 
+With the prevalence of more technology, children access it way before they are of legal age and with little cognitive development. An alarming problem in this regard is children engaging with predators in online grooming conversations. Besides deep web that used to be a hub forillegal activities including child pornography, main stream digital platforms such as online videogames and chat rooms are currently the more common places where children are present and are easy prey for online sexual predators such as those who are diagnosed with paedophilia; an act of an adult having sexual involvement with a minor, through grooming where the sexual predator tries to form emotion relationship with a minor in order to get her trust and make her engage in sexual activities afterwards. 
 
-Run w2vs.py: It will generate the Word2Vec required to run the main code.
-Run tfbinary.py file for loading data and saving it into numpy arrays. And for training as well.
+## Objectives
 
-Paper Link:
-https://www.overleaf.com/4595927817rwxgsddrxnsj
+Around 60%-80% of female high school students have to face online sexual grooming incidents in their life. In many of these instances, the predators try to mix explicit remarks in the conversation to get a sense of how they are going to proceed with the victim, which can be extracted by ``natural language processing`` (NLP) techniques and employed by ``machine learning`` methods to catch such predators. 
 
+1. [Setup](#1-setup)
+2. [Quickstart](#2-quickstart)
+3. [Results](#3-results)
+4. [Acknowledgement](#4-acknowledgement)
 
-To do: 
+## 1. Setup
 
-1) Get a good machine access
-1a) Load Data
-1b) Train and perfrom experiments
+You need to have ``Python >= 3.8`` and install the following main packages, among others listed in [``requirements.txt``](requirements.txt):
+```
 
-2) Complete Paper accordingly.
+```
+By ``pip``, clone the codebase and install the required packages:
+```sh
+git clone https://github.com/Fani-Lab/opcd
+cd opcd
+pip install -r requirements.txt
+```
+By [``conda``](https://www.anaconda.com/products/individual):
+
+```sh
+git clone https://github.com/Fani-Lab/opcd
+cd opcd
+conda env create -f environment.yml
+conda activate opcd
+```
+
+## 2. Quickstart
+
+```sh
+cd src
+python main.py 
+```
+
+The above run, loads and preprocesses ** followed by 5-fold train-evaluation on a training split and final test on test set for **.
+
+## 3. Results
+
+We report the predictions, evaluation metrics on each test instance, and average on all test instances in **. 
+
+TODO: Put result figures and explain them.
+
+## 4. Acknowledgement
