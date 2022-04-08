@@ -16,10 +16,10 @@ def read_xml(xmlfile, tagged_msgs, predators):
                    'msg_line': msg.get('line'),
                    'author_id': author.text,
                    'time': time.text,
-                   'text': body.text,
-                   'tagged_msg': None if not tagged_msgs else (1 if conv.get('id') in tagged_msgs and (msg.get('line') in tagged_msgs[conv.get('id')]) else 0),
-                   'tagged_conv': None if not tagged_msgs else (1 if conv.get('id') in tagged_msgs else 0),
-                   'tagged_predator': None if not predators else (1 if author.text in predators else 0),
+                   'text': "" if body.text is None else body.text
+                   'tagged_msg': None if tagged_msgs is None else (1 if conv.get('id') in tagged_msgs and (msg.get('line') in tagged_msgs[conv.get('id')]) else 0),
+                   'tagged_conv': None if  tagged_msgs is None else (1 if conv.get('id') in tagged_msgs else 0),
+                   'tagged_predator': None if not predators.empty else (1 if author.text in predators else 0),
                    }
             dictinary_list.append(row)
     return df.from_dict(dictinary_list)
