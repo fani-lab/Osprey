@@ -1,5 +1,4 @@
-  ************ Author Predator but Message Non-Predator******************************  
-  
+<conversations>
   <conversation id="95539910a8fe6035ecdded42181c5ab3">
     <message line="1">
       <author>0526eb9cfcee11c0036f3fa6d11158d5</author>
@@ -2598,10 +2597,7 @@
       <text>[http://twitter.com/ChrystalVirgili] @romfield Hope St, Are generally, CA 90071 323-522-4778 hcard http://t.co/DJDKtwS4</text>
     </message>
   </conversation>
-  
-        ************ Author Predator but Message Non-Predator******************************  
-  
-    <conversation id="d4d3735096812a7022ea372e96dd3d4b">
+  <conversation id="d4d3735096812a7022ea372e96dd3d4b">
     <message line="1">
       <author>02800e11fdb1b43595303709f2b38f8c</author>
       <time>10:08</time>
@@ -2688,9 +2684,6 @@
       <text>what is around the mcdonalds that u were at?</text>
     </message>
   </conversation>
-    
-************ Author and Message Non-Predator  ******************************  
-
   <conversation id="85b2f78877dc1a31410a444a1c41fcb9">
     <message line="1">
       <author>97ad8877a5178ec00b63c3fa53b0ffd7</author>
@@ -3078,9 +3071,7 @@
       <text>cool</text>
     </message>
   </conversation>
-
-  
-    <conversation id="c4d7f9b927efb954ccf49856d8da7e44">
+  <conversation id="c4d7f9b927efb954ccf49856d8da7e44">
     <message line="1">
       <author>7be150fa37ec76e7f823a539f781e7ff</author>
       <time>19:56</time>
@@ -3292,9 +3283,7 @@
       <text>ok</text>
     </message>
   </conversation>
-  
- 
-    <conversation id="619c59956e6c850690a9d98d1eb5db59">
+  <conversation id="619c59956e6c850690a9d98d1eb5db59">
     <message line="1">
       <author>d03037c705fcc4f29ecb4564c47644a2</author>
       <time>18:44</time>
@@ -3486,8 +3475,6 @@
       <text>;</text>
     </message>
   </conversation>
-
-
   <conversation id="97aae4106850067e295122b234f802db">
     <message line="1">
       <author>3cf9477a8025ec6420d1e195e2b76324</author>
@@ -3600,8 +3587,6 @@
       <text>u there?</text>
     </message>
   </conversation>
-  
- 
   <conversation id="2b4897b1e8ec8674d634b9b722acf77a">
     <message line="1">
       <author>bd66cf1e0c391e9255fcf6da8d2de7bb</author>
@@ -3629,8 +3614,6 @@
       <text>Are you there.?</text>
     </message>
   </conversation>
-  
-   
   <conversation id="a126340658dc07960b38a9018a78a804">
     <message line="1">
       <author>c1ab02da6f9869624d4abad78a9b29aa</author>
@@ -3648,9 +3631,7 @@
       <text>Nope, goodbye.</text>
     </message>
   </conversation>
-  
- 
-    <conversation id="a126340658dc07960b38a9018a78a804">
+  <conversation id="a126340658dc07960b38a9018a78a804">
     <message line="1">
       <author>c1ab02da6f9869624d4abad78a9b29aa</author>
       <time>08:29</time>
@@ -4039,8 +4020,7 @@
       <text>newp</text>
     </message>
   </conversation>
- 
-    <conversation id="85a0b7c019bfa467a620f339ecb4572a">
+  <conversation id="85a0b7c019bfa467a620f339ecb4572a">
     <message line="1">
       <author>e3f528f5fe46295cd7f22a3950154313</author>
       <time>14:41</time>
@@ -4067,10 +4047,6 @@
       <text>asl?</text>
     </message>
   </conversation>
-
-  
-
-
   <conversation id="6bfed25bab4c3b9ffb581fbd8d9ff64b">
     <message line="1">
       <author>83b1daf28af07207ddacf93b603921a9</author>
@@ -4088,8 +4064,6 @@
       <text>u</text>
     </message>
   </conversation>
-  
-   
   <conversation id="a7b5a49cd0614e7a67548ac14e12f5a9">
     <message line="1">
       <author>ef8ce1e3c7cf3ff0a49821713eb8e933</author>
@@ -4197,7 +4171,6 @@
       <text>Awwww, yeah</text>
     </message>
   </conversation>
-
   <conversation id="0af080e9433ebd6802551f2e6a4c1bee">
     <message line="1">
       <author>7ee0f04e12eff05193ab953ececc9f9e</author>
@@ -4415,7 +4388,5 @@
       <text>No I don't</text>
     </message>
   </conversation>
-
-
-
+</conversations>
 

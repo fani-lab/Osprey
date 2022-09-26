@@ -1,6 +1,5 @@
- 
-
- <conversation id="5fd32399bbb0b3398f6d3aa619f53e33">
+<conversations>
+	<conversation id="5fd32399bbb0b3398f6d3aa619f53e33">
     <message line="1">
       <author>c92808e9cfb0834a62a670e613637377</author>
       <time>16:43</time>
@@ -312,9 +311,6 @@
       <text>oh ok</text>
     </message>
   </conversation>
-  
-
-  
     <conversation id="83e249ee8494382534bad46d3d7657a0">
     <message line="1">
       <author>84fb828731f4e234c54c82158127e73e</author>
@@ -872,9 +868,6 @@
       <text>brb</text>
     </message>
   </conversation>
-  
-  
-  
     <conversation id="2f25f16f6f76a67280dc10904eea6c46">
     <message line="1">
       <author>92694694425a2c90fb417eabc2e8c9f5</author>
@@ -882,8 +875,6 @@
       <text>i think bout u lastnight and i hope u want to be with me sweetheart</text>
     </message>
   </conversation>
- 
-  
     <conversation id="b01f0a0585ad5a1afb033a31fbc08255">
     <message line="1">
       <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
@@ -1446,10 +1437,7 @@
       <text>take care</text>
     </message>
   </conversation>
-
- 
-  
-  <conversation id="1fc362ffef440fec98ae5438d487546d">
+	<conversation id="1fc362ffef440fec98ae5438d487546d">
     <message line="1">
       <author>815de8eb13c20cc0ff35384abac6cad2</author>
       <time>00:23</time>
@@ -2046,8 +2034,6 @@
       <text>nite</text>
     </message>
   </conversation>
-  
-  
     <conversation id="de65c8732fb505e2763885c3ef6a1192">
     <message line="1">
       <author>6d144ccd29ca4950b3da60164f04a0ab</author>
@@ -2625,10 +2611,7 @@
       <text>k</text>
     </message>
   </conversation>
-  
-  
-     
-	    <conversation id="c9353f99e71c61b3f93d8474b099936a">
+	<conversation id="c9353f99e71c61b3f93d8474b099936a">
     <message line="1">
       <author>0e60fa2a21b13bc3d41902ac2acd28e3</author>
       <time>19:31</time>
@@ -2750,9 +2733,6 @@
       <text>you can ask questions about it in #gnusol</text>
     </message>
   </conversation>
-  
-    
-
     <conversation id="82ba812f66f2407fb71df4077e4f49f9">
     <message line="1">
       <author>e67a0e2faf80c39636b753556e844431</author>
@@ -2775,9 +2755,7 @@
       <text>okay i am!</text>
     </message>
   </conversation>
-  
-     
-  <conversation id="02c40e6469d97f23367edf8198f58433">
+	<conversation id="02c40e6469d97f23367edf8198f58433">
     <message line="1">
       <author>4cb2b454b0f158307b76c96dd9178e47</author>
       <time>08:03</time>
@@ -2794,6 +2772,7 @@
       <text>Why do we sing &amp;quot;Rock a bye baby&amp;quot; to lull a baby to sleep when the song is about putting your baby in a tree and letting the wind crash the cradle on the ground?</text>
     </message>
   </conversation>
+</conversations>
 
 
 
