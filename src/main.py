@@ -45,13 +45,15 @@ def get_stats(conversations, predators, tagged_msgs):
     return stats
 
 if __name__ == '__main__':
+    istoy = False
 
-    training_file = '../data/train/pan12-sexual-predator-identification-training-corpus-2012-05-01.xml'
-    training_predator_id_file = '../data/train/pan12-sexual-predator-identification-training-corpus-predators-2012-05-01.txt'
+    toyprefix = 'toy.' if istoy else ''
+    training_file = f'../data/{toyprefix}train/pan12-sexual-predator-identification-training-corpus-2012-05-01.xml'
+    training_predator_id_file = f'../data/{toyprefix}train/pan12-sexual-predator-identification-training-corpus-predators-2012-05-01.txt'
 
-    test_file = '../data/test/pan12-sexual-predator-identification-test-corpus-2012-05-17.xml'
-    test_predator_id_file = '../data/test/pan12-sexual-predator-identification-groundtruth-problem1.txt'
-    test_tagged_msgs_file = '../data/test/pan12-sexual-predator-identification-groundtruth-problem2.txt'
+    test_file = f'../data/{toyprefix}test/pan12-sexual-predator-identification-test-corpus-2012-05-17.xml'
+    test_predator_id_file = f'../data/{toyprefix}test/pan12-sexual-predator-identification-groundtruth-problem1.txt'
+    test_tagged_msgs_file = f'../data/{toyprefix}test/pan12-sexual-predator-identification-groundtruth-problem2.txt'
 
     df_train = read_xml(training_file, None, pd.read_csv(training_predator_id_file))
     df_test = read_xml(test_file, pd.read_csv(test_tagged_msgs_file), pd.read_csv(test_predator_id_file))

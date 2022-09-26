@@ -1,0 +1,3407 @@
+ 
+**************Author Predator but message Non-predator*********************
+
+ <conversation id="5fd32399bbb0b3398f6d3aa619f53e33">
+    <message line="1">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:43</time>
+      <text>hi</text>
+    </message>
+    <message line="2">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>16:43</time>
+      <text>hi</text>
+    </message>
+    <message line="3">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:43</time>
+      <text>how r ya?</text>
+    </message>
+    <message line="4">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>16:43</time>
+      <text>fine</text>
+    </message>
+    <message line="5">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>16:43</time>
+      <text>how r u</text>
+    </message>
+    <message line="6">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:44</time>
+      <text>ok</text>
+    </message>
+    <message line="7">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:44</time>
+      <text>just typical sunday now with lions losing</text>
+    </message>
+    <message line="8">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>16:44</time>
+      <text>aww sorry</text>
+    </message>
+    <message line="9">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:44</time>
+      <text>i'll be ok</text>
+    </message>
+    <message line="10">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:45</time>
+      <text>had a couple beers and was buzzing for a little bit</text>
+    </message>
+    <message line="11">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:45</time>
+      <text>@-)</text>
+    </message>
+    <message line="12">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>16:45</time>
+      <text>lol</text>
+    </message>
+    <message line="13">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>16:45</time>
+      <text>u at home??</text>
+    </message>
+    <message line="14">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:45</time>
+      <text>yes</text>
+    </message>
+    <message line="15">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>16:46</time>
+      <text>u have a party</text>
+    </message>
+    <message line="16">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:46</time>
+      <text>yup</text>
+    </message>
+    <message line="17">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:46</time>
+      <text>with me myself and i</text>
+    </message>
+    <message line="18">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>16:46</time>
+      <text>nobody home with u??</text>
+    </message>
+    <message line="19">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:46</time>
+      <text>parents</text>
+    </message>
+    <message line="20">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>16:46</time>
+      <text>oh</text>
+    </message>
+    <message line="21">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:48</time>
+      <text>why?</text>
+    </message>
+    <message line="22">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:48</time>
+      <text>did u want to party with me?</text>
+    </message>
+    <message line="23">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>16:49</time>
+      <text>i was just askin idk why lol but ya that would be fun lol</text>
+    </message>
+    <message line="24">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:49</time>
+      <text>Rock On!!</text>
+    </message>
+    <message line="25">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>16:50</time>
+      <text>lol</text>
+    </message>
+    <message line="26">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:51</time>
+      <text>having a good day?</text>
+    </message>
+    <message line="27">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>16:51</time>
+      <text>not really but better now that ur here to chat with</text>
+    </message>
+    <message line="28">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:51</time>
+      <text>uh oh</text>
+    </message>
+    <message line="29">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:52</time>
+      <text>big pressure now:-SS</text>
+    </message>
+    <message line="30">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>16:52</time>
+      <text>eh dont worry about it</text>
+    </message>
+    <message line="31">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:53</time>
+      <text>my weeks is wide open now</text>
+    </message>
+    <message line="32">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:53</time>
+      <text>don't work till friday</text>
+    </message>
+    <message line="33">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>16:53</time>
+      <text>how come</text>
+    </message>
+    <message line="34">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:53</time>
+      <text>how i was scheduled</text>
+    </message>
+    <message line="35">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>16:53</time>
+      <text>cool</text>
+    </message>
+    <message line="36">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:54</time>
+      <text>i wonder how long it'll keep raining?</text>
+    </message>
+    <message line="37">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>16:54</time>
+      <text>no idea</text>
+    </message>
+    <message line="38">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>16:55</time>
+      <text>my moms callin me</text>
+    </message>
+    <message line="39">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>16:55</time>
+      <text>brb</text>
+    </message>
+    <message line="40">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>16:55</time>
+      <text>k</text>
+    </message>
+    <message line="41">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>17:18</time>
+      <text>back</text>
+    </message>
+    <message line="42">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>17:18</time>
+      <text>front</text>
+    </message>
+    <message line="43">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>17:18</time>
+      <text>side</text>
+    </message>
+    <message line="44">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>17:19</time>
+      <text>umm</text>
+    </message>
+    <message line="45">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>17:19</time>
+      <text>undercarriage?</text>
+    </message>
+    <message line="46">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>17:19</time>
+      <text>overcarriage??</text>
+    </message>
+    <message line="47">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>17:19</time>
+      <text>wtf?</text>
+    </message>
+    <message line="48">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>17:19</time>
+      <text>lol idk</text>
+    </message>
+    <message line="49">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>17:19</time>
+      <text>u is wild</text>
+    </message>
+    <message line="50">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>17:19</time>
+      <text>thx</text>
+    </message>
+    <message line="51">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>17:20</time>
+      <text>u get in trouble?</text>
+    </message>
+    <message line="52">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>17:20</time>
+      <text>no??</text>
+    </message>
+    <message line="53">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>17:23</time>
+      <text>k</text>
+    </message>
+    <message line="54">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>17:25</time>
+      <text>so what's u doing?</text>
+    </message>
+    <message line="55">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>17:26</time>
+      <text>reading about elektra</text>
+    </message>
+    <message line="56">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>17:26</time>
+      <text>what r u doing</text>
+    </message>
+    <message line="57">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>17:26</time>
+      <text>elektra?</text>
+    </message>
+    <message line="58">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>17:26</time>
+      <text>yes</text>
+    </message>
+    <message line="59">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>17:27</time>
+      <text>carman elektra?</text>
+    </message>
+    <message line="60">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>17:27</time>
+      <text>nooooo</text>
+    </message>
+    <message line="61">
+      <author>b7ef10a3deaa560a5d5dcad89a941e41</author>
+      <time>17:27</time>
+      <text>the comic book elektra</text>
+    </message>
+    <message line="62">
+      <author>c92808e9cfb0834a62a670e613637377</author>
+      <time>17:27</time>
+      <text>oh ok</text>
+    </message>
+  </conversation>
+  
+**************Author Predator but message Non-predator*********************
+  
+  
+    <conversation id="83e249ee8494382534bad46d3d7657a0">
+    <message line="1">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>15:52</time>
+      <text>hey</text>
+    </message>
+    <message line="2">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>15:54</time>
+      <text>hey whats up</text>
+    </message>
+    <message line="3">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>15:55</time>
+      <text>nothin really</text>
+    </message>
+    <message line="4">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>15:55</time>
+      <text>u?</text>
+    </message>
+    <message line="5">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>15:56</time>
+      <text>nothin just got home</text>
+    </message>
+    <message line="6">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>15:56</time>
+      <text>how was ur day</text>
+    </message>
+    <message line="7">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>15:57</time>
+      <text>looks like my dogs gonna have to be put down</text>
+    </message>
+    <message line="8">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>15:57</time>
+      <text>shes at the vet now with my mom and my friend</text>
+    </message>
+    <message line="9">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>15:57</time>
+      <text>:( y?</text>
+    </message>
+    <message line="10">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>15:57</time>
+      <text>shes just old, and looks like she might be suffering</text>
+    </message>
+    <message line="11">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>15:57</time>
+      <text>omg im sry :(</text>
+    </message>
+    <message line="12">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>15:57</time>
+      <text>its ok</text>
+    </message>
+    <message line="13">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>15:58</time>
+      <text>r u ok?</text>
+    </message>
+    <message line="14">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>15:59</time>
+      <text>well, ive got a $50 fifth of wiskey, and a $24 fith of wiskey, lol, ill be fine, lol</text>
+    </message>
+    <message line="15">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:00</time>
+      <text>omg lol</text>
+    </message>
+    <message line="16">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:00</time>
+      <text>b careful</text>
+    </message>
+    <message line="17">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:01</time>
+      <text>its so sad though im so sry</text>
+    </message>
+    <message line="18">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:01</time>
+      <text>lol, i will</text>
+    </message>
+    <message line="19">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:01</time>
+      <text>r u cryin?</text>
+    </message>
+    <message line="20">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:01</time>
+      <text>here n there</text>
+    </message>
+    <message line="21">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:01</time>
+      <text>:(</text>
+    </message>
+    <message line="22">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:02</time>
+      <text>lol, im a rare breed of man, im not afraid to admit that im crying</text>
+    </message>
+    <message line="23">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:02</time>
+      <text>yea anybody would cry bout that</text>
+    </message>
+    <message line="24">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:02</time>
+      <text>thatd b weird if u didnt</text>
+    </message>
+    <message line="25">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:03</time>
+      <text>yup</text>
+    </message>
+    <message line="26">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:03</time>
+      <text>u ever see top gun?</text>
+    </message>
+    <message line="27">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:03</time>
+      <text>the movie?</text>
+    </message>
+    <message line="28">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:04</time>
+      <text>umm dont think so unless i dont remember the name</text>
+    </message>
+    <message line="29">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:04</time>
+      <text>tom cruise is a fighter pilot</text>
+    </message>
+    <message line="30">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:04</time>
+      <text>oh that sounds familar</text>
+    </message>
+    <message line="31">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:06</time>
+      <text>anyways</text>
+    </message>
+    <message line="32">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:06</time>
+      <text>y?</text>
+    </message>
+    <message line="33">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:06</time>
+      <text>is it on?</text>
+    </message>
+    <message line="34">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:06</time>
+      <text>no, just a random though</text>
+    </message>
+    <message line="35">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:07</time>
+      <text>so, you ever gonna tell me what city your from?</text>
+    </message>
+    <message line="36">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:07</time>
+      <text>probly lol</text>
+    </message>
+    <message line="37">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:08</time>
+      <text>lol, just not today?</text>
+    </message>
+    <message line="38">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:08</time>
+      <text>y do u wanna know today?</text>
+    </message>
+    <message line="39">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:08</time>
+      <text>im just curious</text>
+    </message>
+    <message line="40">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:08</time>
+      <text>lol</text>
+    </message>
+    <message line="41">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:08</time>
+      <text>but it dont matter</text>
+    </message>
+    <message line="42">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:09</time>
+      <text>so is it for sure bout ur dog?</text>
+    </message>
+    <message line="43">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:10</time>
+      <text>not sure yet, but it looks pretty much like thats whats gonna happen</text>
+    </message>
+    <message line="44">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:11</time>
+      <text>u need to go get a puppy tomorow</text>
+    </message>
+    <message line="45">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:11</time>
+      <text>then ull feel better</text>
+    </message>
+    <message line="46">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:15</time>
+      <text>naw, not so soon</text>
+    </message>
+    <message line="47">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:15</time>
+      <text>hmm</text>
+    </message>
+    <message line="48">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:15</time>
+      <text>sry was just thinkin what would make u feel better</text>
+    </message>
+    <message line="49">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:16</time>
+      <text>dont be sorry, im just saying it would be too soon</text>
+    </message>
+    <message line="50">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:16</time>
+      <text>thats all</text>
+    </message>
+    <message line="51">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:16</time>
+      <text>so how can i help make u not sad</text>
+    </message>
+    <message line="52">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:16</time>
+      <text>gues u got whisky lol</text>
+    </message>
+    <message line="53">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:17</time>
+      <text>lol, well, what you just asked was enough, someone really truly caring</text>
+    </message>
+    <message line="54">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:17</time>
+      <text>thanks</text>
+    </message>
+    <message line="55">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:17</time>
+      <text>:)</text>
+    </message>
+    <message line="56">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:19</time>
+      <text>ill brb i promisd dad id put chicken in to cook</text>
+    </message>
+    <message line="57">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:20</time>
+      <text>k</text>
+    </message>
+    <message line="58">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:37</time>
+      <text>i just got word they had to put her down</text>
+    </message>
+    <message line="59">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:43</time>
+      <text>back</text>
+    </message>
+    <message line="60">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:43</time>
+      <text>:( ohhhhh</text>
+    </message>
+    <message line="61">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:43</time>
+      <text>r u ok?</text>
+    </message>
+    <message line="62">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:43</time>
+      <text>yeah</text>
+    </message>
+    <message line="63">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:44</time>
+      <text>im upset, but ok</text>
+    </message>
+    <message line="64">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:44</time>
+      <text>:(</text>
+    </message>
+    <message line="65">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:45</time>
+      <text>i was hoping 2008 would be a much better year than 2007, but its not really lookin that way</text>
+    </message>
+    <message line="66">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:45</time>
+      <text>im soooo sry</text>
+    </message>
+    <message line="67">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:46</time>
+      <text>its ok</text>
+    </message>
+    <message line="68">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:47</time>
+      <text>dont even know what to say that wont sound dum</text>
+    </message>
+    <message line="69">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:48</time>
+      <text>dont worry bout it</text>
+    </message>
+    <message line="70">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:49</time>
+      <text>wanna shoot pool or somethin to take ur mind off?</text>
+    </message>
+    <message line="71">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:49</time>
+      <text>i dont got a pool table, lol</text>
+    </message>
+    <message line="72">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:49</time>
+      <text>yahoo pool silly lol</text>
+    </message>
+    <message line="73">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:50</time>
+      <text>k</text>
+    </message>
+    <message line="74">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:50</time>
+      <text>hey play a game doesnt let me clik</text>
+    </message>
+    <message line="75">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:50</time>
+      <text>thats weird</text>
+    </message>
+    <message line="76">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:51</time>
+      <text>ill close n open again</text>
+    </message>
+    <message line="77">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:52</time>
+      <text>still not ther</text>
+    </message>
+    <message line="78">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:52</time>
+      <text>usully it works</text>
+    </message>
+    <message line="79">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:53</time>
+      <text>its ok</text>
+    </message>
+    <message line="80">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:53</time>
+      <text>does it work on urs?</text>
+    </message>
+    <message line="81">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:54</time>
+      <text>i dont see anything bout playing games</text>
+    </message>
+    <message line="82">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:54</time>
+      <text>its ok</text>
+    </message>
+    <message line="83">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:54</time>
+      <text>u clik on actions at the top then play games</text>
+    </message>
+    <message line="84">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:54</time>
+      <text>but its k</text>
+    </message>
+    <message line="85">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:54</time>
+      <text>u seem to sad</text>
+    </message>
+    <message line="86">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:54</time>
+      <text>it doesnt have an option for games, i got 9.0 beta</text>
+    </message>
+    <message line="87">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:55</time>
+      <text>hmm</text>
+    </message>
+    <message line="88">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:55</time>
+      <text>is that old?</text>
+    </message>
+    <message line="89">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:55</time>
+      <text>i am sad, but its what happens when shit like this happens</text>
+    </message>
+    <message line="90">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:55</time>
+      <text>no, new has hell</text>
+    </message>
+    <message line="91">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>16:55</time>
+      <text>omg hope they didnt take away games</text>
+    </message>
+    <message line="92">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>16:55</time>
+      <text>naw, im sure they didnt</text>
+    </message>
+    <message line="93">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>17:00</time>
+      <text>i need a gf, lol</text>
+    </message>
+    <message line="94">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>17:00</time>
+      <text>awww</text>
+    </message>
+    <message line="95">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>17:01</time>
+      <text>but, i know that aint happenin any time soon</text>
+    </message>
+    <message line="96">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>17:01</time>
+      <text>y?</text>
+    </message>
+    <message line="97">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>17:02</time>
+      <text>im ugly, fat, im an emotional trainwreck, i dont have a job or money, and i have a lot of bagagge</text>
+    </message>
+    <message line="98">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>17:03</time>
+      <text>cmon</text>
+    </message>
+    <message line="99">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>17:03</time>
+      <text>u look good for one</text>
+    </message>
+    <message line="100">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>17:03</time>
+      <text>n just cuz u got emotion everybody does</text>
+    </message>
+    <message line="101">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>17:03</time>
+      <text>ive only had 2</text>
+    </message>
+    <message line="102">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>17:03</time>
+      <text>money means nothin</text>
+    </message>
+    <message line="103">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>17:03</time>
+      <text>n what bagage?</text>
+    </message>
+    <message line="104">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>17:03</time>
+      <text>and both didnt last more than a month</text>
+    </message>
+    <message line="105">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>17:04</time>
+      <text>y?</text>
+    </message>
+    <message line="106">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>17:04</time>
+      <text>i owe my dad who i also hate by the way $7000</text>
+    </message>
+    <message line="107">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>17:04</time>
+      <text>i live at home</text>
+    </message>
+    <message line="108">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>17:04</time>
+      <text>all kinds of shit</text>
+    </message>
+    <message line="109">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>17:05</time>
+      <text>aww</text>
+    </message>
+    <message line="110">
+      <author>e03aa9707bd13f180c517ae1a47e9da2</author>
+      <time>17:05</time>
+      <text>u better put the whisky back</text>
+    </message>
+    <message line="111">
+      <author>84fb828731f4e234c54c82158127e73e</author>
+      <time>17:06</time>
+      <text>brb</text>
+    </message>
+  </conversation>
+  
+  **************Author Predator but message Non-predator*********************
+  
+    <conversation id="2f25f16f6f76a67280dc10904eea6c46">
+    <message line="1">
+      <author>92694694425a2c90fb417eabc2e8c9f5</author>
+      <time>12:39</time>
+      <text>i think bout u lastnight and i hope u want to be with me sweetheart</text>
+    </message>
+  </conversation>
+  <conversation id="eca8ef3c1ab60c3f90911deda5f283fa">
+    <message line="1">
+      <author>1e10d84b3917ae58049be95b0071cf7f</author>
+      <time>21:51</time>
+      <text>is &amp;lt;meh&amp;gt;</text>
+    </message>
+    <message line="2">
+      <author>1e10d84b3917ae58049be95b0071cf7f</author>
+      <time>21:51</time>
+      <text>nn all</text>
+    </message>
+    <message line="3">
+      <author>b8810fee2f4a71f849f3f7409546d1d9</author>
+      <time>21:56</time>
+      <text>gsnedders: I saw Avenue Q. It was fun, but it didn't quite live up to the expectations (the best songs were before the intermission and it kinda flattened out from there)</text>
+    </message>
+  </conversation>
+
+  **************Author and message predator*********************
+    <conversation id="b01f0a0585ad5a1afb033a31fbc08255">
+    <message line="1">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:21</time>
+      <text>hey honey</text>
+    </message>
+    <message line="2">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:21</time>
+      <text>waiting for me?</text>
+    </message>
+    <message line="3">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:21</time>
+      <text>yah!</text>
+    </message>
+    <message line="4">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:22</time>
+      <text>sweet</text>
+    </message>
+    <message line="5">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:22</time>
+      <text>i am still on for our plan :)</text>
+    </message>
+    <message line="6">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:22</time>
+      <text>kewl</text>
+    </message>
+    <message line="7">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:22</time>
+      <text>when</text>
+    </message>
+    <message line="8">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:23</time>
+      <text>i need to shower</text>
+    </message>
+    <message line="9">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:23</time>
+      <text>when do u wan tme to come</text>
+    </message>
+    <message line="10">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:23</time>
+      <text>no not so soon hon</text>
+    </message>
+    <message line="11">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:23</time>
+      <text>evening</text>
+    </message>
+    <message line="12">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:23</time>
+      <text>k</text>
+    </message>
+    <message line="13">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:23</time>
+      <text>im thinking like 4'0 clock</text>
+    </message>
+    <message line="14">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:23</time>
+      <text>hmm..ok</text>
+    </message>
+    <message line="15">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:23</time>
+      <text>u bring taco bell stil</text>
+    </message>
+    <message line="16">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:23</time>
+      <text>ill tell u wat i want</text>
+    </message>
+    <message line="17">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:23</time>
+      <text>sure</text>
+    </message>
+    <message line="18">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:24</time>
+      <text>tell me</text>
+    </message>
+    <message line="19">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:25</time>
+      <text>i want nachos, bean &amp; cheese burrito with noonions and no sauce</text>
+    </message>
+    <message line="20">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:25</time>
+      <text>and a PEPSI</text>
+    </message>
+    <message line="21">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:25</time>
+      <text>large</text>
+    </message>
+    <message line="22">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:25</time>
+      <text>oh thats a big order</text>
+    </message>
+    <message line="23">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:25</time>
+      <text>lol</text>
+    </message>
+    <message line="24">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:25</time>
+      <text>let me memorise it</text>
+    </message>
+    <message line="25">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:25</time>
+      <text>lol</text>
+    </message>
+    <message line="26">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:25</time>
+      <text>write it down</text>
+    </message>
+    <message line="27">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:26</time>
+      <text>i will try to remember lol</text>
+    </message>
+    <message line="28">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:26</time>
+      <text>nachos and beans</text>
+    </message>
+    <message line="29">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:26</time>
+      <text>cheese burrito with no onion and sauce</text>
+    </message>
+    <message line="30">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:26</time>
+      <text>perfect</text>
+    </message>
+    <message line="31">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:26</time>
+      <text>pepsi large</text>
+    </message>
+    <message line="32">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:27</time>
+      <text>i will bring it for dinner</text>
+    </message>
+    <message line="33">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:27</time>
+      <text>kewl!</text>
+    </message>
+    <message line="34">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:27</time>
+      <text>so it wont be a pblm right me staying over</text>
+    </message>
+    <message line="35">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:27</time>
+      <text>nope!</text>
+    </message>
+    <message line="36">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:28</time>
+      <text>it will bef un</text>
+    </message>
+    <message line="37">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:28</time>
+      <text>ur dad</text>
+    </message>
+    <message line="38">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:28</time>
+      <text>cool</text>
+    </message>
+    <message line="39">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:28</time>
+      <text>ur dad wont come right</text>
+    </message>
+    <message line="40">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:28</time>
+      <text>nope</text>
+    </message>
+    <message line="41">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:28</time>
+      <text>ok</text>
+    </message>
+    <message line="42">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:28</time>
+      <text>did u have lunch?</text>
+    </message>
+    <message line="43">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:29</time>
+      <text>not yet</text>
+    </message>
+    <message line="44">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:29</time>
+      <text>ok</text>
+    </message>
+    <message line="45">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:29</time>
+      <text>so wht r u doing?</text>
+    </message>
+    <message line="46">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:29</time>
+      <text>nuttin</text>
+    </message>
+    <message line="47">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:31</time>
+      <text>so r we gonna play prates</text>
+    </message>
+    <message line="48">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:31</time>
+      <text>ya</text>
+    </message>
+    <message line="49">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:31</time>
+      <text>bring eyepatches</text>
+    </message>
+    <message line="50">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:31</time>
+      <text>oops i dont have one</text>
+    </message>
+    <message line="51">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:31</time>
+      <text>oh</text>
+    </message>
+    <message line="52">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:32</time>
+      <text>we can manage something</text>
+    </message>
+    <message line="53">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:32</time>
+      <text>lol</text>
+    </message>
+    <message line="54">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:32</time>
+      <text>dont worry</text>
+    </message>
+    <message line="55">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:32</time>
+      <text>k</text>
+    </message>
+    <message line="56">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:32</time>
+      <text>or we can play something else also</text>
+    </message>
+    <message line="57">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:32</time>
+      <text>ok</text>
+    </message>
+    <message line="58">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:32</time>
+      <text>bring ur swim siut</text>
+    </message>
+    <message line="59">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:32</time>
+      <text>hmm i dont know to swim, lol</text>
+    </message>
+    <message line="60">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:33</time>
+      <text>we can swim naked, lol</text>
+    </message>
+    <message line="61">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:33</time>
+      <text>i can teach u</text>
+    </message>
+    <message line="62">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:33</time>
+      <text>o. ok</text>
+    </message>
+    <message line="63">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:33</time>
+      <text>that wud be romantic as well lol</text>
+    </message>
+    <message line="64">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:33</time>
+      <text>true</text>
+    </message>
+    <message line="65">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:33</time>
+      <text>is it indoor pool</text>
+    </message>
+    <message line="66">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:33</time>
+      <text>no</text>
+    </message>
+    <message line="67">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:33</time>
+      <text>hmm so we cant be naked then?</text>
+    </message>
+    <message line="68">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:33</time>
+      <text>k</text>
+    </message>
+    <message line="69">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:33</time>
+      <text>im asking?</text>
+    </message>
+    <message line="70">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:33</time>
+      <text>ya</text>
+    </message>
+    <message line="71">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:34</time>
+      <text>no one can see anything</text>
+    </message>
+    <message line="72">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:34</time>
+      <text>o ok</text>
+    </message>
+    <message line="73">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:34</time>
+      <text>we will figure it out as the time comes</text>
+    </message>
+    <message line="74">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:34</time>
+      <text>lol</text>
+    </message>
+    <message line="75">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:34</time>
+      <text>so like 4</text>
+    </message>
+    <message line="76">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:34</time>
+      <text>i will start like 4 and be there like 6</text>
+    </message>
+    <message line="77">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:34</time>
+      <text>is that ok?</text>
+    </message>
+    <message line="78">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:34</time>
+      <text>ooohh</text>
+    </message>
+    <message line="79">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:34</time>
+      <text>ok</text>
+    </message>
+    <message line="80">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:34</time>
+      <text>u want me b4 that?</text>
+    </message>
+    <message line="81">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:35</time>
+      <text>im not doin anythin all day</text>
+    </message>
+    <message line="82">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:35</time>
+      <text>so i dont care</text>
+    </message>
+    <message line="83">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:35</time>
+      <text>o baby o sorry</text>
+    </message>
+    <message line="84">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:35</time>
+      <text>ok i will try to come sooner so we spend more time</text>
+    </message>
+    <message line="85">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:35</time>
+      <text>will u be online always?</text>
+    </message>
+    <message line="86">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:35</time>
+      <text>mostly</text>
+    </message>
+    <message line="87">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:35</time>
+      <text>cool</text>
+    </message>
+    <message line="88">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:36</time>
+      <text>now i am thinking if i can leave by 2 and reach by 4</text>
+    </message>
+    <message line="89">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:36</time>
+      <text>ok</text>
+    </message>
+    <message line="90">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:36</time>
+      <text>that would be kewl</text>
+    </message>
+    <message line="91">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:36</time>
+      <text>ok honey i have to cook and have lunch now</text>
+    </message>
+    <message line="92">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:37</time>
+      <text>afterwards i will chat with u , get ur details</text>
+    </message>
+    <message line="93">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:37</time>
+      <text>k</text>
+    </message>
+    <message line="94">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:37</time>
+      <text>and drive down there</text>
+    </message>
+    <message line="95">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:37</time>
+      <text>ok</text>
+    </message>
+    <message line="96">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:37</time>
+      <text>yah!</text>
+    </message>
+    <message line="97">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:37</time>
+      <text>im so excited</text>
+    </message>
+    <message line="98">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:37</time>
+      <text>sweet hot cutie</text>
+    </message>
+    <message line="99">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:37</time>
+      <text>me too!</text>
+    </message>
+    <message line="100">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:37</time>
+      <text>lets have fun</text>
+    </message>
+    <message line="101">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:37</time>
+      <text>u bet</text>
+    </message>
+    <message line="102">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:37</time>
+      <text>:0</text>
+    </message>
+    <message line="103">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:37</time>
+      <text>:)</text>
+    </message>
+    <message line="104">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:37</time>
+      <text>lol</text>
+    </message>
+    <message line="105">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:37</time>
+      <text>:-*</text>
+    </message>
+    <message line="106">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:38</time>
+      <text>lol</text>
+    </message>
+    <message line="107">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:38</time>
+      <text>ok bye for now</text>
+    </message>
+    <message line="108">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:38</time>
+      <text>catch u soon</text>
+    </message>
+    <message line="109">
+      <author>d5053979f47f33305af03c4e723e77d3</author>
+      <time>13:38</time>
+      <text>i be here</text>
+    </message>
+    <message line="110">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:38</time>
+      <text>ok baby</text>
+    </message>
+    <message line="111">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:38</time>
+      <text>catch u</text>
+    </message>
+    <message line="112">
+      <author>5a304ea8f1a9aa03d68e15b1eabb9fad</author>
+      <time>13:38</time>
+      <text>take care</text>
+    </message>
+  </conversation>
+
+  **************Author and message predator*********************
+  
+  <conversation id="1fc362ffef440fec98ae5438d487546d">
+    <message line="1">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:23</time>
+      <text>:( i missed you</text>
+    </message>
+    <message line="2">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:24</time>
+      <text>I dint know u were online sweety</text>
+    </message>
+    <message line="3">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:24</time>
+      <text>:(</text>
+    </message>
+    <message line="4">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:24</time>
+      <text>wat time r u going to bed?</text>
+    </message>
+    <message line="5">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:24</time>
+      <text>soon</text>
+    </message>
+    <message line="6">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:25</time>
+      <text>did you still wanna meet on saturday?</text>
+    </message>
+    <message line="7">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:25</time>
+      <text>yes...wat do u mean by still?</text>
+    </message>
+    <message line="8">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:25</time>
+      <text>lol didnt you?</text>
+    </message>
+    <message line="9">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:25</time>
+      <text>we will surely meet up</text>
+    </message>
+    <message line="10">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:26</time>
+      <text>oh ok</text>
+    </message>
+    <message line="11">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:26</time>
+      <text>when do you wanna?</text>
+    </message>
+    <message line="12">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:26</time>
+      <text>sat</text>
+    </message>
+    <message line="13">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:26</time>
+      <text>k</text>
+    </message>
+    <message line="14">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:26</time>
+      <text>what time?</text>
+    </message>
+    <message line="15">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:26</time>
+      <text>upto u</text>
+    </message>
+    <message line="16">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:26</time>
+      <text>morning would b great</text>
+    </message>
+    <message line="17">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:26</time>
+      <text>i could tell my mom anything lol</text>
+    </message>
+    <message line="18">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:26</time>
+      <text>ok</text>
+    </message>
+    <message line="19">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:26</time>
+      <text>i will let you know</text>
+    </message>
+    <message line="20">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:26</time>
+      <text>wat if ur mom comes to know</text>
+    </message>
+    <message line="21">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:27</time>
+      <text>lol you gonna tell her?</text>
+    </message>
+    <message line="22">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:27</time>
+      <text>lol....yeah</text>
+    </message>
+    <message line="23">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:27</time>
+      <text>:(</text>
+    </message>
+    <message line="24">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:27</time>
+      <text>am gonna tell her that i have a minor friend</text>
+    </message>
+    <message line="25">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:27</time>
+      <text>your gonna tell my mom?</text>
+    </message>
+    <message line="26">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:28</time>
+      <text>lol...no dear</text>
+    </message>
+    <message line="27">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:28</time>
+      <text>oh ok</text>
+    </message>
+    <message line="28">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:28</time>
+      <text>lol then she wont find out</text>
+    </message>
+    <message line="29">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:28</time>
+      <text>do u really wanna do all those we talked?</text>
+    </message>
+    <message line="30">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:28</time>
+      <text>if you do</text>
+    </message>
+    <message line="31">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:28</time>
+      <text>r u really ready for it</text>
+    </message>
+    <message line="32">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:28</time>
+      <text>lol i think so</text>
+    </message>
+    <message line="33">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:29</time>
+      <text>do you really wanna?</text>
+    </message>
+    <message line="34">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:29</time>
+      <text>well i like it....but just wondering if u will be able to take it...lol</text>
+    </message>
+    <message line="35">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:29</time>
+      <text>lol</text>
+    </message>
+    <message line="36">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:29</time>
+      <text>do u know how it is gonna b</text>
+    </message>
+    <message line="37">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:30</time>
+      <text>you said it would hurt</text>
+    </message>
+    <message line="38">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:30</time>
+      <text>if it does...i will stop..lol</text>
+    </message>
+    <message line="39">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:30</time>
+      <text>but there's always a first time</text>
+    </message>
+    <message line="40">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:30</time>
+      <text>lol ok</text>
+    </message>
+    <message line="41">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:31</time>
+      <text>lets see....if it hurts we will wait for some more time</text>
+    </message>
+    <message line="42">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:31</time>
+      <text>ok</text>
+    </message>
+    <message line="43">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:31</time>
+      <text>do u know what it is all about</text>
+    </message>
+    <message line="44">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:31</time>
+      <text>ya</text>
+    </message>
+    <message line="45">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:31</time>
+      <text>what do u know dear?</text>
+    </message>
+    <message line="46">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:31</time>
+      <text>i dont wanna get pregnant though</text>
+    </message>
+    <message line="47">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:32</time>
+      <text>u wont....lol</text>
+    </message>
+    <message line="48">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:32</time>
+      <text>if u do...i will be in jail...lol</text>
+    </message>
+    <message line="49">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:32</time>
+      <text>lol how will i not tho?</text>
+    </message>
+    <message line="50">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:32</time>
+      <text>use protection</text>
+    </message>
+    <message line="51">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:32</time>
+      <text>oh ok</text>
+    </message>
+    <message line="52">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:33</time>
+      <text>dont discuss anything with any1</text>
+    </message>
+    <message line="53">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:33</time>
+      <text>ok</text>
+    </message>
+    <message line="54">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:33</time>
+      <text>we can b good friends and share all our things</text>
+    </message>
+    <message line="55">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:34</time>
+      <text>ok</text>
+    </message>
+    <message line="56">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:34</time>
+      <text>do u have lots of freinds?</text>
+    </message>
+    <message line="57">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:35</time>
+      <text>not really</text>
+    </message>
+    <message line="58">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:35</time>
+      <text>k...lets b good friends then</text>
+    </message>
+    <message line="59">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:35</time>
+      <text>lol ok</text>
+    </message>
+    <message line="60">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:36</time>
+      <text>So Kendra....what do u know about sex?</text>
+    </message>
+    <message line="61">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:36</time>
+      <text>just wondering wat a 13 yr old knows....lol</text>
+    </message>
+    <message line="62">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:36</time>
+      <text>lol not alot</text>
+    </message>
+    <message line="63">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:37</time>
+      <text>u dont talk with ur friends</text>
+    </message>
+    <message line="64">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:37</time>
+      <text>ya i do</text>
+    </message>
+    <message line="65">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:37</time>
+      <text>sammi said it hurt</text>
+    </message>
+    <message line="66">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:37</time>
+      <text>none of ur friends have had it before?</text>
+    </message>
+    <message line="67">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:38</time>
+      <text>in the begining it does</text>
+    </message>
+    <message line="68">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:38</time>
+      <text>it can even bleed a bit</text>
+    </message>
+    <message line="69">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:38</time>
+      <text>do u get periods at time?</text>
+    </message>
+    <message line="70">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:39</time>
+      <text>ya</text>
+    </message>
+    <message line="71">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:39</time>
+      <text>r u scared when u hear it bleeds</text>
+    </message>
+    <message line="72">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:39</time>
+      <text>Kendra...if u need more time...we can wait</text>
+    </message>
+    <message line="73">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:39</time>
+      <text>no its ok</text>
+    </message>
+    <message line="74">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:40</time>
+      <text>i just dont want u to leave a decision to me</text>
+    </message>
+    <message line="75">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:40</time>
+      <text>im not</text>
+    </message>
+    <message line="76">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:41</time>
+      <text>take it easy....k</text>
+    </message>
+    <message line="77">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:41</time>
+      <text>wat time r u going to bed?</text>
+    </message>
+    <message line="78">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:41</time>
+      <text>do u have more pics?</text>
+    </message>
+    <message line="79">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:41</time>
+      <text>no</text>
+    </message>
+    <message line="80">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:41</time>
+      <text>im going to bed soo</text>
+    </message>
+    <message line="81">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:41</time>
+      <text>soon</text>
+    </message>
+    <message line="82">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:41</time>
+      <text>k...</text>
+    </message>
+    <message line="83">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:42</time>
+      <text>so hows ur day</text>
+    </message>
+    <message line="84">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:42</time>
+      <text>ok</text>
+    </message>
+    <message line="85">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:42</time>
+      <text>i had to do 9 hrs of clinical work</text>
+    </message>
+    <message line="86">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:43</time>
+      <text>kendra...busy with some work?</text>
+    </message>
+    <message line="87">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:43</time>
+      <text>lol that sounds hard</text>
+    </message>
+    <message line="88">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:43</time>
+      <text>im not busy</text>
+    </message>
+    <message line="89">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:43</time>
+      <text>Hows Minnie?</text>
+    </message>
+    <message line="90">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:43</time>
+      <text>lol</text>
+    </message>
+    <message line="91">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:44</time>
+      <text>lol ok</text>
+    </message>
+    <message line="92">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:44</time>
+      <text>i miss her</text>
+    </message>
+    <message line="93">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:44</time>
+      <text>u will get her soon</text>
+    </message>
+    <message line="94">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:46</time>
+      <text>ya</text>
+    </message>
+    <message line="95">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:46</time>
+      <text>where's mom?</text>
+    </message>
+    <message line="96">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:46</time>
+      <text>bed</text>
+    </message>
+    <message line="97">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:46</time>
+      <text>what time does she work?</text>
+    </message>
+    <message line="98">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:47</time>
+      <text>8</text>
+    </message>
+    <message line="99">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:48</time>
+      <text>8 to?</text>
+    </message>
+    <message line="100">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:48</time>
+      <text>5 or 6</text>
+    </message>
+    <message line="101">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:48</time>
+      <text>on saturdays too?</text>
+    </message>
+    <message line="102">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:48</time>
+      <text>sometimes</text>
+    </message>
+    <message line="103">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:48</time>
+      <text>i can tell her im going to the barn tho</text>
+    </message>
+    <message line="104">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:48</time>
+      <text>where is the barn?</text>
+    </message>
+    <message line="105">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:49</time>
+      <text>will she let u go by urslef</text>
+    </message>
+    <message line="106">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:49</time>
+      <text>ya</text>
+    </message>
+    <message line="107">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:50</time>
+      <text>but other paople r gonna see us too...lol</text>
+    </message>
+    <message line="108">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:50</time>
+      <text>people</text>
+    </message>
+    <message line="109">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:56</time>
+      <text>and now...where r u sweety?.....dreaming? Chatting?</text>
+    </message>
+    <message line="110">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:57</time>
+      <text>im here</text>
+    </message>
+    <message line="111">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:57</time>
+      <text>im going to bed tho</text>
+    </message>
+    <message line="112">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:57</time>
+      <text>will you be on tomorrow?</text>
+    </message>
+    <message line="113">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:57</time>
+      <text>k...I will b</text>
+    </message>
+    <message line="114">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:57</time>
+      <text>i will catch up with ya 2morrow</text>
+    </message>
+    <message line="115">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:59</time>
+      <text>k later</text>
+    </message>
+    <message line="116">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:59</time>
+      <text>bye...</text>
+    </message>
+    <message line="117">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:59</time>
+      <text>Good nute</text>
+    </message>
+    <message line="118">
+      <author>1caa782b9543e4306251525f6eb627a3</author>
+      <time>00:59</time>
+      <text>nite</text>
+    </message>
+    <message line="119">
+      <author>815de8eb13c20cc0ff35384abac6cad2</author>
+      <time>00:59</time>
+      <text>nite</text>
+    </message>
+  </conversation>
+  
+  **************Author and message predator*********************
+    <conversation id="de65c8732fb505e2763885c3ef6a1192">
+    <message line="1">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:02</time>
+      <text>hi</text>
+    </message>
+    <message line="2">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:02</time>
+      <text>baby i am back and forth from work</text>
+    </message>
+    <message line="3">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:02</time>
+      <text>the job i have requires alot from me</text>
+    </message>
+    <message line="4">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:03</time>
+      <text>i kno that must b hard</text>
+    </message>
+    <message line="5">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:03</time>
+      <text>y did u stop answering me bfore?</text>
+    </message>
+    <message line="6">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:03</time>
+      <text>itrying to get everything taken care of</text>
+    </message>
+    <message line="7">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:03</time>
+      <text>answer u bout what</text>
+    </message>
+    <message line="8">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:04</time>
+      <text>i was talkin to u n u didnt answer me for a long time</text>
+    </message>
+    <message line="9">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:04</time>
+      <text>oh i guess cuz i feel as if u think</text>
+    </message>
+    <message line="10">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:04</time>
+      <text>i am playing games</text>
+    </message>
+    <message line="11">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:04</time>
+      <text>and u feel used</text>
+    </message>
+    <message line="12">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:04</time>
+      <text>and if u feel that way i should just not worry bout it</text>
+    </message>
+    <message line="13">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:04</time>
+      <text>damn why is it u live so far away</text>
+    </message>
+    <message line="14">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:05</time>
+      <text>i didnt feel like that i just didnt kno wats goin on</text>
+    </message>
+    <message line="15">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:05</time>
+      <text>cuz if it was just an hour i could come there and be back</text>
+    </message>
+    <message line="16">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:05</time>
+      <text>see i was supose to be off</text>
+    </message>
+    <message line="17">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:05</time>
+      <text>everything kept changing</text>
+    </message>
+    <message line="18">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:05</time>
+      <text>buy since this guy was caught stealing</text>
+    </message>
+    <message line="19">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:05</time>
+      <text>its like 2 1/2 hrs</text>
+    </message>
+    <message line="20">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:05</time>
+      <text>i have to be here so if something happens i can get to work withing a short time</text>
+    </message>
+    <message line="21">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:05</time>
+      <text>is all</text>
+    </message>
+    <message line="22">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:06</time>
+      <text>oh</text>
+    </message>
+    <message line="23">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:06</time>
+      <text>guess its too far huh</text>
+    </message>
+    <message line="24">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:06</time>
+      <text>not too far if i was off</text>
+    </message>
+    <message line="25">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:06</time>
+      <text>i am trying i swear</text>
+    </message>
+    <message line="26">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:06</time>
+      <text>i wish someone could bring u to albany</text>
+    </message>
+    <message line="27">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:06</time>
+      <text>i would pay them to do it</text>
+    </message>
+    <message line="28">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:07</time>
+      <text>i dont kno anybody</text>
+    </message>
+    <message line="29">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:07</time>
+      <text>i know u dont</text>
+    </message>
+    <message line="30">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:07</time>
+      <text>and the only person i trust is HIS-GF</text>
+    </message>
+    <message line="31">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:07</time>
+      <text>i am trying to still come see u tonight</text>
+    </message>
+    <message line="32">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:07</time>
+      <text>but if i dont i will come tomorrow when i get off</text>
+    </message>
+    <message line="33">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:07</time>
+      <text>i am not playing games with you</text>
+    </message>
+    <message line="34">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:08</time>
+      <text>k i didnt really think so</text>
+    </message>
+    <message line="35">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:08</time>
+      <text>everything just kept changing</text>
+    </message>
+    <message line="36">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:08</time>
+      <text>well i hate u have to be there</text>
+    </message>
+    <message line="37">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:08</time>
+      <text>stuck in that house</text>
+    </message>
+    <message line="38">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:08</time>
+      <text>i wish u had a chat girlfriend</text>
+    </message>
+    <message line="39">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:08</time>
+      <text>yea its kinda creepy really</text>
+    </message>
+    <message line="40">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:08</time>
+      <text>that could drive u to albany</text>
+    </message>
+    <message line="41">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:08</time>
+      <text>big house with nobody around</text>
+    </message>
+    <message line="42">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:09</time>
+      <text>i can understand that can be scarey</text>
+    </message>
+    <message line="43">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:09</time>
+      <text>yea it is</text>
+    </message>
+    <message line="44">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:09</time>
+      <text>i called u</text>
+    </message>
+    <message line="45">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:09</time>
+      <text>to see how u were doing</text>
+    </message>
+    <message line="46">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:09</time>
+      <text>but no one picked up</text>
+    </message>
+    <message line="47">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:09</time>
+      <text>oh im sry</text>
+    </message>
+    <message line="48">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:09</time>
+      <text>and that phone dosent work that well</text>
+    </message>
+    <message line="49">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:09</time>
+      <text>after i went off i went outside for a lil</text>
+    </message>
+    <message line="50">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:09</time>
+      <text>that scares me</text>
+    </message>
+    <message line="51">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:09</time>
+      <text>wat happened?</text>
+    </message>
+    <message line="52">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:10</time>
+      <text>i mean if i come and cant get in touch with u</text>
+    </message>
+    <message line="53">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:10</time>
+      <text>i would be stuck</text>
+    </message>
+    <message line="54">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:10</time>
+      <text>u can i was outside</text>
+    </message>
+    <message line="55">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:10</time>
+      <text>ok</text>
+    </message>
+    <message line="56">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:10</time>
+      <text>if i know ur comin ill keep it with me</text>
+    </message>
+    <message line="57">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:10</time>
+      <text>i just wanted some air</text>
+    </message>
+    <message line="58">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:10</time>
+      <text>ok</text>
+    </message>
+    <message line="59">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:10</time>
+      <text>tell me again</text>
+    </message>
+    <message line="60">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:10</time>
+      <text>how much do u weigh</text>
+    </message>
+    <message line="61">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:10</time>
+      <text>r u kinda tiny</text>
+    </message>
+    <message line="62">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:10</time>
+      <text>yea lol</text>
+    </message>
+    <message line="63">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:10</time>
+      <text>im like 98</text>
+    </message>
+    <message line="64">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:11</time>
+      <text>so do u have a but at all</text>
+    </message>
+    <message line="65">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:11</time>
+      <text>r u like skin and bones</text>
+    </message>
+    <message line="66">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:11</time>
+      <text>no lol just right</text>
+    </message>
+    <message line="67">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:11</time>
+      <text>mybf said im just right</text>
+    </message>
+    <message line="68">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:11</time>
+      <text>ok</text>
+    </message>
+    <message line="69">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:11</time>
+      <text>wish u had a pic that shows ur body</text>
+    </message>
+    <message line="70">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:11</time>
+      <text>lol</text>
+    </message>
+    <message line="71">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:12</time>
+      <text>guys like me lol</text>
+    </message>
+    <message line="72">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:12</time>
+      <text>so i can see how it looks</text>
+    </message>
+    <message line="73">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:12</time>
+      <text>send me a pic</text>
+    </message>
+    <message line="74">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:12</time>
+      <text>with u playing the guatior</text>
+    </message>
+    <message line="75">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:12</time>
+      <text>did i send u 1 bfore?</text>
+    </message>
+    <message line="76">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:12</time>
+      <text>i think</text>
+    </message>
+    <message line="77">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:12</time>
+      <text>k i will</text>
+    </message>
+    <message line="78">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:14</time>
+      <text>oery nice</text>
+    </message>
+    <message line="79">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:14</time>
+      <text>do u have another one</text>
+    </message>
+    <message line="80">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:15</time>
+      <text>hello u there</text>
+    </message>
+    <message line="81">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:16</time>
+      <text>ok thats a cute one i got that one</text>
+    </message>
+    <message line="82">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:16</time>
+      <text>nothing with u standing up huh</text>
+    </message>
+    <message line="83">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:16</time>
+      <text>sry not here</text>
+    </message>
+    <message line="84">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:16</time>
+      <text>at home it got more</text>
+    </message>
+    <message line="85">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:16</time>
+      <text>ok</text>
+    </message>
+    <message line="86">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:16</time>
+      <text>so mmmmmm is that all u have</text>
+    </message>
+    <message line="87">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:17</time>
+      <text>just wanta see ur body</text>
+    </message>
+    <message line="88">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:17</time>
+      <text>i never had sex with anyone as small as u before</text>
+    </message>
+    <message line="89">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:17</time>
+      <text>lol</text>
+    </message>
+    <message line="90">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:17</time>
+      <text>how big r ur tits</text>
+    </message>
+    <message line="91">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:17</time>
+      <text>they r very samll huh</text>
+    </message>
+    <message line="92">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:17</time>
+      <text>if u had come like u said ud c me now lol</text>
+    </message>
+    <message line="93">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:18</time>
+      <text>jk</text>
+    </message>
+    <message line="94">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:18</time>
+      <text>i will be there soon</text>
+    </message>
+    <message line="95">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:18</time>
+      <text>34b</text>
+    </message>
+    <message line="96">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:18</time>
+      <text>if i cant come tonight</text>
+    </message>
+    <message line="97">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:18</time>
+      <text>i will be there tomorrow</text>
+    </message>
+    <message line="98">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:18</time>
+      <text>its cool</text>
+    </message>
+    <message line="99">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:18</time>
+      <text>so what is that</text>
+    </message>
+    <message line="100">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:18</time>
+      <text>a handfull</text>
+    </message>
+    <message line="101">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:18</time>
+      <text>guess lol</text>
+    </message>
+    <message line="102">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:18</time>
+      <text>so what enough to put in ur mouth</text>
+    </message>
+    <message line="103">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:19</time>
+      <text>yea probly lol</text>
+    </message>
+    <message line="104">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:19</time>
+      <text>ok</text>
+    </message>
+    <message line="105">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:19</time>
+      <text>r u mad at me</text>
+    </message>
+    <message line="106">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:19</time>
+      <text>no im not</text>
+    </message>
+    <message line="107">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:19</time>
+      <text>ur cool</text>
+    </message>
+    <message line="108">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:20</time>
+      <text>u thought u would have seen ur first dick up close by now huh</text>
+    </message>
+    <message line="109">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:20</time>
+      <text>ok</text>
+    </message>
+    <message line="110">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:20</time>
+      <text>ehst size pants do u wear</text>
+    </message>
+    <message line="111">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:21</time>
+      <text>sexy i will be back later</text>
+    </message>
+    <message line="112">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:21</time>
+      <text>ok</text>
+    </message>
+    <message line="113">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:21</time>
+      <text>talk to u then</text>
+    </message>
+    <message line="114">
+      <author>afa81bc41103f8a693eff3e530e5071d</author>
+      <time>17:21</time>
+      <text>i will be back in 30 mins</text>
+    </message>
+    <message line="115">
+      <author>6d144ccd29ca4950b3da60164f04a0ab</author>
+      <time>17:21</time>
+      <text>k</text>
+    </message>
+  </conversation>
+  
+  
+    **************Author and message predator*********************
+    <conversation id="3671ecd72d9260240ee000484a946141">
+    <message line="1">
+      <author>a52cfbb622e51e16f2dd4351288d4374</author>
+      <time>22:19</time>
+      <text>heads up if you're editing anything on opensolaris.org: i'm about to make some minor changes that shouldn't have any effect on anything - but so far i don't have a great track record</text>
+    </message>
+    <message line="2">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:31</time>
+      <text>I am trying to install solaris express on NIAGRA ; I had inserted a DVD an from an ran &amp;quot;reboot&amp;quot; from terminal (ssh connection to the NIAGRA). and I reached the console (#. screen) ; any ideas?</text>
+    </message>
+    <message line="3">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:32</time>
+      <text>I expected I will get at the setup of the solaris express</text>
+    </message>
+    <message line="4">
+      <author>53e86cb71746c2a78d3aaf322da11ffc</author>
+      <time>22:32</time>
+      <text>NothingLikeSun: you tell it to boot from cdrom</text>
+    </message>
+    <message line="5">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:33</time>
+      <text>quasi, HOW?</text>
+    </message>
+    <message line="6">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:34</time>
+      <text>is there a way to tell the LOM</text>
+    </message>
+    <message line="7">
+      <author>53e86cb71746c2a78d3aaf322da11ffc</author>
+      <time>22:34</time>
+      <text>NothingLikeSun: either at the ok prompt: boot cdrom</text>
+    </message>
+    <message line="8">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:34</time>
+      <text>to boot from DVD</text>
+    </message>
+    <message line="9">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:34</time>
+      <text>ok prompt : do you mean #. ?</text>
+    </message>
+    <message line="10">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:35</time>
+      <text>or ok prompt of a ssh shell?</text>
+    </message>
+    <message line="11">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:35</time>
+      <text>I came from Linux and I am most of the time a programmer ;</text>
+    </message>
+    <message line="12">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:37</time>
+      <text>what is &amp;quot;ok prompt&amp;quot; ? forgive me my ignorance ...</text>
+    </message>
+    <message line="13">
+      <author>a52cfbb622e51e16f2dd4351288d4374</author>
+      <time>22:39</time>
+      <text>oh bork. that totally didn't work</text>
+    </message>
+    <message line="14">
+      <author>53303ac79660a60ff15ef2ae2835996f</author>
+      <time>22:39</time>
+      <text>NothingLikeSun: the operating system has nothing to do with the &amp;quot;OK prompt&amp;quot;</text>
+    </message>
+    <message line="15">
+      <author>53303ac79660a60ff15ef2ae2835996f</author>
+      <time>22:40</time>
+      <text>you access the &amp;quot;ok prompt&amp;quot; from firmware</text>
+    </message>
+    <message line="16">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:40</time>
+      <text>by &amp;quot;break&amp;quot; ?</text>
+    </message>
+    <message line="17">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:40</time>
+      <text>from the SC</text>
+    </message>
+    <message line="18">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:40</time>
+      <text>?</text>
+    </message>
+    <message line="19">
+      <author>a25181847111ff97b9da488c72fdd0bd</author>
+      <time>22:40</time>
+      <text>NothingLikeSun:  TYPE STOP-A</text>
+    </message>
+    <message line="20">
+      <author>a25181847111ff97b9da488c72fdd0bd</author>
+      <time>22:41</time>
+      <text>i mean press stop-a</text>
+    </message>
+    <message line="21">
+      <author>a25181847111ff97b9da488c72fdd0bd</author>
+      <time>22:41</time>
+      <text>then you  should see the ok prompt</text>
+    </message>
+    <message line="22">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:41</time>
+      <text>I have an ordinary keyboard : should break do the job ?</text>
+    </message>
+    <message line="23">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:41</time>
+      <text>or something else for &amp;quot;stop&amp;quot;?</text>
+    </message>
+    <message line="24">
+      <author>a25181847111ff97b9da488c72fdd0bd</author>
+      <time>22:42</time>
+      <text>i dunno then</text>
+    </message>
+    <message line="25">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:42</time>
+      <text>the manual says : break [‚Äìy] [‚Äìc]</text>
+    </message>
+    <message line="26">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:42</time>
+      <text>Drops the host server from running the Solaris OS</text>
+    </message>
+    <message line="27">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:43</time>
+      <text>software into OpenBoot PROM or kmdb.</text>
+    </message>
+    <message line="28">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:43</time>
+      <text>I mean the ALOM guide</text>
+    </message>
+    <message line="29">
+      <author>53e86cb71746c2a78d3aaf322da11ffc</author>
+      <time>22:45</time>
+      <text>NothingLikeSun: &lt;a href="http://docs.sun.com/app/docs/coll/1236.3"&gt;http://docs.sun.com/app/docs/coll/1236.3&lt;/a&gt; is probably a good place to start</text>
+    </message>
+    <message line="30">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:45</time>
+      <text>reading...</text>
+    </message>
+    <message line="31">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:46</time>
+      <text>which of them ? there are 11 !</text>
+    </message>
+    <message line="32">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:47</time>
+      <text>OK: I should do some reading. one last question: how to get to the SC&amp;gt; prompt from #. ? can someone tell me ?</text>
+    </message>
+    <message line="33">
+      <author>c84247cefeb3a07c65c26753231e17f7</author>
+      <time>22:48</time>
+      <text>just type console at the LOM prompt to get to OBP</text>
+    </message>
+    <message line="34">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>22:49</time>
+      <text>Auralis, thnks</text>
+    </message>
+    <message line="35">
+      <author>53e86cb71746c2a78d3aaf322da11ffc</author>
+      <time>22:56</time>
+      <text>NothingLikeSun: something like the Basic Installations doc</text>
+    </message>
+    <message line="36">
+      <author>6b3eb9288618d195ee7609ba9e84b63c</author>
+      <time>22:58</time>
+      <text>hi all</text>
+    </message>
+    <message line="37">
+      <author>53e86cb71746c2a78d3aaf322da11ffc</author>
+      <time>22:58</time>
+      <text>NothingLikeSun: &lt;a href="http://docs.sun.com/app/docs/doc/817-0544/6mgbagb14?a=view"&gt;http://docs.sun.com/app/docs/doc/817-0544/6mgbagb14?a=view&lt;/a&gt; in specific</text>
+    </message>
+    <message line="38">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>23:02</time>
+      <text>is there a default user/password for ALOM ? something like admin/admin ? I am here under pressure</text>
+    </message>
+    <message line="39">
+      <author>a52cfbb622e51e16f2dd4351288d4374</author>
+      <time>23:03</time>
+      <text>augh.</text>
+    </message>
+    <message line="40">
+      <author>a52cfbb622e51e16f2dd4351288d4374</author>
+      <time>23:03</time>
+      <text>richlowe: ping</text>
+    </message>
+    <message line="41">
+      <author>53e86cb71746c2a78d3aaf322da11ffc</author>
+      <time>23:03</time>
+      <text>NothingLikeSun: look in the alom manual for the t2000</text>
+    </message>
+    <message line="42">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>23:03</time>
+      <text>Advanced Lights Out Management</text>
+    </message>
+    <message line="43">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>23:03</time>
+      <text>(ALOM) CMT v1.1 Guide</text>
+    </message>
+    <message line="44">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>23:03</time>
+      <text>this is in front my eyes right now</text>
+    </message>
+    <message line="45">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>23:04</time>
+      <text>they say how to chage password</text>
+    </message>
+    <message line="46">
+      <author>000d10e6d03eeb8a50a6feed67578cbe</author>
+      <time>23:05</time>
+      <text>i am using qemu to access linux from sol 10 u2 on ultra 20.. anyone know how to access a file off of native client from virtual OS?</text>
+    </message>
+    <message line="47">
+      <author>5a2f1c3667886a3c922e7ad2f06ca9b8</author>
+      <time>23:06</time>
+      <text>NothingLikeSun, i thought it was user &amp;quot;admin&amp;quot; w/ no password for the default</text>
+    </message>
+    <message line="48">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>23:06</time>
+      <text>I will try immediately</text>
+    </message>
+    <message line="49">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>23:09</time>
+      <text>admin without password does not work here</text>
+    </message>
+    <message line="50">
+      <author>ec8870145320c70838038be9fc5b9cd4</author>
+      <time>23:10</time>
+      <text>is there another way to start installation of soalris express?</text>
+    </message>
+    <message line="51">
+      <author>53e86cb71746c2a78d3aaf322da11ffc</author>
+      <time>23:12</time>
+      <text>mrdeviant: it is the gui-ness, the stack traces, the memory leaks, the crappy code ...</text>
+    </message>
+    <message line="52">
+      <author>5a2f1c3667886a3c922e7ad2f06ca9b8</author>
+      <time>23:12</time>
+      <text>what memory leaks</text>
+    </message>
+    <message line="53">
+      <author>53e86cb71746c2a78d3aaf322da11ffc</author>
+      <time>23:14</time>
+      <text>most every java webapp in the world ;)</text>
+    </message>
+    <message line="54">
+      <author>5a2f1c3667886a3c922e7ad2f06ca9b8</author>
+      <time>23:14</time>
+      <text>proof?</text>
+    </message>
+    <message line="55">
+      <author>72bac19ca0a2ff15f99326a8f7e02c10</author>
+      <time>23:14</time>
+      <text>complete with proof you aren't doing something to piss the GC off, too.</text>
+    </message>
+    <message line="56">
+      <author>7ef291c89ad915978b203d427919cfbb</author>
+      <time>23:15</time>
+      <text>has the ZFS fsync bug been fixed yet?</text>
+    </message>
+    <message line="57">
+      <author>f2f19c4d189dbb4a182ed65a3e9d699d</author>
+      <time>23:19</time>
+      <text>is there anyway to limit bandwith.. say they hit a certain amount and it cuts off? besides crossbow, if that even does it</text>
+    </message>
+    <message line="58">
+      <author>7ef291c89ad915978b203d427919cfbb</author>
+      <time>23:20</time>
+      <text>hell`, its in the plans for crossbow</text>
+    </message>
+    <message line="59">
+      <author>7ef291c89ad915978b203d427919cfbb</author>
+      <time>23:20</time>
+      <text>i think currently you have to use  ipf to accomblish that task</text>
+    </message>
+    <message line="60">
+      <author>f2f19c4d189dbb4a182ed65a3e9d699d</author>
+      <time>23:21</time>
+      <text>ah</text>
+    </message>
+    <message line="61">
+      <author>7ef291c89ad915978b203d427919cfbb</author>
+      <time>23:22</time>
+      <text>not sure if crossbow supports currently i have read the presentation, but haven't tried because  it doesn't support the version of SXCR i'm running</text>
+    </message>
+    <message line="62">
+      <author>72bac19ca0a2ff15f99326a8f7e02c10</author>
+      <time>23:25</time>
+      <text>jamesd: which?</text>
+    </message>
+    <message line="63">
+      <author>f2f19c4d189dbb4a182ed65a3e9d699d</author>
+      <time>23:25</time>
+      <text>when are they going to put it into SXCR? don't you have to build your own crossbow for it to work now?</text>
+    </message>
+    <message line="64">
+      <author>7ef291c89ad915978b203d427919cfbb</author>
+      <time>23:25</time>
+      <text>i think  crossbow bfu files are for  b44 or something... probably even older</text>
+    </message>
+    <message line="65">
+      <author>7ef291c89ad915978b203d427919cfbb</author>
+      <time>23:26</time>
+      <text>hell`, no idea they can't even get us the damm source code yet.. i'm not holding my breath</text>
+    </message>
+    <message line="66">
+      <author>f2f19c4d189dbb4a182ed65a3e9d699d</author>
+      <time>23:26</time>
+      <text>hehe</text>
+    </message>
+    <message line="67">
+      <author>7ef291c89ad915978b203d427919cfbb</author>
+      <time>23:27</time>
+      <text>yeap the crossbow binaries are for b44..</text>
+    </message>
+    <message line="68">
+      <author>b58b6da33b36acabd1b7a600410e5326</author>
+      <time>23:28</time>
+      <text>jamesd: by &amp;quot;fsync bug&amp;quot; do you mean the &amp;quot;fsync performance sucks&amp;quot; bug?</text>
+    </message>
+    <message line="69">
+      <author>b58b6da33b36acabd1b7a600410e5326</author>
+      <time>23:28</time>
+      <text>jamesd: have a bugid?</text>
+    </message>
+    <message line="70">
+      <author>72bac19ca0a2ff15f99326a8f7e02c10</author>
+      <time>23:28</time>
+      <text>jamesd: see, we're all wondering if that's the one you mean :)</text>
+    </message>
+    <message line="71">
+      <author>f2f19c4d189dbb4a182ed65a3e9d699d</author>
+      <time>23:29</time>
+      <text>jamesd, so crossbow will do it now but it only works with a ceratain SXCR?</text>
+    </message>
+    <message line="72">
+      <author>7ef291c89ad915978b203d427919cfbb</author>
+      <time>23:29</time>
+      <text>&lt;a href="http://bugs.opensolaris.org/bugdatabase/view_bug.do?bug_id=6413510"&gt;http://bugs.opensolaris.org/bugdatabase/view_bug.do?bug_id=6413510&lt;/a&gt;</text>
+    </message>
+    <message line="73">
+      <author>72bac19ca0a2ff15f99326a8f7e02c10</author>
+      <time>23:30</time>
+      <text>fixed Aug 29th.</text>
+    </message>
+    <message line="74">
+      <author>7ef291c89ad915978b203d427919cfbb</author>
+      <time>23:30</time>
+      <text>cool</text>
+    </message>
+    <message line="75">
+      <author>b58b6da33b36acabd1b7a600410e5326</author>
+      <time>23:30</time>
+      <text>in snv_48</text>
+    </message>
+    <message line="76">
+      <author>7ef291c89ad915978b203d427919cfbb</author>
+      <time>23:31</time>
+      <text>it doesn't effect me much now, since i have scsi or sata disks...  the last time i tried my 32 bit driver powered scsi card, a zone first boot, performance was absolutely horrid... hours  for the smf config stuff</text>
+    </message>
+    <message line="77">
+      <author>abe59155aa41ae19e4ea964e9dd4b200</author>
+      <time>23:31</time>
+      <text>&lt;a href="http://www.bagdadsoftware.de&amp;quot;"&gt;http://www.bagdadsoftware.de&amp;quot;&lt;/a&gt;)</text>
+    </message>
+    <message line="78">
+      <author>f2f19c4d189dbb4a182ed65a3e9d699d</author>
+      <time>23:31</time>
+      <text>it looks like ipfilter won't do it</text>
+    </message>
+    <message line="79">
+      <author>5a2f1c3667886a3c922e7ad2f06ca9b8</author>
+      <time>23:31</time>
+      <text>smf initial config is really slow. i've seen it take 15-20 minutes to import 100 manifests on a v490</text>
+    </message>
+    <message line="80">
+      <author>53303ac79660a60ff15ef2ae2835996f</author>
+      <time>23:32</time>
+      <text>on a v490? no way.</text>
+    </message>
+    <message line="81">
+      <author>5a2f1c3667886a3c922e7ad2f06ca9b8</author>
+      <time>23:32</time>
+      <text>yes way</text>
+    </message>
+    <message line="82">
+      <author>53303ac79660a60ff15ef2ae2835996f</author>
+      <time>23:32</time>
+      <text>it takes at most, maybe 5 minutes on my SB1000.</text>
+    </message>
+    <message line="83">
+      <author>5a2f1c3667886a3c922e7ad2f06ca9b8</author>
+      <time>23:32</time>
+      <text>it just did that to me 2 days ago</text>
+    </message>
+    <message line="84">
+      <author>53303ac79660a60ff15ef2ae2835996f</author>
+      <time>23:32</time>
+      <text>I'll have to time it next time I do an upgrade/install</text>
+    </message>
+    <message line="85">
+      <author>5a2f1c3667886a3c922e7ad2f06ca9b8</author>
+      <time>23:33</time>
+      <text>granted this is FCS. maybe it's been fixed in a later version.</text>
+    </message>
+    <message line="86">
+      <author>7ef291c89ad915978b203d427919cfbb</author>
+      <time>23:33</time>
+      <text>takes a few minutes on my u20 with sata drives .. maybe 15 minutes max on my u2</text>
+    </message>
+    <message line="87">
+      <author>b58b6da33b36acabd1b7a600410e5326</author>
+      <time>23:33</time>
+      <text>the limiting factor on manifest import is the performance of fsync</text>
+    </message>
+    <message line="88">
+      <author>b58b6da33b36acabd1b7a600410e5326</author>
+      <time>23:33</time>
+      <text>v490 has FC drives where the write cache is disabled by default.  sata and ata drives typically have it enabled by default.</text>
+    </message>
+    <message line="89">
+      <author>7ef291c89ad915978b203d427919cfbb</author>
+      <time>23:34</time>
+      <text>711 disk boxes with zfs  must really rock...</text>
+    </message>
+  </conversation>
+      **************Author and message predator*********************
+
+    <conversation id="7e6d416cf183e976568be115e636156c">
+    <message line="1">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:14</time>
+      <text>hi</text>
+    </message>
+    <message line="2">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:14</time>
+      <text>hi</text>
+    </message>
+    <message line="3">
+      <author>45a56e5d6a3ecc2037acab4a5d0d6b37</author>
+      <time>02:15</time>
+      <text>Hi</text>
+    </message>
+    <message line="4">
+      <author>45a56e5d6a3ecc2037acab4a5d0d6b37</author>
+      <time>02:15</time>
+      <text>What&amp;apos;s new</text>
+    </message>
+    <message line="5">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:15</time>
+      <text>hih</text>
+    </message>
+    <message line="6">
+      <author>45a56e5d6a3ecc2037acab4a5d0d6b37</author>
+      <time>02:15</time>
+      <text>Hi</text>
+    </message>
+    <message line="7">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:15</time>
+      <text>you</text>
+    </message>
+    <message line="8">
+      <author>45a56e5d6a3ecc2037acab4a5d0d6b37</author>
+      <time>02:15</time>
+      <text>What&amp;apos;s new</text>
+    </message>
+    <message line="9">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:15</time>
+      <text>asl</text>
+    </message>
+    <message line="10">
+      <author>45a56e5d6a3ecc2037acab4a5d0d6b37</author>
+      <time>02:15</time>
+      <text>I&amp;apos;m not new, I&amp;apos;ve been around for a while</text>
+    </message>
+    <message line="11">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:15</time>
+      <text>you</text>
+    </message>
+    <message line="12">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:15</time>
+      <text>asl</text>
+    </message>
+    <message line="13">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:15</time>
+      <text>asl</text>
+    </message>
+    <message line="14">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:15</time>
+      <text>hey baby no bads  man</text>
+    </message>
+    <message line="15">
+      <author>45a56e5d6a3ecc2037acab4a5d0d6b37</author>
+      <time>02:16</time>
+      <text>Where did you learn english</text>
+    </message>
+    <message line="16">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:16</time>
+      <text>yes</text>
+    </message>
+    <message line="17">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:16</time>
+      <text>please currently</text>
+    </message>
+    <message line="18">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:16</time>
+      <text>asl</text>
+    </message>
+    <message line="19">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:16</time>
+      <text>male?</text>
+    </message>
+    <message line="20">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:16</time>
+      <text>female?</text>
+    </message>
+    <message line="21">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:16</time>
+      <text>old</text>
+    </message>
+    <message line="22">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:17</time>
+      <text>age</text>
+    </message>
+    <message line="23">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:17</time>
+      <text>hey</text>
+    </message>
+    <message line="24">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:17</time>
+      <text>hey</text>
+    </message>
+    <message line="25">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:17</time>
+      <text>hey</text>
+    </message>
+    <message line="26">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:17</time>
+      <text>hey</text>
+    </message>
+    <message line="27">
+      <author>8739683712e3526693a721f63f517e3f</author>
+      <time>02:17</time>
+      <text>hey</text>
+    </message>
+  </conversation>
+  
+      **************Author and message Non-predator*********************
+	    <conversation id="c9353f99e71c61b3f93d8474b099936a">
+    <message line="1">
+      <author>0e60fa2a21b13bc3d41902ac2acd28e3</author>
+      <time>19:31</time>
+      <text>yeah, it had been running for many a day</text>
+    </message>
+    <message line="2">
+      <author>0e60fa2a21b13bc3d41902ac2acd28e3</author>
+      <time>19:31</time>
+      <text>ok, bedtime</text>
+    </message>
+    <message line="3">
+      <author>0e60fa2a21b13bc3d41902ac2acd28e3</author>
+      <time>19:31</time>
+      <text>gniteall</text>
+    </message>
+    <message line="4">
+      <author>72bac19ca0a2ff15f99326a8f7e02c10</author>
+      <time>19:31</time>
+      <text>g'night.</text>
+    </message>
+    <message line="5">
+      <author>e282c1b5ca7363d9439f97f76f10056d</author>
+      <time>19:31</time>
+      <text>later on</text>
+    </message>
+    <message line="6">
+      <author>a52cfbb622e51e16f2dd4351288d4374</author>
+      <time>19:31</time>
+      <text>'nite jmcp</text>
+    </message>
+    <message line="7">
+      <author>8bbe89fbbe481710801c4f36db719142</author>
+      <time>19:42</time>
+      <text>what distribution do you recommend?</text>
+    </message>
+    <message line="8">
+      <author>8bbe89fbbe481710801c4f36db719142</author>
+      <time>19:43</time>
+      <text>i'm looking for a small server-based distribution</text>
+    </message>
+    <message line="9">
+      <author>c84247cefeb3a07c65c26753231e17f7</author>
+      <time>19:44</time>
+      <text>just normal solaris, then strip out all he stuff you don't need/want</text>
+    </message>
+    <message line="10">
+      <author>c84247cefeb3a07c65c26753231e17f7</author>
+      <time>19:44</time>
+      <text>you can get it pretty small</text>
+    </message>
+    <message line="11">
+      <author>8bbe89fbbe481710801c4f36db719142</author>
+      <time>19:45</time>
+      <text>is there a one CD version?</text>
+    </message>
+    <message line="12">
+      <author>dee88f7f1080715bdb078c4efda912e6</author>
+      <time>19:45</time>
+      <text>one DVD</text>
+    </message>
+    <message line="13">
+      <author>8bbe89fbbe481710801c4f36db719142</author>
+      <time>19:46</time>
+      <text>sheesh</text>
+    </message>
+    <message line="14">
+      <author>8bbe89fbbe481710801c4f36db719142</author>
+      <time>19:46</time>
+      <text>no one cd base install?</text>
+    </message>
+    <message line="15">
+      <author>dee88f7f1080715bdb078c4efda912e6</author>
+      <time>19:46</time>
+      <text>netstar: depends on what your needs are.  You're new to Solaris?</text>
+    </message>
+    <message line="16">
+      <author>8bbe89fbbe481710801c4f36db719142</author>
+      <time>19:46</time>
+      <text>yes I am</text>
+    </message>
+    <message line="17">
+      <author>dee88f7f1080715bdb078c4efda912e6</author>
+      <time>19:46</time>
+      <text>coming from what?</text>
+    </message>
+    <message line="18">
+      <author>c84247cefeb3a07c65c26753231e17f7</author>
+      <time>19:46</time>
+      <text>the first cd is enough for a core install, of which still a lot can be striped out</text>
+    </message>
+    <message line="19">
+      <author>8bbe89fbbe481710801c4f36db719142</author>
+      <time>19:46</time>
+      <text>I don't want X</text>
+    </message>
+    <message line="20">
+      <author>8bbe89fbbe481710801c4f36db719142</author>
+      <time>19:46</time>
+      <text>I just want something like OpenBSD/NetBSD</text>
+    </message>
+    <message line="21">
+      <author>8bbe89fbbe481710801c4f36db719142</author>
+      <time>19:47</time>
+      <text>with a solaris kernel</text>
+    </message>
+    <message line="22">
+      <author>dee88f7f1080715bdb078c4efda912e6</author>
+      <time>19:47</time>
+      <text>netstar: try Nexenta, &lt;a href="http://gnusolaris.org/"&gt;http://gnusolaris.org/&lt;/a&gt;</text>
+    </message>
+    <message line="23">
+      <author>8bbe89fbbe481710801c4f36db719142</author>
+      <time>19:47</time>
+      <text>thanks</text>
+    </message>
+    <message line="24">
+      <author>dee88f7f1080715bdb078c4efda912e6</author>
+      <time>19:47</time>
+      <text>you can ask questions about it in #gnusol</text>
+    </message>
+  </conversation>
+  
+     **************Author and message Non-predator*********************
+
+    <conversation id="82ba812f66f2407fb71df4077e4f49f9">
+    <message line="1">
+      <author>e67a0e2faf80c39636b753556e844431</author>
+      <time>09:57</time>
+      <text>hi</text>
+    </message>
+    <message line="2">
+      <author>4a275acdb655ffedb2b02ddb04bf58c4</author>
+      <time>09:57</time>
+      <text>hei.</text>
+    </message>
+    <message line="3">
+      <author>e67a0e2faf80c39636b753556e844431</author>
+      <time>09:57</time>
+      <text>im lking for a horny girls, aren&amp;apos;t you?</text>
+    </message>
+    <message line="4">
+      <author>4a275acdb655ffedb2b02ddb04bf58c4</author>
+      <time>09:57</time>
+      <text>okay i am!</text>
+    </message>
+  </conversation>
+  
+       **************Author and message Non-predator*********************
+  <conversation id="02c40e6469d97f23367edf8198f58433">
+    <message line="1">
+      <author>4cb2b454b0f158307b76c96dd9178e47</author>
+      <time>08:03</time>
+      <text>hi</text>
+    </message>
+    <message line="2">
+      <author>4cb2b454b0f158307b76c96dd9178e47</author>
+      <time>08:03</time>
+      <text>asl?</text>
+    </message>
+    <message line="3">
+      <author>94741c78edf26cef1f8e42c7ca258e6b</author>
+      <time>08:03</time>
+      <text>Why do we sing &amp;quot;Rock a bye baby&amp;quot; to lull a baby to sleep when the song is about putting your baby in a tree and letting the wind crash the cradle on the ground?</text>
+    </message>
+  </conversation>
+
+
+
+
