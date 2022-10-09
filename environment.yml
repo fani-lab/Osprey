@@ -1,4 +1,4 @@
-name: opci
+name: opcd
 channels:
   - defaults
   - conda-forge
