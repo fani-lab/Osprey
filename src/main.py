@@ -2,8 +2,8 @@ from lxml import etree
 import pandas as pd
 
 import extract_features as ef
-import msg_classifier
-import conv_msg_classifier
+from classifier import msg_classifier
+from classifier import conv_msg_classifier
 
 def read_xml(xmlfile, tagged_msgs, predators):
     dictinary_list = []
@@ -17,8 +17,8 @@ def read_xml(xmlfile, tagged_msgs, predators):
                    'author_id': author.text,
                    'time': time.text,
                    'text': '' if body.text is None else body.text,
-                   'tagged_msg': None if tagged_msgs is None else (1 if conv.get('id') in tagged_msgs and (msg.get('line') in tagged_msgs[conv.get('id')]) else 0),
-                   'tagged_conv': None if tagged_msgs is None else (1 if conv.get('id') in tagged_msgs else 0),
+                   'tagged_msg': 0 if tagged_msgs.loc[(tagged_msgs['conv_id'] == conv.get('id')) & (tagged_msgs['line'] == int(msg.get('line')))].empty else 1,
+                   'tagged_conv': 0 if tagged_msgs.loc[tagged_msgs['conv_id'] == conv.get('id')].empty else 1,
                    'tagged_predator': None if predators.empty else (1 if author.text in predators else 0),
                    }
             dictinary_list.append(row)
@@ -45,22 +45,23 @@ def get_stats(conversations, predators, tagged_msgs):
     return stats
 
 if __name__ == '__main__':
-    istoy = False
+    datapath = '../data/toy.'
 
-    toyprefix = 'toy.' if istoy else ''
-    training_file = f'../data/{toyprefix}train/pan12-sexual-predator-identification-training-corpus-2012-05-01.xml'
-    training_predator_id_file = f'../data/{toyprefix}train/pan12-sexual-predator-identification-training-corpus-predators-2012-05-01.txt'
+    training_file = f'{datapath}train/pan12-sexual-predator-identification-training-corpus-2012-05-01.xml'
+    training_predator_id_file = f'{datapath}train/pan12-sexual-predator-identification-training-corpus-predators-2012-05-01.txt'
+    training_tagged_msgs_file = f'{datapath}train/pan12-sexual-predator-identification-diff.txt'
 
-    test_file = f'../data/{toyprefix}test/pan12-sexual-predator-identification-test-corpus-2012-05-17.xml'
-    test_predator_id_file = f'../data/{toyprefix}test/pan12-sexual-predator-identification-groundtruth-problem1.txt'
-    test_tagged_msgs_file = f'../data/{toyprefix}test/pan12-sexual-predator-identification-groundtruth-problem2.txt'
 
-    df_train = read_xml(training_file, None, pd.read_csv(training_predator_id_file))
-    df_test = read_xml(test_file, pd.read_csv(test_tagged_msgs_file), pd.read_csv(test_predator_id_file))
+    test_file = f'{datapath}test/pan12-sexual-predator-identification-test-corpus-2012-05-17.xml'
+    test_predator_id_file = f'{datapath}test/pan12-sexual-predator-identification-groundtruth-problem1.txt'
+    test_tagged_msgs_file = f'{datapath}test/pan12-sexual-predator-identification-groundtruth-problem2.txt'
+
+    df_train = read_xml(training_file, pd.read_csv(training_tagged_msgs_file, names=['conv_id', 'line'], sep='\t'), pd.read_csv(training_predator_id_file))
+    df_test = read_xml(test_file, pd.read_csv(test_tagged_msgs_file, names=['conv_id', 'line'], sep='\t'), pd.read_csv(test_predator_id_file))
 
     df_train_test = pd.concat([df_train, df_test])
 
-    text_feature_sets = [['basic'], ['w2v_glove'], ['w2v_bert']]
+    text_feature_sets = [['w2v_glove']]#[['basic'], ['w2v_glove'], ['w2v_bert']]
     for text_feature_set in text_feature_sets:
         text_feature_set_str = '.'.join(text_feature_set)
         text_features = ef.extract_load_text_features(df_train_test, text_feature_set, f'../output/{text_feature_set_str}.npz')

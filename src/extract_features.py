@@ -8,14 +8,12 @@ from sentence_transformers import SentenceTransformer
 from lib import text_corpus as tc, utils
 
 def extract_features(Q, feature_set=[], pretrained=True):#['basic', 'linguistic', 'w2v_glove', 'w2v_bert', 'w2v', 'c2v', 'd2v', 'd2v_c']
-    char_ngram_range = (1, 1)
-    word_ngram_range = (1, 1)
-    tc_Q = tc.TextCorpus(Q['text'], char_ngram_range=char_ngram_range, word_ngram_range=word_ngram_range)
-
-    features = sparse.csr_matrix(tc_Q.getLengthsByTerm()).transpose()
+    tc_Q = tc.TextCorpus(Q['text'], char_ngram_range=(1, 1), word_ngram_range=(1, 1))
+    features = sparse.csr_matrix((0,  len(Q))).transpose()
 
     if 'basic' in feature_set: features = sparse.csr_matrix(sparse.hstack((
         features,
+        tc_Q.getLengthsByTerm(),
         tc_Q.getCharStat()[0],
         tc_Q.getTermStat()[0],
         tc_Q.getTfIdF(),
