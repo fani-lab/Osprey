@@ -18,18 +18,30 @@ You need to have ``Python >= 3.8`` and install the following main packages, amon
 ```
 By ``pip``, clone the codebase and install the required packages:
 ```sh
-git clone https://github.com/Fani-Lab/opcd
-cd opcd
+git clone https://github.com/Fani-Lab/online_predatory_conversation_detection
+cd online_predatory_conversation_detection
 pip install -r requirements.txt
 ```
 By [``conda``](https://www.anaconda.com/products/individual):
 
 ```sh
-git clone https://github.com/Fani-Lab/opcd
-cd opcd
+git clone https://github.com/Fani-Lab/online_predatory_conversation_detection
+cd online_predatory_conversation_detection
 conda env create -f environment.yml
-conda activate opcd
+conda activate online_predatory_conversation_detection
 ```
+
+**Note** You may also need to install some libraries  to get started:
+you can use the `pip install ...`command to install the required libraries.   
+```sh
+numpy 
+pandas
+scipy 
+lxml 
+gensim
+sentence_transformers
+```
+
 
 ## 2. Quickstart
 
