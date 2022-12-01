@@ -74,4 +74,4 @@ if __name__ == '__main__':
     Baselines = [msg_classifier(text_features, [len(df_train), len(df_test)], relabeling)]#, conv_msg_classifier(relabeling)]
 
     for baseline in Baselines:
-        baseline.main()
+        baseline.main(df_train, df_test)
