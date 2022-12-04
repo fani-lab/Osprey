@@ -1,52 +1,42 @@
-import streamlit as st
-from streamlit_chat import message
-import requests
-import urllib
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, Conversation, ConversationalPipeline
+from flask import Flask
+from flask import request, jsonify
 
-st.set_page_config(
-    page_title="Predatory Conversation Detection - Demo",
-    page_icon=":robot:"
-)
+tokenizer = AutoTokenizer.from_pretrained("facebook/blenderbot-400M-distill")
+model = AutoModelForSeq2SeqLM.from_pretrained("facebook/blenderbot-400M-distill")
+nlp = ConversationalPipeline(model=model, tokenizer=tokenizer)
 
-#api
-headers = {
-	"X-RapidAPI-Key": "ca2df21b0cmsh1e3a19211af1628p147906jsn2171b437902e",
-	"X-RapidAPI-Host": "chatbot-chatari.p.rapidapi.com"
-}
+app = Flask(__name__)
 
-st.header("Predatory Conversation Detection - Demo")
-st.markdown("[Github](https://github.com/fani-lab/online_predatory_conversation_detection)")
+conversation = Conversation()
 
-if 'generated' not in st.session_state:
-    st.session_state['generated'] = []
+@app.route('/add_input', methods = ['GET', 'POST'])
+def add_input():
+     text = request.json['text']
+     conversation.add_user_input(text)
+     result = nlp([conversation], do_sample=False, max_length=1000)
+     messages = []
+     for is_user, text in result.iter_texts():
+          messages.append({
+               'is_user': is_user,
+               'text': text
+          })
+     return jsonify({
+          'uuid': result.uuid,
+          'messages': messages
+     })
+@app.route('/reset', methods = ['GET', 'POST'])
+def reset():
+     global conversation
+     conversation = Conversation()
+     return 'ok' 
 
-if 'past' not in st.session_state:
-    st.session_state['past'] = []
-
-def query(message):
-    parsed_message = urllib.parse.quote(message)
-
-    url = f"https://chatbot-api.vercel.app/api/?message=message={parsed_message}"
-
-    response = requests.request("GET", url, headers=headers)
-    return response.json()
-
-def get_text():
-    input_text = st.text_input("You: ","Hello, how are you?", key="input")
-    return input_text 
-
-
-user_input = get_text()
-
-if user_input:
-    output = query(user_input)
-
-    st.session_state.past.append(user_input)
-    print(output)
-
-    st.session_state.generated.append(output["message"])
-
-if st.session_state['generated']:
-    for i in range(len(st.session_state['generated'])-1, -1, -1):
-        message(st.session_state["generated"][i], key=str(i))
-        message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
+#give the chatbot an identity
+@app.route('/init_persona', methods = ['GET', 'POST'])
+def init():
+     text = request.json['text']
+     conversation.add_user_input('Hello')
+     conversation.append_response(text)
+     # Put the user's messages as "old message".
+     conversation.mark_processed()
+     return 'ok' 
