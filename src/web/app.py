@@ -1,13 +1,13 @@
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, Conversation, ConversationalPipeline
 from flask import Flask
 from flask import request, jsonify
-
+from flask_cors import CORS
 tokenizer = AutoTokenizer.from_pretrained("facebook/blenderbot-400M-distill")
 model = AutoModelForSeq2SeqLM.from_pretrained("facebook/blenderbot-400M-distill")
 nlp = ConversationalPipeline(model=model, tokenizer=tokenizer)
 
 app = Flask(__name__)
-
+CORS(app)
 conversation = Conversation()
 
 @app.route('/add_input', methods = ['GET', 'POST'])
@@ -21,6 +21,7 @@ def add_input():
                'is_user': is_user,
                'text': text
           })
+     print(messages)
      return jsonify({
           'uuid': result.uuid,
           'messages': messages

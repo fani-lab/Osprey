@@ -7,25 +7,39 @@ function App() {
   const [message, setMessage] = useState([
     {
       id: 1,
-      msg: "Give dog a bath",
+      text: "Give dog a bath",
       is_user: true,
     },
     {
       id: 2,
-      msg: "Give dog a bath",
+      text: "Give dog a bath",
       is_user: false,
     },
     {
       id: 3,
-      msg: "Give dog a bath",
+      text: "Give dog a bath",
       is_user: true,
     },
   ]);
   const sendMessage = async (e) => {
     e.preventDefault();
     let copy = [...message];
-    copy = [...copy, { id: copy.length + 1, msg: formValue, is_user: true }];
+    copy = [...copy, { id: copy.length + 1, text: formValue, is_user: true }];
     setMessage(copy);
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: formValue }),
+    };
+    fetch("http://localhost:5000/add_input", requestOptions)
+      .then((response) => response.json())
+      .then((data) =>
+        setMessage([
+          ...copy,
+          { id: data.uuid, text: data.messages, is_user: false },
+        ])
+      );
     setFormValue("");
   };
 
@@ -64,7 +78,7 @@ function ChatMessage(props) {
     <>
       <div className={`message ${messageClass}`}>
         <img src={photoicon} alt="icon" />
-        <p>{props.message.msg}</p>
+        <p>{props.message.text}</p>
       </div>
     </>
   );
