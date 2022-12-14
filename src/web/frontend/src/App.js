@@ -1,30 +1,37 @@
 import "./App.css";
 import { useState } from "react";
-
+import { AiOutlineSend } from "react-icons/ai";
+import {
+  Button,
+  Box,
+  Heading,
+  Text,
+  Input,
+  VStack,
+  HStack,
+  Link,
+  InputGroup,
+  InputRightElement,
+} from "@chakra-ui/react";
 function App() {
+  let date = new Date();
+
   const [formValue, setFormValue] = useState("");
 
-  const [message, setMessage] = useState([
-    {
-      id: 1,
-      text: "Give dog a bath",
-      is_user: true,
-    },
-    {
-      id: 2,
-      text: "Give dog a bath",
-      is_user: false,
-    },
-    {
-      id: 3,
-      text: "Give dog a bath",
-      is_user: true,
-    },
-  ]);
+  const [message, setMessage] = useState([]);
+
   const sendMessage = async (e) => {
     e.preventDefault();
     let copy = [...message];
-    copy = [...copy, { id: copy.length + 1, text: formValue, is_user: true }];
+    copy = [
+      ...copy,
+      {
+        id: copy.length + 1,
+        text: formValue,
+        is_user: true,
+        time: date.getHours() + ":" + date.getMinutes(),
+      },
+    ];
     setMessage(copy);
 
     const requestOptions = {
@@ -37,49 +44,90 @@ function App() {
       .then((data) =>
         setMessage([
           ...copy,
-          { id: data.uuid, text: data.messages, is_user: false },
+          {
+            id: copy.length + 1,
+            text: data.messages,
+            is_user: false,
+            time: date.getHours() + ":" + date.getMinutes(),
+          },
         ])
       );
     setFormValue("");
   };
 
+  function reset() {
+    setMessage([]);
+    fetch("http://localhost:5000/reset");
+  }
+
   return (
-    <div className="App">
+    <Box className="App">
       <header>
-        <h3>Online Predatory Conversation Detection</h3>
+        <VStack>
+          <Text fontSize="3xl">Online Predatory Conversation Detection</Text>
+          {/*<Text>
+            Talk to a chat bot! You’ll be notified if a machine learning
+            algorithm detects a predatory conversation.{" "}
+  </Text>*/}
+        </VStack>
       </header>
       <main>
         {message &&
           message.map((msg) => <ChatMessage message={msg} key={msg.id} />)}
       </main>
-
-      <form onSubmit={sendMessage}>
-        <input
-          value={formValue}
-          onChange={(e) => setFormValue(e.target.value)}
-          placeholder="say something nice"
-        />
-
-        <button type="submit" disabled={!formValue}>
-          🕊️
-        </button>
-      </form>
-    </div>
+      <br />
+      <Box className="Bottom">
+        <form onSubmit={sendMessage}>
+          <InputGroup size="lg">
+            <Input
+              value={formValue}
+              onChange={(e) => setFormValue(e.target.value)}
+              placeholder="Type your message"
+            />
+            <InputRightElement>
+              <Button
+                size="md"
+                variant="ghost"
+                type="submit"
+                disabled={!formValue}
+              >
+                <AiOutlineSend />
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+        </form>
+        <Box className="footer">
+          <Text>
+            Research project by{" "}
+            <Link
+              color="teal.500"
+              href="https://github.com/fani-lab/online_predatory_conversation_detection"
+            >
+              Fani's lab
+            </Link>
+          </Text>
+          <Button colorScheme={"yellow"} onClick={reset}>
+            New topic
+          </Button>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 
 function ChatMessage(props) {
-  const messageClass = props.message.is_user === true ? "sent" : "received";
-  const photoicon =
-    props.message.is_user === true
-      ? "https://static.vecteezy.com/system/resources/previews/002/318/271/original/user-profile-icon-free-vector.jpg"
-      : "https://img.freepik.com/premium-vector/robot-support-bot-icon-white_116137-2172.jpg?w=2000";
+  const { id, text, is_user, time } = props.message;
+  const messageClass = is_user === true ? "sent" : "received";
+  const leftOrRight = is_user === true ? "right" : "left";
+
   return (
     <>
-      <div className={`message ${messageClass}`}>
-        <img src={photoicon} alt="icon" />
-        <p>{props.message.text}</p>
-      </div>
+      <Box style={{ display: "flex", flexDirection: "column" }}>
+        <Box style={{ textAlign: `${leftOrRight}` }}>Today at {time}</Box>
+        <Box className={`message ${messageClass}`}>
+          <Text fontSize="2xl">{text}</Text>
+        </Box>
+      </Box>
     </>
   );
 }
