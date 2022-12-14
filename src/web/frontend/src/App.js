@@ -64,7 +64,9 @@ function App() {
     <Box className="App">
       <header>
         <VStack>
-          <Text fontSize="3xl">Online Predatory Conversation Detection</Text>
+          <Text fontSize="3xl" fontWeight="semibold">
+            Online Predatory Conversation Detection
+          </Text>
           {/*<Text>
             Talk to a chat bot! You’ll be notified if a machine learning
             algorithm detects a predatory conversation.{" "}
@@ -107,7 +109,7 @@ function App() {
             </Link>
           </Text>
           <Button colorScheme={"yellow"} onClick={reset}>
-            New topic
+            Reset
           </Button>
         </Box>
       </Box>
@@ -125,7 +127,7 @@ function ChatMessage(props) {
       <Box style={{ display: "flex", flexDirection: "column" }}>
         <Box style={{ textAlign: `${leftOrRight}` }}>Today at {time}</Box>
         <Box className={`message ${messageClass}`}>
-          <Text fontSize="2xl">{text}</Text>
+          <Text fontSize="xl">{text}</Text>
         </Box>
       </Box>
     </>

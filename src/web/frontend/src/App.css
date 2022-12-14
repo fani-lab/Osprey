@@ -1,5 +1,5 @@
 :root {
-  --maxWidth: 800px;
+  --maxWidth: 728px;
 }
 .App {
   max-width: var(--maxWidth);
@@ -9,7 +9,7 @@
 }
 
 .App header {
-  padding: 1rem;
+  padding: 0.5rem;
   min-height: 50px;
   border-bottom: 1px solid #282c34;
   width: 100%;
@@ -94,7 +94,6 @@ li {
 }
 
 p {
-  max-width: 80%;
   margin-bottom: 12px;
   line-height: 24px;
   padding: 10px 20px;
@@ -113,6 +112,8 @@ p {
 }
 
 .sent p {
+  max-width: 80%;
+
   background: #32353f;
   color: white;
   padding: 12px 36px;
@@ -120,5 +121,7 @@ p {
   align-self: flex-end;
 }
 .received p {
+  max-width: 80%;
+
   background: #ffe34f;
 }
