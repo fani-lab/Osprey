@@ -4,8 +4,19 @@ import pandas as pd
 import extract_features as ef
 from classifier import msg_classifier
 from classifier import conv_msg_classifier
+import pickle
 
 def read_xml(xmlfile, tagged_msgs, predators):
+    """Reads xml dataset for training and testing sets
+
+    Args:
+        xmlfile (str): Conversation data to extract from.
+        tagged_msgs (Dataframe): original labels (conversation, message id)
+        predators (Dataframe): predator labels (author)
+
+    Returns:
+        Dataframe: Contains conversation id, message id, author id, time, text, tagged_msg, tagged_conv, tagged_predator
+    """    
     dictinary_list = []
     df = pd.DataFrame(columns=['conv_id', 'msg_id', 'author_id', 'time', 'text'], index=['conv_id'])
     root = etree.parse(xmlfile).getroot()  # <conversations>
@@ -25,6 +36,16 @@ def read_xml(xmlfile, tagged_msgs, predators):
     return df.from_dict(dictinary_list)
 
 def get_stats(conversations, predators, tagged_msgs):
+    """_summary_
+
+    Args:
+        conversations (_type_): _description_
+        predators (_type_): _description_
+        tagged_msgs (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     stats = {'n_convs':0,
              'n_msgs':0,
              'avg_n_msgs_convs':0,
@@ -60,7 +81,7 @@ if __name__ == '__main__':
     df_test = read_xml(test_file, pd.read_csv(test_tagged_msgs_file, names=['conv_id', 'line'], sep='\t'), pd.read_csv(test_predator_id_file))
 
     df_train_test = pd.concat([df_train, df_test])
-
+    df_train_test.to_pickle('df_train_test.pkl')
     text_feature_sets = [['w2v_glove']]#[['basic'], ['w2v_glove'], ['w2v_bert']]
     for text_feature_set in text_feature_sets:
         text_feature_set_str = '.'.join(text_feature_set)

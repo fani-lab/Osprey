@@ -8,10 +8,22 @@ from sentence_transformers import SentenceTransformer
 from lib import text_corpus as tc, utils
 
 def extract_features(Q, feature_set=[], pretrained=True):#['basic', 'linguistic', 'w2v_glove', 'w2v_bert', 'w2v', 'c2v', 'd2v', 'd2v_c']
+    """Create sentence embeddings
+
+    Args:
+        Q (Dataframe): Training and testing data
+        feature_set (list, optional): Word to vector models. Defaults to [].
+        pretrained (bool, optional): _description_. Defaults to True.
+
+    Returns:
+        CSR Matrix: Sentence embeddings of the training and testing conversations
+    """
     tc_Q = tc.TextCorpus(Q['text'], char_ngram_range=(1, 1), word_ngram_range=(1, 1))
     features = sparse.csr_matrix((0,  len(Q))).transpose()
+    print('features',features.shape)
 
-    if 'basic' in feature_set: features = sparse.csr_matrix(sparse.hstack((
+    if 'basic' in feature_set: 
+        features = sparse.csr_matrix(sparse.hstack((
         features,
         tc_Q.getLengthsByTerm(),
         tc_Q.getCharStat()[0],
@@ -52,7 +64,7 @@ def extract_features(Q, feature_set=[], pretrained=True):#['basic', 'linguistic'
         model = SentenceTransformer('average_word_embeddings_glove.6B.300d')
         sentence_embeddings = model.encode(Q['text'].values)
         features = sparse.csr_matrix(sparse.hstack((features, sentence_embeddings)))
-
+        
     if 'w2v_bert' in feature_set:
         model = SentenceTransformer('paraphrase-distilroberta-base-v2')
         sentence_embeddings = model.encode(Q['text'].values)
@@ -77,6 +89,19 @@ def extract_features(Q, feature_set=[], pretrained=True):#['basic', 'linguistic'
     return features
 
 def extract_load_text_features(Q, feature_set, features_file=None):
+    """Load saved vectors or create new one
+
+    Args:
+        Q (Dataframe): Training and testing data
+        feature_set (list[str]): Word to vector models. Defaults to [].
+        features_file (str, optional): File to load from. Defaults to None.
+
+    Raises:
+        e: Exception or FileNotFoundError
+
+    Returns:
+        CSR Matrix: Sentence embeddings of the training and testing conversations
+    """
     try:
         return utils.load_sparse_csr(features_file)
     except FileNotFoundError as e:

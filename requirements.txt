@@ -4,9 +4,9 @@ pandas
 scikit-learn
 scipy==1.7.2
 lxml==4.6.4
-sentence_transformers==2.1.0
+sentence_transformers==2.2.2
 matplotlib==3.5.0
 
-#web app
-flask
-transfomers
+#website
+Flask==2.0.2
+flask_cors==3.0.10
