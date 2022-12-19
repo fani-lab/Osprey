@@ -21,6 +21,7 @@ main {
   height: 75vh;
   overflow-y: scroll;
   display: flex;
+  scroll-behavior: smooth;
   flex-direction: column;
 }
 
@@ -116,7 +117,6 @@ p {
 
   background: #32353f;
   color: white;
-  padding: 12px 36px;
 
   align-self: flex-end;
 }

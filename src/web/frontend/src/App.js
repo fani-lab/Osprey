@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { AiOutlineSend } from "react-icons/ai";
 import {
   Button,
@@ -14,12 +14,20 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 function App() {
+  const dummy = useRef();
   let date = new Date();
 
   const [formValue, setFormValue] = useState("");
 
   const [message, setMessage] = useState([]);
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [message]);
+
+  const scrollToBottom = () => {
+    dummy.current?.scrollIntoView({ behavior: "smooth" });
+  };
   const sendMessage = async (e) => {
     e.preventDefault();
     let copy = [...message];
@@ -53,6 +61,7 @@ function App() {
         ])
       );
     setFormValue("");
+    dummy.current.scrollIntoView({ behavior: "smooth" });
   };
 
   function reset() {
@@ -76,6 +85,7 @@ function App() {
       <main>
         {message &&
           message.map((msg) => <ChatMessage message={msg} key={msg.id} />)}
+        <span ref={dummy}></span>
       </main>
       <br />
       <Box className="Bottom">
@@ -108,6 +118,7 @@ function App() {
               Fani's lab
             </Link>
           </Text>
+
           <Button colorScheme={"yellow"} onClick={reset}>
             Reset
           </Button>
@@ -119,6 +130,7 @@ function App() {
 
 function ChatMessage(props) {
   const { id, text, is_user, time } = props.message;
+
   const messageClass = is_user === true ? "sent" : "received";
   const leftOrRight = is_user === true ? "right" : "left";
 
