@@ -1,33 +1,35 @@
 import "./App.css";
 import { useState, useRef, useEffect } from "react";
 import { AiOutlineSend } from "react-icons/ai";
+import ChatMessage from "./Components/ChatMessage";
 import {
   Button,
   Box,
-  Heading,
   Text,
   Input,
-  VStack,
-  HStack,
   Link,
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
+import Header from "./Components/Header";
+
 function App() {
   const dummy = useRef();
   let date = new Date();
 
   const [formValue, setFormValue] = useState("");
-
   const [message, setMessage] = useState([]);
 
   useEffect(() => {
     scrollToBottom();
   }, [message]);
 
+  // Autoscroll to bottom of chat everytime a new message is sent
   const scrollToBottom = () => {
     dummy.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  // Sends message to backend and receives response
   const sendMessage = async (e) => {
     e.preventDefault();
     let copy = [...message];
@@ -64,6 +66,7 @@ function App() {
     dummy.current.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Resets and clears conversation
   function reset() {
     setMessage([]);
     fetch("http://localhost:5000/reset");
@@ -71,17 +74,7 @@ function App() {
 
   return (
     <Box className="App">
-      <header>
-        <VStack>
-          <Text fontSize="3xl" fontWeight="semibold">
-            Online Predatory Conversation Detection
-          </Text>
-          {/*<Text>
-            Talk to a chat bot! You’ll be notified if a machine learning
-            algorithm detects a predatory conversation.{" "}
-  </Text>*/}
-        </VStack>
-      </header>
+      <Header />
       <main>
         {message &&
           message.map((msg) => <ChatMessage message={msg} key={msg.id} />)}
@@ -125,24 +118,6 @@ function App() {
         </Box>
       </Box>
     </Box>
-  );
-}
-
-function ChatMessage(props) {
-  const { id, text, is_user, time } = props.message;
-
-  const messageClass = is_user === true ? "sent" : "received";
-  const leftOrRight = is_user === true ? "right" : "left";
-
-  return (
-    <>
-      <Box style={{ display: "flex", flexDirection: "column" }}>
-        <Box style={{ textAlign: `${leftOrRight}` }}>Today at {time}</Box>
-        <Box className={`message ${messageClass}`}>
-          <Text fontSize="xl">{text}</Text>
-        </Box>
-      </Box>
-    </>
   );
 }
 

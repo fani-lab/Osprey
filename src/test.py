@@ -5,6 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sentence_transformers import SentenceTransformer
 from scipy import sparse
 import numpy as np
+import joblib
 
 # Preprocess the data
 loader = np.load("w2v_glove.npz") #load the sparse matrix
@@ -30,5 +31,7 @@ sentence_embeddings = sentence_model.encode(testinput).reshape(1, -1) #map sente
 print(model.predict(sentence_embeddings)) #not sure if this actually works
 print('Accuracy: ', accuracy)
 
+filename = "model.joblib"
+joblib.dump(model, filename) 
 #y= y['tagged_msg'].value_counts()
 #print(X.shape)

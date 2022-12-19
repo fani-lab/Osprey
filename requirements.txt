@@ -1,6 +1,6 @@
 gensim==4.1.2
 nltk
-pandas
+pandas==1.4.1
 scikit-learn
 scipy==1.7.2
 lxml==4.6.4
