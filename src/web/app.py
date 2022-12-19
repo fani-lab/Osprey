@@ -24,9 +24,11 @@ def add_input():
          json: Chatbot response
      """
      text = request.json['text']
-     conversation.add_user_input(text)
-     result = nlp([conversation], do_sample=False, max_length=1000)
+     conversation.add_user_input(text) # Add user input to conversation
+     result = nlp([conversation], do_sample=False, max_length=1000) # Get chatbot response
      messages = []
+
+     #Browse results and form a list of messages
      for is_user, text in result.iter_texts():
           messages.append({
                'is_user': is_user,
@@ -47,10 +49,9 @@ def reset():
 def init():
      """give the chatbot an identity"""
      text = request.json['text']
-     conversation.add_user_input('Hello')
-     conversation.append_response(text)
-     # Put the user's messages as "old message".
-     conversation.mark_processed()
+     conversation.add_user_input('Hello') # User doesn't need to say hello at the start
+     conversation.append_response(text) # Personality of the chatbot
+     conversation.mark_processed() # Archive the previous messages and consider them as a context 
 
 if __name__ == "__main__":
     app.run(debug=True)
