@@ -34,7 +34,8 @@ def add_input():
                'is_user': is_user,
                'text': text
           })
-     sentence_embeddings = sentence_model.encode(testinput).reshape(1, -1) #map sentence to vector
+     
+     #sentence_embeddings = sentence_model.encode(testinput).reshape(1, -1) #map sentence to vector
      return jsonify({
           'messages': text
      })
