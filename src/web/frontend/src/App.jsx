@@ -19,6 +19,7 @@ function App() {
 
   const [formValue, setFormValue] = useState("");
   const [message, setMessage] = useState([]);
+  const [isLoad, setIsLoading] = useState(false);
 
   useEffect(() => {
     scrollToBottom();
@@ -32,6 +33,8 @@ function App() {
   // Sends message to backend and receives response
   const sendMessage = async (e) => {
     e.preventDefault();
+    setIsLoading(!isLoad);
+
     let copy = [...message];
     copy = [
       ...copy,
@@ -43,13 +46,15 @@ function App() {
       },
     ];
     setMessage(copy);
+    setFormValue("");
+    dummy.current.scrollIntoView({ behavior: "smooth" });
 
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text: formValue }),
     };
-    fetch("http://localhost:5000/add_input", requestOptions)
+    await fetch("http://localhost:5000/add_input", requestOptions)
       .then((response) => response.json())
       .then((data) =>
         setMessage([
@@ -62,8 +67,7 @@ function App() {
           },
         ])
       );
-    setFormValue("");
-    dummy.current.scrollIntoView({ behavior: "smooth" });
+    setIsLoading(false);
   };
 
   // Resets and clears conversation
@@ -94,7 +98,8 @@ function App() {
                 size="md"
                 variant="ghost"
                 type="submit"
-                disabled={!formValue}
+                isLoading={isLoad}
+                disabled={!formValue || isLoad}
               >
                 <AiOutlineSend />
               </Button>
@@ -102,7 +107,7 @@ function App() {
           </InputGroup>
         </form>
         <Box className="footer">
-          <Text>
+          {/*<Text>
             Research project by{" "}
             <Link
               color="teal.500"
@@ -110,7 +115,7 @@ function App() {
             >
               Fani's lab
             </Link>
-          </Text>
+        </Text> */}
 
           <Button colorScheme={"yellow"} onClick={reset}>
             Reset
