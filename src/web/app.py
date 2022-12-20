@@ -23,20 +23,28 @@ def add_input():
      Returns:
          json: Chatbot response
      """
-     text = request.json['text']
-     conversation.add_user_input(text) # Add user input to conversation
+     userinput = request.json['text']
+     conversation.add_user_input(userinput) # Add user input to conversation
      result = nlp([conversation], do_sample=False, max_length=1000) # Get chatbot response
      messages = []
 
      #Browse results and form a list of messages
-     for is_user, text in result.iter_texts():
+     for is_user, chatbot_response in result.iter_texts():
           messages.append({
                'is_user': is_user,
-               'text': text
+               'text': chatbot_response
           })
-     sentence_embeddings = sentence_model.encode(testinput).reshape(1, -1) #map sentence to vector
+
+     chatbot_encoded_msg = sentence_model.encode(chatbot_response).reshape(1, -1) #map sentence to vector
+     chatbot_label = classify_model.predict(chatbot_encoded_msg)
+
+     user_encoded_msg = sentence_model.encode(userinput).reshape(1, -1) #map sentence to vector
+     user_label = classify_model.predict(user_encoded_msg)
+     
      return jsonify({
-          'messages': text
+          'messages': chatbot_response,
+          "chatbot_label": str(chatbot_label),
+          "user_label": str(user_label),
      })
      
 @app.route('/reset', methods = ['GET', 'POST'])
