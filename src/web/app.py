@@ -11,14 +11,14 @@ nlp = ConversationalPipeline(model=model, tokenizer=tokenizer)
 conversation = Conversation()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app) # Allow cross-origin requests
 
 classify_model = joblib.load('model.joblib') 
 sentence_model = SentenceTransformer('average_word_embeddings_glove.6B.300d')
 
 @app.route('/add_input', methods = ['GET', 'POST'])
 def add_input():
-     """_summary_
+     """Receieve chatbot response and whenever or not it's predatorial
 
      Returns:
          json: Chatbot response
@@ -34,19 +34,27 @@ def add_input():
                'is_user': is_user,
                'text': chatbot_response
           })
+     print(chatbot_response)
 
-     chatbot_encoded_msg = sentence_model.encode(chatbot_response).reshape(1, -1) #map sentence to vector
-     chatbot_label = classify_model.predict(chatbot_encoded_msg)
-
-     user_encoded_msg = sentence_model.encode(userinput).reshape(1, -1) #map sentence to vector
-     user_label = classify_model.predict(user_encoded_msg)
-     
+     chatbot_label = classify_msg(chatbot_response)
      return jsonify({
           'messages': chatbot_response,
           "chatbot_label": str(chatbot_label),
+     })
+
+@app.route('/classify_user_msg', methods = ['GET', 'POST'])
+def classify_user_msg():
+     """Check if user's message is predatorial or not
+
+     Returns:
+         json: Classification model's prediction
+     """
+     userinput = request.json['text']
+     user_label = classify_msg(userinput)
+     return jsonify({
           "user_label": str(user_label),
      })
-     
+
 @app.route('/reset', methods = ['GET', 'POST'])
 def reset():
      """Reset conversation, so that the chatbot forgets everything."""
@@ -55,11 +63,24 @@ def reset():
 
 @app.route('/init_persona', methods = ['GET', 'POST'])
 def init():
-     """give the chatbot an identity"""
+     """Give the chatbot an identity"""
      text = request.json['text']
      conversation.add_user_input('Hello') # User doesn't need to say hello at the start
      conversation.append_response(text) # Personality of the chatbot
      conversation.mark_processed() # Archive the previous messages and consider them as a context 
+     
+def classify_msg(msg):
+     """Embed the message and classify it using the classification model
+
+     Args:
+         msg (str): Message input.
+
+     Returns:
+         list[int]: returns 1 or 0 for predatorial or not predatorial respectively.
+     """
+     encoded_msg = sentence_model.encode(msg).reshape(1, -1)
+     label = classify_model.predict(encoded_msg)
+     return label[0]
 
 if __name__ == "__main__":
     app.run(debug=True)

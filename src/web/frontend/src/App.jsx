@@ -5,9 +5,8 @@ import ChatMessage from "./Components/ChatMessage";
 import {
   Button,
   Box,
-  Text,
   Input,
-  Link,
+  useToast,
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
@@ -16,21 +15,25 @@ import Header from "./Components/Header";
 function App() {
   const dummy = useRef();
   let date = new Date();
+  const toast = useToast();
+  const id = "toastId";
 
   const [formValue, setFormValue] = useState("");
   const [message, setMessage] = useState([]);
   const [isLoad, setIsLoading] = useState(false);
+  const [displayToast, setDisplayToast] = useState(false);
+  const [toastMsg, setToastMsg] = useState("");
 
+  // Autoscroll to bottom of chat everytime a new message is sent
   useEffect(() => {
     scrollToBottom();
   }, [message]);
 
-  // Autoscroll to bottom of chat everytime a new message is sent
   const scrollToBottom = () => {
     dummy.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Sends message to backend and receives response
+  // After user sends a message
   const sendMessage = async (e) => {
     e.preventDefault();
     setIsLoading(!isLoad);
@@ -54,18 +57,30 @@ function App() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text: formValue }),
     };
+
+    // Checks if user message is predatorial
+    fetch("http://localhost:5000/classify_user_msg", requestOptions).then(
+      (response) =>
+        response.json().then((data) => callToast(data.user_label, formValue))
+    );
+
+    // Receieves response from chatbot
+    // After receiving response, user can send another message
     await fetch("http://localhost:5000/add_input", requestOptions)
       .then((response) => response.json())
-      .then((data) =>
-        setMessage([
-          ...copy,
-          {
-            id: copy.length + 1,
-            text: data.messages,
-            is_user: false,
-            time: date.getHours() + ":" + date.getMinutes(),
-          },
-        ])
+      .then(
+        (data) => (
+          setMessage([
+            ...copy,
+            {
+              id: copy.length + 1,
+              text: data.messages,
+              is_user: false,
+              time: date.getHours() + ":" + date.getMinutes(),
+            },
+          ]),
+          callToast(data.chatbot_label, data.messages)
+        )
       );
     setIsLoading(false);
   };
@@ -73,11 +88,35 @@ function App() {
   // Resets and clears conversation
   function reset() {
     setMessage([]);
-    fetch("http://localhost:5000/reset");
+    fetch("http://localhost:5000/reset"); // Chatbot forgets past conversation
+  }
+
+  // Displays toast if message is predatorial
+  function callToast(result, msg) {
+    if (result === "0") {
+      setDisplayToast(true);
+      setToastMsg(msg);
+    }
+
+    // Clear toast
+    setTimeout(() => {
+      setDisplayToast(false);
+      setToastMsg("");
+    }, 5000);
   }
 
   return (
     <Box className="App">
+      {displayToast && !toast.isActive(id) // Prevents multiple toasts from being displayed
+        ? toast({
+            title: "Predatorial message detected.",
+            description: `${toastMsg}`,
+            status: "error",
+            id,
+            position: "top",
+            isClosable: true,
+          })
+        : null}
       <Header />
       <main>
         {message &&

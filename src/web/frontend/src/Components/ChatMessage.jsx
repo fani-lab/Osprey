@@ -3,6 +3,7 @@ import { Box, Text } from "@chakra-ui/react";
 function ChatMessage(props) {
   const { id, text, is_user, time } = props.message;
 
+  // Different styling for user and bot messages
   const messageClass = is_user === true ? "sent" : "received";
   const leftOrRight = is_user === true ? "right" : "left";
 
