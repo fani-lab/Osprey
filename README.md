@@ -31,17 +31,6 @@ conda env create -f environment.yml
 conda activate online_predatory_conversation_detection
 ```
 
-**Note** You may also need to install some libraries  to get started:
-you can use the `pip install ...`command to install the required libraries.   
-```sh
-numpy 
-pandas
-scipy 
-lxml 
-gensim
-sentence_transformers
-```
-
 
 ## 2. Quickstart
 
