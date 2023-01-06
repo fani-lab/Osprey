@@ -60,6 +60,7 @@ def reset():
      """Reset conversation, so that the chatbot forgets everything."""
      global conversation
      conversation = Conversation()
+     return "OK"
 
 @app.route('/init_persona', methods = ['GET', 'POST'])
 def init():
@@ -68,7 +69,8 @@ def init():
      conversation.add_user_input('Hello') # User doesn't need to say hello at the start
      conversation.append_response(text) # Personality of the chatbot
      conversation.mark_processed() # Archive the previous messages and consider them as a context 
-     
+     return "OK"
+
 def classify_msg(msg):
      """Embed the message and classify it using the classification model
 
@@ -80,6 +82,7 @@ def classify_msg(msg):
      """
      encoded_msg = sentence_model.encode(msg).reshape(1, -1)
      label = classify_model.predict(encoded_msg)
+     print(label)
      return label[0]
 
 if __name__ == "__main__":

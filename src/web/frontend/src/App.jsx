@@ -93,7 +93,7 @@ function App() {
 
   // Displays toast if message is predatorial
   function callToast(result, msg) {
-    if (result === "0") {
+    if (result === "1") {
       setDisplayToast(true);
       setToastMsg(msg);
     }
