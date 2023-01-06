@@ -4,7 +4,11 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
+<<<<<<< Updated upstream
     <orderEntry type="jdk" jdkName="opcd" jdkType="Python SDK" />
+=======
+    <orderEntry type="jdk" jdkName="Python 3.9 (online_predatory_conversation_detection)" jdkType="Python SDK" />
+>>>>>>> Stashed changes
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">

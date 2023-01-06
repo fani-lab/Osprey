@@ -23,6 +23,12 @@ class Baseline:
         self.rf.fit(rf_train, label)
 
         # using gridsearch cvjust to see if we get result:
+    def train(self, rf_train):
+        label = rf_train['tagged_pred']
+        self.rf.fit(rf_train['', ''], label )
+
+        return None
+>>>>>>> Stashed changes
 
     def test(self):
         # load the saved model and apply it on test set
@@ -41,4 +47,5 @@ class Baseline:
         # prep
         self.prep()
         self.train(rf_train)  # rf: random_forest train features
+
         # self.test(rf_test)
