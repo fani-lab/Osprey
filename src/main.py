@@ -79,7 +79,7 @@ if __name__ == '__main__':
     relabeling = ['tagged_msg', 'tagged_predator', 'tagged_conv']
 
     Baselines = [
-        msg_classifier(text_features, [len(df_train), len(df_test)], relabeling)]  # , conv_msg_classifier(relabeling)]
+        msg_classifier(text_features, [len(df_train), len(df_test)], relabeling)] # , conv_msg_classifier(relabeling)]
 
     for baseline in Baselines:
         baseline.main(df_train, df_test)
