@@ -6,7 +6,6 @@ from sentence_transformers import SentenceTransformer
 from scipy import sparse
 import numpy as np
 from imblearn.over_sampling import RandomOverSampler
-#text cleaning
 import nltk
 nltk.download('punkt')
 nltk.download('stopwords')

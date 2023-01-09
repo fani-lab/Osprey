@@ -5,6 +5,7 @@ import extract_features as ef
 from classifier import msg_classifier
 from classifier import conv_msg_classifier
 import pickle
+from lib import text_cleaning as t_c
 
 def read_xml(xmlfile, tagged_msgs, predators):
     """Reads xml dataset for training and testing sets
@@ -82,6 +83,15 @@ if __name__ == '__main__':
 
     df_train_test = pd.concat([df_train, df_test])
     df_train_test.to_pickle('df_train_test.pkl')
+
+    # text cleaning
+    df_train_test['text'] = df_train_test['text'].apply(lambda x: t_c.convert_to_lower(x))
+    df_train_test['text'] = df_train_test['text'].apply(lambda x: t_c.remove_numbers(x))
+    df_train_test['text'] = df_train_test['text'].apply(lambda x: t_c.remove_punctuation(x))
+    df_train_test['text'] = df_train_test['text'].apply(lambda x: t_c.remove_stopwords(x))
+    df_train_test['text'] = df_train_test['text'].apply(lambda x: t_c.remove_extra_white_spaces(x))
+    df_train_test['text'] = df_train_test['text'].apply(lambda x: t_c.lemmatizing(x))
+
     text_feature_sets = [['w2v_glove']]#[['basic'], ['w2v_glove'], ['w2v_bert']]
     for text_feature_set in text_feature_sets:
         text_feature_set_str = '.'.join(text_feature_set)
@@ -92,7 +102,7 @@ if __name__ == '__main__':
     # 'tagged_msg_bc': if conv has at least one tagged msg, all the msgs of the conv are tagged
     relabeling = ['tagged_msg', 'tagged_predator', 'tagged_conv']
 
-    Baselines = [msg_classifier(text_features, [len(df_train), len(df_test)], relabeling)]#, conv_msg_classifier(relabeling)]
+    Baselines = [msg_classifier(text_features, [len(df_train), len(df_test)], relabeling, df_train_test)]#, conv_msg_classifier(relabeling)]
 
     for baseline in Baselines:
         baseline.main()
