@@ -69,6 +69,21 @@ if __name__ == '__main__':
 
     text_feature_sets = [['w2v_glove']]  # [['basic'], ['w2v_glove'], ['w2v_bert']]
     # map the words of strings in train_test(concat) to crs_matrix
+
+    ##
+    ###
+    ####
+    #Ask this : before i used the train_test_concat = self.features, in the main of baseline
+    # i used to pass the df_train and df_test to the function seperately but and the data that would be passed on
+    # was a pandas data frame and i could use that to do the necessary stuff on it
+    #  but now that i just use the text_features that originates from here and moves to baseline by getting constructedd in classifier
+    # then, when i print the thing,  it s a csr_matrix and it does not have the structure of a pandas data frame anymore
+    # and since in the extracrt_load_text_features => we only alter the 'text' column i do not assume the csr matrix is including the rest  of the data
+    # and we still need to pass the df_train_test to the function
+    # and if yes , then how do we use the information from the self.features to translate to impliment the translation that happend from text to numbers
+    ###
+    ##
+    #
     for text_feature_set in text_feature_sets:
         text_feature_set_str = '.'.join(text_feature_set)
         text_features = ef.extract_load_text_features(df_train_test, text_feature_set,
@@ -85,4 +100,4 @@ if __name__ == '__main__':
 
     for baseline in Baselines:
         # baseline.main(df_train, df_test)
-        baseline.main(df_train_test)
+        baseline.main()
