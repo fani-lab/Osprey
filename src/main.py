@@ -19,7 +19,7 @@ def read_xml(xmlfile, tagged_msgs, predators):
                    'time': time.text,
                    'text': '' if body.text is None else body.text,
                    'tagged_msg': 0 if tagged_msgs.loc[(tagged_msgs['conv_id'] == conv.get('id')) & (
-                               tagged_msgs['line'] == int(msg.get('line')))].empty else 1,
+                           tagged_msgs['line'] == int(msg.get('line')))].empty else 1,
                    'tagged_conv': 0 if tagged_msgs.loc[tagged_msgs['conv_id'] == conv.get('id')].empty else 1,
                    'tagged_predator': None if predators.empty else (1 if author.text in predators else 0),
                    }
@@ -68,18 +68,21 @@ if __name__ == '__main__':
     df_train_test = pd.concat([df_train, df_test])
 
     text_feature_sets = [['w2v_glove']]  # [['basic'], ['w2v_glove'], ['w2v_bert']]
+    # map the words of strings in train_test(concat) to crs_matrix
     for text_feature_set in text_feature_sets:
         text_feature_set_str = '.'.join(text_feature_set)
         text_features = ef.extract_load_text_features(df_train_test, text_feature_set,
                                                       f'../output/{text_feature_set_str}.npz')
+    print(type(text_features))
 
     # 'tagged_msg': original labels (conv, msg_line) only available for test set
     # 'tagged_predator_bc': if conv has at least one predator, all the msgs of the conv are tagged
     # 'tagged_msg_bc': if conv has at least one tagged msg, all the msgs of the conv are tagged
     relabeling = ['tagged_msg', 'tagged_predator', 'tagged_conv']
 
-    Baselines = [
-        msg_classifier(text_features, [len(df_train), len(df_test)], relabeling)] # , conv_msg_classifier(relabeling)]
+    Baselines = [msg_classifier(text_features, [len(df_train), len(df_test)], relabeling)]
+    # , conv_msg_classifier(relabeling)]
 
     for baseline in Baselines:
-        baseline.main(df_train, df_test)
+        # baseline.main(df_train, df_test)
+        baseline.main(df_train_test)
