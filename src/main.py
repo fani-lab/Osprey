@@ -102,7 +102,7 @@ if __name__ == '__main__':
     # 'tagged_msg_bc': if conv has at least one tagged msg, all the msgs of the conv are tagged
     relabeling = ['tagged_msg', 'tagged_predator', 'tagged_conv']
 
-    Baselines = [msg_classifier(text_features, [len(df_train), len(df_test)], relabeling, df_train_test)]#, conv_msg_classifier(relabeling)]
+    Baselines = [msg_classifier()]#text_features, [len(df_train), len(df_test)], relabeling, df_train_test)]#, conv_msg_classifier(relabeling)]
 
     for baseline in Baselines:
-        baseline.main()
+        baseline.main(df_train_test, text_features)
