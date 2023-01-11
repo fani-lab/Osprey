@@ -105,4 +105,4 @@ if __name__ == '__main__':
     Baselines = [msg_classifier()]#text_features, [len(df_train), len(df_test)], relabeling, df_train_test)]#, conv_msg_classifier(relabeling)]
 
     for baseline in Baselines:
-        baseline.main(df_train_test, text_features)
+        baseline.main(df_train_test, text_features, "../output/")

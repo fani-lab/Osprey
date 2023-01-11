@@ -156,7 +156,11 @@ function App() {
             </Link>
         </Text> */}
 
-          <Button colorScheme={"yellow"} onClick={reset}>
+          <Button
+            disabled={isLoad || message.length === 0}
+            colorScheme={"yellow"}
+            onClick={reset}
+          >
             Reset
           </Button>
         </Box>
