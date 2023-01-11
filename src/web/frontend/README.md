@@ -1,5 +1,7 @@
 ## How to run React app
 
+## 0. Make sure you're in the frontend directory
+
 ## 1. Install required libraries
 
 ```
