@@ -19,7 +19,8 @@ def extract_features(Q, feature_set=[], pretrained=True):#['basic', 'linguistic'
         CSR Matrix: Sentence embeddings of the training and testing conversations
     """
     tc_Q = tc.TextCorpus(Q['text'], char_ngram_range=(1, 1), word_ngram_range=(1, 1))
-    features = sparse.csr_matrix((0,  len(Q))).transpose()
+    print(len(Q))
+    features = sparse.csr_matrix((1,  len(Q))).transpose()
     print('features',features.shape)
 
     if 'basic' in feature_set: 
@@ -63,8 +64,19 @@ def extract_features(Q, feature_set=[], pretrained=True):#['basic', 'linguistic'
     if 'w2v_glove' in feature_set:
         model = SentenceTransformer('average_word_embeddings_glove.6B.300d')
         sentence_embeddings = model.encode(Q['text'].values)
-        features = sparse.csr_matrix(sparse.hstack((features, sentence_embeddings)))
-        
+        features = sparse.csr_matrix(sparse.hstack((
+            features, 
+            sentence_embeddings, 
+            Q['msg_word_count'].values.reshape(-1, 1), 
+            Q['msg_char_count'].values.reshape(-1, 1),
+            Q['time'].values.reshape(-1, 1),
+            )))
+        #print(Q['msg_word_count'].values.reshape(-1, 1))
+        #print(Q['msg_word_count'].values.reshape(-1, 1))
+        #print(features)
+        #features = sparse.csr_matrix(sparse.hstack((features, Q['msg_word_count'].values.reshape(-1, 1), )))
+        #print(features)
+
     if 'w2v_bert' in feature_set:
         model = SentenceTransformer('paraphrase-distilroberta-base-v2')
         sentence_embeddings = model.encode(Q['text'].values)

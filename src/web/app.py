@@ -4,6 +4,7 @@ from flask_cors import CORS
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, Conversation, ConversationalPipeline
 from sentence_transformers import SentenceTransformer
 import joblib
+from scipy import sparse
 
 tokenizer = AutoTokenizer.from_pretrained("facebook/blenderbot-400M-distill")
 model = AutoModelForSeq2SeqLM.from_pretrained("facebook/blenderbot-400M-distill")
@@ -13,7 +14,8 @@ conversation = Conversation()
 app = Flask(__name__)
 CORS(app) # Allow cross-origin requests
 
-classify_model = joblib.load('model.joblib') 
+#classify_model = joblib.load('logistic_regression.joblib') 
+classify_model = joblib.load('model.joblib')
 sentence_model = SentenceTransformer('average_word_embeddings_glove.6B.300d')
 
 @app.route('/add_input', methods = ['GET', 'POST'])
@@ -82,6 +84,7 @@ def classify_msg(msg):
      """
      encoded_msg = sentence_model.encode(msg).reshape(1, -1)
      label = classify_model.predict(encoded_msg)
+     #label = classify_model.predict(sparse.csr_matrix(sparse.hstack((encoded_msg, 1, 3, 1672620360))))
      print(label)
      return label[0]
 

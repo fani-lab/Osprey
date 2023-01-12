@@ -72,8 +72,6 @@ df['text'] = df['text'].apply(lambda x: lemmatizing(x))
 
 df['after_cleaning'] = df['text'].apply(lambda x: len(x))
 
-print(df["text"].head(25))
-
 features = sparse.csr_matrix((0,  len(df))).transpose()
 sentence_embeddings = sentence_model.encode(df['text'].values)
 

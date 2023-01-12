@@ -15,7 +15,6 @@ class msg_classifier(Baseline):
         Baseline (Class): inherits from parent
     """
     def __init__(self):
-        """init function"""
         super(msg_classifier, self).__init__()
 
     def prep(self, X, df_train_test):
@@ -26,11 +25,11 @@ class msg_classifier(Baseline):
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
         return X_train, X_test, y_train, y_test
 
-    def train(self, X_train, y_train):
+    def train(self, X_train, y_train, output):
         # trains the model
         model = LogisticRegression(solver='lbfgs', max_iter=1000)
         model.fit(X_train, y_train)
-        pickle.dump(model, open("model.joblib", 'wb'))
+        pickle.dump(model, open(f"{output}logistic_regression.joblib", 'wb'))
         return model
         
     def test(self, X_test, model):
@@ -45,8 +44,9 @@ class msg_classifier(Baseline):
         return df
 
     def main(self, df, text_features, output, cmd=['prep', 'train', 'test', 'eval']):
+        print(text_features)
         if 'prep'  in cmd: X_train, X_test, y_train, y_test = self.prep(text_features, df)
-        if 'train' in cmd: model = self.train(X_train, y_train)
+        if 'train' in cmd: model = self.train(X_train, y_train, output)
         if 'test'  in cmd: ypred = self.test(X_test, model)
         if 'eval'  in cmd: result = self.eval(y_test, ypred, output)
 
