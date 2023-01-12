@@ -1,6 +1,8 @@
+from itertools import combinations
+
 from lxml import etree
 import pandas as pd
-
+from scipy import sparse
 import extract_features as ef
 from classifier import msg_classifier
 from classifier import conv_msg_classifier
@@ -67,37 +69,29 @@ if __name__ == '__main__':
 
     df_train_test = pd.concat([df_train, df_test])
 
-    text_feature_sets = [['w2v_glove']]  # [['basic'], ['w2v_glove'], ['w2v_bert']]
-    # map the words of strings in train_test(concat) to crs_matrix
+    text_feature_set = ['w2v_glove']  # [['basic'], ['w2v_glove'], ['w2v_bert'], ['time']]
 
-    ##
-    ###
-    ####
-    #Ask this : before i used the train_test_concat = self.features, in the main of baseline
-    # i used to pass the df_train and df_test to the function seperately but and the data that would be passed on
-    # was a pandas data frame and i could use that to do the necessary stuff on it
-    #  but now that i just use the text_features that originates from here and moves to baseline by getting constructedd in classifier
-    # then, when i print the thing,  it s a csr_matrix and it does not have the structure of a pandas data frame anymore
-    # and since in the extracrt_load_text_features => we only alter the 'text' column i do not assume the csr matrix is including the rest  of the data
-    # and we still need to pass the df_train_test to the function
-    # and if yes , then how do we use the information from the self.features to translate to impliment the translation that happend from text to numbers
-    ###
-    ##
-    #
-    for text_feature_set in text_feature_sets:
-        text_feature_set_str = '.'.join(text_feature_set)
-        text_features = ef.extract_load_text_features(df_train_test, text_feature_set,
-                                                      f'../output/{text_feature_set_str}.npz')
+    # this is for the time when we want to use all the possible combinations of features
+    # combinations_lst = []
+    # for i in range(len(text_feature_set)):
+    #     combinations_lst.append(list(combinations(text_feature_set, i)))
+
+    text_feature_set_str = '.'.join(text_feature_set)
+    text_features = ef.extract_load_text_features(df_train_test, text_feature_set,
+                                                  f'../output/{text_feature_set_str}.npz')
     print(type(text_features))
 
     # 'tagged_msg': original labels (conv, msg_line) only available for test set
     # 'tagged_predator_bc': if conv has at least one predator, all the msgs of the conv are tagged
     # 'tagged_msg_bc': if conv has at least one tagged msg, all the msgs of the conv are tagged
-    relabeling = ['tagged_msg', 'tagged_predator', 'tagged_conv']
+    label = 'tagged_msg'  # , 'tagged_predator', 'tagged_conv']
 
-    Baselines = [msg_classifier(text_features, [len(df_train), len(df_test)], relabeling)]
-    # , conv_msg_classifier(relabeling)]
+    # passing features, outputfile_str, split, target to classifier
+    Baselines = [msg_classifier(text_features, f'{text_feature_set_str}.{label}', [len(df_train), len(df_test)],
+                 df_train_test[label])]
+    # sparse.csr_matrix(sparse.hstack((df_train_test['label']))) => creates a csr_matrix with a column of targets
+    # sparse.csr_matrix(sparse.hstack((df_train_test[label]))) => df_train_test[label].array() ,
+    # conv_msg_classifier(relabeling)]
 
     for baseline in Baselines:
-        # baseline.main(df_train, df_test)
         baseline.main()
