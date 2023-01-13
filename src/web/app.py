@@ -5,6 +5,7 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, Conversation, Con
 from sentence_transformers import SentenceTransformer
 import joblib
 from scipy import sparse
+import datetime
 
 tokenizer = AutoTokenizer.from_pretrained("facebook/blenderbot-400M-distill")
 model = AutoModelForSeq2SeqLM.from_pretrained("facebook/blenderbot-400M-distill")
@@ -14,8 +15,8 @@ conversation = Conversation()
 app = Flask(__name__)
 CORS(app) # Allow cross-origin requests
 
-#classify_model = joblib.load('logistic_regression.joblib') 
-classify_model = joblib.load('model.joblib')
+classify_model = joblib.load('logistic_regression.joblib') 
+#classify_model = joblib.load('model.joblib')
 sentence_model = SentenceTransformer('average_word_embeddings_glove.6B.300d')
 
 @app.route('/add_input', methods = ['GET', 'POST'])
@@ -36,9 +37,14 @@ def add_input():
                'is_user': is_user,
                'text': chatbot_response
           })
-     print(chatbot_response)
+     print(chatbot_response, len(chatbot_response.split(' ')), len(chatbot_response))
 
-     chatbot_label = classify_msg(chatbot_response)
+     hour = datetime.datetime.now().strftime("%H")
+     minute = datetime.datetime.now().strftime("%M")
+     #time = datetime(2023, 1,1,int(hour), int(minute)).timestamp()
+     print('hour',hour)
+     print('minute',minute)
+     chatbot_label = classify_msg(chatbot_response, len(chatbot_response.split(' ')), len(chatbot_response), int(hour) )
      return jsonify({
           'messages': chatbot_response,
           "chatbot_label": str(chatbot_label),
@@ -52,7 +58,9 @@ def classify_user_msg():
          json: Classification model's prediction
      """
      userinput = request.json['text']
-     user_label = classify_msg(userinput)
+     usertime = request.json['time']
+     print('usertime',usertime)
+     user_label = classify_msg(userinput, len(userinput.split(" ")), len(userinput), 1672620360)
      return jsonify({
           "user_label": str(user_label),
      })
@@ -73,7 +81,7 @@ def init():
      conversation.mark_processed() # Archive the previous messages and consider them as a context 
      return "OK"
 
-def classify_msg(msg):
+def classify_msg(msg, word_count, char_count, time):
      """Embed the message and classify it using the classification model
 
      Args:
@@ -83,7 +91,13 @@ def classify_msg(msg):
          list[int]: returns 1 or 0 for predatorial or not predatorial respectively.
      """
      encoded_msg = sentence_model.encode(msg).reshape(1, -1)
-     label = classify_model.predict(encoded_msg)
+     features = sparse.csr_matrix(sparse.hstack((1,
+     encoded_msg, 
+     word_count,
+     char_count,
+     time
+     )))
+     label = classify_model.predict(features)
      #label = classify_model.predict(sparse.csr_matrix(sparse.hstack((encoded_msg, 1, 3, 1672620360))))
      print(label)
      return label[0]

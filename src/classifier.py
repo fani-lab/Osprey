@@ -2,7 +2,7 @@ from baseline import Baseline
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 #from sklearn.ensemble import RandomForestClassifier
-from imblearn.over_sampling import RandomOverSampler
+from imblearn.over_sampling import RandomOverSampler #download required
 import pickle
 import pandas as pd
 from sklearn.metrics import f1_score, precision_score, recall_score

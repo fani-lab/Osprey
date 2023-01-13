@@ -51,11 +51,15 @@ function App() {
     setMessage(copy);
     setFormValue("");
     dummy.current.scrollIntoView({ behavior: "smooth" });
-
+    console.log(date.valueOf());
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: formValue }),
+      body: JSON.stringify({
+        text: formValue,
+        //no date, just time
+        time: [date.getHours, date.getMinutes],
+      }),
     };
 
     // Checks if user message is predatorial
