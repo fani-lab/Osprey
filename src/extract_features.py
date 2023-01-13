@@ -20,7 +20,7 @@ def extract_features(Q, feature_set=[], pretrained=True):#['basic', 'linguistic'
     """
     tc_Q = tc.TextCorpus(Q['text'], char_ngram_range=(1, 1), word_ngram_range=(1, 1))
     print(len(Q))
-    features = sparse.csr_matrix((1,  len(Q))).transpose()
+    features = sparse.csr_matrix((0,  len(Q))).transpose()
     print('features',features.shape)
 
     if 'basic' in feature_set: 
@@ -71,6 +71,8 @@ def extract_features(Q, feature_set=[], pretrained=True):#['basic', 'linguistic'
             Q['msg_char_count'].values.reshape(-1, 1),
             Q['time'].values.reshape(-1, 1),
             )))
+        print(sentence_embeddings)
+        print(Q['time'].values.reshape(-1, 1))
         #print(Q['msg_word_count'].values.reshape(-1, 1))
         #print(Q['msg_word_count'].values.reshape(-1, 1))
         #print(features)

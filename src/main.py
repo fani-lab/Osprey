@@ -22,13 +22,14 @@ def read_xml(xmlfile, tagged_msgs, predators):
     for conv in root.getchildren():
         for msg in conv.getchildren():
             author, time, body = msg.getchildren()
+            #format time
             time = time.text.split(':')
             hour = int(time[0])
             minute = int(time[1])
             row = {'conv_id': conv.get('id'),
                    'msg_line': msg.get('line'),
                    'author_id': author.text,
-                   'time': datetime.datetime(2023,1,1,hour, minute).timestamp(),
+                   'time': datetime.datetime(2023,1,1,hour, minute).timestamp(), #unix epoch time
                    'msg_char_count': len(body.text) if body.text is not None else 0,  
                    'msg_word_count': len(body.text.split()) if body.text is not None else 0,
                    'text': '' if body.text is None else body.text,
@@ -85,6 +86,7 @@ if __name__ == '__main__':
     df_test = read_xml(test_file, pd.read_csv(test_tagged_msgs_file, names=['conv_id', 'line'], sep='\t'), pd.read_csv(test_predator_id_file))
 
     df_train_test = pd.concat([df_train, df_test])
+    print('time', datetime.datetime.fromtimestamp(df_train_test['time'].values[55]))
     text_feature_sets = [['w2v_glove']]#[['basic'], ['w2v_glove'], ['w2v_bert']]
     for text_feature_set in text_feature_sets:
         text_feature_set_str = '.'.join(text_feature_set)

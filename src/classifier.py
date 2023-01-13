@@ -6,7 +6,6 @@ from imblearn.over_sampling import RandomOverSampler #download required
 import pickle
 import pandas as pd
 from sklearn.metrics import f1_score, precision_score, recall_score
-from lib import eval as evl
 
 class msg_classifier(Baseline):
     """Classifies message as predatory or normal
@@ -44,7 +43,6 @@ class msg_classifier(Baseline):
         return df
 
     def main(self, df, text_features, output, cmd=['prep', 'train', 'test', 'eval']):
-        print(text_features)
         if 'prep'  in cmd: X_train, X_test, y_train, y_test = self.prep(text_features, df)
         if 'train' in cmd: model = self.train(X_train, y_train, output)
         if 'test'  in cmd: ypred = self.test(X_test, model)
