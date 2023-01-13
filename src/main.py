@@ -69,7 +69,7 @@ if __name__ == '__main__':
 
     df_train_test = pd.concat([df_train, df_test])
 
-    text_feature_set = ['w2v_glove']  # [['basic'], ['w2v_glove'], ['w2v_bert'], ['time']]
+    text_feature_set = ['w2v_glove', 'w2v_bert']  # [['basic'], ['w2v_glove'], ['w2v_bert'], ['time']]
 
     # this is for the time when we want to use all the possible combinations of features
     # combinations_lst = []

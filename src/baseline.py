@@ -1,6 +1,7 @@
 import joblib
-import pandas as pd
+import pandas
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report
 import warnings
 
 
@@ -20,7 +21,7 @@ class Baseline:
         return rf_train, rf_test
 
     def train(self, rf_train):
-
+        # call fit on the train and the train section of the target
         self.rf.fit(rf_train, self.target[:self.split[0]].values.ravel())
         joblib.dump(self.rf, f"../output/rf/{self.output}.pkl", compress=3)
 
@@ -28,16 +29,16 @@ class Baseline:
         # load the saved model and apply it on test set
         loaded_rf = joblib.load(f"../output/rf/{self.output}.pkl")
         pred_label = loaded_rf.predict(rf_test)
-        joblib.dump(pred_label, f"../output/rf/{self.output}.pred.test.pkl", compress=3)
-        return pred_label
-        # save the prediction results
+        joblib.dump(pred_label, f"../output/rf/{self.output}.pred.test.pkl", compress=3)  # save the prediction results
+        #print(f"size pred_label {len(pred_label)}")
         # self.rf.pred_prob()
 
     def eval(self):
         # load the prediction results
-        # eval on test labels
-        # save the eval results self.target[-self.split[1]]
-        pass
+        pred_label = joblib.load(f"../output/rf/{self.output}.pred.test.pkl")
+        report = classification_report(self.target[self.split[0]:], pred_label, output_dict=True)
+        df = pandas.DataFrame(report)
+        df.to_csv(f"../output/rf/{self.output}.report.csv", index=False)
 
     def main(self):  # rf_train, rf_test
         # call the pipeline or part of it for prep, train, test, eval
@@ -48,5 +49,5 @@ class Baseline:
         rf_test = lst[1]
 
         self.train(rf_train)
-
         self.test(rf_test)
+        self.eval()
