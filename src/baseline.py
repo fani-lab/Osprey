@@ -30,7 +30,7 @@ class Baseline:
         loaded_rf = joblib.load(f"../output/rf/{self.output}.pkl")
         pred_label = loaded_rf.predict(rf_test)
         joblib.dump(pred_label, f"../output/rf/{self.output}.pred.test.pkl", compress=3)  # save the prediction results
-        #print(f"size pred_label {len(pred_label)}")
+        # print(f"size pred_label {len(pred_label)}")
         # self.rf.pred_prob()
 
     def eval(self):
@@ -38,7 +38,7 @@ class Baseline:
         pred_label = joblib.load(f"../output/rf/{self.output}.pred.test.pkl")
         report = classification_report(self.target[self.split[0]:], pred_label, output_dict=True)
         df = pandas.DataFrame(report)
-        df.to_csv(f"../output/rf/{self.output}.report.csv", index=False)
+        df.to_csv(f"../output/rf/{self.output}.eval.csv", index=False)
 
     def main(self):  # rf_train, rf_test
         # call the pipeline or part of it for prep, train, test, eval
