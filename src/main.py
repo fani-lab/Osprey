@@ -17,7 +17,7 @@ def read_xml(xmlfile, tagged_msgs, predators):
             row = {'conv_id': conv.get('id'),
                    'msg_line': msg.get('line'),
                    'author_id': author.text,
-                   'time': time.text,
+                   'time': float(time.text[0:2] + '.' + time.text[3:5]),
                    'text': '' if body.text is None else body.text,
                    'tagged_msg': 0 if tagged_msgs.loc[(tagged_msgs['conv_id'] == conv.get('id')) & (
                            tagged_msgs['line'] == int(msg.get('line')))].empty else 1,
