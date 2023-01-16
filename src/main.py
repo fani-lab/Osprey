@@ -72,16 +72,6 @@ if __name__ == '__main__':
     # this is for the time when we want to use all the possible combinations of features
     combinations_lst = []
     text_feature_set = ['w2v_glove', 'w2v_bert']  # [['basic'], ['w2v_glove'], ['w2v_bert'], ['time']]
-    # for element in text_feature_set:
-    #     combinations_lst.append(element) # appending the single features
-
-    # we start from 2, so we don't make a tuple for combinations with single elements
-    # we end the loop at len(text_feature_set)+1 because we want the len to be inclusive
-    # for i in range(1, len(text_feature_set) + 1):
-    #     temp_lst = list(combinations(text_feature_set, i))
-
-    # print(f"combinations_lst: {combinations_lst}")
-    # ----- End -----
 
     # creating baselines with different combinations of features, and then with diff targets
     Baselines = []
@@ -90,16 +80,16 @@ if __name__ == '__main__':
             text_feature_set_str = '.'.join(combination)
             text_features = ef.extract_load_text_features(df_train_test, combination,
                                                           f'../output/{text_feature_set_str}.npz')
-
             # 'tagged_msg': original labels (conv, msg_line) only available for test set
             # 'tagged_predator_bc': if conv has at least one predator, all the msgs of the conv are tagged
             # 'tagged_msg_bc': if conv has at least one tagged msg, all the msgs of the conv are tagged
-            label = 'tagged_msg'  # , 'tagged_predator', 'tagged_conv']
-            # passing features, outputfile_str, split, target to classifier
-            Baselines.append(
-                    msg_classifier(text_features, f'{text_feature_set_str}.{label}', [len(df_train), len(df_test)],
-                                   df_train_test[label]))
-            # conv_msg_classifier(relabeling)]
+            labels = ['tagged_msg', 'tagged_predator', 'tagged_conv']
+            for label in labels:
+                # passing features, outputfile_str, split, target to classifier
+                Baselines.append(
+                        msg_classifier(text_features, f'{text_feature_set_str}.{label}', [len(df_train), len(df_test)],
+                                       df_train_test[label]))
+                # conv_msg_classifier(relabeling)]
 
     for baseline in Baselines:
         baseline.main()
