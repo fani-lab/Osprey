@@ -35,18 +35,19 @@ class msg_classifier(Baseline):
         # model predictions
         return model.predict(X_test)
 
-    def eval(self, targets, pred, output):
+    def eval(self, targets, pred, output, text_features):
         # evaluation on model predictions, outputs csv
         targets = targets.values.flatten()
-        df = pd.DataFrame([{"f1":f1_score(targets, pred, average='weighted'), "precision":precision_score(targets, pred, average='weighted'), "recall":recall_score(targets, pred, average='weighted')}])
+        df = pd.DataFrame([{"features": text_features, "f1":f1_score(targets, pred, average='weighted'), "precision":precision_score(targets, pred, average='weighted'), "recall":recall_score(targets, pred, average='weighted')}])
         df.to_csv(f'{output}preds.eval.csv', sep='\t', index=False)
         return df
 
     def main(self, df, text_features, output, cmd=['prep', 'train', 'test', 'eval']):
+        print(text_features)
         if 'prep'  in cmd: X_train, X_test, y_train, y_test = self.prep(text_features, df)
         if 'train' in cmd: model = self.train(X_train, y_train, output)
         if 'test'  in cmd: ypred = self.test(X_test, model)
-        if 'eval'  in cmd: result = self.eval(y_test, ypred, output)
+        if 'eval'  in cmd: result = self.eval(y_test, ypred, output, text_features)
 
 class conv_msg_classifier(msg_classifier):
     def __init__(self):

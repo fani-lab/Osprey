@@ -67,17 +67,18 @@ def extract_features(Q, feature_set=[], pretrained=True):#['basic', 'linguistic'
         features = sparse.csr_matrix(sparse.hstack((
             features, 
             sentence_embeddings, 
-            Q['msg_word_count'].values.reshape(-1, 1), 
-            Q['msg_char_count'].values.reshape(-1, 1),
-            Q['time'].values.reshape(-1, 1),
+  
             )))
-        print(sentence_embeddings)
-        print(Q['time'].values.reshape(-1, 1))
         #print(Q['msg_word_count'].values.reshape(-1, 1))
         #print(Q['msg_word_count'].values.reshape(-1, 1))
         #print(features)
         #features = sparse.csr_matrix(sparse.hstack((features, Q['msg_word_count'].values.reshape(-1, 1), )))
-        #print(features)
+
+    if 'time' in feature_set:
+        features = sparse.csr_matrix(sparse.hstack((features, Q['time'].values.reshape(-1, 1), )))
+
+    if 'count' in feature_set:
+        features = sparse.csr_matrix(sparse.hstack((features, Q['msg_word_count'].values.reshape(-1, 1),Q['msg_char_count'].values.reshape(-1,1) )))
 
     if 'w2v_bert' in feature_set:
         model = SentenceTransformer('paraphrase-distilroberta-base-v2')
