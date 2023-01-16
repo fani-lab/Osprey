@@ -122,6 +122,7 @@ def extract_load_text_features(Q, feature_set, features_file=None):
     except FileNotFoundError as e:
         print("File not found! Generating the features matrix ...")
         features = extract_features(Q, feature_set)
+        print(feature_set)
         utils.save_sparse_csr(features_file, features)
         print(f"saved features with shape (data size, feature size): {features.shape}")
         return features

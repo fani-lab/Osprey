@@ -28,7 +28,7 @@ def read_xml(xmlfile, tagged_msgs, predators):
                    'msg_line': msg.get('line'),
                    'author_id': author.text,
                    #'time': datetime.datetime(2023,1,1,hour, minute).timestamp(), #unix epoch time
-                     'time': time.text.replace(":","."),
+                     'time': float(time.text.replace(":",".")),
                    'msg_char_count': len(body.text) if body.text is not None else 0,  
                    'msg_word_count': len(body.text.split()) if body.text is not None else 0,
                    'text': '' if body.text is None else body.text,
@@ -85,18 +85,20 @@ if __name__ == '__main__':
     df_test = read_xml(test_file, pd.read_csv(test_tagged_msgs_file, names=['conv_id', 'line'], sep='\t'), pd.read_csv(test_predator_id_file))
 
     df_train_test = pd.concat([df_train, df_test])
-    print('time', df_train_test['time'].min(), df_train_test['time'].max())
-    text_feature_sets = [ ['w2v_glove'], ['count'], ]#[['basic'], ['w2v_glove'], ['w2v_bert']]
+    text_feature_sets = [ ['w2v_glove', 'count', 'time'], ['w2v_glove', 'count',], ['w2v_glove', 'time'], ['count', 'time'], ['w2v_glove'], ['count'], ['time'] ]#[['basic'], ['w2v_glove'], ['w2v_bert']]
+    Baselines = [msg_classifier()]#text_features, [len(df_train), len(df_test)], relabeling, df_train_test)]#, conv_msg_classifier(relabeling)]
+    
     for text_feature_set in text_feature_sets:
         text_feature_set_str = '.'.join(text_feature_set)
         text_features = ef.extract_load_text_features(df_train_test, text_feature_set, f'../output/{text_feature_set_str}.npz')
+        
+        for baseline in Baselines:
+            baseline.main(df_train_test, text_features, f"../output/{text_feature_set_str}", text_feature_set_str)
 
     # 'tagged_msg': original labels (conv, msg_line) only available for test set
     # 'tagged_predator_bc': if conv has at least one predator, all the msgs of the conv are tagged
     # 'tagged_msg_bc': if conv has at least one tagged msg, all the msgs of the conv are tagged
     relabeling = ['tagged_msg', 'tagged_predator', 'tagged_conv']
 
-    Baselines = [msg_classifier()]#text_features, [len(df_train), len(df_test)], relabeling, df_train_test)]#, conv_msg_classifier(relabeling)]
 
-    for baseline in Baselines:
-        baseline.main(df_train_test, text_features, "../output/")
+    
