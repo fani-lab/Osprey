@@ -1,6 +1,7 @@
+from itertools import combinations
 from lxml import etree
 import pandas as pd
-
+from scipy import sparse
 import extract_features as ef
 from classifier import msg_classifier
 from classifier import conv_msg_classifier
@@ -19,7 +20,7 @@ def read_xml(xmlfile, tagged_msgs, predators):
                    'time': time.text,
                    'text': '' if body.text is None else body.text,
                    'tagged_msg': 0 if tagged_msgs.loc[(tagged_msgs['conv_id'] == conv.get('id')) & (
-                               tagged_msgs['line'] == int(msg.get('line')))].empty else 1,
+                           tagged_msgs['line'] == int(msg.get('line')))].empty else 1,
                    'tagged_conv': 0 if tagged_msgs.loc[tagged_msgs['conv_id'] == conv.get('id')].empty else 1,
                    'tagged_predator': None if predators.empty else (1 if author.text in predators else 0),
                    }
@@ -67,19 +68,38 @@ if __name__ == '__main__':
 
     df_train_test = pd.concat([df_train, df_test])
 
-    text_feature_sets = [['w2v_glove']]  # [['basic'], ['w2v_glove'], ['w2v_bert']]
-    for text_feature_set in text_feature_sets:
-        text_feature_set_str = '.'.join(text_feature_set)
-        text_features = ef.extract_load_text_features(df_train_test, text_feature_set,
-                                                      f'../output/{text_feature_set_str}.npz')
+    # ---- combinations ----
+    # this is for the time when we want to use all the possible combinations of features
+    combinations_lst = []
+    text_feature_set = ['w2v_glove', 'w2v_bert']  # [['basic'], ['w2v_glove'], ['w2v_bert'], ['time']]
+    # for element in text_feature_set:
+    #     combinations_lst.append(element) # appending the single features
 
-    # 'tagged_msg': original labels (conv, msg_line) only available for test set
-    # 'tagged_predator_bc': if conv has at least one predator, all the msgs of the conv are tagged
-    # 'tagged_msg_bc': if conv has at least one tagged msg, all the msgs of the conv are tagged
-    relabeling = ['tagged_msg', 'tagged_predator', 'tagged_conv']
+    # we start from 2, so we don't make a tuple for combinations with single elements
+    # we end the loop at len(text_feature_set)+1 because we want the len to be inclusive
+    # for i in range(1, len(text_feature_set) + 1):
+    #     temp_lst = list(combinations(text_feature_set, i))
 
-    Baselines = [
-        msg_classifier(text_features, [len(df_train), len(df_test)], relabeling)] # , conv_msg_classifier(relabeling)]
+    # print(f"combinations_lst: {combinations_lst}")
+    # ----- End -----
+
+    # creating baselines with different combinations of features, and then with diff targets
+    Baselines = []
+    for i in range(1, len(text_feature_set) + 1):
+        for combination in combinations(text_feature_set, i):
+            text_feature_set_str = '.'.join(combination)
+            text_features = ef.extract_load_text_features(df_train_test, combination,
+                                                          f'../output/{text_feature_set_str}.npz')
+
+            # 'tagged_msg': original labels (conv, msg_line) only available for test set
+            # 'tagged_predator_bc': if conv has at least one predator, all the msgs of the conv are tagged
+            # 'tagged_msg_bc': if conv has at least one tagged msg, all the msgs of the conv are tagged
+            label = 'tagged_msg'  # , 'tagged_predator', 'tagged_conv']
+            # passing features, outputfile_str, split, target to classifier
+            Baselines.append(
+                    msg_classifier(text_features, f'{text_feature_set_str}.{label}', [len(df_train), len(df_test)],
+                                   df_train_test[label]))
+            # conv_msg_classifier(relabeling)]
 
     for baseline in Baselines:
-        baseline.main(df_train, df_test)
+        baseline.main()

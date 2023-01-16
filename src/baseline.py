@@ -1,62 +1,55 @@
+import joblib
+import pandas
 from sklearn.ensemble import RandomForestClassifier
-from datetime import datetime
+from sklearn.metrics import classification_report
+import warnings
+
 
 class Baseline:
-    def __init__(self, features, target):
+    def __init__(self, features, output, split, target):
         self.rf = RandomForestClassifier()
         self.features = features
+        self.split = split
         self.target = target
+        self.output = output
 
-    def prep(self, rf_train):
-        '''
-        remove redundant/ useless features
-        check if there are null values
-        get rid of id 
-        Returns
-        -------
-        '''
-        drop_list = ['conv_id', 'msg_line', 'author_id']
-        rf_train.drop(drop_list, axis=1, inplace=True)
-
-        # checking for missing values:
-        print(f"{rf_train.count()}")
-
-        # have to conver the string to time:
-        datetime.strptime(rf_train['time'], '%A')
+    def prep(self):
+        # splitting the train and test section of the csr_matrx
+        rf_train = self.features[:self.split[0], :]  # [70%]
+        rf_test = self.features[self.split[0]:, :]  # [30%]
+        # return a list containing two csr_mtx for train and test
+        return rf_train, rf_test
 
     def train(self, rf_train):
 
-        print(f"Enter the number associated with the target of choice:\n"
-              f"1. tagged_msg \n 2. tagged_predator \n 3. tagged_conv")
-        choice = int(input())
-        if choice == 1:
-            label = self.target[0]
-        elif choice == 2:
-            label = self.target[1]
-        elif choice == 3:
-            label = self.target[2]
-        else:
-            print(f"invalid selection! Rerun the program")
-            exit(1)
+        # call fit on the train and the train section of the target
+        self.rf.fit(rf_train, self.target[:self.split[0]].values.ravel())
+        joblib.dump(self.rf, f"../output/rf/{self.output}.pkl", compress=3)
 
-        self.rf.fit(rf_train, label)
 
     def test(self, rf_test):
         # load the saved model and apply it on test set
-        # save the prediction results
+        loaded_rf = joblib.load(f"../output/rf/{self.output}.pkl")
+        pred_label = loaded_rf.predict(rf_test)
+        joblib.dump(pred_label, f"../output/rf/{self.output}.pred.test.pkl", compress=3)  # save the prediction results
+        # print(f"size pred_label {len(pred_label)}")
         # self.rf.pred_prob()
-        pass
 
     def eval(self):
         # load the prediction results
-        # eval on test labels
-        # save the eval results
-        pass
+        pred_label = joblib.load(f"../output/rf/{self.output}.pred.test.pkl")
+        report = classification_report(self.target[self.split[0]:], pred_label, output_dict=True)
+        df = pandas.DataFrame(report)
+        df.to_csv(f"../output/rf/{self.output}.eval.csv", index=False)
 
-    def main(self, rf_train, rf_test):
+    def main(self):  # rf_train, rf_test
         # call the pipeline or part of it for prep, train, test, eval
-        # prep
-        self.prep(rf_train)
-        #self.train(rf_train)  # rf: random_forest train features
-        #self.test(rf_test)
+        warnings.filterwarnings('ignore', category=FutureWarning)
 
+        lst = self.prep()
+        rf_train = lst[0]
+        rf_test = lst[1]
+
+        self.train(rf_train)
+        self.test(rf_test)
+        self.eval()

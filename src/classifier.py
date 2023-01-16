@@ -1,7 +1,9 @@
 from baseline import Baseline
+
+
 class msg_classifier(Baseline):
-    def __init__(self, features, split = [70, 30], target=['tagged_msg']):
-        super(msg_classifier, self).__init__(features, target)
+    def __init__(self, features, output, split=(70, 30), target=['tagged_msg']):
+        super(msg_classifier, self).__init__(features, output, split, target)
 
 
 class conv_msg_classifier(msg_classifier):
