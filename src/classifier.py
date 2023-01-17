@@ -6,6 +6,7 @@ from imblearn.over_sampling import RandomOverSampler #download required
 import pickle
 import pandas as pd
 from sklearn.metrics import f1_score, precision_score, recall_score
+from sklearn.metrics import roc_auc_score
 
 class msg_classifier(Baseline):
     """Classifies message as predatory or normal
@@ -36,19 +37,21 @@ class msg_classifier(Baseline):
         return model.predict(X_test)
 
     def eval(self, targets, pred, output, feature_str):
+        try:
+            df = pd.read_csv("preds.eval.csv",usecols= ['features', 'f1', 'precision', 'recall', 'roc_auc'], sep='\t')
+        except FileNotFoundError:
+            df = pd.DataFrame(columns=['features', 'f1', 'precision', 'recall', 'roc_auc'])
         # evaluation on model predictions, outputs csv
         targets = targets.values.flatten()
-        
-        try:
-            df = pd.read_csv("preds.eval.csv")
-            new = pd.Dataframe([["features", "f1", "precision", "recall"], [feature_str, f1_score(targets, pred, average='weighted'), precision_score(targets, pred, average='weighted'), recall_score(targets, pred, average='weighted')]])
-            df.update(new)
-            df.to_csv(f'preds.eval.csv', sep='\t', index=False)
 
-        except FileNotFoundError:
-            print("File not found.")
-            df = pd.Dataframe([["features", "f1", "precision", "recall"], [feature_str, f1_score(targets, pred, average='weighted'), precision_score(targets, pred, average='weighted'), recall_score(targets, pred, average='weighted')]])
-            df.to_csv(f'preds.eval.csv', sep='\t', index=False)
+        new_row = pd.Series({'features': feature_str, 'f1': f1_score(targets, pred), 'precision': precision_score(targets, pred), 'recall': recall_score(targets, pred), 'roc_auc': roc_auc_score(targets, pred)})
+
+        df = pd.concat([
+                df, 
+                pd.DataFrame([new_row], columns=new_row.index)]
+            ).reset_index(drop=True)
+        df.to_csv(f'preds.eval.csv', sep='\t', index=False)
+        
         return df
 
     def main(self, df, text_features, output, feature_str, cmd=['prep', 'train', 'test', 'eval']):

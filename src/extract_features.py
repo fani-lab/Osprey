@@ -66,19 +66,23 @@ def extract_features(Q, feature_set=[], pretrained=True):#['basic', 'linguistic'
         sentence_embeddings = model.encode(Q['text'].values)
         features = sparse.csr_matrix(sparse.hstack((
             features, 
-            sentence_embeddings, 
-  
+            sentence_embeddings,
             )))
-        #print(Q['msg_word_count'].values.reshape(-1, 1))
-        #print(Q['msg_word_count'].values.reshape(-1, 1))
-        #print(features)
-        #features = sparse.csr_matrix(sparse.hstack((features, Q['msg_word_count'].values.reshape(-1, 1), )))
 
     if 'time' in feature_set:
         features = sparse.csr_matrix(sparse.hstack((features, Q['time'].values.reshape(-1, 1), )))
 
     if 'count' in feature_set:
         features = sparse.csr_matrix(sparse.hstack((features, Q['msg_word_count'].values.reshape(-1, 1),Q['msg_char_count'].values.reshape(-1,1) )))
+
+    if 'msg_line' in feature_set:
+        features = sparse.csr_matrix(sparse.hstack((features, Q['msg_line'].values.reshape(-1, 1), )))
+    
+    if 'nauthor' in feature_set:
+        features = sparse.csr_matrix(sparse.hstack((features, Q['nauthor'].values.reshape(-1, 1), )))
+    
+    if 'conv_size' in feature_set:
+        features = sparse.csr_matrix(sparse.hstack((features, Q['conv_size'].values.reshape(-1, 1), )))
 
     if 'w2v_bert' in feature_set:
         model = SentenceTransformer('paraphrase-distilroberta-base-v2')

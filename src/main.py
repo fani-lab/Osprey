@@ -4,7 +4,8 @@ import extract_features as ef
 from classifier import msg_classifier
 from classifier import conv_msg_classifier
 import datetime
-
+def find_conv_size(x):
+    pass
 def read_xml(xmlfile, tagged_msgs, predators):
     """Reads xml dataset for training and testing sets
 
@@ -21,16 +22,16 @@ def read_xml(xmlfile, tagged_msgs, predators):
     root = etree.parse(xmlfile).getroot()  # <conversations>
     for conv in root.getchildren():
         for msg in conv.getchildren():
-            author, time, body = msg.getchildren()
-            #format time
             
+            author, time, body = msg.getchildren()
             row = {'conv_id': conv.get('id'),
-                   'msg_line': msg.get('line'),
+                   'msg_line': int(msg.get('line')),
                    'author_id': author.text,
-                   #'time': datetime.datetime(2023,1,1,hour, minute).timestamp(), #unix epoch time
-                     'time': float(time.text.replace(":",".")),
+                    'time': float(time.text.replace(":",".")),
                    'msg_char_count': len(body.text) if body.text is not None else 0,  
                    'msg_word_count': len(body.text.split()) if body.text is not None else 0,
+                   'conv_size': len(conv.getchildren()),
+                   'nauthor': len(set([m.getchildren()[0].text for m in conv.getchildren()])), # number of authors in the conversation, first index of msg
                    'text': '' if body.text is None else body.text,
                    'tagged_msg': 0 if tagged_msgs.loc[(tagged_msgs['conv_id'] == conv.get('id')) & (tagged_msgs['line'] == int(msg.get('line')))].empty else 1,
                    'tagged_conv': 0 if tagged_msgs.loc[tagged_msgs['conv_id'] == conv.get('id')].empty else 1,
@@ -82,10 +83,12 @@ if __name__ == '__main__':
     test_tagged_msgs_file = f'{datapath}test/pan12-sexual-predator-identification-groundtruth-problem2.txt'
 
     df_train = read_xml(training_file, pd.read_csv(training_tagged_msgs_file, names=['conv_id', 'line'], sep='\t'), pd.read_csv(training_predator_id_file))
-    df_test = read_xml(test_file, pd.read_csv(test_tagged_msgs_file, names=['conv_id', 'line'], sep='\t'), pd.read_csv(test_predator_id_file))
+    df_test = read_xml(test_file, pd.read_csv(test_tagged_msgs_file, names=['conv_id', 'line'], sep='\t'), pd.read_csv(test_predator_id_file))    
+    #print(df_test['msg_line'].head())
+    #print(df_train['msg_line'].head())
 
     df_train_test = pd.concat([df_train, df_test])
-    text_feature_sets = [ ['w2v_glove', 'count', 'time'], ['w2v_glove', 'count',], ['w2v_glove', 'time'], ['count', 'time'], ['w2v_glove'], ['count'], ['time'] ]#[['basic'], ['w2v_glove'], ['w2v_bert']]
+    text_feature_sets = [ ['w2v_glove','time', 'nauthor', 'conv_size'], ['w2v_glove','time',  'nauthors'], ['w2v_glove','time',  'conv_size'],]#[['basic'], ['w2v_glove'], ['w2v_bert']]
     Baselines = [msg_classifier()]#text_features, [len(df_train), len(df_test)], relabeling, df_train_test)]#, conv_msg_classifier(relabeling)]
     
     for text_feature_set in text_feature_sets:
