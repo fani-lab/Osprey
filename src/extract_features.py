@@ -84,6 +84,12 @@ def extract_features(Q, feature_set=[], pretrained=True):#['basic', 'linguistic'
     if 'conv_size' in feature_set:
         features = sparse.csr_matrix(sparse.hstack((features, Q['conv_size'].values.reshape(-1, 1), )))
 
+    if 'prv_msg' in feature_set:
+        features = sparse.csr_matrix(sparse.hstack((features, Q['prv_msg'].values.reshape(-1, 1), )))
+
+    if 'nxt_msg' in feature_set:
+        features = sparse.csr_matrix(sparse.hstack((features, Q['nxt_msg'].values.reshape(-1, 1), )))
+        
     if 'w2v_bert' in feature_set:
         model = SentenceTransformer('paraphrase-distilroberta-base-v2')
         sentence_embeddings = model.encode(Q['text'].values)

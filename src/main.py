@@ -4,10 +4,40 @@ import extract_features as ef
 from classifier import msg_classifier
 from classifier import conv_msg_classifier
 import datetime
-def find_conv_size(x):
-    pass
+
+def get_prev_msg_cat( prev, text):
+    """Concatenates previous message with current message text
+
+    Args:
+        prev (dict): previous messages in conversation
+        text (str): current message text
+
+    Returns:
+        str: past messages and current message text
+    """
+    return prev['prv_cat']+" "+text
+
+def get_next_msg_cat(conv, start_line, result):
+    """Concatenates next messages with current message text
+
+    Args:
+        conv (list): the entire conversation
+        start_line (int): current message line number
+        result (str): current message text
+
+    Returns:
+        str: "future messages" and current message text
+    """
+    if result is None:
+        result = ""
+    # starts from message line and concats all future messages
+    for msgs in conv[start_line:]:
+        author, time, body = msgs.getchildren()
+        result+= " "+body.text
+    return result
+    
 def read_xml(xmlfile, tagged_msgs, predators):
-    """Reads xml dataset for training and testing sets
+    """Reads xml file to create dataset for training and testing sets
 
     Args:
         xmlfile (str): Conversation data to extract from.
@@ -15,30 +45,34 @@ def read_xml(xmlfile, tagged_msgs, predators):
         predators (Dataframe): predator labels (author)
 
     Returns:
-        Dataframe: Contains conversation id, message id, author id, time, text, tagged_msg, tagged_conv, tagged_predator
+        Dataframe: dataset with text features and labels
     """    
-    dictinary_list = []
+    dictionary_list = []
     df = pd.DataFrame(columns=['conv_id', 'msg_id', 'author_id', 'time', 'text'], index=['conv_id'])
     root = etree.parse(xmlfile).getroot()  # <conversations>
     for conv in root.getchildren():
         for msg in conv.getchildren():
-            
             author, time, body = msg.getchildren()
             row = {'conv_id': conv.get('id'),
                    'msg_line': int(msg.get('line')),
                    'author_id': author.text,
-                    'time': float(time.text.replace(":",".")),
+                   'time': float(time.text.replace(":",".")),
+                   # previous messages in conversation & current message
+                   'prv_cat': "" if len(dictionary_list)==0 else get_prev_msg_cat(dictionary_list[-1], str(body.text)),
+                   # future messages in conversation & current message
+                   'nxt_cat': get_next_msg_cat(conv.getchildren(), int(msg.get('line')), body.text),
                    'msg_char_count': len(body.text) if body.text is not None else 0,  
                    'msg_word_count': len(body.text.split()) if body.text is not None else 0,
                    'conv_size': len(conv.getchildren()),
-                   'nauthor': len(set([m.getchildren()[0].text for m in conv.getchildren()])), # number of authors in the conversation, first index of msg
+                   # number of authors in the conversation, first index of msg
+                   'nauthor': len(set([m.getchildren()[0].text for m in conv.getchildren()])),
                    'text': '' if body.text is None else body.text,
                    'tagged_msg': 0 if tagged_msgs.loc[(tagged_msgs['conv_id'] == conv.get('id')) & (tagged_msgs['line'] == int(msg.get('line')))].empty else 1,
                    'tagged_conv': 0 if tagged_msgs.loc[tagged_msgs['conv_id'] == conv.get('id')].empty else 1,
                    'tagged_predator': None if predators.empty else (1 if author.text in predators else 0),
                    }
-            dictinary_list.append(row)
-    return df.from_dict(dictinary_list)
+            dictionary_list.append(row)
+    return df.from_dict(dictionary_list)
 
 def get_stats(conversations, predators, tagged_msgs):
     """_summary_
@@ -88,7 +122,9 @@ if __name__ == '__main__':
     #print(df_train['msg_line'].head())
 
     df_train_test = pd.concat([df_train, df_test])
-    text_feature_sets = [ ['w2v_glove','time', 'nauthor', 'conv_size'], ['w2v_glove','time',  'nauthors'], ['w2v_glove','time',  'conv_size'],]#[['basic'], ['w2v_glove'], ['w2v_bert']]
+    print(df_train_test['prv_cat'].head())
+    print(df_train_test['nxt_cat'].tail())
+    text_feature_sets = [["w2v_glove", 'nxt_cat', 'prv_cat', "nauthors", "conv_size", "time",], ['w2v_glove','nxt_cat', 'prv_cat'], ["w2v_glove", 'nxt_cat', 'prv_cat', "nauthors", "conv_size", "time", "count"]]
     Baselines = [msg_classifier()]#text_features, [len(df_train), len(df_test)], relabeling, df_train_test)]#, conv_msg_classifier(relabeling)]
     
     for text_feature_set in text_feature_sets:
