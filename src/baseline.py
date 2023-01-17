@@ -21,9 +21,11 @@ class Baseline:
         return rf_train, rf_test
 
     def train(self, rf_train):
+
         # call fit on the train and the train section of the target
         self.rf.fit(rf_train, self.target[:self.split[0]].values.ravel())
         joblib.dump(self.rf, f"../output/rf/{self.output}.pkl", compress=3)
+
 
     def test(self, rf_test):
         # load the saved model and apply it on test set
