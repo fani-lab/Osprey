@@ -119,10 +119,8 @@ if __name__ == '__main__':
 
     df_train = read_xml(training_file, pd.read_csv(training_tagged_msgs_file, names=['conv_id', 'line'], sep='\t'), pd.read_csv(training_predator_id_file))
     df_test = read_xml(test_file, pd.read_csv(test_tagged_msgs_file, names=['conv_id', 'line'], sep='\t'), pd.read_csv(test_predator_id_file))    
-
-
     df_train_test = pd.concat([df_train, df_test])
-    text_feature_sets = [["w2v_glove", 'nxt_cat', ], ["w2v_glove", 'prv_cat', ],['w2v_glove','nxt_cat', 'prv_cat'], ["w2v_glove", 'nxt_cat', 'prv_cat', "nauthors", "conv_size", "time", "count"]]
+    text_feature_sets = [["w2v_glove","prv_cat","nauthors", "time","count", "msg_line"]]
     Baselines = [msg_classifier()]#text_features, [len(df_train), len(df_test)], relabeling, df_train_test)]#, conv_msg_classifier(relabeling)]
     
     for text_feature_set in text_feature_sets:
@@ -136,6 +134,5 @@ if __name__ == '__main__':
     # 'tagged_predator_bc': if conv has at least one predator, all the msgs of the conv are tagged
     # 'tagged_msg_bc': if conv has at least one tagged msg, all the msgs of the conv are tagged
     relabeling = ['tagged_msg', 'tagged_predator', 'tagged_conv']
-
 
     

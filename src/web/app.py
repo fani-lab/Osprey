@@ -15,9 +15,9 @@ conversation = Conversation()
 app = Flask(__name__)
 CORS(app) # Allow cross-origin requests
 
-classify_model = joblib.load('model.joblib') 
-#classify_model = joblib.load('model.joblib')
+classify_model = joblib.load('bigboi.joblib') 
 sentence_model = SentenceTransformer('average_word_embeddings_glove.6B.300d')
+messages = []
 
 @app.route('/add_input', methods = ['GET', 'POST'])
 def add_input():
@@ -27,9 +27,10 @@ def add_input():
          json: Chatbot response
      """
      userinput = request.json['text']
+     time = request.json['time']  
      conversation.add_user_input(userinput) # Add user input to conversation
      result = nlp([conversation], do_sample=False, max_length=1000) # Get chatbot response
-     messages = []
+     global messages
      #Browse results and form a list of messages
      for is_user, chatbot_response in result.iter_texts():
           messages.append({
@@ -39,12 +40,7 @@ def add_input():
      print(messages)
      #print(chatbot_response, len(chatbot_response.split(' ')), len(chatbot_response))
 
-     hour = datetime.datetime.now().strftime("%H")
-     minute = datetime.datetime.now().strftime("%M")
-     #time = datetime(2023, 1,1,int(hour), int(minute)).timestamp()
-     print('hour',hour)
-     print('minute',minute)
-     chatbot_label = classify_msg(chatbot_response) #len(chatbot_response.split(' ')), len(chatbot_response), int(hour) )
+     chatbot_label = classify_msg(chatbot_response, float(time)) #len(chatbot_response.split(' ')), len(chatbot_response), int(hour) )
      return jsonify({
           'messages': chatbot_response,
           "chatbot_label": str(chatbot_label),
@@ -59,8 +55,8 @@ def classify_user_msg():
      """
      userinput = request.json['text']
      usertime = request.json['time']
-     print('usertime',usertime)
-     user_label = classify_msg(userinput,) #len(userinput.split(" ")), len(userinput), 1672620360)
+     print('usertime', float(usertime))
+     user_label = classify_msg(userinput, float(usertime) ) #len(userinput.split(" ")), len(userinput), 1672620360)
      return jsonify({
           "user_label": str(user_label),
      })
@@ -69,6 +65,8 @@ def classify_user_msg():
 def reset():
      """Reset conversation, so that the chatbot forgets everything."""
      global conversation
+     global messages
+     messages = []
      conversation = Conversation()
      return "OK"
 
@@ -81,7 +79,7 @@ def init():
      conversation.mark_processed() # Archive the previous messages and consider them as a context 
      return "OK"
 
-def classify_msg(msg):
+def classify_msg(msg, time=00.00):
      """Embed the message and classify it using the classification model
 
      Args:
@@ -90,13 +88,34 @@ def classify_msg(msg):
      Returns:
          list[int]: returns 1 or 0 for predatorial or not predatorial respectively.
      """
+     global messages #previous messages
+     msg_line=[len(messages)]; 
+     char_count=[len(msg)]; 
+     word_count=[len(msg.split(' '))]; 
+     nauthor=[2]
+
+     prv_cat =""
+     if len(messages) > 0:
+          for i in messages:
+               prv_cat += " "+i['text']
+
+     prv_msg = sentence_model.encode(prv_cat).reshape(1, -1)
+
      encoded_msg = sentence_model.encode(msg).reshape(1, -1)
-     #features = sparse.csr_matrix(sparse.hstack((1,
-     #encoded_msg, 
-     #)))
-     #label = classify_model.predict(features)
-     label = classify_model.predict(encoded_msg)
-     #label = classify_model.predict(sparse.csr_matrix(sparse.hstack((encoded_msg, 1, 3, 1672620360))))
+     features = sparse.csr_matrix((0,  1)).transpose()
+
+     features = sparse.csr_matrix(sparse.hstack((
+     features,
+     encoded_msg, 
+     #char_count,
+     word_count,
+     prv_msg,
+     nauthor,
+     time,
+     msg_line
+     )))
+
+     label = classify_model.predict(features)
      print(label)
      return label[0]
 

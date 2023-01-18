@@ -58,7 +58,7 @@ function App() {
       body: JSON.stringify({
         text: formValue,
         //no date, just time
-        time: [date.getHours, date.getMinutes],
+        time: date.getHours() + "." + date.getMinutes(),
       }),
     };
 

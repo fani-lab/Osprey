@@ -26,9 +26,9 @@ class msg_classifier(Baseline):
         return X_train, X_test, y_train, y_test
 
     def train(self, X_train, y_train, output, feature_str):
-        model = LogisticRegression(solver='lbfgs', max_iter=1000)
+        model = LogisticRegression(solver='lbfgs', max_iter=10000)
         model.fit(X_train, y_train)
-        pickle.dump(model, open(f"{output}feature_str.joblib", 'wb'))
+        pickle.dump(model, open(f"{output}{feature_str}.joblib", 'wb'))
         return model
         
     def test(self, X_test, model):
