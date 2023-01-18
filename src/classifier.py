@@ -25,15 +25,13 @@ class msg_classifier(Baseline):
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
         return X_train, X_test, y_train, y_test
 
-    def train(self, X_train, y_train, output):
-        # trains the model
+    def train(self, X_train, y_train, output, feature_str):
         model = LogisticRegression(solver='lbfgs', max_iter=1000)
         model.fit(X_train, y_train)
-        pickle.dump(model, open(f"{output}.joblib", 'wb'))
+        pickle.dump(model, open(f"{output}feature_str.joblib", 'wb'))
         return model
         
     def test(self, X_test, model):
-        # model predictions
         return model.predict(X_test)
 
     def eval(self, targets, pred, output, feature_str):
@@ -41,7 +39,7 @@ class msg_classifier(Baseline):
             df = pd.read_csv("preds.eval.csv",usecols= ['features', 'f1', 'precision', 'recall', 'roc_auc'], sep='\t')
         except FileNotFoundError:
             df = pd.DataFrame(columns=['features', 'f1', 'precision', 'recall', 'roc_auc'])
-        # evaluation on model predictions, outputs csv
+
         targets = targets.values.flatten()
 
         new_row = pd.Series({'features': feature_str, 'f1': f1_score(targets, pred), 'precision': precision_score(targets, pred), 'recall': recall_score(targets, pred), 'roc_auc': roc_auc_score(targets, pred)})
@@ -50,13 +48,13 @@ class msg_classifier(Baseline):
                 df, 
                 pd.DataFrame([new_row], columns=new_row.index)]
             ).reset_index(drop=True)
-        df.to_csv(f'preds.eval.csv', sep='\t', index=False)
+        df.to_csv(f'{output}preds.eval.csv', sep='\t', index=False)
         
         return df
 
     def main(self, df, text_features, output, feature_str, cmd=['prep', 'train', 'test', 'eval']):
         if 'prep'  in cmd: X_train, X_test, y_train, y_test = self.prep(text_features, df)
-        if 'train' in cmd: model = self.train(X_train, y_train, output)
+        if 'train' in cmd: model = self.train(X_train, y_train, output, feature_str)
         if 'test'  in cmd: ypred = self.test(X_test, model)
         if 'eval'  in cmd: result = self.eval(y_test, ypred, output, feature_str)
 

@@ -18,7 +18,7 @@ def get_prev_msg_cat( prev, text):
     return prev['prv_cat']+" "+text
 
 def get_next_msg_cat(conv, start_line, result):
-    """Concatenates next messages with current message text
+    """Starts from message line and concats all future messages
 
     Args:
         conv (list): the entire conversation
@@ -30,9 +30,10 @@ def get_next_msg_cat(conv, start_line, result):
     """
     if result is None:
         result = ""
-    # starts from message line and concats all future messages
     for msgs in conv[start_line:]:
         author, time, body = msgs.getchildren()
+        if body.text is None:
+            body.text = ""
         result+= " "+body.text
     return result
     
@@ -60,7 +61,7 @@ def read_xml(xmlfile, tagged_msgs, predators):
                    # previous messages in conversation & current message
                    'prv_cat': "" if len(dictionary_list)==0 else get_prev_msg_cat(dictionary_list[-1], str(body.text)),
                    # future messages in conversation & current message
-                   'nxt_cat': get_next_msg_cat(conv.getchildren(), int(msg.get('line')), body.text),
+                   'nxt_cat': get_next_msg_cat(conv.getchildren(), int(msg.get('line')), str(body.text)),
                    'msg_char_count': len(body.text) if body.text is not None else 0,  
                    'msg_word_count': len(body.text.split()) if body.text is not None else 0,
                    'conv_size': len(conv.getchildren()),
@@ -118,12 +119,9 @@ if __name__ == '__main__':
 
     df_train = read_xml(training_file, pd.read_csv(training_tagged_msgs_file, names=['conv_id', 'line'], sep='\t'), pd.read_csv(training_predator_id_file))
     df_test = read_xml(test_file, pd.read_csv(test_tagged_msgs_file, names=['conv_id', 'line'], sep='\t'), pd.read_csv(test_predator_id_file))    
-    #print(df_test['msg_line'].head())
-    #print(df_train['msg_line'].head())
+
 
     df_train_test = pd.concat([df_train, df_test])
-    print(df_train_test['prv_cat'].head())
-    print(df_train_test['nxt_cat'].tail())
     text_feature_sets = [["w2v_glove", 'nxt_cat', 'prv_cat', "nauthors", "conv_size", "time",], ['w2v_glove','nxt_cat', 'prv_cat'], ["w2v_glove", 'nxt_cat', 'prv_cat', "nauthors", "conv_size", "time", "count"]]
     Baselines = [msg_classifier()]#text_features, [len(df_train), len(df_test)], relabeling, df_train_test)]#, conv_msg_classifier(relabeling)]
     
@@ -132,7 +130,7 @@ if __name__ == '__main__':
         text_features = ef.extract_load_text_features(df_train_test, text_feature_set, f'../output/{text_feature_set_str}.npz')
         
         for baseline in Baselines:
-            baseline.main(df_train_test, text_features, f"../output/{text_feature_set_str}", text_feature_set_str)
+            baseline.main(df_train_test, text_features, "../output/", text_feature_set_str)
 
     # 'tagged_msg': original labels (conv, msg_line) only available for test set
     # 'tagged_predator_bc': if conv has at least one predator, all the msgs of the conv are tagged
