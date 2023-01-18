@@ -36,7 +36,7 @@ class msg_classifier(Baseline):
 
     def eval(self, targets, pred, output, feature_str):
         try:
-            df = pd.read_csv("preds.eval.csv",usecols= ['features', 'f1', 'precision', 'recall', 'roc_auc'], sep='\t')
+            df = pd.read_csv(f"{output}preds.eval.csv",usecols= ['features', 'f1', 'precision', 'recall', 'roc_auc'], sep='\t')
         except FileNotFoundError:
             df = pd.DataFrame(columns=['features', 'f1', 'precision', 'recall', 'roc_auc'])
 

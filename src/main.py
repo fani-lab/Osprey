@@ -122,7 +122,7 @@ if __name__ == '__main__':
 
 
     df_train_test = pd.concat([df_train, df_test])
-    text_feature_sets = [["w2v_glove", 'nxt_cat', 'prv_cat', "nauthors", "conv_size", "time",], ['w2v_glove','nxt_cat', 'prv_cat'], ["w2v_glove", 'nxt_cat', 'prv_cat', "nauthors", "conv_size", "time", "count"]]
+    text_feature_sets = [["w2v_glove", 'nxt_cat', ], ["w2v_glove", 'prv_cat', ],['w2v_glove','nxt_cat', 'prv_cat'], ["w2v_glove", 'nxt_cat', 'prv_cat', "nauthors", "conv_size", "time", "count"]]
     Baselines = [msg_classifier()]#text_features, [len(df_train), len(df_test)], relabeling, df_train_test)]#, conv_msg_classifier(relabeling)]
     
     for text_feature_set in text_feature_sets:
