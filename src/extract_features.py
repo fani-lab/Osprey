@@ -8,10 +8,23 @@ from sentence_transformers import SentenceTransformer
 from lib import text_corpus as tc, utils
 
 def extract_features(Q, feature_set=[], pretrained=True):#['basic', 'linguistic', 'w2v_glove', 'w2v_bert', 'w2v', 'c2v', 'd2v', 'd2v_c']
-    tc_Q = tc.TextCorpus(Q['text'], char_ngram_range=(1, 1), word_ngram_range=(1, 1))
-    features = sparse.csr_matrix((0,  len(Q))).transpose()
+    """Create sentence embeddings
 
-    if 'basic' in feature_set: features = sparse.csr_matrix(sparse.hstack((
+    Args:
+        Q (Dataframe): Training and testing data
+        feature_set (list, optional): Word to vector models. Defaults to [].
+        pretrained (bool, optional): _description_. Defaults to True.
+
+    Returns:
+        CSR Matrix: Sentence embeddings of the training and testing conversations
+    """
+    tc_Q = tc.TextCorpus(Q['text'], char_ngram_range=(1, 1), word_ngram_range=(1, 1))
+    print(len(Q))
+    features = sparse.csr_matrix((0,  len(Q))).transpose()
+    print('features',features.shape)
+
+    if 'basic' in feature_set: 
+        features = sparse.csr_matrix(sparse.hstack((
         features,
         tc_Q.getLengthsByTerm(),
         tc_Q.getCharStat()[0],
@@ -51,7 +64,41 @@ def extract_features(Q, feature_set=[], pretrained=True):#['basic', 'linguistic'
     if 'w2v_glove' in feature_set:
         model = SentenceTransformer('average_word_embeddings_glove.6B.300d')
         sentence_embeddings = model.encode(Q['text'].values)
-        features = sparse.csr_matrix(sparse.hstack((features, sentence_embeddings)))
+        features = sparse.csr_matrix(sparse.hstack((
+            features, 
+            sentence_embeddings,
+            )))
+
+    if 'time' in feature_set:
+        features = sparse.csr_matrix(sparse.hstack((features, Q['time'].values.reshape(-1, 1), )))
+
+    if 'count' in feature_set:
+        features = sparse.csr_matrix(sparse.hstack((features, Q['msg_word_count'].values.reshape(-1, 1),Q['msg_char_count'].values.reshape(-1,1) )))
+
+    if 'msg_line' in feature_set:
+        features = sparse.csr_matrix(sparse.hstack((features, Q['msg_line'].values.reshape(-1, 1), )))
+    
+    if 'nauthor' in feature_set:
+        features = sparse.csr_matrix(sparse.hstack((features, Q['nauthor'].values.reshape(-1, 1), )))
+    
+    if 'conv_size' in feature_set:
+        features = sparse.csr_matrix(sparse.hstack((features, Q['conv_size'].values.reshape(-1, 1), )))
+
+    if 'prv_cat' in feature_set:
+        model = SentenceTransformer('average_word_embeddings_glove.6B.300d')
+        sentence_embeddings = model.encode(Q['prv_cat'].values)
+        features = sparse.csr_matrix(sparse.hstack((
+            features, 
+            sentence_embeddings,
+            )))
+
+    if 'nxt_cat' in feature_set:
+        model = SentenceTransformer('average_word_embeddings_glove.6B.300d')
+        sentence_embeddings = model.encode(Q['nxt_cat'].values)
+        features = sparse.csr_matrix(sparse.hstack((
+            features, 
+            sentence_embeddings,
+            )))   
 
     if 'w2v_bert' in feature_set:
         model = SentenceTransformer('paraphrase-distilroberta-base-v2')
@@ -77,11 +124,25 @@ def extract_features(Q, feature_set=[], pretrained=True):#['basic', 'linguistic'
     return features
 
 def extract_load_text_features(Q, feature_set, features_file=None):
+    """Load saved vectors or create new one
+
+    Args:
+        Q (Dataframe): Training and testing data
+        feature_set (list[str]): Word to vector models. Defaults to [].
+        features_file (str, optional): File to load from. Defaults to None.
+
+    Raises:
+        e: Exception or FileNotFoundError
+
+    Returns:
+        CSR Matrix: Sentence embeddings of the training and testing conversations
+    """
     try:
         return utils.load_sparse_csr(features_file)
     except FileNotFoundError as e:
         print("File not found! Generating the features matrix ...")
         features = extract_features(Q, feature_set)
+        print(feature_set)
         utils.save_sparse_csr(features_file, features)
         print(f"saved features with shape (data size, feature size): {features.shape}")
         return features
