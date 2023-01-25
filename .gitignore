@@ -2,3 +2,4 @@ venv/
 *.pyc
 *.ini
 /__pycache__/
+/data/
