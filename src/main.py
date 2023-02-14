@@ -73,7 +73,7 @@ def read_xml(xmlfile, tagged_msgs, predators):
                    'text': '' if body.text is None else body.text,
                    'tagged_msg': 0 if tagged_msgs.loc[(tagged_msgs['conv_id'] == conv.get('id')) & (tagged_msgs['line'] == int(msg.get('line')))].empty else 1,
                    'tagged_conv': 0 if tagged_msgs.loc[tagged_msgs['conv_id'] == conv.get('id')].empty else 1,
-                   'tagged_predator': None if predators.empty else (1 if author.text in predators else 0),
+                   'tagged_predator': None if predators.empty else (1 if len(predators[predators['tagged_pred'] == author.text]) > 0 else 0),
                    }
             dictionary_list.append(row)
     return df.from_dict(dictionary_list)
@@ -83,7 +83,7 @@ def get_stats(data):
     """_summary_
 
     Args:
-        data: the input is dataframe which is the output of read_xml() func
+        data: the input is dataframe
 
     Returns:
         _type_: _description_
@@ -131,24 +131,26 @@ if __name__ == '__main__':
     test_predator_id_file = f'{datapath}test/pan12-sexual-predator-identification-groundtruth-problem1.txt'
     test_tagged_msgs_file = f'{datapath}test/pan12-sexual-predator-identification-groundtruth-problem2.txt'
 
-    df_train = read_xml(training_file, pd.read_csv(training_tagged_msgs_file, names=['conv_id', 'line'], sep='\t'), pd.read_csv(training_predator_id_file))
-    df_test = read_xml(test_file, pd.read_csv(test_tagged_msgs_file, names=['conv_id', 'line'], sep='\t'), pd.read_csv(test_predator_id_file))
+    df_train = read_xml(training_file, pd.read_csv(training_tagged_msgs_file, names=['conv_id', 'line'], sep='\t'), pd.read_csv(training_predator_id_file, header=None, names=['tagged_pred']))
+    df_train.to_csv(f"{datapath}train.csv")
+    df_test = read_xml(test_file, pd.read_csv(test_tagged_msgs_file, names=['conv_id', 'line'], sep='\t'), pd.read_csv(test_predator_id_file, header=None, names=['tagged_pred']))
+    df_test.to_csv(f"{datapath}test.csv")
     df_train_test = pd.concat([df_train, df_test])
 
 
-    # text_feature_sets = [["w2v_glove","prv_cat","nauthors", "time","count", "msg_line"]]
-    # Baselines = [msg_classifier()]#text_features, [len(df_train), len(df_test)], relabeling, df_train_test)]#, conv_msg_classifier(relabeling)]
-    #
-    # for text_feature_set in text_feature_sets:
-    #     text_feature_set_str = '.'.join(text_feature_set)
-    #     text_features = ef.extract_load_text_features(df_train_test, text_feature_set, f'../output/{text_feature_set_str}.npz')
-    #
-    #     for baseline in Baselines:
-    #         baseline.main(df_train_test, text_features, "../output/", text_feature_set_str)
-    #
-    # # 'tagged_msg': original labels (conv, msg_line) only available for test set
-    # # 'tagged_predator_bc': if conv has at least one predator, all the msgs of the conv are tagged
-    # # 'tagged_msg_bc': if conv has at least one tagged msg, all the msgs of the conv are tagged
-    # relabeling = ['tagged_msg', 'tagged_predator', 'tagged_conv']
-    #
+    text_feature_sets = [["w2v_glove","prv_cat","nauthors", "time","count", "msg_line"]]
+    Baselines = [msg_classifier()]#text_features, [len(df_train), len(df_test)], relabeling, df_train_test)]#, conv_msg_classifier(relabeling)]
+
+    for text_feature_set in text_feature_sets:
+        text_feature_set_str = '.'.join(text_feature_set)
+        text_features = ef.extract_load_text_features(df_train_test, text_feature_set, f'../output/{text_feature_set_str}.npz')
+
+        for baseline in Baselines:
+            baseline.main(df_train_test, text_features, "../output/", text_feature_set_str)
+
+    # 'tagged_msg': original labels (conv, msg_line) only available for test set
+    # 'tagged_predator_bc': if conv has at least one predator, all the msgs of the conv are tagged
+    # 'tagged_msg_bc': if conv has at least one tagged msg, all the msgs of the conv are tagged
+    relabeling = ['tagged_msg', 'tagged_predator', 'tagged_conv']
+
     #
