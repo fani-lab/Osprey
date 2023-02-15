@@ -48,13 +48,13 @@ pan12-sexual-predator-identification-training-corpus-predators-2012-05-01.txt
 | N-ary Conversations                                 | 8413   | 19705   |
 | Users                                               | 97689  | 218702  |
 | Predatory Conversations                             | 2016   | 3737    |
-| Predators                                           | 1      | 1       |
+| Predators                                           | 142      | 254       |
 | Binary Predatory Conversations                      | 2016   | 3737    |
 | Non-binary Perdatory Conversations                  | 0      | 0       |
 | Avg Messages in Predatory Conversation              | 60.73  | 90.07   |
 |average message number for a non-predatory conversation| 12.74  | 12.86   |
 | more than 1 Predators in a Conversation             | 0      | 0       |
 | Avg Ratio of Conversation (#message) for a Predator | 60.73  | 90.07   |
-| Predators in Normal Conversations                   | 2      | 9       |
+| Predators in Normal Conversations                   | 1997      | 2903       |
 
 [^1]: https://pan.webis.de/
