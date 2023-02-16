@@ -10,3 +10,4 @@ matplotlib==3.5.0
 #website
 Flask==2.0.2
 flask_cors==3.0.10
+numpy~=1.23.5
