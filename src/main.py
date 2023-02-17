@@ -2,10 +2,13 @@ import os
 
 from lxml import etree
 import pandas as pd
-import extract_features as ef
-from classifier import msg_classifier
-from classifier import conv_msg_classifier
-import datetime
+# import extract_features as ef
+# from classifier import msg_classifier
+# from classifier import conv_msg_classifier
+# import datetime
+from models.ann import SimpleANN
+from preprocessing.stopwords import NLTKStopWordRemoving
+
 
 def get_prev_msg_cat( prev, text):
     """Concatenates previous message with current message text
@@ -122,7 +125,29 @@ def get_stats(data):
 
 
 if __name__ == '__main__':
-    datapath = '../data/'
+    test_path, train_path = "data/test/test.csv", "data/train/train.csv"
+    test_path, train_path = "data/toy.test/toy-test.csv", "data/toy.train/toy-train.csv"
+    kwargs = {
+        # "preprocessed_path": "data/preprocessed/basic/",
+        "preprocessed_path": "data/preprocessed/basic/toy-",
+        "load_from_pkl": False,
+        "preprocessings": [NLTKStopWordRemoving()],
+    }
+    test_df  = pd.read_csv(test_path)
+    train_df = pd.read_csv(train_path)
+
+    model = SimpleANN(train_df, test_df, **kwargs)
+    
+    try:
+        model.prep()
+    except Exception as e:
+        e.with_traceback()
+
+    # HERE WE GO: -------------
+    model.train_tokens
+    model.train_labels
+
+    datapath = 'data/'
 
     if os.path.isfile(f'{datapath}toy.train/toy-train.csv'):
         df_train = pd.read_csv(f'{datapath}toy.train/toy-train.csv', index_col=0).fillna('')
