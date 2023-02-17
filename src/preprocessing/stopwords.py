@@ -1,13 +1,9 @@
 import nltk
-import pandas as pd
 
 from nltk.corpus import stopwords
 
 
-class BasePreprocessing:
-
-    def opt(self, input):
-        pass
+from preprocessing.base import BasePreprocessing
 
 
 class NLTKStopWordRemoving(BasePreprocessing):
