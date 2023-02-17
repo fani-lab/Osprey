@@ -85,40 +85,29 @@ class SimpleANN(Baseline):
             if not self.load_from_pkl:
                 raise FileNotFoundError()
             self.train_df = pd.read_csv(self.preprocessed_path + "train.csv")
-            # self.test_df  = pd.read_csv(self.preprocessed_path + "test.csv")
+            train_tokens = np.array([np.fromstring(record[1:-1], dtype=float, sep=' ')
+                                     for record in self.train_df["tokens"]])
         except FileNotFoundError:
 
             print("generating tokens")
             train_tokens = self.nltk_tokenize(self.train_df["text"])
-            # test_tokens = self.nltk_tokenize(self.test_df["text"])
-            # train_tokens = [word_tokenize(record.lower()) if pd.notna(record) else [] for record in self.train_df["text"]]
 
-            # self.train_df["tokens"] = self.train_df.apply(lambda row: word_tokenize(row["text"].lower()) if pd.notna(row["text"]) else '', axis=1)
-            # self.test_df["tokens"] = self.test_df.apply(lambda row: word_tokenize(row["text"].lower()) if pd.notna(row["text"]) else '', axis=1)
             for preprocessor in self.preprocessings:
                 train_tokens = [*preprocessor.opt(train_tokens)]
-                # test_tokens = [*preprocessor.opt(test_tokens)]
             train_tokens = self.vectorize_bow2(train_tokens)
-            # test_tokens = self.vectorize_bow2(test_tokens)
 
-            # self.train_df = pd.concat([self.train_df, pd.Series([str(record) for record in train_tokens], name="tokens")])
             self.train_df["tokens"] = train_tokens
-            # self.test_df = pd.concat([self.test_df, pd.Series(test_tokens, name="tokens")])
 
-            # print("tokens generated")
-            # self._remove_stop_words()
-            # print("stopwords removed")
-            # print("saving processed data")
-# np.squeeze(np.asarray(a.iloc[-1]))
             self.train_df.to_csv(self.preprocessed_path + "train.csv", escapechar='\\')
-            # self.test_df.to_csv(self.preprocessed_path + "test.csv", escapechar='\\')
-            # pd.DataFrame().to_csv
+            train_tokens = np.array(train_tokens)
         except Exception as e:
             raise e
         
         
-        
+        self.train_labels = np.array(self.train_df["tagged_msg"])
+        self.train_tokens = train_tokens
         print("preparation is finished")
+        
         
             
 
