@@ -44,7 +44,6 @@ class SimpleANN(torch.nn.Module, Baseline):
         logger.info("started generating bag of words vectors")
         data = set()
         data.update(*tokens_records)
-        data = list(data)
         pattern = lambda x: x
         logger.debug("fitting data into one hot encoder")
         self.encoder.fit(self.get_data_generator(data=data, pattern=pattern))
