@@ -24,4 +24,6 @@ class NLTKStopWordRemoving(BasePreprocessing):
             yield result
         # return input.apply(lambda record: [token for token in record if token not in sw_set], axis=1)
 
+    def name(self) -> str:
+        return "nltk stopwords remover"
 
