@@ -1,4 +1,4 @@
-from baseline import Baseline
+from src.models.baseline import Baseline
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 #from sklearn.ensemble import RandomForestClassifier
