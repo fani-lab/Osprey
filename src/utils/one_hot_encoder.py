@@ -3,10 +3,9 @@ from torch import sparse_coo_tensor, float32
 
 class GenerativeOneHotEncoder:
 
-    def __init__(self, data_generator, buffer_cap=20, device="cpu") -> None:
+    def __init__(self, buffer_cap=20, device="cpu") -> None:
         
         self.__buffer_cap = buffer_cap
-        self.data_generator = data_generator
         self.__records = dict()
         self.device = device
         self.transform_started = False
@@ -51,9 +50,9 @@ class GenerativeOneHotEncoder:
                 self.__records[record] = len(self.__records)
         buffer = {}
 
-    def fit(self):
+    def fit(self, data_generator):
         buffer = []
-        for i, record in enumerate(self.data_generator()):
+        for i, record in enumerate(data_generator()):
             if self.transform_started:
                 raise Exception("cannot fit the encoder as this encoder has already transformed some records.")
             buffer.append(record) # todo

@@ -21,6 +21,9 @@ class SimpleANN(torch.nn.Module, Baseline):
         self.preprocessings = preprocessings
         self.preprocessed_path = preprocessed_path
         self.load_from_pkl = load_from_pkl
+        
+        self.encoder = GenerativeOneHotEncoder()
+
         if copy:
             self.train_df = train.copy(deep=True)
             self.test_df  = test.copy(deep=True)
@@ -33,32 +36,8 @@ class SimpleANN(torch.nn.Module, Baseline):
         print("removing stopwords 1")
         stopwords_set = stopwords.words()
         print("removing stopwords 2")
-        # train_tokens = []
-        # for _, record in self.train_df.iterrows():
-        #     train_tokens.append([token for token in record["tokens"] if token not in stopwords_set])
         self.train_df["tokens"] = self.train_df.apply(lambda row: [token for token in row["tokens"] if token not in stopwords_set], axis=1)
         self.test_df["tokens"]  = self.test_df.apply (lambda row: [token for token in row["tokens"] if token not in stopwords_set], axis=1)
-
-    def vectorize_bow(self):
-        print("generating one hot vectors")
-        data = set()
-        data.update(*[record.replace(",", "").replace("'", "")[1:-1].split() for record in self.train_df["tokens"]])
-        data = list(data)
-        one_hot_encoder = OneHotEncoder(handle_unknown='infrequent_if_exist')
-        one_hot_encoder.fit([[record] for record in data])
-        vectors = []
-        for _, record in self.train_df.iterrows():
-            try:
-                temp = []
-                for token in literal_eval(record["tokens"]):
-                    if len(token) > 0:
-                        temp.append([token])
-                vectors.append(
-                                one_hot_encoder.transform(temp).sum(axis=0) if len(temp) > 0 else np.zeros((1, len(data)), dtype=np.float64)
-                                )
-            except Exception as e:
-                raise e
-        return vectors
 
     def get_data_generator(self, data, pattern):
         def func():
@@ -72,11 +51,10 @@ class SimpleANN(torch.nn.Module, Baseline):
         data.update(*tokens_records)
         data = list(data)
         pattern = lambda x: x
-        encoder = GenerativeOneHotEncoder(self.get_data_generator(data=data, pattern=pattern))
-        encoder.fit()
+        self.encoder.fit(self.get_data_generator(data=data, pattern=pattern))
         vectors = []
         for record in tokens_records:
-            temp = encoder.transform(record=record)
+            temp = self.encoder.transform(record=record)
             vectors.append(torch.sparse.sum(torch.cat(temp), dim=0))
         return vectors
 
