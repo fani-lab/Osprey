@@ -72,6 +72,8 @@ class SimpleANN(torch.nn.Module, Baseline):
                 raise FileNotFoundError()
             with open(self.get_session_path("vectors.pkl"), "rb") as f:
                 train_tokens = pickle.load(f)
+            with open(self.get_session_path("one-hot-encoder.pkl"), "rb") as f:
+                self.encoder = pickle.load(f)
             
         except FileNotFoundError:
 
@@ -84,6 +86,10 @@ class SimpleANN(torch.nn.Module, Baseline):
 
             with open(self.preprocessed_path + "vectors.pkl", "wb") as f:
                 pickle.dump(train_tokens, f)
+            
+            with open(self.get_session_path("one-hot-encoder.pkl"), "wb") as f:
+                pickle.dump(self.encoder, f)
+            
         except Exception as e:
             raise e
         
