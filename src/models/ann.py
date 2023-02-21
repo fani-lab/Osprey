@@ -1,4 +1,3 @@
-from ast import literal_eval
 import pickle
 import logging
 
@@ -11,7 +10,6 @@ import numpy as np
 import nltk
 import torch
 
-from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
 logger = logging.getLogger()
@@ -36,18 +34,10 @@ class SimpleANN(torch.nn.Module, Baseline):
             self.test_df  = test
         nltk.download('punkt')
 
-    def _remove_stop_words(self):
-        print("removing stopwords 1")
-        stopwords_set = stopwords.words()
-        print("removing stopwords 2")
-        self.train_df["tokens"] = self.train_df.apply(lambda row: [token for token in row["tokens"] if token not in stopwords_set], axis=1)
-        self.test_df["tokens"]  = self.test_df.apply (lambda row: [token for token in row["tokens"] if token not in stopwords_set], axis=1)
-
     def get_data_generator(self, data, pattern):
         def func():
             for record in data:
                 yield pattern(record)
-        
         return func
 
     def vectorize(self, tokens_records):
