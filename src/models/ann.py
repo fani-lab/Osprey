@@ -26,9 +26,8 @@ class SimpleANN(torch.nn.Module, Baseline):
                  preprocessings=list[BasePreprocessing], copy=True, load_from_pkl=True,
                  preprocessed_path="data/preprocessed/basic/", **kwargs):
 
-        # dimension_list = [950, 250, 150, 50, 2]
         super(SimpleANN, self).__init__()
-        # Creating Model layers
+
         self.layers = nn.ModuleList()
         for i, j in zip(dimension_list, dimension_list[1:]):
             self.layers.append(nn.Linear(in_features=i, out_features=j))
@@ -95,15 +94,6 @@ class SimpleANN(torch.nn.Module, Baseline):
 
     def test(self):
         pass
-
-    def _remove_stop_words(self):
-        print("removing stopwords 1")
-        stopwords_set = stopwords.words()
-        print("removing stopwords 2")
-        self.train_df["tokens"] = self.train_df.apply(
-            lambda row: [token for token in row["tokens"] if token not in stopwords_set], axis=1)
-        self.test_df["tokens"] = self.test_df.apply(
-            lambda row: [token for token in row["tokens"] if token not in stopwords_set], axis=1)
 
     def get_data_generator(self, data, pattern):
         def func():
