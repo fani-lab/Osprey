@@ -1,20 +1,23 @@
 from ast import literal_eval
+import pickle
 
 from baseline import Baseline
-from preprocessing.stopwords import BasePreprocessing, NLTKStopWordRemoving
+from preprocessing.base import BasePreprocessing
+from utils.one_hot_encoder import GenerativeOneHotEncoder
 
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 import nltk
+import torch
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
 
-class SimpleANN(Baseline):
+class SimpleANN(torch.nn.Module, Baseline):
 
     def __init__(self, train: pd.DataFrame, test: pd.DataFrame, preprocessings=list[BasePreprocessing], copy=True, load_from_pkl=True, preprocessed_path="data/preprocessed/basic/"):
-        super(SimpleANN).__init__()
+        super(SimpleANN, self).__init__()
         self.preprocessings = preprocessings
         self.preprocessed_path = preprocessed_path
         self.load_from_pkl = load_from_pkl
@@ -56,37 +59,42 @@ class SimpleANN(Baseline):
             except Exception as e:
                 raise e
         return vectors
-    
-    def vectorize_bow2(self, tokens_records):
-        print("generating one hot vectors")
+
+    def get_data_generator(self, data, pattern):
+        def func():
+            for record in data:
+                yield pattern(record)
+        
+        return func
+
+    def vectorize(self, tokens_records):
         data = set()
         data.update(*tokens_records)
         data = list(data)
-        one_hot_encoder = OneHotEncoder(handle_unknown='infrequent_if_exist')
-        one_hot_encoder.fit([[record] for record in data])
+        pattern = lambda x: x
+        encoder = GenerativeOneHotEncoder(self.get_data_generator(data=data, pattern=pattern))
+        encoder.fit()
         vectors = []
-        for i, record in enumerate(tokens_records):
-            if i == 76:
-                print()
-            temp = [[token] for token in record]
-            vectors.append(
-                        np.squeeze(np.asarray(one_hot_encoder.transform(temp).sum(axis=0))) if len(temp) > 0 else
-                            np.zeros((len(data)), dtype=np.float64)
-                    )
+        for record in tokens_records:
+            temp = encoder.transform(record=record)
+            vectors.append(torch.sparse.sum(torch.cat(temp), dim=0))
         return vectors
 
     def nltk_tokenize(self, input) -> list[list[str]]:
         train_tokens = [word_tokenize(record.lower()) if pd.notna(record) else [] for record in input]
         return train_tokens
 
+    def get_session_path(self, file_name: str = "") -> str:
+        return self.preprocessed_path + file_name
+
     def prep(self):
         print("starting preperations")
         try:
             if not self.load_from_pkl:
                 raise FileNotFoundError()
-            self.train_df = pd.read_csv(self.preprocessed_path + "train.csv")
-            train_tokens = np.array([np.fromstring(record[1:-1], dtype=float, sep=' ')
-                                     for record in self.train_df["tokens"]])
+            with open(self.get_session_path("vectors.pkl"), "rb") as f:
+                train_tokens = pickle.load(f)
+            
         except FileNotFoundError:
 
             print("generating tokens")
@@ -94,12 +102,10 @@ class SimpleANN(Baseline):
 
             for preprocessor in self.preprocessings:
                 train_tokens = [*preprocessor.opt(train_tokens)]
-            train_tokens = self.vectorize_bow2(train_tokens)
+            train_tokens = self.vectorize(train_tokens)
 
-            self.train_df["tokens"] = train_tokens
-
-            self.train_df.to_csv(self.preprocessed_path + "train.csv", escapechar='\\')
-            train_tokens = np.array(train_tokens)
+            with open(self.preprocessed_path + "vectors.pkl", "wb") as f:
+                pickle.dump(train_tokens, f)
         except Exception as e:
             raise e
         
@@ -107,7 +113,7 @@ class SimpleANN(Baseline):
         self.train_labels = np.array(self.train_df["tagged_msg"])
         self.train_tokens = train_tokens
         print("preparation is finished")
-        
+
         
             
 
