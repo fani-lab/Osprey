@@ -21,3 +21,5 @@ class PunctuationRemoving(BasePreprocessing):
                     print()
             yield result
 
+    def name(self) -> str:
+        return "punctuation remover"
