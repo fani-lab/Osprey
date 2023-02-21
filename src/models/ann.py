@@ -1,7 +1,7 @@
 import pickle
 
 import torchmetrics
-from baseline import Baseline
+from models.baseline import Baseline
 from preprocessing.base import BasePreprocessing
 from utils.one_hot_encoder import GenerativeOneHotEncoder
 
@@ -14,11 +14,11 @@ from torch.utils.data import DataLoader
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
-from src.models.mydataset import MyDataset
+from utils.mydataset import MyDataset
 
 
 class SimpleANN(torch.nn.Module, Baseline):
-    #
+
     def __init__(self, dimension_list, activation, loss_func, lr, train: pd.DataFrame, test: pd.DataFrame,
                  preprocessings=list[BasePreprocessing], copy=True, load_from_pkl=True,
                  preprocessed_path="data/preprocessed/basic/"):
@@ -49,6 +49,14 @@ class SimpleANN(torch.nn.Module, Baseline):
         nltk.download('punkt')
 
     def forward(self, x):
+        """
+
+        Args:
+            x: Tensor object
+
+        Returns: prediction of the model
+
+        """
         for layer in self.layers[:-1]:
             x = layer(x)
             x = self.activation(x)
@@ -56,7 +64,15 @@ class SimpleANN(torch.nn.Module, Baseline):
         x = self.layers[-1](x)
         return x
 
-    def learn(self, epoch_num, batch_size):
+    def learn(self, epoch_num: int, batch_size: int):
+        """
+        This function is the training phase of the model
+
+        Args:
+             epoch_num: number of epochs
+             batch_size: size of training batches
+
+        """
         recall = torchmetrics.Recall(task='multiclass', num_classes=2)
         print(70 * '~')
         print('TRAINING PHASE')
