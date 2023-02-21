@@ -14,7 +14,7 @@ class PunctuationRemoving(BasePreprocessing):
             
             for token in record:
                 try:
-                    t = re.sub(r"^[\w]+$", '', token)
+                    t = re.sub(r"[^A-Za-z0-9\s]+", '', token)
                     if t:
                         result.append(t)
                 except:
