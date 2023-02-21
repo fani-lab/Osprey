@@ -3,3 +3,6 @@ venv/
 *.ini
 /__pycache__/
 /data/
+.vscode
+.idea
+*.log

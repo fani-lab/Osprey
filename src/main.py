@@ -1,13 +1,17 @@
 import os
-
+import torch
 from lxml import etree
 import pandas as pd
-import extract_features as ef
-from classifier import msg_classifier
-from classifier import conv_msg_classifier
-import datetime
+# import extract_features as ef
+# from classifier import msg_classifier
+# from classifier import conv_msg_classifier
+# import datetime
+from models.ann import SimpleANN
+from preprocessing.stopwords import NLTKStopWordRemoving
+from src.preprocessing.punctuations import PunctuationRemoving
 
-def get_prev_msg_cat( prev, text):
+
+def get_prev_msg_cat(prev, text):
     """Concatenates previous message with current message text
 
     Args:
@@ -17,7 +21,8 @@ def get_prev_msg_cat( prev, text):
     Returns:
         str: past messages and current message text
     """
-    return prev['prv_cat']+" "+text
+    return prev['prv_cat'] + " " + text
+
 
 def get_next_msg_cat(conv, start_line, result):
     """Starts from message line and concats all future messages
@@ -36,7 +41,7 @@ def get_next_msg_cat(conv, start_line, result):
         author, time, body = msgs.getchildren()
         if body.text is None:
             body.text = ""
-        result+= " "+body.text
+        result += " " + body.text
     return result
 
 
@@ -61,7 +66,7 @@ def read_xml(xmlfile, tagged_msgs, predators):
             row = {'conv_id': conv.get('id'),
                    'msg_line': int(msg.get('line')),
                    'author_id': author.text,
-                   'time': float(time.text.replace(":",".")),
+                   'time': float(time.text.replace(":", ".")),
                    # previous messages in conversation & current message
                    # TODO Frightening space Complexity in following three lines
                    # 'prv_cat': "" if len(dictionary_list)==0 else get_prev_msg_cat(dictionary_list[-1], str(body.text)),
@@ -73,9 +78,11 @@ def read_xml(xmlfile, tagged_msgs, predators):
                    # number of authors in the conversation, first index of msg
                    'nauthor': len(set([m.getchildren()[0].text for m in conv.getchildren()])),
                    'text': '' if body.text is None else body.text,
-                   'tagged_msg': 0 if tagged_msgs.loc[(tagged_msgs['conv_id'] == conv.get('id')) & (tagged_msgs['line'] == int(msg.get('line')))].empty else 1,
+                   'tagged_msg': 0 if tagged_msgs.loc[(tagged_msgs['conv_id'] == conv.get('id')) & (
+                               tagged_msgs['line'] == int(msg.get('line')))].empty else 1,
                    'tagged_conv': 0 if tagged_msgs.loc[tagged_msgs['conv_id'] == conv.get('id')].empty else 1,
-                   'tagged_predator': None if predators.empty else (1 if author.text in predators['tagged_pred'].tolist() else 0),
+                   'tagged_predator': None if predators.empty else (
+                       1 if author.text in predators['tagged_pred'].tolist() else 0),
                    }
             dictionary_list.append(row)
     return df.from_dict(dictionary_list)
@@ -93,18 +100,24 @@ def get_stats(data):
 
     stats = {'n_convs': len(data.groupby('conv_id')),
              'n_msgs': len(data),
-             'avg_n_msgs_convs': round(len(data)/len(data.conv_id.unique()), 2),
-             'n_binconv':len(data[data['nauthor'] == 2].groupby('conv_id')),
-             'n_n-aryconv':len(data[data['nauthor'] > 2].groupby('conv_id')),
-             'avg_n_msgs_binconvs': round(len(data[data['nauthor'] == 2]) / len(data[data['nauthor'] == 2].groupby('conv_id')), 2),
-             'avg_n_msgs_nonbinconvs': round(len(data[data['nauthor'] > 2]) / len(data[data['nauthor'] > 2].groupby('conv_id')), 2),
+             'avg_n_msgs_convs': round(len(data) / len(data.conv_id.unique()), 2),
+             'n_binconv': len(data[data['nauthor'] == 2].groupby('conv_id')),
+             'n_n-aryconv': len(data[data['nauthor'] > 2].groupby('conv_id')),
+             'avg_n_msgs_binconvs': round(
+                 len(data[data['nauthor'] == 2]) / len(data[data['nauthor'] == 2].groupby('conv_id')), 2),
+             'avg_n_msgs_nonbinconvs': round(
+                 len(data[data['nauthor'] > 2]) / len(data[data['nauthor'] > 2].groupby('conv_id')), 2),
 
-             'n_tagged_binconvs': len(data[(data['nauthor'] == 2) & (data['tagged_conv'] == 1)].groupby('conv_id')), #needs relabeling: 1) any convs with at least one tagged_msg, 2) any convs with at least one predator
-             'n_tagged_nonbinconvs': len(data[(data['nauthor'] > 2) & (data['tagged_conv'] == 1)].groupby('conv_id')),#needs relabeling
-             'avg_n_msgs_tagged_convs':round(len(data[data['tagged_conv'] == 1]) / len(data[data['tagged_conv'] == 1].groupby('conv_id')),2),
+             'n_tagged_binconvs': len(data[(data['nauthor'] == 2) & (data['tagged_conv'] == 1)].groupby('conv_id')),
+             # needs relabeling: 1) any convs with at least one tagged_msg, 2) any convs with at least one predator
+             'n_tagged_nonbinconvs': len(data[(data['nauthor'] > 2) & (data['tagged_conv'] == 1)].groupby('conv_id')),
+             # needs relabeling
+             'avg_n_msgs_tagged_convs': round(
+                 len(data[data['tagged_conv'] == 1]) / len(data[data['tagged_conv'] == 1].groupby('conv_id')), 2),
 
              'n_convs_mult_predators': 0,
-             'avg_n_msgs_convs_for_predator': round(len(data[(data['tagged_predator'] == 1)]) / len(data[(data['tagged_predator'] == 1)].groupby('conv_id')),2),
+             'avg_n_msgs_convs_for_predator': round(len(data[(data['tagged_predator'] == 1)]) / len(
+                 data[(data['tagged_predator'] == 1)].groupby('conv_id')), 2),
              'avg_n_normalconvs_for_predator': len(data[(data['tagged_conv'] == 0) & (data['tagged_predator'] == 1)]),
              }
 
@@ -122,41 +135,90 @@ def get_stats(data):
 
 
 if __name__ == '__main__':
-    datapath = '../data/'
+    # test_path, train_path = "data/test/test.csv", "data/train/train.csv"
+    test_path, train_path = "../data/toy.test/toy-test.csv", "../data/toy.train/toy-train.csv"
+    test_df = pd.read_csv(test_path)
+    train_df = pd.read_csv(train_path)
 
-    if os.path.isfile(f'{datapath}toy.train/toy-train.csv'):
-        df_train = pd.read_csv(f'{datapath}toy.train/toy-train.csv', index_col=0).fillna('')
-    else:
-        print("extracting training data")
-        training_file = f'{datapath}toy.train/pan12-sexual-predator-identification-training-corpus-2012-05-01.xml'
-        training_predator_id_file = f'{datapath}toy.train/pan12-sexual-predator-identification-training-corpus-predators-2012-05-01.txt'
-        training_tagged_msgs_file = f'{datapath}toy.train/pan12-sexual-predator-identification-diff.txt'
-        df_train = read_xml(training_file, pd.read_csv(training_tagged_msgs_file, names=['conv_id', 'line'], sep='\t', header=None), pd.read_csv(training_predator_id_file, header=None, names=['tagged_pred']))
-        df_train.to_csv(f"{datapath}/toy.train/toy-train.csv")
+    kwargs = {
+        "dimension_list": list([950, 250, 150, 50, 2]),
+        "activation": torch.nn.ReLU(),
+        "loss_func": torch.nn.CrossEntropyLoss(),
+        "lr": 0.001,
+        "train": train_df,
+        "test": test_df,
+        # "preprocessed_path": "data/preprocessed/basic/",
+        "preprocessed_path": "../data/preprocessed/basic/toy",
+        "load_from_pkl": True,
+        "preprocessings": [NLTKStopWordRemoving(), PunctuationRemoving()],
+    }
+    model = SimpleANN(**kwargs)
 
+    try:
+        model.prep()
+    except Exception as e:
+        # e.with_traceback()
+        raise e
 
-    if os.path.isfile(f'{datapath}toy.test/toy-test.csv'):
-        df_test = pd.read_csv(f'{datapath}toy.test/toy-test.csv', index_col=0).fillna('')
-    else:
-        test_file = f'{datapath}toy.test/pan12-sexual-predator-identification-test-corpus-2012-05-17.xml'
-        test_predator_id_file = f'{datapath}toy.test/pan12-sexual-predator-identification-groundtruth-problem1.txt'
-        test_tagged_msgs_file = f'{datapath}toy.test/pan12-sexual-predator-identification-groundtruth-problem2.txt'
-        df_test = read_xml(test_file, pd.read_csv(test_tagged_msgs_file, names=['conv_id', 'line'], sep='\t', header=None), pd.read_csv(test_predator_id_file, header=None, names=['tagged_pred']))
-        df_test.to_csv(f"{datapath}/toy.test/toy-test.csv")
-
-    # df_train_test = pd.concat([df_train, df_test])
-
-    # text_feature_sets = [["w2v_glove","nauthors", "time","count", "msg_line"]] # [["w2v_glove","prv_cat","nauthors", "time","count", "msg_line"]]
-    # Baselines = [msg_classifier()]#text_features, [len(df_train), len(df_test)], relabeling, df_train_test)]#, conv_msg_classifier(relabeling)]
-    #
-    # for text_feature_set in text_feature_sets:
-    #     text_feature_set_str = '.'.join(text_feature_set)
-    #     text_features = ef.extract_load_text_features(df_train_test, text_feature_set, f'../output/{text_feature_set_str}.npz')
-    #
-    #     for baseline in Baselines:
-    #         baseline.main(df_train_test, text_features, "../output/", text_feature_set_str)
-    #
-    # # 'tagged_msg': original labels (conv, msg_line) only available for test set
-    # # 'tagged_predator_bc': if conv has at least one predator, all the msgs of the conv are tagged
-    # # 'tagged_msg_bc': if conv has at least one tagged msg, all the msgs of the conv are tagged
-    # relabeling = ['tagged_msg', 'tagged_predator', 'tagged_conv']
+    model.learn(epoch_num=10, batch_size=64)
+# if __name__ == '__main__':
+#     # test_path, train_path = "data/test/test.csv", "data/train/train.csv"
+#     test_path, train_path = "../data/toy.test/toy-test.csv", "../data/toy.train/toy-train.csv"
+#     kwargs = {
+#         # "preprocessed_path": "data/preprocessed/basic/",
+#         "preprocessed_path": "data/preprocessed/basic/toy-",
+#         "load_from_pkl": False,
+#         "preprocessings": [NLTKStopWordRemoving()],
+#     }
+#     test_df  = pd.read_csv(test_path)
+#     train_df = pd.read_csv(train_path)
+#
+#     model = SimpleANN(train_df, test_df, **kwargs)
+#
+#     try:
+#         model.prep()
+#     except Exception as e:
+#         e.with_traceback()
+#
+#     # HERE WE GO: -------------
+#     model.train_tokens
+#     model.train_labels
+#
+#     datapath = 'data/'
+#
+#     if os.path.isfile(f'{datapath}toy.train/toy-train.csv'):
+#         df_train = pd.read_csv(f'{datapath}toy.train/toy-train.csv', index_col=0).fillna('')
+#     else:
+#         print("extracting training data")
+#         training_file = f'{datapath}toy.train/pan12-sexual-predator-identification-training-corpus-2012-05-01.xml'
+#         training_predator_id_file = f'{datapath}toy.train/pan12-sexual-predator-identification-training-corpus-predators-2012-05-01.txt'
+#         training_tagged_msgs_file = f'{datapath}toy.train/pan12-sexual-predator-identification-diff.txt'
+#         df_train = read_xml(training_file, pd.read_csv(training_tagged_msgs_file, names=['conv_id', 'line'], sep='\t', header=None), pd.read_csv(training_predator_id_file, header=None, names=['tagged_pred']))
+#         df_train.to_csv(f"{datapath}/toy.train/toy-train.csv")
+#
+#
+#     if os.path.isfile(f'{datapath}toy.test/toy-test.csv'):
+#         df_test = pd.read_csv(f'{datapath}toy.test/toy-test.csv', index_col=0).fillna('')
+#     else:
+#         test_file = f'{datapath}toy.test/pan12-sexual-predator-identification-test-corpus-2012-05-17.xml'
+#         test_predator_id_file = f'{datapath}toy.test/pan12-sexual-predator-identification-groundtruth-problem1.txt'
+#         test_tagged_msgs_file = f'{datapath}toy.test/pan12-sexual-predator-identification-groundtruth-problem2.txt'
+#         df_test = read_xml(test_file, pd.read_csv(test_tagged_msgs_file, names=['conv_id', 'line'], sep='\t', header=None), pd.read_csv(test_predator_id_file, header=None, names=['tagged_pred']))
+#         df_test.to_csv(f"{datapath}/toy.test/toy-test.csv")
+#
+#     # df_train_test = pd.concat([df_train, df_test])
+#
+#     # text_feature_sets = [["w2v_glove","nauthors", "time","count", "msg_line"]] # [["w2v_glove","prv_cat","nauthors", "time","count", "msg_line"]]
+#     # Baselines = [msg_classifier()]#text_features, [len(df_train), len(df_test)], relabeling, df_train_test)]#, conv_msg_classifier(relabeling)]
+#     #
+#     # for text_feature_set in text_feature_sets:
+#     #     text_feature_set_str = '.'.join(text_feature_set)
+#     #     text_features = ef.extract_load_text_features(df_train_test, text_feature_set, f'../output/{text_feature_set_str}.npz')
+#     #
+#     #     for baseline in Baselines:
+#     #         baseline.main(df_train_test, text_features, "../output/", text_feature_set_str)
+#     #
+#     # # 'tagged_msg': original labels (conv, msg_line) only available for test set
+#     # # 'tagged_predator_bc': if conv has at least one predator, all the msgs of the conv are tagged
+#     # # 'tagged_msg_bc': if conv has at least one tagged msg, all the msgs of the conv are tagged
+#     # relabeling = ['tagged_msg', 'tagged_predator', 'tagged_conv']
