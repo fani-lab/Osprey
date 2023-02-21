@@ -7,9 +7,9 @@ from utils.one_hot_encoder import GenerativeOneHotEncoder
 
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import OneHotEncoder
 import nltk
 import torch
+
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
