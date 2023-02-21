@@ -79,9 +79,7 @@ class SimpleANN(torch.nn.Module, Baseline):
 
         """
         recall = torchmetrics.Recall(task='multiclass', num_classes=2)
-        print(70 * '~')
-        print('TRAINING PHASE')
-        print(70 * '~')
+        logger.info("training phase started")
         for i in range(1, epoch_num+1):
             loss = 0
             train_dataloader = DataLoader(self.train_dataset, batch_size, shuffle=True)
@@ -91,9 +89,9 @@ class SimpleANN(torch.nn.Module, Baseline):
                 loss = self.loss_function(y_hat, y)
                 loss.backward()
                 self.optimizer.step()
-                print(f'recall on batch: {recall(y_hat.argmax(1), y)}')
+                logger.info(f'recall on batch: {recall(y_hat.argmax(1), y)}')
 
-            print(f'epoch {i}:\n Loss: {loss}')
+            logger.info(f'epoch {i}:\n Loss: {loss}')
 
     def test(self):
         pass
