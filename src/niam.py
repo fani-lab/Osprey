@@ -7,7 +7,7 @@ from preprocessing.punctuations import PunctuationRemoving
 
 if __name__ == "__main__":
     # test_path, train_path = "data/test/test.csv", "data/train/train.csv"
-    test_path, train_path = "../data/toy.test/toy-test.csv", "../data/toy.train/toy-train.csv"
+    test_path, train_path = "data/toy.test/toy-test.csv", "data/toy.train/toy-train.csv"
     test_df = pd.read_csv(test_path)
     train_df = pd.read_csv(train_path)
 
@@ -20,7 +20,7 @@ if __name__ == "__main__":
         "train": train_df,
         "test": test_df,
         # "preprocessed_path": "data/preprocessed/basic/",
-        "preprocessed_path": "../data/preprocessed/basic/toy",
+        "preprocessed_path": "data/preprocessed/basic/toy",
         "load_from_pkl": True,
         "preprocessings": [NLTKStopWordRemoving(), PunctuationRemoving()],
     }
