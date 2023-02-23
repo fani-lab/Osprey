@@ -8,7 +8,7 @@ import torch.nn
 from models.ann import SimpleANN
 from preprocessing.stopwords import NLTKStopWordRemoving
 from preprocessing.punctuations import PunctuationRemoving
-from utils.mydataset import BagOfWordsDataset
+from utils.dataset import BagOfWordsDataset
 
 
 START_TIME = time.strftime("%m-%d-%Y-%H-%M-%S", time.localtime() )
@@ -28,6 +28,7 @@ logger = logging.getLogger()
 logger.addHandler(debug_file_handler)
 logger.addHandler(info_terminal_handler)
 logger.setLevel(logging.DEBUG)
+
 
 if __name__ == "__main__":
     # test_path, train_path = "data/test/test.csv", "data/train/train.csv"
