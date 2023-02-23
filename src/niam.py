@@ -8,6 +8,7 @@ import torch.nn
 from models.ann import SimpleANN
 from preprocessing.stopwords import NLTKStopWordRemoving
 from preprocessing.punctuations import PunctuationRemoving
+from utils.mydataset import BagOfWordsDataset
 
 
 START_TIME = time.strftime("%m-%d-%Y-%H-%M-%S", time.localtime() )
@@ -37,18 +38,15 @@ if __name__ == "__main__":
     train_df = pd.read_csv(train_path)
     logger.debug("reading test and train csv files is done")
 
-    # dimension_list, activation, loss_func, lr, train: pd.DataFrame, test: pd.DataFrame, preprocessings = list[BasePreprocessing], copy = True, load_from_pkl = True, preprocessed_path = "data/preprocessed/basic/"
+    train_dataset = BagOfWordsDataset(train_df, "data/preprocessed/basic/toy", True, preprocessings=[NLTKStopWordRemoving(), PunctuationRemoving()], copy=False)
+    train_dataset.prepare()
+    ## dimension_list, activation, loss_func, lr, train: pd.DataFrame, test: pd.DataFrame, preprocessings = list[BasePreprocessing], copy = True, load_from_pkl = True, preprocessed_path = "data/preprocessed/basic/"
     kwargs = {
         "dimension_list": list([950, 250, 150, 50, 2]),
         "activation": torch.nn.ReLU(),
         "loss_func": torch.nn.CrossEntropyLoss(),
         "lr": 0.001,
-        "train": train_df,
-        "test": test_df,
-        # "preprocessed_path": "data/preprocessed/basic/",
-        "preprocessed_path": "data/preprocessed/basic/toy",
-        "load_from_pkl": True,
-        "preprocessings": [NLTKStopWordRemoving(), PunctuationRemoving()],
+        "train_dataset": train_dataset,
     }
     model = SimpleANN(**kwargs)
 
