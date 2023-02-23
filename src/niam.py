@@ -41,6 +41,8 @@ if __name__ == "__main__":
 
     train_dataset = BagOfWordsDataset(train_df, "data/preprocessed/basic/toy", True, preprocessings=[NLTKStopWordRemoving(), PunctuationRemoving()], copy=False)
     train_dataset.prepare()
+    test_dataset = BagOfWordsDataset(test_df, "data/preprocessed/basic/toy-test", True, preprocessings=[NLTKStopWordRemoving(), PunctuationRemoving()], parent_dataset=train_dataset, copy=False)
+    test_dataset.prepare()
     ## dimension_list, activation, loss_func, lr, train: pd.DataFrame, test: pd.DataFrame, preprocessings = list[BasePreprocessing], copy = True, load_from_pkl = True, preprocessed_path = "data/preprocessed/basic/"
     kwargs = {
         "dimension_list": list([950, 250, 150, 50, 2]),

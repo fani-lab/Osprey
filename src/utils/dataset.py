@@ -26,11 +26,12 @@ class MyDataset(Dataset):
 
 
 class BagOfWordsDataset(Dataset):
-    def __init__(self, df: pd.DataFrame, output_path: str, load_from_pkl: bool, preprocessings=list[BasePreprocessing], parent_dataset=None, copy: bool=False):
+    def __init__(self, df: pd.DataFrame, output_path: str, load_from_pkl: bool, preprocessings:list[BasePreprocessing]=[], persist_data=True, parent_dataset=None, copy: bool=False):
         self.output_path = output_path
         self.parent_dataset = parent_dataset
         self.load_from_pkl = load_from_pkl
         self.preprocessings = preprocessings
+        self.persist_data = persist_data
 
         if copy:
             logger.debug("copying df to ann class")
@@ -41,22 +42,12 @@ class BagOfWordsDataset(Dataset):
     def get_session_path(self, filename) -> str:
         return self.output_path + "bow/" + filename
 
-    def prepare(self):
-        logger.info("data preparation started")
+    def preprocess(self):
         try:
             if not self.load_from_pkl:
                 raise FileNotFoundError()
-            logger.info("reading tokens and encoder from pickle files")
-            logger.debug("reading vectors")
-            with open(self.get_session_path("vectors.pkl"), "rb") as f:
+            with open(self.get_session_path("tokens.pkl"), "rb") as f:
                 tokens = pickle.load(f)
-
-            logger.debug("finished reading vectors")
-            logger.debug("reading encoder")
-            with open(self.get_session_path("one-hot-encoder.pkl"), "rb") as f:
-                self.encoder = pickle.load(f)
-            logger.debug("finished reading encoder")
-
         except FileNotFoundError:
             logger.info("generating tokens from scratch")
             tokens = self.nltk_tokenize(self.df["text"])
@@ -64,23 +55,33 @@ class BagOfWordsDataset(Dataset):
             for preprocessor in self.preprocessings:
                 logger.info(f"applying {preprocessor.name()}")
                 tokens = [*preprocessor.opt(tokens)]
-            logger.info("vectorizing data")
-            encoder = self.init_encoder(tokens)
-            tokens = self.vectorize(tokens, encoder)
 
-            logger.info("saving vectors as pickle")
-            with force_open(self.get_session_path("vectors.pkl"), "wb") as f:
+        return tokens
+    
+    def prepare(self):
+        tokens = self.preprocess()
+
+        self.encoder = self.init_encoder(tokens_records=tokens)
+
+        vectors = self.vectorize(tokens, self.encoder)
+
+        # Persisting changes
+        if self.persist_data:
+            vectors_path = self.get_session_path("vectors.pkl")
+            encoder_path = self.get_session_path("encoder.pkl")
+            tokens_path = self.get_session_path("tokens.pkl")
+            logger.info(f"saving tokens as pickle at {tokens_path}")
+            with force_open(tokens_path, "wb") as f:
                 pickle.dump(tokens, f)
-
-            logger.info("saving encoder as pickle")
-            with force_open(self.get_session_path("one-hot-encoder.pkl"), "wb") as f: # TODO: save them via the vectorize method
+            logger.info(f"saving vectors as pickle at {vectors_path}")
+            with force_open(vectors_path, "wb") as f:
+                pickle.dump(vectors, f)
+            logger.info(f"saving encoder as pickle at {encoder_path}")
+            with force_open(encoder_path, "wb") as f:
                 pickle.dump(self.encoder, f)
-
-        except Exception as e:
-            raise e
-
+        
         self.labels = torch.tensor(self.df["tagged_msg"].values)
-        self.data = torch.stack(tokens)
+        self.data = torch.stack(vectors)
         logger.info("data preparation finished")
     
     def get_data_generator(self, data, pattern):
@@ -97,13 +98,26 @@ class BagOfWordsDataset(Dataset):
         return tokens
     
     def init_encoder(self, tokens_records):
-        encoder = GenerativeOneHotEncoder()
-        logger.info("started generating bag of words vector encoder")
-        data = set()
-        data.update(*tokens_records)
-        pattern = lambda x: x
-        logger.debug("fitting data into one hot encoder")
-        encoder.fit(self.get_data_generator(data=data, pattern=pattern))
+        try:
+            if self.parent_dataset is not None:
+                encoder = self.parent_dataset.encoder
+                return encoder
+        except Exception as e:
+            raise e
+        
+        try:
+            if not self.load_from_pkl:
+                raise FileNotFoundError()
+            with open(self.get_session_path("one-hot-encoder.pkl"), "rb") as f:
+                encoder = pickle.load(f)
+        except FileNotFoundError:
+            encoder = GenerativeOneHotEncoder()
+            logger.info("started generating bag of words vector encoder")
+            data = set()
+            data.update(*tokens_records)
+            pattern = lambda x: x
+            logger.debug("fitting data into one hot encoder")
+            encoder.fit(self.get_data_generator(data=data, pattern=pattern))
 
         return encoder
     
