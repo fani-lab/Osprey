@@ -20,6 +20,7 @@ from utils.mydataset import MyDataset
 
 logger = logging.getLogger()
 
+
 class SimpleANN(torch.nn.Module, Baseline):
 
     def __init__(self, dimension_list, activation, loss_func, lr, train: pd.DataFrame, test: pd.DataFrame,
@@ -79,7 +80,7 @@ class SimpleANN(torch.nn.Module, Baseline):
         """
         recall = torchmetrics.Recall(task='multiclass', num_classes=2)
         logger.info("training phase started")
-        for i in range(1, epoch_num+1):
+        for i in range(1, epoch_num + 1):
             loss = 0
             train_dataloader = DataLoader(self.train_dataset, batch_size, shuffle=True)
             for X, y in train_dataloader:
@@ -92,8 +93,22 @@ class SimpleANN(torch.nn.Module, Baseline):
 
             logger.info(f'epoch {i}:\n Loss: {loss}')
 
-    def test(self):
-        pass
+    def test(self, test_data, test_label):
+        test_dataset = MyDataset(test_data, test_label)
+        test_dataloader = DataLoader(test_dataset, batch_size=1)
+        pred = []
+        label = []
+        for X, y in test_dataloader:
+            pred.append(self.forward(X).argmax(1))
+            label.append(y)
+        accuracy = torchmetrics.Accuracy('multiclass', num_classes=2)
+        precision = torchmetrics.Precision('multiclass', num_classes=2)
+        recall = torchmetrics.Recall('multiclass', num_classes=2)
+        pred = torch.tensor(pred)
+        label = torch.tensor(label)
+        logger.info(
+            f'accuracy: {accuracy(pred, label)}\n' + f'Precision: {precision(pred, label)}\n' +
+            f'Recall: {recall(pred, label)}')
 
     def get_data_generator(self, data, pattern):
         def func():
@@ -157,7 +172,8 @@ class SimpleANN(torch.nn.Module, Baseline):
                 pickle.dump(train_tokens, f)
 
             logger.info("saving encoder as pickle")
-            with open(self.get_session_path("one-hot-encoder.pkl"), "wb") as f: # TODO: save them via the vectorize method
+            with open(self.get_session_path("one-hot-encoder.pkl"),
+                      "wb") as f:  # TODO: save them via the vectorize method
                 pickle.dump(self.encoder, f)
 
         except Exception as e:

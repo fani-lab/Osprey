@@ -1,4 +1,8 @@
+import logging
 import os
+import sys
+import time
+
 import torch
 from lxml import etree
 import pandas as pd
@@ -8,7 +12,7 @@ import pandas as pd
 # import datetime
 from models.ann import SimpleANN
 from preprocessing.stopwords import NLTKStopWordRemoving
-from src.preprocessing.punctuations import PunctuationRemoving
+from preprocessing.punctuations import PunctuationRemoving
 
 
 def get_prev_msg_cat(prev, text):
@@ -79,7 +83,7 @@ def read_xml(xmlfile, tagged_msgs, predators):
                    'nauthor': len(set([m.getchildren()[0].text for m in conv.getchildren()])),
                    'text': '' if body.text is None else body.text,
                    'tagged_msg': 0 if tagged_msgs.loc[(tagged_msgs['conv_id'] == conv.get('id')) & (
-                               tagged_msgs['line'] == int(msg.get('line')))].empty else 1,
+                           tagged_msgs['line'] == int(msg.get('line')))].empty else 1,
                    'tagged_conv': 0 if tagged_msgs.loc[tagged_msgs['conv_id'] == conv.get('id')].empty else 1,
                    'tagged_predator': None if predators.empty else (
                        1 if author.text in predators['tagged_pred'].tolist() else 0),
@@ -134,19 +138,58 @@ def get_stats(data):
     return stats
 
 
+START_TIME = time.strftime("%m-%d-%Y-%H-%M-%S", time.localtime())
+FORMATTER = logging.Formatter("%(asctime)s | %(name)s | %(levelname)s : %(message)s")
+FORMATTER_VERBOSE = logging.Formatter(
+    "%(asctime)s | %(name)s | %(levelname)s | %(filename)s %(funcName)s @ %(lineno)s : %(message)s")
+
+debug_file_handler = logging.FileHandler(f"../logs/{START_TIME}.log")
+debug_file_handler.setLevel(logging.DEBUG)
+debug_file_handler.setFormatter(FORMATTER_VERBOSE)
+
+info_terminal_handler = logging.StreamHandler(sys.stdout)
+info_terminal_handler.setLevel(logging.INFO)
+info_terminal_handler.setFormatter(FORMATTER)
+
+logger = logging.getLogger()
+logger.addHandler(debug_file_handler)
+logger.addHandler(info_terminal_handler)
+logger.setLevel(logging.DEBUG)
+
 if __name__ == '__main__':
-    # test_path, train_path = "data/test/test.csv", "data/train/train.csv"
-    test_path, train_path = "../data/toy.test/toy-test.csv", "../data/toy.train/toy-train.csv"
-    test_df = pd.read_csv(test_path)
-    train_df = pd.read_csv(train_path)
+    datapath = '../data/'
+    try:
+        df_train = pd.read_csv(f'{datapath}toy.train/toy-train.csv', index_col=0).fillna('')
+    except FileNotFoundError:
+
+        print("extracting training data")
+        training_file = f'{datapath}toy.train/pan12-sexual-predator-identification-training-corpus-2012-05-01.xml'
+        training_predator_id_file = f'{datapath}toy.train/pan12-sexual-predator-identification-training-corpus-predators-2012-05-01.txt'
+        training_tagged_msgs_file = f'{datapath}toy.train/pan12-sexual-predator-identification-diff.txt'
+        df_train = read_xml(training_file,
+                            pd.read_csv(training_tagged_msgs_file, names=['conv_id', 'line'], sep='\t', header=None),
+                            pd.read_csv(training_predator_id_file, header=None, names=['tagged_pred']))
+        df_train.to_csv(f"{datapath}/toy.train/toy-train.csv")
+
+    try:
+        df_test = pd.read_csv(f'{datapath}toy.test/toy-test.csv', index_col=0).fillna('')
+    except FileNotFoundError:
+        print("extracting test data")
+        test_file = f'{datapath}toy.test/pan12-sexual-predator-identification-test-corpus-2012-05-17.xml'
+        test_predator_id_file = f'{datapath}toy.test/pan12-sexual-predator-identification-groundtruth-problem1.txt'
+        test_tagged_msgs_file = f'{datapath}toy.test/pan12-sexual-predator-identification-groundtruth-problem2.txt'
+        df_test = read_xml(test_file,
+                           pd.read_csv(test_tagged_msgs_file, names=['conv_id', 'line'], sep='\t', header=None),
+                           pd.read_csv(test_predator_id_file, header=None, names=['tagged_pred']))
+        df_test.to_csv(f"{datapath}/toy.test/toy-test.csv")
 
     kwargs = {
         "dimension_list": list([950, 250, 150, 50, 2]),
         "activation": torch.nn.ReLU(),
         "loss_func": torch.nn.CrossEntropyLoss(),
         "lr": 0.001,
-        "train": train_df,
-        "test": test_df,
+        "train": df_train,
+        "test": df_test,
         # "preprocessed_path": "data/preprocessed/basic/",
         "preprocessed_path": "../data/preprocessed/basic/toy",
         "load_from_pkl": True,
@@ -161,6 +204,8 @@ if __name__ == '__main__':
         raise e
 
     model.learn(epoch_num=10, batch_size=64)
+    model.test(model.train_tokens, model.train_labels)
+
 # if __name__ == '__main__':
 #     # test_path, train_path = "data/test/test.csv", "data/train/train.csv"
 #     test_path, train_path = "../data/toy.test/toy-test.csv", "../data/toy.train/toy-train.csv"
@@ -208,17 +253,17 @@ if __name__ == '__main__':
 #
 #     # df_train_test = pd.concat([df_train, df_test])
 #
-#     # text_feature_sets = [["w2v_glove","nauthors", "time","count", "msg_line"]] # [["w2v_glove","prv_cat","nauthors", "time","count", "msg_line"]]
-#     # Baselines = [msg_classifier()]#text_features, [len(df_train), len(df_test)], relabeling, df_train_test)]#, conv_msg_classifier(relabeling)]
-#     #
-#     # for text_feature_set in text_feature_sets:
-#     #     text_feature_set_str = '.'.join(text_feature_set)
-#     #     text_features = ef.extract_load_text_features(df_train_test, text_feature_set, f'../output/{text_feature_set_str}.npz')
-#     #
-#     #     for baseline in Baselines:
-#     #         baseline.main(df_train_test, text_features, "../output/", text_feature_set_str)
-#     #
-#     # # 'tagged_msg': original labels (conv, msg_line) only available for test set
-#     # # 'tagged_predator_bc': if conv has at least one predator, all the msgs of the conv are tagged
-#     # # 'tagged_msg_bc': if conv has at least one tagged msg, all the msgs of the conv are tagged
-#     # relabeling = ['tagged_msg', 'tagged_predator', 'tagged_conv']
+# text_feature_sets = [["w2v_glove","nauthors", "time","count", "msg_line"]] # [["w2v_glove","prv_cat","nauthors", "time","count", "msg_line"]]
+# Baselines = [msg_classifier()]#text_features, [len(df_train), len(df_test)], relabeling, df_train_test)]#, conv_msg_classifier(relabeling)]
+#
+# for text_feature_set in text_feature_sets:
+#     text_feature_set_str = '.'.join(text_feature_set)
+#     text_features = ef.extract_load_text_features(df_train_test, text_feature_set, f'../output/{text_feature_set_str}.npz')
+#
+#     for baseline in Baselines:
+#         baseline.main(df_train_test, text_features, "../output/", text_feature_set_str)
+#
+# # 'tagged_msg': original labels (conv, msg_line) only available for test set
+# # 'tagged_predator_bc': if conv has at least one predator, all the msgs of the conv are tagged
+# # 'tagged_msg_bc': if conv has at least one tagged msg, all the msgs of the conv are tagged
+# relabeling = ['tagged_msg', 'tagged_predator', 'tagged_conv']
