@@ -31,8 +31,6 @@ class BagOfWordsDataset(Dataset):
         self.parent_dataset = parent_dataset
         self.load_from_pkl = load_from_pkl
         self.preprocessings = preprocessings
-        
-        self.encoder = GenerativeOneHotEncoder()
 
         if copy:
             logger.debug("copying df to ann class")
@@ -67,7 +65,8 @@ class BagOfWordsDataset(Dataset):
                 logger.info(f"applying {preprocessor.name()}")
                 tokens = [*preprocessor.opt(tokens)]
             logger.info("vectorizing data")
-            tokens = self.vectorize(tokens)
+            encoder = self.init_encoder(tokens)
+            tokens = self.vectorize(tokens, encoder)
 
             logger.info("saving vectors as pickle")
             with force_open(self.get_session_path("vectors.pkl"), "wb") as f:
@@ -97,21 +96,25 @@ class BagOfWordsDataset(Dataset):
         logger.debug("finished toknizing using nltk")
         return tokens
     
-    def vectorize(self, tokens_records):
-        logger.info("started generating bag of words vectors")
+    def init_encoder(self, tokens_records):
+        encoder = GenerativeOneHotEncoder()
+        logger.info("started generating bag of words vector encoder")
         data = set()
         data.update(*tokens_records)
         pattern = lambda x: x
         logger.debug("fitting data into one hot encoder")
-        self.encoder.fit(self.get_data_generator(data=data, pattern=pattern))
+        encoder.fit(self.get_data_generator(data=data, pattern=pattern))
+
+        return encoder
+    
+    def vectorize(self, tokens_records, encoder):
         logger.debug("started transforming message records into sparse vectors")
         vectors = []
         for record in tokens_records:
-            temp = self.encoder.transform(record=record)
+            temp = encoder.transform(record=record)
             vectors.append(torch.sparse.sum(torch.cat(temp), dim=0))
         logger.debug("transforming of records into vectors is finished")
         return vectors
-
 
     def __getitem__(self, index):
         return self.data[index], self.labels[index]
