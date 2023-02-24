@@ -12,6 +12,7 @@ from utils.filing import force_open
 
 logger = logging.getLogger()
 
+
 class MyDataset(Dataset):
     def __init__(self, train, target):
         self.data = torch.stack(train)
@@ -24,9 +25,10 @@ class MyDataset(Dataset):
         return len(self.data)
 
 
-
 class BagOfWordsDataset(Dataset):
-    def __init__(self, df: pd.DataFrame, output_path: str, load_from_pkl: bool, preprocessings:list[BasePreprocessing]=[], persist_data=True, parent_dataset=None, copy: bool=False):
+    def __init__(self, df: pd.DataFrame, output_path: str, load_from_pkl: bool,
+                 preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None,
+                 copy: bool = False):
         self.output_path = output_path
         self.parent_dataset = parent_dataset
         self.load_from_pkl = load_from_pkl
@@ -57,7 +59,7 @@ class BagOfWordsDataset(Dataset):
                 tokens = [*preprocessor.opt(tokens)]
 
         return tokens
-    
+
     def prepare(self):
         tokens = self.preprocess()
 
@@ -79,24 +81,24 @@ class BagOfWordsDataset(Dataset):
             logger.info(f"saving encoder as pickle at {encoder_path}")
             with force_open(encoder_path, "wb") as f:
                 pickle.dump(self.encoder, f)
-        
+
         self.labels = torch.tensor(self.df["tagged_msg"].values)
         self.data = torch.stack(vectors)
         logger.info("data preparation finished")
-    
+
     def get_data_generator(self, data, pattern):
         def func():
             for record in data:
                 yield pattern(record)
 
         return func
-    
+
     def nltk_tokenize(self, input) -> list[list[str]]:
         logger.debug("tokenizing using nltk")
         tokens = [word_tokenize(record.lower()) if pd.notna(record) else [] for record in input]
         logger.debug("finished toknizing using nltk")
         return tokens
-    
+
     def init_encoder(self, tokens_records):
         try:
             if self.parent_dataset is not None:
@@ -104,7 +106,7 @@ class BagOfWordsDataset(Dataset):
                 return encoder
         except Exception as e:
             raise e
-        
+
         try:
             if not self.load_from_pkl:
                 raise FileNotFoundError()
@@ -120,7 +122,7 @@ class BagOfWordsDataset(Dataset):
             encoder.fit(self.get_data_generator(data=data, pattern=pattern))
 
         return encoder
-    
+
     def vectorize(self, tokens_records, encoder):
         logger.debug("started transforming message records into sparse vectors")
         vectors = []
@@ -135,3 +137,7 @@ class BagOfWordsDataset(Dataset):
 
     def __len__(self):
         return self.data.shape[0]
+
+    @property
+    def shape(self):
+        return self.data.shape

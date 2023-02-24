@@ -11,16 +11,20 @@ from torch.utils.data import DataLoader
 
 logger = logging.getLogger()
 
+
 class SimpleANN(torch.nn.Module, Baseline):
 
-    def __init__(self, dimension_list, activation, loss_func, lr, train_dataset,**kwargs):
+    def __init__(self, dimension_list, activation, loss_func, lr, train_dataset, number_of_classes=2, **kwargs):
 
         super(SimpleANN, self).__init__()
-
+        self.number_of_classes = number_of_classes
+        self.i2h = nn.Linear(train_dataset.shape[1],
+                             dimension_list[0] if len(dimension_list) > 0 else self.number_of_classes)
         self.layers = nn.ModuleList()
         for i, j in zip(dimension_list, dimension_list[1:]):
             self.layers.append(nn.Linear(in_features=i, out_features=j))
-
+        self.h2o = torch.nn.Linear(dimension_list[-1] if len(dimension_list) > 0 else train_dataset.shape[1],
+                                   self.number_of_classes)
         self.activation = activation
         self.optimizer = torch.optim.SGD(self.parameters(), lr=lr)
         self.loss_function = loss_func
@@ -36,11 +40,11 @@ class SimpleANN(torch.nn.Module, Baseline):
         Returns: prediction of the model
 
         """
-        for layer in self.layers[:-1]:
-            x = layer(x)
-            x = self.activation(x)
+        x = self.activation(self.i2h(x))
+        for layer in self.layers:
+            x = self.activation(layer(x))
 
-        x = self.layers[-1](x)
+        x = self.h2o(x)
         x = torch.softmax(x, dim=1)
         return x
 
@@ -64,7 +68,6 @@ class SimpleANN(torch.nn.Module, Baseline):
                 loss = self.loss_function(y_hat, y)
                 loss.backward()
                 self.optimizer.step()
-                # logger.info(f'recall on batch: {recall(y_hat.argmax(1), y)}')
                 logger.info(f"epoch: {i} | batch: {batch_index} | loss: {loss}")
 
             logger.info(f'epoch {i}:\n Loss: {loss}')
