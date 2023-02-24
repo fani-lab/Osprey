@@ -1,5 +1,6 @@
 import pickle
 import logging
+import time
 
 import torchmetrics
 from models.baseline import Baseline
@@ -71,11 +72,13 @@ class SimpleANN(torch.nn.Module, Baseline):
                 logger.info(f"epoch: {i} | batch: {batch_index} | loss: {loss}")
 
             logger.info(f'epoch {i}:\n Loss: {loss}')
+        current_time = time.strftime("%m-%d-%Y-%H-%M", time.localtime())
+        self.save(path=f"output/ann/ann-{current_time}.pth")
 
     def test(self, test_dataset):
-        accuracy = torchmetrics.Accuracy('binary',)
-        precision = torchmetrics.Precision('binary',)
-        recall = torchmetrics.Recall('binary',)
+        accuracy = torchmetrics.Accuracy('binary', )
+        precision = torchmetrics.Precision('binary', )
+        recall = torchmetrics.Recall('binary', )
         all_preds = []
         all_targets = []
         test_dataloader = DataLoader(test_dataset, batch_size=64)
@@ -98,6 +101,20 @@ class SimpleANN(torch.nn.Module, Baseline):
         logger.info(f'torchmetrics precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
         logger.info(f'torchmetrics Recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
 
-
     def get_session_path(self, file_name: str = "") -> str:
         return self.preprocessed_path + file_name
+
+    def save(self, path):
+        try:
+            torch.save(self.state_dict(), path)
+            logger.info('parameters saved successfully.')
+        except Exception as e:
+            logger.debug(e)
+
+    def load_params(self, path):
+        try:
+            self.load_state_dict(torch.load(path))
+            logger.info("parameters loaded successfully")
+        except Exception as e:
+            logger.debug(e)
+
