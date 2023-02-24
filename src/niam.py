@@ -30,17 +30,20 @@ logger.addHandler(info_terminal_handler)
 logger.setLevel(logging.DEBUG)
 
 if __name__ == "__main__":
-    # test_path, train_path = "data/test/test.csv", "data/train/train.csv"
-    test_path, train_path = "data/toy.test/toy-test.csv", "data/toy.train/toy-train.csv"
+    test_path, train_path = "data/test/test.csv", "data/train/train.csv"
+    # test_path, train_path = "data/toy.test/toy-test.csv", "data/toy.train/toy-train.csv"
     logger.info("reading test csv file")
     test_df = pd.read_csv(test_path)
     logger.info("reading train csv file")
     train_df = pd.read_csv(train_path)
     logger.debug("reading test and train csv files is done")
-    train_dataset = TimeBasedBagOfWordsDataset(train_df, "data/preprocessed/basic/toy", False,
+
+    datasets_path = "data/preprocessed/ann/1/"
+
+    train_dataset = TimeBasedBagOfWordsDataset(train_df, datasets_path, True,
                                       preprocessings=[NLTKStopWordRemoving(), PunctuationRemoving()], copy=False)
     train_dataset.prepare()
-    test_dataset = TimeBasedBagOfWordsDataset(test_df, "data/preprocessed/basic/toy-test", False,
+    test_dataset = TimeBasedBagOfWordsDataset(test_df, datasets_path + "test_", True,
                                      preprocessings=[NLTKStopWordRemoving(), PunctuationRemoving()],
                                      parent_dataset=train_dataset, copy=False)
     test_dataset.prepare()
@@ -50,7 +53,7 @@ if __name__ == "__main__":
         "dimension_list": list([256]),
         "activation": torch.nn.ReLU(),
         "loss_func": torch.nn.CrossEntropyLoss(),
-        "lr": 0.001,
+        "lr": 0.1,
         "train_dataset": train_dataset,
         "number_of_classes": 2,
     }
