@@ -141,3 +141,37 @@ class BagOfWordsDataset(Dataset):
     @property
     def shape(self):
         return self.data.shape
+
+
+class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
+
+    def get_normalization_params(self, columns):
+        if self.parent_dataset is not None:
+            return self.parent_dataset.get_normalization_params(columns)
+        if hasattr(self, "normalization_params"):
+            return self.normalization_params
+        
+        self.normalization_params = dict()
+        for c in columns:
+            self.normalization_params[c] = (self.df[c].mean(), self.df[c].std())
+
+        return self.normalization_params
+
+    def vectorize(self, tokens_records, encoder):
+        logger.debug("started transforming message records into sparse vectors")
+        vectors = []
+        context_columns = ("nauthor", "msg_line", "time")
+        self.df[["nauthor", "msg_line", "time"]]
+        normalization_params = self.get_normalization_params(context_columns)
+        for c in context_columns:
+            self.df[f"normalized_{c}"] = (self.df[c] - normalization_params[c][0]) / normalization_params[c][1]
+        context_indices = [list(range(len(context_columns)))]
+        
+        for i, record in enumerate(tokens_records):
+            onehots = torch.sparse.sum(torch.cat(encoder.transform(record=record)), dim=0)
+            context = torch.sparse_coo_tensor(context_indices, [self.df.iloc[i][f"normalized_{c}"] for c in context_columns],
+                                              (len(context_columns),), dtype=torch.float32)
+
+            vectors.append(torch.hstack((context, onehots)))
+        logger.debug("transforming of records into vectors is finished")
+        return vectors

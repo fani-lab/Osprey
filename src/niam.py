@@ -8,7 +8,7 @@ import torch.nn
 from models.ann import SimpleANN
 from preprocessing.stopwords import NLTKStopWordRemoving
 from preprocessing.punctuations import PunctuationRemoving
-from utils.dataset import BagOfWordsDataset
+from utils.dataset import BagOfWordsDataset, TimeBasedBagOfWordsDataset
 
 START_TIME = time.strftime("%m-%d-%Y-%H-%M-%S", time.localtime())
 
@@ -37,11 +37,10 @@ if __name__ == "__main__":
     logger.info("reading train csv file")
     train_df = pd.read_csv(train_path)
     logger.debug("reading test and train csv files is done")
-
-    train_dataset = BagOfWordsDataset(train_df, "data/preprocessed/basic/toy", True,
+    train_dataset = TimeBasedBagOfWordsDataset(train_df, "data/preprocessed/basic/toy", False,
                                       preprocessings=[NLTKStopWordRemoving(), PunctuationRemoving()], copy=False)
     train_dataset.prepare()
-    test_dataset = BagOfWordsDataset(test_df, "data/preprocessed/basic/toy-test", True,
+    test_dataset = TimeBasedBagOfWordsDataset(test_df, "data/preprocessed/basic/toy-test", False,
                                      preprocessings=[NLTKStopWordRemoving(), PunctuationRemoving()],
                                      parent_dataset=train_dataset, copy=False)
     test_dataset.prepare()
