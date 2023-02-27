@@ -30,15 +30,15 @@ logger.addHandler(info_terminal_handler)
 logger.setLevel(logging.DEBUG)
 
 if __name__ == "__main__":
-    test_path, train_path = "data/test/test.csv", "data/train/train.csv"
-    # test_path, train_path = "data/toy.test/toy-test.csv", "data/toy.train/toy-train.csv"
+    # test_path, train_path = "/data/test/test.csv", "/data/train/train.csv"
+    test_path, train_path = "data/toy.test/toy-test.csv", "data/toy.train/toy-train.csv"
     logger.info("reading test csv file")
     test_df = pd.read_csv(test_path)
     logger.info("reading train csv file")
     train_df = pd.read_csv(train_path)
     logger.debug("reading test and train csv files is done")
 
-    datasets_path = "data/preprocessed/ann/1/"
+    datasets_path = "/data/preprocessed/ann/1/"
 
     train_dataset = TimeBasedBagOfWordsDataset(train_df, datasets_path, True,
                                       preprocessings=[NLTKStopWordRemoving(), PunctuationRemoving()], copy=False)
@@ -50,7 +50,7 @@ if __name__ == "__main__":
     ## dimension_list, activation, loss_func, lr, train: pd.DataFrame, test: pd.DataFrame, preprocessings = list[BasePreprocessing], copy = True, load_from_pkl = True, preprocessed_path = "data/preprocessed/basic/"
     kwargs = {
         # "dimension_list": list([950, 250, 150, 50, 2]),
-        "dimension_list": list([256]),
+        "dimension_list": list([128]),
         "activation": torch.nn.ReLU(),
         "loss_func": torch.nn.CrossEntropyLoss(),
         "lr": 0.1,
