@@ -15,14 +15,22 @@ logger = logging.getLogger()
 
 class MyDataset(Dataset):
     def __init__(self, train, target):
-        self.data = torch.stack(train)
-        self.labels = torch.from_numpy(target)
+        if isinstance(train, pd.core.frame.DataFrame):
+            self.data = torch.from_numpy(train.values)
+            self.labels = torch.from_numpy(target.to_numpy())
+        else:
+            self.data = torch.stack(train)
+            self.labels = torch.from_numpy(target)
 
     def __getitem__(self, index):
         return self.data[index], self.labels[index]
 
     def __len__(self):
         return len(self.data)
+
+    @property
+    def shape(self):
+        return self.data.shape
 
 
 class BagOfWordsDataset(Dataset):
