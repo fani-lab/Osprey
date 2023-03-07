@@ -145,6 +145,10 @@ class BagOfWordsDataset(Dataset):
         logger.debug("transforming of records into vectors is finished")
         return vectors
 
+    def oversample_by_smote(self):
+        smote = SMOTE(random_state=42)
+        self.data, self.labels = smote.fit_resample(self.data.to_dense(), self.labels)
+
     def __getitem__(self, index):
         return self.data[index], self.labels[index]
 
@@ -154,10 +158,6 @@ class BagOfWordsDataset(Dataset):
     @property
     def shape(self):
         return self.data.shape
-
-    def oversample_by_smote(self):
-        smote = SMOTE(random_state=42)
-        self.data, self.labels = smote.fit_resample(self.data.to_dense(), self.labels)
 
 
 
