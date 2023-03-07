@@ -9,6 +9,7 @@ from nltk.tokenize import word_tokenize
 from preprocessing.base import BasePreprocessing
 from utils.one_hot_encoder import GenerativeOneHotEncoder
 from utils.filing import force_open
+from imblearn.over_sampling import SMOTE
 
 logger = logging.getLogger()
 
@@ -31,6 +32,10 @@ class MyDataset(Dataset):
     @property
     def shape(self):
         return self.data.shape
+
+    def oversample_by_smote(self):
+        smote = SMOTE(random_state=42)
+        self.data, self.labels = smote.fit_resample(self.data.to_dense(), self.labels)
 
 
 class BagOfWordsDataset(Dataset):
@@ -150,6 +155,11 @@ class BagOfWordsDataset(Dataset):
     def shape(self):
         return self.data.shape
 
+    def oversample_by_smote(self):
+        smote = SMOTE(random_state=42)
+        self.data, self.labels = smote.fit_resample(self.data.to_dense(), self.labels)
+
+
 
 class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
 
@@ -158,7 +168,7 @@ class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
             return self.parent_dataset.get_normalization_params(columns)
         if hasattr(self, "normalization_params"):
             return self.normalization_params
-        
+
         self.normalization_params = dict()
         for c in columns:
             self.normalization_params[c] = (self.df[c].mean(), self.df[c].std())
@@ -174,12 +184,14 @@ class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
         for c in context_columns:
             self.df[f"normalized_{c}"] = (self.df[c] - normalization_params[c][0]) / normalization_params[c][1]
         context_indices = [list(range(len(context_columns)))]
-        
+
         for i, record in enumerate(tokens_records):
             onehots = torch.sparse.sum(torch.cat(encoder.transform(record=record)), dim=0)
-            context = torch.sparse_coo_tensor(context_indices, [self.df.iloc[i][f"normalized_{c}"] for c in context_columns],
+            context = torch.sparse_coo_tensor(context_indices,
+                                              [self.df.iloc[i][f"normalized_{c}"] for c in context_columns],
                                               (len(context_columns),), dtype=torch.float32)
 
             vectors.append(torch.hstack((context, onehots)))
         logger.debug("transforming of records into vectors is finished")
         return vectors
+
