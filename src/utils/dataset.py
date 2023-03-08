@@ -8,6 +8,7 @@ from nltk.tokenize import word_tokenize
 
 from preprocessing.base import BasePreprocessing
 from utils.one_hot_encoder import GenerativeOneHotEncoder
+from utils.transformers_encoders import TransformersEmbeddingEncoder
 from utils.filing import force_open
 from imblearn.over_sampling import SMOTE
 
@@ -195,3 +196,20 @@ class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
         logger.debug("transforming of records into vectors is finished")
         return vectors
 
+
+class TransformersEmbeddingDataset(BagOfWordsDataset):
+
+    def __init__(self, df: pd.DataFrame, output_path: str, load_from_pkl: bool, preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, copy: bool = False):
+        super().__init__(df, output_path, load_from_pkl, preprocessings, persist_data, parent_dataset, copy)
+
+    def init_encoder(self, tokens_records):
+        logger.debug("Transformer Embedding Dataset being initialized")
+        encoder = TransformersEmbeddingEncoder()
+
+        return encoder
+
+    def vectorize(self, tokens_records, encoder):
+        vectors = [None] * len(tokens_records)
+        for i, record in enumerate(tokens_records):
+            vectors[i] = torch.cat(encoder.transform(record))
+        return vectors
