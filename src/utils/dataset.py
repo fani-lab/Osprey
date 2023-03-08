@@ -10,6 +10,7 @@ from preprocessing.base import BasePreprocessing
 from utils.one_hot_encoder import GenerativeOneHotEncoder
 from utils.transformers_encoders import TransformersEmbeddingEncoder
 from utils.filing import force_open
+from utils.commons import nltk_tokenize
 from imblearn.over_sampling import SMOTE
 
 logger = logging.getLogger()
@@ -39,7 +40,7 @@ class MyDataset(Dataset):
         self.data, self.labels = smote.fit_resample(self.data.to_dense(), self.labels)
 
 
-class BagOfWordsDataset(Dataset):
+class BaseDataset(Dataset):
     def __init__(self, df: pd.DataFrame, output_path: str, load_from_pkl: bool,
                  preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None,
                  copy: bool = False):
@@ -54,10 +55,13 @@ class BagOfWordsDataset(Dataset):
             self.df = df.copy(deep=True)
         else:
             self.df = df
-
+        
     def get_session_path(self, filename) -> str:
-        return self.output_path + "bow/" + filename
-
+        return self.output_path + "base/" + filename
+    
+    def tokenize(self, input) -> list[list[str]]:
+        raise NotImplementedError()
+    
     def preprocess(self):
         try:
             if not self.load_from_pkl:
@@ -66,7 +70,7 @@ class BagOfWordsDataset(Dataset):
                 tokens = pickle.load(f)
         except FileNotFoundError:
             logger.info("generating tokens from scratch")
-            tokens = self.nltk_tokenize(self.df["text"])
+            tokens = self.tokenize(self.df["text"])
             logger.info("applying preprocessing modules")
             for preprocessor in self.preprocessings:
                 logger.info(f"applying {preprocessor.name()}")
@@ -100,6 +104,36 @@ class BagOfWordsDataset(Dataset):
         self.data = torch.stack(vectors)
         logger.info("data preparation finished")
 
+    def __getitem__(self, index):
+        return self.data[index], self.labels[index]
+
+    def __len__(self):
+        return self.data.shape[0]
+
+    @property
+    def shape(self):
+        return self.data.shape
+
+
+class BagOfWordsDataset(BaseDataset):
+    def __init__(self, df: pd.DataFrame, output_path: str, load_from_pkl: bool,
+                 preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None,
+                 copy: bool = False):
+        self.output_path = output_path
+        self.parent_dataset = parent_dataset
+        self.load_from_pkl = load_from_pkl
+        self.preprocessings = preprocessings
+        self.persist_data = persist_data
+
+        if copy:
+            logger.debug("copying df to ann class")
+            self.df = df.copy(deep=True)
+        else:
+            self.df = df
+
+    def get_session_path(self, filename) -> str:
+        return self.output_path + "bow/" + filename
+
     def get_data_generator(self, data, pattern):
         def func():
             for record in data:
@@ -107,11 +141,9 @@ class BagOfWordsDataset(Dataset):
 
         return func
 
-    def nltk_tokenize(self, input) -> list[list[str]]:
+    def tokenize(self, input) -> list[list[str]]:
         logger.debug("tokenizing using nltk")
-        tokens = [word_tokenize(record.lower()) if pd.notna(record) else [] for record in input]
-        logger.debug("finished toknizing using nltk")
-        return tokens
+        return nltk_tokenize(input)
 
     def init_encoder(self, tokens_records):
         try:
@@ -150,17 +182,6 @@ class BagOfWordsDataset(Dataset):
         smote = SMOTE(random_state=42)
         self.data, self.labels = smote.fit_resample(self.data.to_dense(), self.labels)
 
-    def __getitem__(self, index):
-        return self.data[index], self.labels[index]
-
-    def __len__(self):
-        return self.data.shape[0]
-
-    @property
-    def shape(self):
-        return self.data.shape
-
-
 
 class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
 
@@ -197,7 +218,7 @@ class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
         return vectors
 
 
-class TransformersEmbeddingDataset(BagOfWordsDataset):
+class TransformersEmbeddingDataset(BaseDataset):
 
     def __init__(self, df: pd.DataFrame, output_path: str, load_from_pkl: bool, preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, copy: bool = False):
         super().__init__(df, output_path, load_from_pkl, preprocessings, persist_data, parent_dataset, copy)
@@ -205,8 +226,11 @@ class TransformersEmbeddingDataset(BagOfWordsDataset):
     def init_encoder(self, tokens_records):
         logger.debug("Transformer Embedding Dataset being initialized")
         encoder = TransformersEmbeddingEncoder()
-
         return encoder
+
+    def tokenize(self, input):
+        logger.debug("tokenizing using nltk")
+        return nltk_tokenize(input)
 
     def vectorize(self, tokens_records, encoder):
         vectors = [None] * len(tokens_records)
