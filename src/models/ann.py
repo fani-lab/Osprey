@@ -74,7 +74,7 @@ class SimpleANN(torch.nn.Module, Baseline):
             validation_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size,
                                                             sampler=validation_subsampler)
             # Train phase
-            for i in range(1, epoch_num + 1):
+            for i in range(epoch_num):
                 loss = 0
                 for batch_index, (X, y) in enumerate(train_loader):
                     y_hat = self.forward(X)
@@ -108,12 +108,9 @@ class SimpleANN(torch.nn.Module, Baseline):
                 logger.info(f'torchmetrics precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
                 logger.info(f'torchmetrics Recall: {(100 * recall(all_preds, all_targets)):>0.1f}\n')
 
-                if batch_index % self.snapshot_steps == 0:
-                    snapshot_path = self.get_session_path("weights", fold, f"e{i}.pth")
+                if i % self.snapshot_steps == 0 or i == epoch_num-1:
+                    snapshot_path = self.get_session_path("weights", fold, f"e-{i}.pth")
                     self.save(snapshot_path)
-
-        current_time = time.strftime("%m-%d-%Y-%H-%M", time.localtime())
-        self.save(path=f"output/ann/ann-{current_time}.pth")
 
     # def learn(self, epoch_num: int, batch_size: int):
     #     """
