@@ -4,13 +4,11 @@ import pickle
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
-from nltk.tokenize import word_tokenize
 
 from preprocessing.base import BasePreprocessing
 from utils.one_hot_encoder import GenerativeOneHotEncoder
 from utils.transformers_encoders import TransformersEmbeddingEncoder
-from utils.filing import force_open
-from utils.commons import nltk_tokenize
+from utils.commons import nltk_tokenize, force_open
 from imblearn.over_sampling import SMOTE
 
 logger = logging.getLogger()
@@ -237,3 +235,6 @@ class TransformersEmbeddingDataset(BaseDataset):
         for i, record in enumerate(tokens_records):
             vectors[i] = torch.cat(encoder.transform(record))
         return vectors
+
+    def get_session_path(self, filename) -> str:
+        return self.output_path + "transformer/" + filename

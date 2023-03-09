@@ -4,8 +4,7 @@ import time
 import pandas as pd
 import torchmetrics
 
-from src.models.baseline import Baseline
-from src.preprocessing.base import BasePreprocessing
+from models.baseline import Baseline
 
 import torch
 from torch import nn

@@ -1,11 +1,6 @@
 from sentence_transformers import SentenceTransformer
 
 
-
-
-model = SentenceTransformer
-
-
 class TransformersEmbeddingEncoder:
 
     def __init__(self, device="cpu", transformer_identifier="sentence-transformers/all-distilroberta-v1", *args, **kwargs):
