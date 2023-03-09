@@ -65,8 +65,7 @@ class SimpleANN(torch.nn.Module, Baseline):
         logger.info("training phase started")
         kfold = KFold(n_splits=k_fold)
         for fold, (train_ids, validation_ids) in enumerate(kfold.split(self.train_dataset)):
-            logger.info(f'FOLD {fold}')
-            logger.info('--------------------------------')
+            logger.info(f'getting data for fold #{fold}')
             train_subsampler = torch.utils.data.SubsetRandomSampler(train_ids)
             validation_subsampler = torch.utils.data.SubsetRandomSampler(validation_ids)
             train_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size,
@@ -82,9 +81,7 @@ class SimpleANN(torch.nn.Module, Baseline):
                     loss = self.loss_function(y_hat, y)
                     loss.backward()
                     self.optimizer.step()
-                    logger.info(f"epoch: {i} | batch: {batch_index} | loss: {loss}")
-
-                logger.info(f'epoch {i}:\n Loss: {loss}\n')
+                    logger.info(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
 
                 # Validation phase
                 all_preds = []
@@ -133,10 +130,10 @@ class SimpleANN(torch.nn.Module, Baseline):
         correct /= size
         all_preds = torch.tensor(all_preds)
         all_targets = torch.tensor(all_targets)
-        logger.info(f"Test Error: \n Accuracy: {(100 * correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
-        logger.info(f'torchmetrics Accuracy: {(100 * accuracy(all_preds, all_targets)):>0.1f}')
+        logger.info(f"test metrics accuracy: {(100 * correct):>0.1f}%, avg loss: {test_loss:>8f}")
+        logger.info(f'torchmetrics accuracy: {(100 * accuracy(all_preds, all_targets)):>0.1f}')
         logger.info(f'torchmetrics precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
-        logger.info(f'torchmetrics Recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
+        logger.info(f'torchmetrics recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
 
     def save(self, path):
         with force_open(path, "wb") as f:
