@@ -58,10 +58,11 @@ if __name__ == "__main__":
         "loss_func": torch.nn.CrossEntropyLoss(),
         "lr": 0.01,
         "train_dataset": train_dataset,
+        "module_session_path": "/output/rnn",
         "number_of_classes": 2,
     }
     model = RnnModule(**kwargs)
 
-    model.learn(epoch_num=10, batch_size=64)
+    model.learn(epoch_num=10, batch_size=64, k_fold=5)
     model.test(test_dataset)
     print('Done!')

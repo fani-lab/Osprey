@@ -5,6 +5,7 @@ import time
 import torchmetrics
 from models.baseline import Baseline
 from preprocessing.base import BasePreprocessing
+from utils.commons import force_open
 
 import torch
 from torch import nn
@@ -17,7 +18,7 @@ logger = logging.getLogger()
 
 class SimpleANN(torch.nn.Module, Baseline):
 
-    def __init__(self, dimension_list, activation, loss_func, lr, train_dataset, number_of_classes=2, **kwargs):
+    def __init__(self, dimension_list, activation, loss_func, lr, train_dataset, module_session_path, number_of_classes=2, **kwargs):
 
         super(SimpleANN, self).__init__()
         self.number_of_classes = number_of_classes
@@ -33,6 +34,9 @@ class SimpleANN(torch.nn.Module, Baseline):
         self.loss_function = loss_func
 
         self.train_dataset = train_dataset
+        self.session_path = module_session_path if module_session_path[-1] == "\\" or module_session_path[-1] == "/" else module_session_path + "/"
+
+        self.snapshot_steps = 2
 
     def forward(self, x):
         """
@@ -51,6 +55,9 @@ class SimpleANN(torch.nn.Module, Baseline):
         x = torch.softmax(x, dim=1)
         return x
 
+    def get_session_path(self, *args):
+        return f"{self.session_path}" + "ann/" + "/".join([str(a) for a in  args])
+
     def learn(self, epoch_num: int, batch_size: int, k_fold: int):
         accuracy = torchmetrics.Accuracy('binary', )
         precision = torchmetrics.Precision('binary', )
@@ -67,7 +74,7 @@ class SimpleANN(torch.nn.Module, Baseline):
             validation_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size,
                                                             sampler=validation_subsampler)
             # Train phase
-            for i in range(1, epoch_num + 1):
+            for i in range(epoch_num):
                 loss = 0
                 for batch_index, (X, y) in enumerate(train_loader):
                     y_hat = self.forward(X)
@@ -99,10 +106,11 @@ class SimpleANN(torch.nn.Module, Baseline):
                 logger.info(f"Validation Error: Avg loss: {test_loss:>8f}")
                 logger.info(f'torchmetrics Accuracy: {(100 * accuracy(all_preds, all_targets)):>0.1f}')
                 logger.info(f'torchmetrics precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
-                logger.info(f'torchmetrics Recall: {(100 * recall(all_preds, all_targets)):>0.1f}\n')
+                logger.info(f'torchmetrics Recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
 
-        current_time = time.strftime("%m-%d-%Y-%H-%M", time.localtime())
-        self.save(path=f"output/ann/ann-{current_time}.pth")
+                if i % self.snapshot_steps == 0 or i == epoch_num-1:
+                    snapshot_path = self.get_session_path("weights", fold, f"e-{i}.pth")
+                    self.save(snapshot_path)
 
     def test(self, test_dataset):
         accuracy = torchmetrics.Accuracy('binary', )
@@ -130,16 +138,11 @@ class SimpleANN(torch.nn.Module, Baseline):
         logger.info(f'torchmetrics precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
         logger.info(f'torchmetrics Recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
 
-    def get_session_path(self, file_name: str = "") -> str:
-        return self.preprocessed_path + file_name
-
     def save(self, path):
-        try:
-            torch.save(self.state_dict(), path)
-            logger.info('parameters saved successfully.')
-        except Exception as e:
-            logger.debug(e)
-
+        with force_open(path, "wb") as f:
+            torch.save(self.state_dict(), f)
+            logger.info(f"saving sanpshot at {path}")
+        
     def load_params(self, path):
         try:
             self.load_state_dict(torch.load(path))
