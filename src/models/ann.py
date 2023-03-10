@@ -104,32 +104,6 @@ class SimpleANN(torch.nn.Module, Baseline):
         current_time = time.strftime("%m-%d-%Y-%H-%M", time.localtime())
         self.save(path=f"output/ann/ann-{current_time}.pth")
 
-    # def learn(self, epoch_num: int, batch_size: int):
-    #     """
-    #     This function is the training phase of the model
-    #
-    #     Args:
-    #          epoch_num: number of epochs
-    #          batch_size: size of training batches
-    #
-    #     """
-    #     recall = torchmetrics.Recall(task='multiclass', num_classes=2)
-    #     logger.info("training phase started")
-    #     for i in range(1, epoch_num + 1):
-    #         loss = 0
-    #         train_dataloader = DataLoader(self.train_dataset, batch_size, shuffle=True)
-    #         for batch_index, (X, y) in enumerate(train_dataloader):
-    #             y_hat = self.forward(X)
-    #             self.optimizer.zero_grad()
-    #             loss = self.loss_function(y_hat, y)
-    #             loss.backward()
-    #             self.optimizer.step()
-    #             logger.info(f"epoch: {i} | batch: {batch_index} | loss: {loss}")
-    #
-    #         logger.info(f'epoch {i}:\n Loss: {loss}')
-    #     current_time = time.strftime("%m-%d-%Y-%H-%M", time.localtime())
-    #     self.save(path=f"output/ann/ann-{current_time}.pth")
-
     def test(self, test_dataset):
         accuracy = torchmetrics.Accuracy('binary', )
         precision = torchmetrics.Precision('binary', )

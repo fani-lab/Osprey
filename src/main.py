@@ -138,6 +138,7 @@ def get_stats(data):
 
     return stats
 
+
 START_TIME = time.strftime("%m-%d-%Y-%H-%M-%S", time.localtime())
 
 FORMATTER = logging.Formatter("%(asctime)s | %(name)s | %(levelname)s : %(message)s")
@@ -187,13 +188,7 @@ if __name__ == "__main__":
     }
     model = SimpleANN(**kwargs)
 
-    try:
-        model.prep()
-    except Exception as e:
-        logger.error(e)
-        raise e
-
-    model.learn(epoch_num=10, batch_size=64)
+    model.learn(epoch_num=50, batch_size=64)
     model.test(test_dataset)
 
 # if __name__ == '__main__':

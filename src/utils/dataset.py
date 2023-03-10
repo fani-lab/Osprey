@@ -160,7 +160,6 @@ class BagOfWordsDataset(Dataset):
         return self.data.shape
 
 
-
 class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
 
     def get_normalization_params(self, columns):
@@ -194,4 +193,3 @@ class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
             vectors.append(torch.hstack((context, onehots)))
         logger.debug("transforming of records into vectors is finished")
         return vectors
-
