@@ -9,7 +9,7 @@ class Baseline():
         #   save
         pass
 
-    def train(self):
+    def learn(self):
         pass
 
     def test(self):

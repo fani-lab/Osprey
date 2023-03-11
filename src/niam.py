@@ -5,10 +5,10 @@ import sys
 import pandas as pd
 import torch.nn
 
-from models.ann import SimpleANN
+from models.ann import ANNModule
 from preprocessing.stopwords import NLTKStopWordRemoving
 from preprocessing.punctuations import PunctuationRemoving
-from src.models.rnn import RnnModule
+from models.rnn import RnnModule
 from utils.dataset import BagOfWordsDataset, TimeBasedBagOfWordsDataset
 
 START_TIME = time.strftime("%m-%d-%Y-%H-%M-%S", time.localtime())
@@ -49,20 +49,30 @@ if __name__ == "__main__":
                                               parent_dataset=train_dataset, copy=False)
     test_dataset.prepare()
     ## data_size, hidden_size, output_size, activation, loss_func, lr, train: pd.DataFrame, test: pd.DataFrame, preprocessings = list[BasePreprocessing], copy = True, load_from_pkl = True, preprocessed_path = "data/preprocessed/basic/"
+    # kwargs = {
+    #     "input_size": train_dataset.shape[1],
+    #     "hidden_dim": 64,
+    #     "num_layers": 1,
+    #     "learning_batch_size": 64,
+    #     "activation": torch.nn.ReLU(),
+    #     "loss_func": torch.nn.CrossEntropyLoss(),
+    #     "lr": 0.001,
+    #     "train_dataset": train_dataset,
+    #     "module_session_path": "/output/rnn",
+    #     "number_of_classes": 2,
+    # }
     kwargs = {
-        "input_size": train_dataset.shape[1],
-        "hidden_dim": 64,
-        "num_layers": 1,
-        "learning_batch_size": 64,
+        # "dimension_list": list([950, 250, 150, 50, 2]),
+        "dimension_list": list([128]),
         "activation": torch.nn.ReLU(),
         "loss_func": torch.nn.CrossEntropyLoss(),
-        "lr": 0.01,
+        "lr": 0.1,
         "train_dataset": train_dataset,
-        "module_session_path": "/output/rnn",
+        "module_session_path": "./output/",
         "number_of_classes": 2,
     }
-    model = RnnModule(**kwargs)
+    model = ANNModule(**kwargs)
 
-    model.learn(epoch_num=10, batch_size=64, k_fold=5)
+    model.learn(epoch_num=100, batch_size=64, k_fold=10)
     model.test(test_dataset)
     print('Done!')

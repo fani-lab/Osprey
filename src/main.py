@@ -10,7 +10,7 @@ import pandas as pd
 # from classifier import msg_classifier
 # from classifier import conv_msg_classifier
 # import datetime
-from models.ann import SimpleANN
+from models.ann import ANNModule
 from preprocessing.stopwords import NLTKStopWordRemoving
 from preprocessing.punctuations import PunctuationRemoving
 from utils.dataset import TimeBasedBagOfWordsDataset
@@ -186,7 +186,7 @@ if __name__ == "__main__":
         "train_dataset": train_dataset,
         "number_of_classes": 2,
     }
-    model = SimpleANN(**kwargs)
+    model = ANNModule(**kwargs)
 
     model.learn(epoch_num=50, batch_size=64)
     model.test(test_dataset)
