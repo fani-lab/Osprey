@@ -11,16 +11,20 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 
+import matplotlib.pyplot as plt
+import numpy as np
+
 from sklearn.model_selection import KFold
 
 logger = logging.getLogger()
 
 
-class SimpleANN(torch.nn.Module, Baseline):
+class ANNModule(torch.nn.Module, Baseline):
 
-    def __init__(self, dimension_list, activation, loss_func, lr, train_dataset, module_session_path, number_of_classes=2, **kwargs):
+    def __init__(self, dimension_list, activation, loss_func, lr, train_dataset, module_session_path,
+                 number_of_classes=2, **kwargs):
 
-        super(SimpleANN, self).__init__()
+        super(ANNModule, self).__init__()
         self.number_of_classes = number_of_classes
         self.i2h = nn.Linear(train_dataset.shape[1],
                              dimension_list[0] if len(dimension_list) > 0 else self.number_of_classes)
@@ -34,7 +38,8 @@ class SimpleANN(torch.nn.Module, Baseline):
         self.loss_function = loss_func
 
         self.train_dataset = train_dataset
-        self.session_path = module_session_path if module_session_path[-1] == "\\" or module_session_path[-1] == "/" else module_session_path + "/"
+        self.session_path = module_session_path if module_session_path[-1] == "\\" or module_session_path[
+            -1] == "/" else module_session_path + "/"
 
         self.snapshot_steps = 2
 
@@ -56,7 +61,7 @@ class SimpleANN(torch.nn.Module, Baseline):
         return x
 
     def get_session_path(self, *args):
-        return f"{self.session_path}" + "ann/" + "/".join([str(a) for a in  args])
+        return f"{self.session_path}" + "ann/" + "/".join([str(a) for a in args])
 
     def learn(self, epoch_num: int, batch_size: int, k_fold: int):
         accuracy = torchmetrics.Accuracy('binary', )
@@ -74,6 +79,21 @@ class SimpleANN(torch.nn.Module, Baseline):
             validation_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size,
                                                             sampler=validation_subsampler)
             # Train phase
+            total_loss = []
+            # resetting module parameters
+            for name, module in self.named_children():
+                try:
+                    if isinstance(module, nn.ModuleList):
+                        for name_, layer in module.named_children():
+                            print(name_)
+                            layer.reset_parameters()
+                            print("parameters reset!")
+                    else:
+                        print(name)
+                        module.reset_parameters()
+                        print("parameters reset!")
+                except:
+                    pass
             for i in range(epoch_num):
                 loss = 0
                 for batch_index, (X, y) in enumerate(train_loader):
@@ -83,9 +103,8 @@ class SimpleANN(torch.nn.Module, Baseline):
                     loss.backward()
                     self.optimizer.step()
                     logger.info(f"epoch: {i} | batch: {batch_index} | loss: {loss}")
-
+                total_loss.append(loss.item())
                 logger.info(f'epoch {i}:\n Loss: {loss}\n')
-
                 # Validation phase
                 all_preds = []
                 all_targets = []
@@ -108,9 +127,12 @@ class SimpleANN(torch.nn.Module, Baseline):
                 logger.info(f'torchmetrics precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
                 logger.info(f'torchmetrics Recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
 
-                if i % self.snapshot_steps == 0 or i == epoch_num-1:
-                    snapshot_path = self.get_session_path("weights", fold, f"e-{i}.pth")
-                    self.save(snapshot_path)
+            snapshot_path = self.get_session_path(f"f{fold}", f"model_fold{fold}.pth")
+            self.save(snapshot_path)
+            plt.plot(np.array(total_loss))
+            plt.axis([0, epoch_num, 0, 1])
+            plt.savefig(self.get_session_path(f"f{fold}", f"model_fold{fold}_loss.png"))
+            plt.show()
 
     def test(self, test_dataset):
         accuracy = torchmetrics.Accuracy('binary', )
@@ -140,9 +162,9 @@ class SimpleANN(torch.nn.Module, Baseline):
 
     def save(self, path):
         with force_open(path, "wb") as f:
-            torch.save(self.state_dict(), f)
-            logger.info(f"saving sanpshot at {path}")
-        
+            torch.save(self, f)
+            logger.info(f"saving model at {path}")
+
     def load_params(self, path):
         try:
             self.load_state_dict(torch.load(path))
