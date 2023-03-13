@@ -70,15 +70,13 @@ class RnnModule(nn.Module, Baseline):
                 try:
                     if isinstance(module, nn.ModuleList):
                         for name_, layer in module.named_children():
-                            print(name_)
                             layer.reset_parameters()
-                            print("parameters reset!")
+                            logger.info("parameters reset")
                     else:
-                        print(name)
                         module.reset_parameters()
-                        print("parameters reset!")
-                except:
-                    pass
+                        logger.info("parameters reset")
+                except Exception as e:
+                    logger.error(e)
             # Train phase
             for i in range(1, epoch_num + 1):
                 loss = 0
@@ -97,43 +95,43 @@ class RnnModule(nn.Module, Baseline):
                     logger.info(f"epoch: {i} | batch: {batch_index} | loss: {loss}")
                 total_loss.append(loss.item())
                 logger.info(f'epoch {i}:\n Loss: {loss}')
-                # Validation phase
-                all_preds = []
-                all_targets = []
-                size = len(validation_loader)
-                num_batches = len(validation_loader)
-                test_loss, correct = 0, 0
-                with torch.no_grad():
-                    for batch_index, (X, y) in enumerate(validation_loader):
-                        X = X.to_dense()
-                        X = X.unsqueeze(1)
-                        pred = self.forward(X)
-                        pred = pred.squeeze()
-                        all_preds.extend(pred.argmax(1))
-                        all_targets.extend(y)
-                        test_loss += self.loss_function(pred, y).item()
-                        correct += (pred.argmax(1) == y).type(torch.float).sum().item()
-                test_loss /= num_batches
-                correct /= size
-                all_preds = torch.tensor(all_preds)
-                all_targets = torch.tensor(all_targets)
-                logger.info(f"Validation Error: Avg loss: {test_loss:>8f}")
-                logger.info(f'torchmetrics Accuracy: {(100 * accuracy(all_preds, all_targets)):>0.1f}')
-                logger.info(f'torchmetrics precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
-                logger.info(f'torchmetrics Recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
+            # Validation phase
+            all_preds = []
+            all_targets = []
+            size = len(validation_loader)
+            num_batches = len(validation_loader)
+            test_loss, correct = 0, 0
+            with torch.no_grad():
+                for batch_index, (X, y) in enumerate(validation_loader):
+                    X = X.to_dense()
+                    X = X.unsqueeze(1)
+                    pred = self.forward(X)
+                    pred = pred.squeeze()
+                    all_preds.extend(pred.argmax(1))
+                    all_targets.extend(y)
+                    valid_loss.append(self.loss_function(pred, y).item())
+                    test_loss += self.loss_function(pred, y).item()
+                    correct += (pred.argmax(1) == y).type(torch.float).sum().item()
 
-                # saving the whole model at the end of each fold
+            test_loss /= num_batches
+            correct /= size
+            all_preds = torch.tensor(all_preds)
+            all_targets = torch.tensor(all_targets)
+            logger.info(f"Validation Error: Avg loss: {test_loss:>8f}")
+            logger.info(f'torchmetrics Accuracy: {(100 * accuracy(all_preds, all_targets)):>0.1f}')
+            logger.info(f'torchmetrics precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
+            logger.info(f'torchmetrics Recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
+
+            # saving the whole model at the end of each fold
             snapshot_path = self.get_session_path(f"f{fold}", f"model_fold{fold}.pth")
             self.save(snapshot_path)
             plt.plot(np.array(total_loss))
             plt.axis([0, epoch_num, 0, 1])
+            plt.title(f"fold{fold}_train_loss")
             plt.savefig(self.get_session_path(f"f{fold}", f"model_fold{fold}_loss.png"))
             plt.show()
 
     def test(self, test_dataset):
-        accuracy = torchmetrics.Accuracy('binary', )
-        precision = torchmetrics.Precision('binary', )
-        recall = torchmetrics.Recall('binary', )
         all_preds = []
         all_targets = []
         test_dataloader = DataLoader(test_dataset, batch_size=64, drop_last=True)
@@ -154,10 +152,12 @@ class RnnModule(nn.Module, Baseline):
         correct /= size
         all_preds = torch.tensor(all_preds)
         all_targets = torch.tensor(all_targets)
-        logger.info(f"Test Error:  Accuracy: {(100 * correct):>0.1f}%, Avg loss: {test_loss:>8f} ")
-        logger.info(f'torchmetrics Accuracy: {(100 * accuracy(all_preds, all_targets)):>0.1f}')
-        logger.info(f'torchmetrics precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
-        logger.info(f'torchmetrics Recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
+        with force_open(self.get_session_path('preds.pkl'), 'wb') as file:
+            pickle.dump(all_preds, file)
+            logger.info('predictions are saved.')
+        with force_open(self.get_session_path('targets.pkl'), 'wb') as file:
+            pickle.dump(all_targets, file)
+            logger.info('targets are saved.')
 
     def save(self, path):
         with force_open(path, "wb") as f:

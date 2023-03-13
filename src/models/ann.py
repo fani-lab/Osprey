@@ -84,15 +84,13 @@ class ANNModule(torch.nn.Module, Baseline):
                 try:
                     if isinstance(module, nn.ModuleList):
                         for name_, layer in module.named_children():
-                            print(name_)
                             layer.reset_parameters()
-                            print("parameters reset!")
+                            logger.info("parameters reset")
                     else:
-                        print(name)
                         module.reset_parameters()
-                        print("parameters reset!")
-                except:
-                    pass
+                        logger.info("parameters reset")
+                except Exception as e:
+                    logger.error(e)
             for i in range(epoch_num):
                 loss = 0
                 for batch_index, (X, y) in enumerate(train_loader):
@@ -154,14 +152,16 @@ class ANNModule(torch.nn.Module, Baseline):
         correct /= size
         all_preds = torch.tensor(all_preds)
         all_targets = torch.tensor(all_targets)
-        logger.info(f"test metrics accuracy: {(100 * correct):>0.1f}%, avg loss: {test_loss:>8f}")
-        logger.info(f'torchmetrics accuracy: {(100 * accuracy(all_preds, all_targets)):>0.1f}')
-        logger.info(f'torchmetrics precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
-        logger.info(f'torchmetrics recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
+        with force_open(self.get_session_path('preds.pkl'), 'wb') as file:
+            pickle.dump(all_preds, file)
+            logger.info('predictions are saved.')
+        with force_open(self.get_session_path('targets.pkl'), 'wb') as file:
+            pickle.dump(all_targets, file)
+            logger.info('targets are saved.')
 
     def save(self, path):
         with force_open(path, "wb") as f:
-            torch.save(self, f)
+            torch.save(self.state_dict(), f)
             logger.info(f"saving model at {path}")
 
     def load_params(self, path):
