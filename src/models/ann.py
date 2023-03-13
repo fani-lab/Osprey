@@ -125,12 +125,12 @@ class ANNModule(torch.nn.Module, Baseline):
                 logger.info(f'torchmetrics precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
                 logger.info(f'torchmetrics Recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
 
-            snapshot_path = self.get_session_path(f"f{fold}", f"model_fold{fold}.pth")
+            snapshot_path = self.get_session_path("weights", f"f{fold}", f"model_fold{fold}.pth")
             self.save(snapshot_path)
             plt.plot(np.array(total_loss))
             plt.axis([0, epoch_num, 0, 1])
-            plt.savefig(self.get_session_path(f"f{fold}", f"model_fold{fold}_loss.png"))
-            plt.show()
+            plt.savefig(self.get_session_path("figures", f"f{fold}", f"model_fold{fold}_loss.png"))
+            # plt.show()
 
     def test(self, test_dataset):
         accuracy = torchmetrics.Accuracy('binary', )
