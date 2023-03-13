@@ -8,6 +8,8 @@ import torch.nn
 from src.models.ann import ANNModule
 from src.preprocessing.stopwords import NLTKStopWordRemoving
 from src.preprocessing.punctuations import PunctuationRemoving
+from src.preprocessing.repetitions import RepetitionRemoving
+
 from src.models.rnn import RnnModule
 from src.utils.dataset import BagOfWordsDataset, TimeBasedBagOfWordsDataset
 
@@ -38,14 +40,14 @@ def main():
     train_df = pd.read_csv(train_path)
     logger.debug("reading test and train csv files is done")
 
-    datasets_path = "data/preprocessed/ann/2/"
+    datasets_path = "data/preprocessed/ann/"
 
     train_dataset = TimeBasedBagOfWordsDataset(train_df, datasets_path, False,
-                                               preprocessings=[NLTKStopWordRemoving(), PunctuationRemoving()],
+                                               preprocessings=[NLTKStopWordRemoving(), PunctuationRemoving(), RepetitionRemoving()],
                                                copy=False)
     train_dataset.prepare()
     test_dataset = TimeBasedBagOfWordsDataset(test_df, datasets_path + "test_", False,
-                                              preprocessings=[NLTKStopWordRemoving(), PunctuationRemoving()],
+                                              preprocessings=[NLTKStopWordRemoving(), PunctuationRemoving(), RepetitionRemoving()],
                                               parent_dataset=train_dataset, copy=False)
     test_dataset.prepare()
     ## data_size, hidden_size, output_size, activation, loss_func, lr, train: pd.DataFrame, test: pd.DataFrame, preprocessings = list[BasePreprocessing], copy = True, load_from_pkl = True, preprocessed_path = "data/preprocessed/basic/"

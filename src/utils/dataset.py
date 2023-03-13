@@ -39,6 +39,9 @@ class MyDataset(Dataset):
 
 
 class BaseDataset(Dataset):
+
+    short_name = "base"
+    
     def __init__(self, df: pd.DataFrame, output_path: str, load_from_pkl: bool,
                  preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None,
                  copy: bool = False):
@@ -55,7 +58,7 @@ class BaseDataset(Dataset):
             self.df = df
         
     def get_session_path(self, filename) -> str:
-        return self.output_path + "base/" + filename
+        return self.output_path + self.short_name +"/" + ".".join([pp.short_name() for pp in self.preprocessings]) + "/" + filename
     
     def tokenize(self, input) -> list[list[str]]:
         raise NotImplementedError()
@@ -114,6 +117,9 @@ class BaseDataset(Dataset):
 
 
 class BagOfWordsDataset(BaseDataset):
+
+    short_name = "bow"
+    
     def __init__(self, df: pd.DataFrame, output_path: str, load_from_pkl: bool,
                  preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None,
                  copy: bool = False):
@@ -128,9 +134,6 @@ class BagOfWordsDataset(BaseDataset):
             self.df = df.copy(deep=True)
         else:
             self.df = df
-
-    def get_session_path(self, filename) -> str:
-        return self.output_path + "bow/" + filename
 
     def get_data_generator(self, data, pattern):
         def func():
@@ -182,6 +185,8 @@ class BagOfWordsDataset(BaseDataset):
 
 
 class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
+    
+    short_name = "time-bow"
 
     def get_normalization_params(self, columns):
         if self.parent_dataset is not None:
@@ -217,6 +222,8 @@ class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
 
 
 class TransformersEmbeddingDataset(BaseDataset):
+
+    short_name = "transformer/"
 
     def __init__(self, df: pd.DataFrame, output_path: str, load_from_pkl: bool, preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, copy: bool = False):
         super().__init__(df, output_path, load_from_pkl, preprocessings, persist_data, parent_dataset, copy)
