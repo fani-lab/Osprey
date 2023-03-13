@@ -10,7 +10,7 @@ import pandas as pd
 # from classifier import msg_classifier
 # from classifier import conv_msg_classifier
 # import datetime
-from models.ann import SimpleANN
+from models.ann import ANNModule
 from preprocessing.stopwords import NLTKStopWordRemoving
 from preprocessing.punctuations import PunctuationRemoving
 from utils.dataset import TimeBasedBagOfWordsDataset
@@ -138,6 +138,7 @@ def get_stats(data):
 
     return stats
 
+
 START_TIME = time.strftime("%m-%d-%Y-%H-%M-%S", time.localtime())
 
 FORMATTER = logging.Formatter("%(asctime)s | %(name)s | %(levelname)s : %(message)s")
@@ -185,15 +186,9 @@ if __name__ == "__main__":
         "train_dataset": train_dataset,
         "number_of_classes": 2,
     }
-    model = SimpleANN(**kwargs)
+    model = ANNModule(**kwargs)
 
-    try:
-        model.prep()
-    except Exception as e:
-        logger.error(e)
-        raise e
-
-    model.learn(epoch_num=10, batch_size=64)
+    model.learn(epoch_num=50, batch_size=64)
     model.test(test_dataset)
 
 # if __name__ == '__main__':
