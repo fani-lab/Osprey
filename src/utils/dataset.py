@@ -5,10 +5,10 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
-from preprocessing.base import BasePreprocessing
-from utils.one_hot_encoder import GenerativeOneHotEncoder
-from utils.transformers_encoders import TransformersEmbeddingEncoder
-from utils.commons import nltk_tokenize, force_open
+from src.preprocessing.base import BasePreprocessing
+from src.utils.one_hot_encoder import GenerativeOneHotEncoder
+from src.utils.transformers_encoders import TransformersEmbeddingEncoder
+from src.utils.commons import nltk_tokenize, force_open
 from imblearn.over_sampling import SMOTE
 
 logger = logging.getLogger()

@@ -4,7 +4,7 @@ import time
 import pandas as pd
 import torchmetrics
 
-from models.baseline import Baseline
+from src.models.baseline import Baseline
 
 import torch
 from sklearn.model_selection import KFold

@@ -1,5 +1,5 @@
 import re
-from preprocessing.base import BasePreprocessing
+from src.preprocessing.base import BasePreprocessing
 
 class RepetitionRemoving(BasePreprocessing):
 

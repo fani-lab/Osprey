@@ -3,7 +3,7 @@ import nltk
 from nltk.corpus import stopwords
 
 
-from preprocessing.base import BasePreprocessing
+from src.preprocessing.base import BasePreprocessing
 
 
 class NLTKStopWordRemoving(BasePreprocessing):

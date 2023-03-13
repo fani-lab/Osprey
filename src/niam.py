@@ -5,11 +5,11 @@ import sys
 import pandas as pd
 import torch.nn
 
-from models.ann import ANNModule
-from preprocessing.stopwords import NLTKStopWordRemoving
-from preprocessing.punctuations import PunctuationRemoving
-from models.rnn import RnnModule
-from utils.dataset import BagOfWordsDataset, TimeBasedBagOfWordsDataset
+from src.models.ann import ANNModule
+from src.preprocessing.stopwords import NLTKStopWordRemoving
+from src.preprocessing.punctuations import PunctuationRemoving
+from src.models.rnn import RnnModule
+from src.utils.dataset import BagOfWordsDataset, TimeBasedBagOfWordsDataset
 
 START_TIME = time.strftime("%m-%d-%Y-%H-%M-%S", time.localtime())
 
@@ -30,7 +30,7 @@ logger.addHandler(debug_file_handler)
 logger.addHandler(info_terminal_handler)
 logger.setLevel(logging.DEBUG)
 
-if __name__ == "__main__":
+def main():
     test_path, train_path = "data/toy.test/toy-test.csv", "data/toy.train/toy-train.csv"
     logger.info("reading test csv file")
     test_df = pd.read_csv(test_path)
@@ -38,13 +38,13 @@ if __name__ == "__main__":
     train_df = pd.read_csv(train_path)
     logger.debug("reading test and train csv files is done")
 
-    datasets_path = "/data/preprocessed/ann/1/"
+    datasets_path = "data/preprocessed/ann/2/"
 
-    train_dataset = TimeBasedBagOfWordsDataset(train_df, datasets_path, True,
+    train_dataset = TimeBasedBagOfWordsDataset(train_df, datasets_path, False,
                                                preprocessings=[NLTKStopWordRemoving(), PunctuationRemoving()],
                                                copy=False)
     train_dataset.prepare()
-    test_dataset = TimeBasedBagOfWordsDataset(test_df, datasets_path + "test_", True,
+    test_dataset = TimeBasedBagOfWordsDataset(test_df, datasets_path + "test_", False,
                                               preprocessings=[NLTKStopWordRemoving(), PunctuationRemoving()],
                                               parent_dataset=train_dataset, copy=False)
     test_dataset.prepare()

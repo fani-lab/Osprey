@@ -3,9 +3,9 @@ import logging
 import time
 
 import torchmetrics
-from models.baseline import Baseline
-from preprocessing.base import BasePreprocessing
-from utils.commons import force_open
+from src.models.baseline import Baseline
+from src.preprocessing.base import BasePreprocessing
+from src.utils.commons import force_open
 
 import torch
 from torch import nn
