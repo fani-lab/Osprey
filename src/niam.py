@@ -68,7 +68,7 @@ def main():
         "loss_func": torch.nn.CrossEntropyLoss(),
         "lr": 0.1,
         "train_dataset": train_dataset,
-        "module_session_path": "./output/",
+        "module_session_path": f"output/{START_TIME}/",
         "number_of_classes": 2,
     }
     model = ANNModule(**kwargs)
