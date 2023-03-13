@@ -1,7 +1,8 @@
 import pickle
 import logging
-
+import matplotlib.pyplot as plt
 import torchmetrics
+from sklearn import metrics
 
 logger = logging.getLogger()
 
@@ -32,16 +33,26 @@ class Baseline():
         accuracy = torchmetrics.Accuracy('binary', )
         precision = torchmetrics.Precision('binary', )
         recall = torchmetrics.Recall('binary', )
+        roc = torchmetrics.ROC(task="binary")
+        auroc = torchmetrics.AUROC(task="binary")
         preds = None
         targets = None
-        with open(self.get_session_path('preds.pkl')) as file:
+        with open(self.get_session_path('preds.pkl'), 'rb') as file:
             preds = pickle.load(file)
-        with open(self.get_session_path('targets.pkl')) as file:
+        with open(self.get_session_path('targets.pkl'), 'rb') as file:
             targets = pickle.load(file)
+        fpr, tpr, thresholds = roc(preds, targets)
+        plt.plot(fpr, tpr)
+        plt.title("ROC")
+        plt.savefig(self.get_session_path(f"ROC.png"))
+        plt.show()
 
+        logger.info('Evaluation:')
         logger.info(f'torchmetrics Accuracy: {(100 * accuracy(preds, targets)):>0.1f}')
         logger.info(f'torchmetrics precision: {(100 * precision(preds, targets)):>0.1f}')
         logger.info(f'torchmetrics Recall: {(100 * recall(preds, targets)):>0.1f}')
+        logger.info(f'torchmetrics AUCROC: {(auroc(preds, targets)):>0.1f}')
+
 
     def main(self):
         # call the pipeline or part of it for prep, train, test, eval
