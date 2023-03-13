@@ -129,7 +129,8 @@ class ANNModule(torch.nn.Module, Baseline):
             self.save(snapshot_path)
             plt.plot(np.array(total_loss))
             plt.axis([0, epoch_num, 0, 1])
-            plt.savefig(self.get_session_path("figures", f"f{fold}", f"model_fold{fold}_loss.png"))
+            with force_open(self.get_session_path("figures", f"f{fold}", f"model_fold{fold}_loss.png"), "wb") as f:
+                plt.savefig(f)
             # plt.show()
 
     def test(self, test_dataset):
