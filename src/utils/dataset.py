@@ -6,7 +6,7 @@ import torch
 from torch.utils.data import Dataset
 
 from src.preprocessing.base import BasePreprocessing
-from src.utils.one_hot_encoder import GenerativeOneHotEncoder
+from src.utils.one_hot_encoder import OneHotEncoder
 from src.utils.transformers_encoders import TransformersEmbeddingEncoder
 from src.utils.commons import nltk_tokenize, force_open
 from imblearn.over_sampling import SMOTE
@@ -157,7 +157,7 @@ class BagOfWordsDataset(BaseDataset):
             with open(self.get_session_path("one-hot-encoder.pkl"), "rb") as f:
                 encoder = pickle.load(f)
         except FileNotFoundError:
-            encoder = GenerativeOneHotEncoder()
+            encoder = OneHotEncoder()
             logger.info("started generating bag of words vector encoder")
             data = set()
             data.update(*tokens_records)

@@ -1,7 +1,7 @@
 from torch import sparse_coo_tensor, float32
 
 
-class GenerativeOneHotEncoder:
+class OneHotEncoder:
 
     def __init__(self, buffer_cap=20, device="cpu") -> None:
         
