@@ -43,6 +43,6 @@ class Baseline():
         logger.info(f'torchmetrics precision: {(100 * precision(preds, targets)):>0.1f}')
         logger.info(f'torchmetrics Recall: {(100 * recall(preds, targets)):>0.1f}')
 
-    def main(self):
+    def main(self, *args, **kwargs):
         # call the pipeline or part of it for prep, train, test, eval
-        pass
+        raise NotImplementedError()

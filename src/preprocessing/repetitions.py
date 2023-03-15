@@ -15,6 +15,7 @@ class RepetitionRemoving(BasePreprocessing):
     def name(self) -> str:
         return "repetition remover"
     
-    def short_name(self) -> str:
+    @classmethod
+    def short_name(cls) -> str:
         return "rr"
     

@@ -1,4 +1,6 @@
-class BasePreprocessing:
+from src.utils.commons import RegisterableObject
+
+class BasePreprocessing(RegisterableObject):
 
     def opt(self, input):
         pass

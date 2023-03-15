@@ -13,7 +13,7 @@ from src.preprocessing.repetitions import RepetitionRemoving
 from src.models.rnn import RnnModule
 from src.utils.dataset import BagOfWordsDataset, TimeBasedBagOfWordsDataset, TransformersEmbeddingDataset
 
-import settings
+from settings import settings, mappings
 
 START_TIME = time.strftime("%m-%d-%Y-%H-%M-%S", time.localtime())
 
@@ -35,8 +35,8 @@ logger.addHandler(info_terminal_handler)
 logger.setLevel(logging.DEBUG)
 
 def main():
-    # test_path, train_path = "data/toy.test/toy-test.csv", "data/toy.train/toy-train.csv"
-    test_path, train_path = "data/test/test.csv", "data/train/train.csv"
+    test_path, train_path = "data/toy.test/toy-test.csv", "data/toy.train/toy-train.csv"
+    # test_path, train_path = "data/test/test.csv", "data/train/train.csv"
     logger.info("reading test csv file")
     test_df = pd.read_csv(test_path)
     logger.info("reading train csv file")
@@ -86,33 +86,53 @@ def main():
 
 def run():
     datasets = dict()
-    for dataset_name, (short_name, train, test) in settings.datasets.items():
+    for dataset_name, (short_name, train_configs, test_configs) in settings.datasets.items():
         dataset_class = None
-        if short_name == "bow":
-            dataset_class = BagOfWordsDataset
-        elif short_name == "transformer/":
-            dataset_class = TransformersEmbeddingDataset
-        else:
-            raise Exception(f"the dataset {short_name} is not implemented.")
-        train_dataset = dataset_class(**train)
-        datasets[dataset_name] = (train_dataset, dataset_class(**test, parent_dataset=train_dataset))
+        try:
+            dataset_class = mappings.DATASETS[short_name]
+        except Exception as e:
+            raise Exception(f"the dataset {short_name} is either not implemented or not registered")
+                
+        preprocessings = []
+        for pp in train_configs["preprocessings"]:
+            try:
+                preprocessings.append(mappings.PREPROCESSINGS[pp])
+            except Exception as e:
+                raise Exception(f"preprocessing `{pp}` either not implemented or not registered") from e
+        
+        train_dataset = dataset_class(**{**train_configs, "preprocessings": [pp() for pp in preprocessings]})
+        test_dataset = dataset_class(**{**test_configs, "parent_dataset": train_dataset, "preprocessings": [pp() for pp in preprocessings]})
+        datasets[dataset_name] = (train_dataset, test_dataset)
 
     for model_name, session in settings.sessions.items():
         commands = session["commands"]
-        session["folds_number"]
-        session["dataset"]
-        model_configs = session["model_configs"]
+
+        activation, activation_kwargs = mappings.ACTIVATIONS[session["model_configs"]["activation"][0]], session["model_configs"]["activation"][1]
+        loss, loss_kwargs = mappings.LOSS_FUNCTIONS[session["model_configs"]["loss_func"][0]], session["model_configs"]["loss_func"][1]
+        model_configs = {**session["model_configs"], "activation": activation(**activation_kwargs),
+                         "loss_func": loss(**loss_kwargs),
+                         "module_session_path": session["model_configs"]["module_session_path"] + "/" + START_TIME
+                            if session["model_configs"]["session_path_include_time"] else session["model_configs"]["module_session_path"],
+                         }
         model_class = None
         
         if model_name == "ann":
             model_class = ANNModule
         
         for command, command_kwargs, dataset_name, *_ in commands:
-            model = model_class(**model_configs, input_size=datasets[dataset_name][0].shape[1])
 
             if command == "train":
-                model.learn(**command_kwargs, train_dataset=datasets[dataset_name][0])
+                dataset = datasets[dataset_name][0]
+                dataset.prepare()
+                model = model_class(**model_configs, input_size=datasets[dataset_name][0].shape[1])
+                model.learn(**command_kwargs, train_dataset=dataset)
             if command == "test":
-                model.test(**command_kwargs, test_dataset=datasets[dataset_name][1])
+                dataset = datasets[dataset_name][1]
+                dataset.prepare()
+                model = model_class(**model_configs, input_size=datasets[dataset_name][0].shape[1])
+                model.test(**command_kwargs, test_dataset=dataset)
             if command == "evaluate":
+                dataset = datasets[dataset_name][0]
+                dataset.prepare()
+                model = model_class(**model_configs, input_size=datasets[dataset_name][0].shape[1])
                 model.eval(**command_kwargs)
