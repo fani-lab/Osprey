@@ -93,9 +93,10 @@ class ANNModule(torch.nn.Module, Baseline):
             for i in range(epoch_num):
                 loss = 0
                 for batch_index, (X, y) in enumerate(train_loader):
+                    y = y.type(torch.float)
                     y_hat = self.forward(X)
                     self.optimizer.zero_grad()
-                    loss = self.loss_function(y_hat, y)
+                    loss = self.loss_function(y_hat.squeeze(), y)
                     loss.backward()
                     self.optimizer.step()
                     logger.info(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
@@ -108,16 +109,18 @@ class ANNModule(torch.nn.Module, Baseline):
                 test_loss, correct = 0, 0
                 with torch.no_grad():
                     for batch_index, (X, y) in enumerate(validation_loader):
+                        y = y.type(torch.float)
                         pred = self.forward(X)
-                        all_preds.extend(pred.argmax(1))
+                        all_preds.extend(pred)
+                        # all_preds.extend(pred.argmax(1))
                         all_targets.extend(y)
-                        test_loss += self.loss_function(pred, y).item()
-                        correct += (pred.argmax(1) == y).type(torch.float).sum().item()
-                test_loss /= num_batches
-                correct /= size
+                        # test_loss += self.loss_function(pred, y).item()
+                        # correct += (pred.argmax(1) == y).type(torch.float).sum().item()
+                # test_loss /= num_batches
+                # correct /= size
                 all_preds = torch.tensor(all_preds)
                 all_targets = torch.tensor(all_targets)
-                logger.info(f"Validation Error: Avg loss: {test_loss:>8f}")
+                # logger.info(f"Validation Error: Avg loss: {test_loss:>8f}")
                 logger.info(f'torchmetrics Accuracy: {(100 * accuracy(all_preds, all_targets)):>0.1f}')
                 logger.info(f'torchmetrics precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
                 logger.info(f'torchmetrics Recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
@@ -131,9 +134,6 @@ class ANNModule(torch.nn.Module, Baseline):
             # plt.show()
 
     def test(self, test_dataset):
-        accuracy = torchmetrics.Accuracy('binary', )
-        precision = torchmetrics.Precision('binary', )
-        recall = torchmetrics.Recall('binary', )
         all_preds = []
         all_targets = []
         test_dataloader = DataLoader(test_dataset, batch_size=64)
@@ -142,13 +142,15 @@ class ANNModule(torch.nn.Module, Baseline):
         test_loss, correct = 0, 0
         with torch.no_grad():
             for X, y in test_dataloader:
+                y = y.type(torch.float)
                 pred = self.forward(X)
-                all_preds.extend(pred.argmax(1))
+                all_preds.extend(pred)
+                # all_preds.extend(pred.argmax(1))
                 all_targets.extend(y)
-                test_loss += self.loss_function(pred, y).item()
-                correct += (pred.argmax(1) == y).type(torch.float).sum().item()
-        test_loss /= num_batches
-        correct /= size
+                # test_loss += self.loss_function(pred, y).item()
+                # correct += (pred.argmax(1) == y).type(torch.float).sum().item()
+        # test_loss /= num_batches
+        # correct /= size
         all_preds = torch.tensor(all_preds)
         all_targets = torch.tensor(all_targets)
         with force_open(self.get_session_path('preds.pkl'), 'wb') as file:
@@ -157,6 +159,9 @@ class ANNModule(torch.nn.Module, Baseline):
         with force_open(self.get_session_path('targets.pkl'), 'wb') as file:
             pickle.dump(all_targets, file)
             logger.info('targets are saved.')
+
+    def eval(self):
+        Baseline.eval(self)
 
     def save(self, path):
         with force_open(path, "wb") as f:

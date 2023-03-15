@@ -43,6 +43,7 @@ class RnnModule(nn.Module, Baseline):
         out, hn = self.rnn(x)
         out = self.hidden2out(out)
         # out = torch.softmax(out, dim=1)
+        out = torch.sigmoid(out)
         return out
 
     def get_session_path(self, *args):
@@ -84,6 +85,7 @@ class RnnModule(nn.Module, Baseline):
                 # train_dataloader = DataLoader(self.train_dataset, batch_size, drop_last=True, shuffle=True)
                 for batch_index, (X, y) in enumerate(train_loader):
                     # search for sparse with rnn
+                    y = y.type(torch.float)
                     X = X.to_dense()
                     X = X.unsqueeze(1)
                     y_hat = self.forward(X)
@@ -100,24 +102,26 @@ class RnnModule(nn.Module, Baseline):
             all_targets = []
             size = len(validation_loader)
             num_batches = len(validation_loader)
-            test_loss, correct = 0, 0
+            # test_loss, correct = 0, 0
             with torch.no_grad():
                 for batch_index, (X, y) in enumerate(validation_loader):
+                    y = y.type(torch.float)
                     X = X.to_dense()
                     X = X.unsqueeze(1)
                     pred = self.forward(X)
                     pred = pred.squeeze()
-                    all_preds.extend(pred.argmax(1))
+                    all_preds.extend(pred)
+                    # all_preds.extend(pred.argmax(1))
                     all_targets.extend(y)
                     valid_loss.append(self.loss_function(pred, y).item())
-                    test_loss += self.loss_function(pred, y).item()
-                    correct += (pred.argmax(1) == y).type(torch.float).sum().item()
+                    # test_loss += self.loss_function(pred, y).item()
+                    # correct += (pred.argmax(1) == y).type(torch.float).sum().item()
 
-            test_loss /= num_batches
-            correct /= size
+            # test_loss /= num_batches
+            # correct /= size
             all_preds = torch.tensor(all_preds)
             all_targets = torch.tensor(all_targets)
-            logger.info(f"Validation Error: Avg loss: {test_loss:>8f}")
+            # logger.info(f"Validation Error: Avg loss: {test_loss:>8f}")
             logger.info(f'torchmetrics Accuracy: {(100 * accuracy(all_preds, all_targets)):>0.1f}')
             logger.info(f'torchmetrics precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
             logger.info(f'torchmetrics Recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
@@ -144,12 +148,13 @@ class RnnModule(nn.Module, Baseline):
                 X = X.unsqueeze(1)
                 pred = self.forward(X)
                 pred = pred.squeeze()
-                all_preds.extend(pred.argmax(1))
+                # all_preds.extend(pred.argmax(1))
+                all_preds.extend(pred)
                 all_targets.extend(y)
-                test_loss += self.loss_function(pred, y).item()
-                correct += (pred.argmax(1) == y).type(torch.float).sum().item()
-        test_loss /= num_batches
-        correct /= size
+                # test_loss += self.loss_function(pred, y).item()
+                # correct += (pred.argmax(1) == y).type(torch.float).sum().item()
+        # test_loss /= num_batches
+        # correct /= size
         all_preds = torch.tensor(all_preds)
         all_targets = torch.tensor(all_targets)
         with force_open(self.get_session_path('preds.pkl'), 'wb') as file:
@@ -158,6 +163,9 @@ class RnnModule(nn.Module, Baseline):
         with force_open(self.get_session_path('targets.pkl'), 'wb') as file:
             pickle.dump(all_targets, file)
             logger.info('targets are saved.')
+
+    def eval(self):
+        Baseline.eval(self)
 
     def save(self, path):
         with force_open(path, "wb") as f:
