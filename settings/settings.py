@@ -15,7 +15,7 @@ preconfiged_sessions = {
     },
     "ann": {
         "commands": [
-            ("train", {"epoch_num": 100, "batch_size": 64, "k_fold": 10}, "bow-v0"),
+            # ("train", {"epoch_num": 100, "batch_size": 64, "k_fold": 10}, "bow-v0"),
              ("test", dict(), "bow-v0"),
              ("eval", dict(), ""),
             ],
@@ -37,14 +37,14 @@ preconfiged_datasets = {
         {       # train configs
             "data_path": "data/toy.train/toy-train.csv",
             "output_path": "data/preprocessed/ann/",
-            "load_from_pkl": True,
+            "load_from_pkl": False,
             "preprocessings": ["sw", "pr", "rr"],
             "persist_data": True,
         },
         {      # test configs
             "data_path": "data/toy.test/toy-test.csv",
-            "output_path": "data/preprocessed/ann/",
-            "load_from_pkl": True,
+            "output_path": "data/preprocessed/ann/test-",
+            "load_from_pkl": False,
             "preprocessings": ["sw", "pr", "rr"],
             "persist_data": True,
         }

@@ -88,6 +88,10 @@ class BaseDataset(Dataset, RegisterableObject):
         if self.already_prepared:
             logger.debug("already called prepared")
             return
+        
+        if self.parent_dataset is not None:
+           self.parent_dataset.prepare()
+
         tokens = self.preprocess()
 
         self.encoder = self.init_encoder(tokens_records=tokens)
