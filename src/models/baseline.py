@@ -12,7 +12,7 @@ class Baseline():
         pass
 
     def prep(self):
-        # if the features are save => load it
+        # if the features are saved => load it
         # else:
         #   extract
         #   save

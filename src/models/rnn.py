@@ -130,7 +130,7 @@ class RnnModule(nn.Module, Baseline):
             snapshot_path = self.get_session_path(f"f{fold}", f"model_fold{fold}.pth")
             self.save(snapshot_path)
             plt.plot(np.array(total_loss))
-            plt.axis([0, epoch_num, 0, 1])
+            # plt.axis([0, epoch_num, 0, 1])
             plt.title(f"fold{fold}_train_loss")
             plt.savefig(self.get_session_path(f"f{fold}", f"model_fold{fold}_loss.png"))
             plt.show()

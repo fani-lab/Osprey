@@ -57,7 +57,8 @@ class ANNModule(torch.nn.Module, Baseline):
             x = self.activation(layer(x))
 
         x = self.h2o(x)
-        x = torch.softmax(x, dim=1)
+        # x = torch.softmax(x, dim=1)
+        # x = torch.sigmoid(x)
         return x
 
     def get_session_path(self, *args):
@@ -101,38 +102,38 @@ class ANNModule(torch.nn.Module, Baseline):
                     loss.backward()
                     self.optimizer.step()
                     logger.info(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
-
-                # Validation phase
-                all_preds = []
-                all_targets = []
-                size = len(validation_loader)
-                num_batches = len(validation_loader)
-                test_loss, correct = 0, 0
-                with torch.no_grad():
-                    for batch_index, (X, y) in enumerate(validation_loader):
-                        y = y.type(torch.float)
-                        pred = self.forward(X)
-                        all_preds.extend(pred)
-                        # all_preds.extend(pred.argmax(1))
-                        all_targets.extend(y)
-                        # test_loss += self.loss_function(pred, y).item()
-                        # correct += (pred.argmax(1) == y).type(torch.float).sum().item()
-                # test_loss /= num_batches
-                # correct /= size
-                all_preds = torch.tensor(all_preds)
-                all_targets = torch.tensor(all_targets)
-                # logger.info(f"Validation Error: Avg loss: {test_loss:>8f}")
-                logger.info(f'torchmetrics Accuracy: {(100 * accuracy(all_preds, all_targets)):>0.1f}')
-                logger.info(f'torchmetrics precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
-                logger.info(f'torchmetrics Recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
+                total_loss.append(loss.item())
+            # Validation phase
+            all_preds = []
+            all_targets = []
+            size = len(validation_loader)
+            num_batches = len(validation_loader)
+            test_loss, correct = 0, 0
+            with torch.no_grad():
+                for batch_index, (X, y) in enumerate(validation_loader):
+                    y = y.type(torch.float)
+                    pred = self.forward(X)
+                    all_preds.extend(pred)
+                    # all_preds.extend(pred.argmax(1))
+                    all_targets.extend(y)
+                    # test_loss += self.loss_function(pred, y).item()
+                    # correct += (pred.argmax(1) == y).type(torch.float).sum().item()
+            # test_loss /= num_batches
+            # correct /= size
+            all_preds = torch.tensor(all_preds)
+            all_targets = torch.tensor(all_targets)
+            # logger.info(f"Validation Error: Avg loss: {test_loss:>8f}")
+            logger.info(f'torchmetrics Accuracy: {(100 * accuracy(all_preds, all_targets)):>0.1f}')
+            logger.info(f'torchmetrics precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
+            logger.info(f'torchmetrics Recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
 
             snapshot_path = self.get_session_path("weights", f"f{fold}", f"model_fold{fold}.pth")
             self.save(snapshot_path)
             plt.plot(np.array(total_loss))
-            plt.axis([0, epoch_num, 0, 1])
+            # plt.axis([0, epoch_num, 0, 200])
             with force_open(self.get_session_path("figures", f"f{fold}", f"model_fold{fold}_loss.png"), "wb") as f:
                 plt.savefig(f)
-            # plt.show()
+            plt.show()
 
     def test(self, test_dataset):
         all_preds = []
@@ -143,7 +144,6 @@ class ANNModule(torch.nn.Module, Baseline):
         test_loss, correct = 0, 0
         with torch.no_grad():
             for X, y in test_dataloader:
-                y = y.type(torch.float)
                 pred = self.forward(X)
                 all_preds.extend(pred)
                 # all_preds.extend(pred.argmax(1))

@@ -89,7 +89,7 @@ class BaseDataset(Dataset):
         # Persisting changes
         if self.persist_data:
             vectors_path = self.get_session_path("vectors.pkl")
-            encoder_path = self.get_session_path("encoder.pkl")
+            encoder_path = self.get_session_path("one-hot-encoder.pkl")
             tokens_path = self.get_session_path("tokens.pkl")
             logger.info(f"saving tokens as pickle at {tokens_path}")
             with force_open(tokens_path, "wb") as f:
