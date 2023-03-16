@@ -37,7 +37,7 @@ preconfiged_datasets = {
         {       # train configs
             "data_path": "data/toy.train/toy-train.csv",
             "output_path": "data/preprocessed/ann/",
-            "load_from_pkl": False,
+            "load_from_pkl": True,
             "preprocessings": ["sw", "pr", "rr"],
             "persist_data": True,
         },

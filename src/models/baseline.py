@@ -2,7 +2,6 @@ import pickle
 import logging
 import matplotlib.pyplot as plt
 import torchmetrics
-from sklearn import metrics
 
 from src.utils.commons import RegisterableObject
 
