@@ -9,7 +9,7 @@ logger = logging.getLogger()
 
 
 class Baseline(RegisterableObject):
-    def __init__(self, input_size: int, *args, **kwargs):
+    def __init__(self, input_size: int):
         self.input_size = input_size
 
     def prep(self):

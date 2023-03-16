@@ -17,13 +17,13 @@ from sklearn.model_selection import KFold
 logger = logging.getLogger()
 
 
-class ANNModule(torch.nn.Module, Baseline):
+class ANNModule(Baseline, torch.nn.Module):
 
     def __init__(self, dimension_list, activation, loss_func, lr, input_size, module_session_path,
                  number_of_classes=2, **kwargs):
+        Baseline.__init__(self, input_size=input_size)
+        torch.nn.Module.__init__(self)
 
-        super(ANNModule, self).__init__(dimension_list, activation, loss_func, lr, input_size, module_session_path,
-                 number_of_classes, **kwargs)
         self.number_of_classes = number_of_classes
         self.i2h = nn.Linear(self.input_size,
                              dimension_list[0] if len(dimension_list) > 0 else self.number_of_classes)

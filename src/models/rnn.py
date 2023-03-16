@@ -18,11 +18,11 @@ from src.utils.commons import force_open
 logger = logging.getLogger()
 
 
-class RnnModule(nn.Module, Baseline):
+class RnnModule(Baseline, nn.Module):
     def __init__(self, input_size, hidden_dim, num_layers, activation, loss_func, lr, train_dataset,
                  learning_batch_size, module_session_path, number_of_classes=2, **kwargs):
-        super(RnnModule, self).__init__(input_size, hidden_dim, num_layers, activation, loss_func, lr, train_dataset,
-                 learning_batch_size, module_session_path, number_of_classes, **kwargs)
+        Baseline.__init__(self, input_size=input_size)
+        nn.Module.__init__(self)
 
         self.rnn = nn.RNN(input_size=input_size, hidden_size=hidden_dim, num_layers=num_layers, nonlinearity='relu',
                           batch_first=True)

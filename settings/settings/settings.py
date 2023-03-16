@@ -44,7 +44,7 @@ preconfiged_datasets = {
         {      # test configs
             "data_path": "data/toy.test/toy-test.csv",
             "output_path": "data/preprocessed/ann/test-",
-            "load_from_pkl": False,
+            "load_from_pkl": True,
             "preprocessings": ["sw", "pr", "rr"],
             "persist_data": True,
         }
