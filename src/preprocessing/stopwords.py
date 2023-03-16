@@ -24,5 +24,6 @@ class NLTKStopWordRemoving(BasePreprocessing):
     def name(self) -> str:
         return "nltk stopwords remover"
 
-    def short_name(self) -> str:
+    @classmethod
+    def short_name(cls) -> str:
         return "sw"

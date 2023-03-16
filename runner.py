@@ -1,6 +1,20 @@
 # This file is for sake of compatibility between different development environment
-from src.niam import main
+from src.niam import main, run
+from src.preprocessing import NLTKStopWordRemoving, PunctuationRemoving, RepetitionRemoving
+from src.utils.dataset import BagOfWordsDataset, TimeBasedBagOfWordsDataset, TransformersEmbeddingDataset
+from settings.mappings import register_mappings, register_mappings_torch
+
 
 
 if __name__ == "__main__":
-    main()
+    register_mappings_torch()
+
+    register_mappings(NLTKStopWordRemoving)
+    register_mappings(PunctuationRemoving)
+    register_mappings(RepetitionRemoving)
+
+    register_mappings(BagOfWordsDataset)
+    register_mappings(TimeBasedBagOfWordsDataset)
+    register_mappings(TransformersEmbeddingDataset)
+
+    run()

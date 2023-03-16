@@ -24,6 +24,7 @@ class PunctuationRemoving(BasePreprocessing):
     def name(self) -> str:
         return "punctuation remover"
 
-    def short_name(self) -> str:
+    @classmethod
+    def short_name(cls) -> str:
         return "pr"
     

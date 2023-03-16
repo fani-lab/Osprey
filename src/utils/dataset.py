@@ -8,7 +8,9 @@ from torch.utils.data import Dataset
 from src.preprocessing.base import BasePreprocessing
 from src.utils.one_hot_encoder import OneHotEncoder
 from src.utils.transformers_encoders import TransformersEmbeddingEncoder
-from src.utils.commons import nltk_tokenize, force_open
+from src.utils.commons import nltk_tokenize, force_open, RegisterableObject
+
+
 from imblearn.over_sampling import SMOTE
 
 logger = logging.getLogger()
@@ -38,27 +40,30 @@ class MyDataset(Dataset):
         self.data, self.labels = smote.fit_resample(self.data.to_dense(), self.labels)
 
 
-class BaseDataset(Dataset):
+class BaseDataset(Dataset, RegisterableObject):
 
-    short_name = "base"
     
-    def __init__(self, df: pd.DataFrame, output_path: str, load_from_pkl: bool,
-                 preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None,
-                 copy: bool = False):
+    def __init__(self, data_path: str, output_path: str, load_from_pkl: bool,
+                 preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, *args, **kwargs):
         self.output_path = output_path
         self.parent_dataset = parent_dataset
         self.load_from_pkl = load_from_pkl
         self.preprocessings = preprocessings
         self.persist_data = persist_data
+        self.df_path = data_path
 
-        if copy:
-            logger.debug("copying df to ann class")
-            self.df = df.copy(deep=True)
-        else:
-            self.df = df
+        self.__df__ = None
+
+        self.already_prepared = False
+
+    @property
+    def df(self):
+        if self.__df__ is None:
+            self.__df__ = pd.read_csv(self.df_path)
+        return self.__df__
         
     def get_session_path(self, filename) -> str:
-        return self.output_path + self.short_name +"/" + ".".join([pp.short_name() for pp in self.preprocessings]) + "/" + filename
+        return self.output_path + self.short_name() +"/" + ".".join([pp.short_name() for pp in self.preprocessings]) + "/" + filename
     
     def tokenize(self, input) -> list[list[str]]:
         raise NotImplementedError()
@@ -80,6 +85,13 @@ class BaseDataset(Dataset):
         return tokens
 
     def prepare(self):
+        if self.already_prepared:
+            logger.debug("already called prepared")
+            return
+        
+        if self.parent_dataset is not None:
+           self.parent_dataset.prepare()
+
         tokens = self.preprocess()
 
         self.encoder = self.init_encoder(tokens_records=tokens)
@@ -103,6 +115,7 @@ class BaseDataset(Dataset):
 
         self.labels = torch.tensor(self.df["tagged_msg"].values)
         self.data = torch.stack(vectors)
+        self.already_prepared = True
         logger.info("data preparation finished")
 
     def __getitem__(self, index):
@@ -118,23 +131,19 @@ class BaseDataset(Dataset):
 
 class BagOfWordsDataset(BaseDataset):
 
-    short_name = "bow"
+    @classmethod
+    def short_name(cls) -> str:
+        return "bow"
     
-    def __init__(self, df: pd.DataFrame, output_path: str, load_from_pkl: bool,
-                 preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None,
-                 copy: bool = False):
-        self.output_path = output_path
-        self.parent_dataset = parent_dataset
-        self.load_from_pkl = load_from_pkl
-        self.preprocessings = preprocessings
-        self.persist_data = persist_data
-
-        if copy:
-            logger.debug("copying df to ann class")
-            self.df = df.copy(deep=True)
-        else:
-            self.df = df
-
+    # def __init__(self, df: pd.DataFrame, output_path: str, load_from_pkl: bool,
+    #              preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None,
+    #              copy: bool = False):
+    #     self.output_path = output_path
+    #     self.parent_dataset = parent_dataset
+    #     self.load_from_pkl = load_from_pkl
+    #     self.preprocessings = preprocessings
+    #     self.persist_data = persist_data
+        
     def get_data_generator(self, data, pattern):
         def func():
             for record in data:
@@ -186,7 +195,9 @@ class BagOfWordsDataset(BaseDataset):
 
 class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
     
-    short_name = "time-bow"
+    @classmethod
+    def short_name(cls) -> str:
+        return "time-bow"
 
     def get_normalization_params(self, columns):
         if self.parent_dataset is not None:
@@ -221,13 +232,12 @@ class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
         return vectors
 
 
-class TransformersEmbeddingDataset(BaseDataset):
+class TransformersEmbeddingDataset(BaseDataset, RegisterableObject):
 
-    short_name = "transformer/"
-
-    def __init__(self, df: pd.DataFrame, output_path: str, load_from_pkl: bool, preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, copy: bool = False):
-        super().__init__(df, output_path, load_from_pkl, preprocessings, persist_data, parent_dataset, copy)
-
+    @classmethod
+    def short_name(cls) -> str:
+        return "transformer/"
+        
     def init_encoder(self, tokens_records):
         logger.debug("Transformer Embedding Dataset being initialized")
         encoder = TransformersEmbeddingEncoder()

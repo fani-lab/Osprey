@@ -54,6 +54,6 @@ class Baseline():
         logger.info(f'torchmetrics AUCROC: {(auroc(preds, targets)):>0.1f}')
 
 
-    def main(self):
+    def main(self, *args, **kwargs):
         # call the pipeline or part of it for prep, train, test, eval
-        pass
+        raise NotImplementedError()

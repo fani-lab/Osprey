@@ -1,15 +1,13 @@
 import pickle
 import logging
-import time
 
 import torchmetrics
 from src.models.baseline import Baseline
-from src.preprocessing.base import BasePreprocessing
 from src.utils.commons import force_open
 
 import torch
 from torch import nn
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Dataset
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -21,23 +19,22 @@ logger = logging.getLogger()
 
 class ANNModule(torch.nn.Module, Baseline):
 
-    def __init__(self, dimension_list, activation, loss_func, lr, train_dataset, module_session_path,
+    def __init__(self, dimension_list, activation, loss_func, lr, input_size, module_session_path,
                  number_of_classes=2, **kwargs):
 
         super(ANNModule, self).__init__()
         self.number_of_classes = number_of_classes
-        self.i2h = nn.Linear(train_dataset.shape[1],
+        self.i2h = nn.Linear(input_size,
                              dimension_list[0] if len(dimension_list) > 0 else self.number_of_classes)
         self.layers = nn.ModuleList()
         for i, j in zip(dimension_list, dimension_list[1:]):
             self.layers.append(nn.Linear(in_features=i, out_features=j))
-        self.h2o = torch.nn.Linear(dimension_list[-1] if len(dimension_list) > 0 else train_dataset.shape[1],
+        self.h2o = torch.nn.Linear(dimension_list[-1] if len(dimension_list) > 0 else input_size,
                                    self.number_of_classes)
         self.activation = activation
         self.optimizer = torch.optim.SGD(self.parameters(), lr=lr)
         self.loss_function = loss_func
 
-        self.train_dataset = train_dataset
         self.session_path = module_session_path if module_session_path[-1] == "\\" or module_session_path[
             -1] == "/" else module_session_path + "/"
 
@@ -64,7 +61,9 @@ class ANNModule(torch.nn.Module, Baseline):
     def get_session_path(self, *args):
         return f"{self.session_path}" + "ann/" + "/".join([str(a) for a in args])
 
-    def learn(self, epoch_num: int, batch_size: int, k_fold: int):
+    def learn(self, epoch_num: int, batch_size: int, k_fold: int, train_dataset: Dataset):
+
+        self.train_dataset = train_dataset
         accuracy = torchmetrics.Accuracy('binary', )
         precision = torchmetrics.Precision('binary', )
         recall = torchmetrics.Recall('binary', )

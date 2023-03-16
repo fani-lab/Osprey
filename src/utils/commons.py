@@ -11,3 +11,11 @@ def force_open(path, *args, **kwargs):
     os.makedirs(os.path.dirname(path), exist_ok=True)
 
     return open(path, *args, **kwargs)
+
+
+class RegisterableObject:
+
+    @classmethod
+    def short_name(cls) -> str:
+        raise NotImplementedError()
+
