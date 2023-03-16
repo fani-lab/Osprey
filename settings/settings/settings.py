@@ -56,3 +56,12 @@ sessions = {
 }
 
 datasets = preconfiged_datasets
+
+FILTERED_CONFIGS = {
+    "session_path_include_time",
+    "data_path",
+    "output_path",
+    "load_from_pkl",
+    "preprocessings",
+    "persist_data",
+}
