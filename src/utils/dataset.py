@@ -124,6 +124,11 @@ class BaseDataset(Dataset, RegisterableObject):
     def __len__(self):
         return self.data.shape[0]
 
+    def to(self, device):
+        self.data = self.data.to(device)
+        self.labels = self.labels.to(device)
+
+
     @property
     def shape(self):
         return self.data.shape

@@ -85,6 +85,8 @@ def main():
 
 
 def run():
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    logger.info(f'processing unit: {device}')
     datasets = dict()
     for dataset_name, (short_name, train_configs, test_configs) in settings.datasets.items():
         dataset_class = None
@@ -125,14 +127,17 @@ def run():
                 dataset = datasets[dataset_name][0]
                 dataset.prepare()
                 model = model_class(**model_configs, input_size=datasets[dataset_name][0].shape[1])
+                model.to(device=device)
                 model.learn(**command_kwargs, train_dataset=dataset)
             if command == "test":
                 dataset = datasets[dataset_name][1]
                 dataset.prepare()
                 model = model_class(**model_configs, input_size=datasets[dataset_name][0].shape[1])
+                model.to(device=device)
                 model.test(**command_kwargs, test_dataset=dataset)
-            if command == "evaluate":
-                dataset = datasets[dataset_name][0]
-                dataset.prepare()
-                model = model_class(**model_configs, input_size=datasets[dataset_name][0].shape[1])
+            if command == "eval":
+                # dataset = datasets[dataset_name][0]
+                # dataset.prepare()
+                model = model_class(**model_configs, input_size=1)
+                # model.to(device=device)
                 model.eval(**command_kwargs)

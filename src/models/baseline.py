@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import torchmetrics
 from sklearn import metrics
 
+from src.utils.commons import force_open
+
 logger = logging.getLogger()
 
 
@@ -29,7 +31,7 @@ class Baseline():
     def get_session_path(self, *args):
         raise NotImplementedError()
 
-    def eval(self):
+    def eval(self,path ,device):
         accuracy = torchmetrics.Accuracy('binary', )
         precision = torchmetrics.Precision('binary', )
         recall = torchmetrics.Recall('binary', )
@@ -37,14 +39,18 @@ class Baseline():
         auroc = torchmetrics.AUROC(task="binary")
         preds = None
         targets = None
-        with open(self.get_session_path('preds.pkl'), 'rb') as file:
+        with open(path+'preds.pkl', 'rb') as file:
             preds = pickle.load(file)
-        with open(self.get_session_path('targets.pkl'), 'rb') as file:
+        with open(path+'targets.pkl', 'rb') as file:
             targets = pickle.load(file)
+        if preds.ndim > targets.ndim:
+            preds = preds.squeeze()
+        preds = preds.to(device)
+        targets = targets.to(device)
         fpr, tpr, thresholds = roc(preds, targets)
         plt.plot(fpr, tpr)
         plt.title("ROC")
-        plt.savefig(self.get_session_path(f"ROC.png"))
+        plt.savefig("ROC.png")
         plt.show()
 
         logger.info('Evaluation:')

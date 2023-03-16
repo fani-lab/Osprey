@@ -2,7 +2,7 @@ from src.preprocessing import BasePreprocessing
 from src.utils.dataset import BaseDataset
 from src.utils.commons import RegisterableObject
 
-from torch.nn import ReLU, CrossEntropyLoss
+from torch.nn import ReLU, CrossEntropyLoss, BCEWithLogitsLoss
 
 
 PREPROCESSINGS = dict()
@@ -30,4 +30,6 @@ def register_mappings(obj: RegisterableObject):
 def register_mappings_torch():
     ACTIVATIONS["relu"] = ReLU
     LOSS_FUNCTIONS["cross-entropy"] = CrossEntropyLoss
+    LOSS_FUNCTIONS["BCEW"] = BCEWithLogitsLoss
+
     pass

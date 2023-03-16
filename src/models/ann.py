@@ -20,7 +20,7 @@ logger = logging.getLogger()
 class ANNModule(torch.nn.Module, Baseline):
 
     def __init__(self, dimension_list, activation, loss_func, lr, input_size, module_session_path,
-                 number_of_classes=2, **kwargs):
+                 number_of_classes=1, device='cpu',  **kwargs):
 
         super(ANNModule, self).__init__()
         self.number_of_classes = number_of_classes
@@ -39,6 +39,7 @@ class ANNModule(torch.nn.Module, Baseline):
             -1] == "/" else module_session_path + "/"
 
         self.snapshot_steps = 2
+        self.device = device
 
     def forward(self, x):
         """
@@ -64,6 +65,7 @@ class ANNModule(torch.nn.Module, Baseline):
     def learn(self, epoch_num: int, batch_size: int, k_fold: int, train_dataset: Dataset):
 
         self.train_dataset = train_dataset
+        self.train_dataset.to(self.device)
         accuracy = torchmetrics.Accuracy('binary', )
         precision = torchmetrics.Precision('binary', )
         recall = torchmetrics.Recall('binary', )
@@ -137,10 +139,11 @@ class ANNModule(torch.nn.Module, Baseline):
     def test(self, test_dataset):
         all_preds = []
         all_targets = []
+        test_dataset.to(self.device)
         test_dataloader = DataLoader(test_dataset, batch_size=64)
-        size = len(test_dataset)
-        num_batches = len(test_dataloader)
-        test_loss, correct = 0, 0
+        # size = len(test_dataset)
+        # num_batches = len(test_dataloader)
+        # test_loss, correct = 0, 0
         with torch.no_grad():
             for X, y in test_dataloader:
                 pred = self.forward(X)
@@ -151,7 +154,7 @@ class ANNModule(torch.nn.Module, Baseline):
                 # correct += (pred.argmax(1) == y).type(torch.float).sum().item()
         # test_loss /= num_batches
         # correct /= size
-        all_preds = torch.tensor(all_preds)
+        all_preds = torch.stack(all_preds)
         all_targets = torch.tensor(all_targets)
         with force_open(self.get_session_path('preds.pkl'), 'wb') as file:
             pickle.dump(all_preds, file)
@@ -160,8 +163,8 @@ class ANNModule(torch.nn.Module, Baseline):
             pickle.dump(all_targets, file)
             logger.info('targets are saved.')
 
-    def eval(self):
-        Baseline.eval(self)
+    def eval(self, path):
+        Baseline.eval(self, path, device=self.device)
 
     def save(self, path):
         with force_open(path, "wb") as f:

@@ -15,18 +15,19 @@ preconfiged_sessions = {
     },
     "ann": {
         "commands": [
-            # ("train", {"epoch_num": 100, "batch_size": 64, "k_fold": 10}, "bow-v0"),
-             ("test", dict(), "bow-v0"),
-             ("eval", dict(), ""),
+            ("train", {"epoch_num": 110, "batch_size": 500, "k_fold": 10}, "bow-v0"),
+            ("test", dict(), "bow-v0"),
+            ("eval", {"path": 'output/ann-test/ann/'}, ""),
             ],
         "model_configs": {
-            "dimension_list": list([128]),
+            "dimension_list": list([32]),
             "activation": ("relu", dict()),
-            "loss_func": ("cross-entropy", dict()),
-            "lr": 0.1,
-            "module_session_path": f"output/",
-            "session_path_include_time": True,
-            "number_of_classes": 2,
+            "loss_func": ("BCEW", dict()),
+            "lr": 0.01,
+            "module_session_path": "output/ann-test/",
+            "session_path_include_time": False,
+            "number_of_classes": 1,
+            "device": 'cuda'
         },
     },
 }
