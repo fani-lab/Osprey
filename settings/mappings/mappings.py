@@ -1,9 +1,11 @@
 from src.preprocessing import BasePreprocessing
 from src.utils.dataset import BaseDataset
+from src.models.baseline import Baseline
 from src.utils.commons import RegisterableObject
 
 from torch.nn import ReLU, CrossEntropyLoss, BCEWithLogitsLoss
 
+MODELS = dict()
 
 PREPROCESSINGS = dict()
 
@@ -21,6 +23,11 @@ def register_mappings(obj: RegisterableObject):
             raise Exception(f"a class of the same shortname `{obj.short_name()}` already registered")
         PREPROCESSINGS[obj.short_name()] = obj
     
+    if issubclass(obj, Baseline):
+        if PREPROCESSINGS.get(obj.short_name(), None) is not None:
+            raise Exception(f"a class of the same shortname `{obj.short_name()}` already registered")
+        MODELS[obj.short_name()] = obj
+        
     if issubclass(obj, BaseDataset):
         if DATASETS.get(obj.short_name(), None) is not None:
             raise Exception(f"a class of the same shortname `{obj.short_name()}` already registered")

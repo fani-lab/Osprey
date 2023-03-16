@@ -38,14 +38,14 @@ preconfiged_datasets = {
         {       # train configs
             "data_path": "data/toy.train/toy-train.csv",
             "output_path": "data/preprocessed/ann/",
-            "load_from_pkl": False,
+            "load_from_pkl": True,
             "preprocessings": ["sw", "pr", "rr"],
             "persist_data": True,
         },
         {      # test configs
             "data_path": "data/toy.test/toy-test.csv",
             "output_path": "data/preprocessed/ann/test-",
-            "load_from_pkl": False,
+            "load_from_pkl": True,
             "preprocessings": ["sw", "pr", "rr"],
             "persist_data": True,
         }
@@ -57,3 +57,12 @@ sessions = {
 }
 
 datasets = preconfiged_datasets
+
+FILTERED_CONFIGS = {
+    "session_path_include_time",
+    "data_path",
+    "output_path",
+    "load_from_pkl",
+    "preprocessings",
+    "persist_data",
+}

@@ -18,10 +18,11 @@ from src.utils.commons import force_open
 logger = logging.getLogger()
 
 
-class RnnModule(nn.Module, Baseline):
+class RnnModule(Baseline, nn.Module):
     def __init__(self, input_size, hidden_dim, num_layers, activation, loss_func, lr, train_dataset,
                  learning_batch_size, module_session_path, number_of_classes=2, **kwargs):
-        super(RnnModule, self).__init__()
+        Baseline.__init__(self, input_size=input_size)
+        nn.Module.__init__(self)
 
         self.rnn = nn.RNN(input_size=input_size, hidden_size=hidden_dim, num_layers=num_layers, nonlinearity='relu',
                           batch_first=True)
@@ -37,6 +38,10 @@ class RnnModule(nn.Module, Baseline):
         self.session_path = module_session_path if module_session_path[-1] == "\\" or module_session_path[
             -1] == "/" else module_session_path + "/"
         self.snapshot_steps = 2
+    
+    @classmethod
+    def short_name(cls) -> str:
+        return "rnn"
 
     def forward(self, x):
         # h0 = torch.zeros(1 * self.num_layers, self.batch_size, self.hidden_size)

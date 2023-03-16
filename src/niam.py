@@ -83,6 +83,16 @@ def main():
     # model.test(test_dataset)
     logger.info('Done!')
 
+def create_model_configs(session: dict):
+    activation, activation_kwargs = mappings.ACTIVATIONS[session["model_configs"]["activation"][0]], session["model_configs"]["activation"][1]
+    loss, loss_kwargs = mappings.LOSS_FUNCTIONS[session["model_configs"]["loss_func"][0]], session["model_configs"]["loss_func"][1]
+
+    configs = {**session["model_configs"], "activation": activation(**activation_kwargs),
+                         "loss_func": loss(**loss_kwargs),
+                         "module_session_path": session["model_configs"]["module_session_path"] + "/" + START_TIME
+                            if session["model_configs"]["session_path_include_time"] else session["model_configs"]["module_session_path"],
+                        }
+    configs = {k: v for k, v in configs if k not in settings.FILTERED_CONFIGS}
 
 def run():
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -109,17 +119,9 @@ def run():
     for model_name, session in settings.sessions.items():
         commands = session["commands"]
 
-        activation, activation_kwargs = mappings.ACTIVATIONS[session["model_configs"]["activation"][0]], session["model_configs"]["activation"][1]
-        loss, loss_kwargs = mappings.LOSS_FUNCTIONS[session["model_configs"]["loss_func"][0]], session["model_configs"]["loss_func"][1]
-        model_configs = {**session["model_configs"], "activation": activation(**activation_kwargs),
-                         "loss_func": loss(**loss_kwargs),
-                         "module_session_path": session["model_configs"]["module_session_path"] + "/" + START_TIME
-                            if session["model_configs"]["session_path_include_time"] else session["model_configs"]["module_session_path"],
-                         }
-        model_class = None
+        model_configs = create_model_configs(session=session)
         
-        if model_name == "ann":
-            model_class = ANNModule
+        model_class = mappings.MODELS[model_name]
         
         for command, command_kwargs, dataset_name, *_ in commands:
 

@@ -17,10 +17,12 @@ from sklearn.model_selection import KFold
 logger = logging.getLogger()
 
 
-class ANNModule(torch.nn.Module, Baseline):
+class ANNModule(Baseline, torch.nn.Module):
 
     def __init__(self, dimension_list, activation, loss_func, lr, input_size, module_session_path,
-                 number_of_classes=1, device='cpu',  **kwargs):
+                 number_of_classes=2, device='cpu', **kwargs):
+        Baseline.__init__(self, input_size=input_size)
+        torch.nn.Module.__init__(self)
 
         super(ANNModule, self).__init__()
         self.number_of_classes = number_of_classes
@@ -40,6 +42,10 @@ class ANNModule(torch.nn.Module, Baseline):
 
         self.snapshot_steps = 2
         self.device = device
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "ann"
 
     def forward(self, x):
         """
@@ -131,29 +137,23 @@ class ANNModule(torch.nn.Module, Baseline):
             snapshot_path = self.get_session_path("weights", f"f{fold}", f"model_fold{fold}.pth")
             self.save(snapshot_path)
             plt.plot(np.array(total_loss))
-            # plt.axis([0, epoch_num, 0, 200])
+            plt.axis([0, epoch_num, 0, 1])
             with force_open(self.get_session_path("figures", f"f{fold}", f"model_fold{fold}_loss.png"), "wb") as f:
                 plt.savefig(f)
-            plt.show()
+            # plt.show()
 
     def test(self, test_dataset):
         all_preds = []
         all_targets = []
         test_dataset.to(self.device)
         test_dataloader = DataLoader(test_dataset, batch_size=64)
-        # size = len(test_dataset)
-        # num_batches = len(test_dataloader)
-        # test_loss, correct = 0, 0
         with torch.no_grad():
             for X, y in test_dataloader:
+                y = y.type(torch.float)
                 pred = self.forward(X)
                 all_preds.extend(pred)
-                # all_preds.extend(pred.argmax(1))
                 all_targets.extend(y)
-                # test_loss += self.loss_function(pred, y).item()
-                # correct += (pred.argmax(1) == y).type(torch.float).sum().item()
-        # test_loss /= num_batches
-        # correct /= size
+
         all_preds = torch.stack(all_preds)
         all_targets = torch.tensor(all_targets)
         with force_open(self.get_session_path('preds.pkl'), 'wb') as file:
