@@ -114,10 +114,8 @@ def run():
                          "module_session_path": session["model_configs"]["module_session_path"] + "/" + START_TIME
                             if session["model_configs"]["session_path_include_time"] else session["model_configs"]["module_session_path"],
                          }
-        model_class = None
         
-        if model_name == "ann":
-            model_class = ANNModule
+        model_class = mappings.MODELS[model_name]
         
         for command, command_kwargs, dataset_name, *_ in commands:
 

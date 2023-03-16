@@ -22,14 +22,15 @@ class ANNModule(torch.nn.Module, Baseline):
     def __init__(self, dimension_list, activation, loss_func, lr, input_size, module_session_path,
                  number_of_classes=2, **kwargs):
 
-        super(ANNModule, self).__init__()
+        super(ANNModule, self).__init__(dimension_list, activation, loss_func, lr, input_size, module_session_path,
+                 number_of_classes, **kwargs)
         self.number_of_classes = number_of_classes
-        self.i2h = nn.Linear(input_size,
+        self.i2h = nn.Linear(self.input_size,
                              dimension_list[0] if len(dimension_list) > 0 else self.number_of_classes)
         self.layers = nn.ModuleList()
         for i, j in zip(dimension_list, dimension_list[1:]):
             self.layers.append(nn.Linear(in_features=i, out_features=j))
-        self.h2o = torch.nn.Linear(dimension_list[-1] if len(dimension_list) > 0 else input_size,
+        self.h2o = torch.nn.Linear(dimension_list[-1] if len(dimension_list) > 0 else self.input_size,
                                    self.number_of_classes)
         self.activation = activation
         self.optimizer = torch.optim.SGD(self.parameters(), lr=lr)
@@ -39,6 +40,10 @@ class ANNModule(torch.nn.Module, Baseline):
             -1] == "/" else module_session_path + "/"
 
         self.snapshot_steps = 2
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "ann"
 
     def forward(self, x):
         """

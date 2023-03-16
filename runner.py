@@ -2,6 +2,7 @@
 from src.niam import main, run
 from src.preprocessing import NLTKStopWordRemoving, PunctuationRemoving, RepetitionRemoving
 from src.utils.dataset import BagOfWordsDataset, TimeBasedBagOfWordsDataset, TransformersEmbeddingDataset
+from src.models import ANNModule, RnnModule
 from settings.mappings import register_mappings, register_mappings_torch
 
 
@@ -16,5 +17,8 @@ if __name__ == "__main__":
     register_mappings(BagOfWordsDataset)
     register_mappings(TimeBasedBagOfWordsDataset)
     register_mappings(TransformersEmbeddingDataset)
+
+    register_mappings(ANNModule)
+    register_mappings(RnnModule)
 
     run()

@@ -4,12 +4,14 @@ import matplotlib.pyplot as plt
 import torchmetrics
 from sklearn import metrics
 
+from src.utils.commons import RegisterableObject
+
 logger = logging.getLogger()
 
 
-class Baseline():
-    def __init__(self):
-        pass
+class Baseline(RegisterableObject):
+    def __init__(self, input_size: int, *args, **kwargs):
+        self.input_size = input_size
 
     def prep(self):
         # if the features are save => load it
