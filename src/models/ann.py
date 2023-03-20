@@ -24,7 +24,6 @@ class ANNModule(Baseline, torch.nn.Module):
         Baseline.__init__(self, input_size=input_size)
         torch.nn.Module.__init__(self)
 
-        super(ANNModule, self).__init__()
         self.number_of_classes = number_of_classes
         self.i2h = nn.Linear(input_size,
                              dimension_list[0] if len(dimension_list) > 0 else self.number_of_classes)
