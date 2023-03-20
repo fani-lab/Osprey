@@ -17,7 +17,7 @@ preconfiged_sessions = {
         "commands": [
             ("train", {"epoch_num": 110, "batch_size": 500, "k_fold": 10}, "bow-v0"),
             ("test", dict(), "bow-v0"),
-            ("eval", {"path": 'output/ann-test/ann/'}, ""),
+            # ("eval", {"path": 'output/ann-test/ann/'}, ""),
             ],
         "model_configs": {
             "dimension_list": list([32]),
@@ -66,3 +66,5 @@ FILTERED_CONFIGS = {
     "preprocessings",
     "persist_data",
 }
+
+IGNORED_PARAM_RESET = {"activation", "loss_function"}

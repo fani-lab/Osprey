@@ -2,8 +2,10 @@ import pickle
 import logging
 
 import torchmetrics
+
 from src.models.baseline import Baseline
 from src.utils.commons import force_open
+from settings import settings
 
 import torch
 from torch import nn
@@ -89,13 +91,15 @@ class ANNModule(Baseline, torch.nn.Module):
             # resetting module parameters
             for name, module in self.named_children():
                 try:
+                    if name in settings.IGNORED_PARAM_RESET:
+                        continue
                     if isinstance(module, nn.ModuleList):
                         for name_, layer in module.named_children():
+                            logger.info("resetting layer parameters")
                             layer.reset_parameters()
-                            logger.info("parameters reset")
                     else:
+                        logger.info(f"resetting module parameters {name}")
                         module.reset_parameters()
-                        logger.info("parameters reset")
                 except Exception as e:
                     logger.error(e)
             for i in range(epoch_num):
