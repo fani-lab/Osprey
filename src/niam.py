@@ -92,7 +92,8 @@ def create_model_configs(session: dict):
                          "module_session_path": session["model_configs"]["module_session_path"] + "/" + START_TIME
                             if session["model_configs"]["session_path_include_time"] else session["model_configs"]["module_session_path"],
                         }
-    configs = {k: v for k, v in configs if k not in settings.FILTERED_CONFIGS}
+    configs = {k: v for k, v in configs.items() if k not in settings.FILTERED_CONFIGS}
+    return configs
 
 def run():
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
