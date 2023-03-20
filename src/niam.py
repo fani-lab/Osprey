@@ -83,20 +83,20 @@ def main():
     # model.test(test_dataset)
     logger.info('Done!')
 
-def create_model_configs(session: dict):
+def create_model_configs(session_name: str, session: dict):
     activation, activation_kwargs = mappings.ACTIVATIONS[session["model_configs"]["activation"][0]], session["model_configs"]["activation"][1]
     loss, loss_kwargs = mappings.LOSS_FUNCTIONS[session["model_configs"]["loss_func"][0]], session["model_configs"]["loss_func"][1]
 
     configs = {**session["model_configs"], "activation": activation(**activation_kwargs),
                          "loss_func": loss(**loss_kwargs),
-                         "module_session_path": session["model_configs"]["module_session_path"] + "/" + START_TIME
-                            if session["model_configs"]["session_path_include_time"] else session["model_configs"]["module_session_path"],
+                         "module_session_path": session["model_configs"]["module_session_path"] + "/" + START_TIME + "/" + session_name
+                            if session["model_configs"]["session_path_include_time"] else session["model_configs"]["module_session_path"] + "/" + session_name,
                         }
     configs = {k: v for k, v in configs.items() if k not in settings.FILTERED_CONFIGS}
     return configs
 
 def run():
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = 'cuda' if settings.USE_CUDA_IF_AVAILABLE and torch.cuda.is_available() else 'cpu'
     logger.info(f'processing unit: {device}')
     datasets = dict()
     for dataset_name, (short_name, train_configs, test_configs) in settings.datasets.items():
@@ -113,16 +113,16 @@ def run():
             except Exception as e:
                 raise Exception(f"preprocessing `{pp}` either not implemented or not registered") from e
         
-        train_dataset = dataset_class(**{**train_configs, "preprocessings": [pp() for pp in preprocessings]})
-        test_dataset = dataset_class(**{**test_configs, "parent_dataset": train_dataset, "preprocessings": [pp() for pp in preprocessings]})
+        train_dataset = dataset_class(**{**train_configs, "preprocessings": [pp() for pp in preprocessings], "device": device})
+        test_dataset = dataset_class(**{**test_configs, "parent_dataset": train_dataset, "preprocessings": [pp() for pp in preprocessings], "device": device})
         datasets[dataset_name] = (train_dataset, test_dataset)
 
     for model_name, session in settings.sessions.items():
         commands = session["commands"]
 
-        model_configs = create_model_configs(session=session)
+        model_configs = create_model_configs(model_name, session=session)
         
-        model_class = mappings.MODELS[model_name]
+        model_class = mappings.MODELS[session["model"]]
         
         for command, command_kwargs, dataset_name, *_ in commands:
 

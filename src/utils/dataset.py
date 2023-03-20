@@ -44,13 +44,14 @@ class BaseDataset(Dataset, RegisterableObject):
 
     
     def __init__(self, data_path: str, output_path: str, load_from_pkl: bool,
-                 preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, *args, **kwargs):
+                 preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, device="cpu", *args, **kwargs):
         self.output_path = output_path
         self.parent_dataset = parent_dataset
         self.load_from_pkl = load_from_pkl
         self.preprocessings = preprocessings
         self.persist_data = persist_data
         self.df_path = data_path
+        self.device = device
 
         self.__df__ = None
 
@@ -241,11 +242,11 @@ class TransformersEmbeddingDataset(BaseDataset, RegisterableObject):
 
     @classmethod
     def short_name(cls) -> str:
-        return "transformer/"
+        return "transformer/distillbert"
         
     def init_encoder(self, tokens_records):
         logger.debug("Transformer Embedding Dataset being initialized")
-        encoder = TransformersEmbeddingEncoder()
+        encoder = TransformersEmbeddingEncoder(device=self.device)
         return encoder
 
     def tokenize(self, input):
@@ -259,4 +260,18 @@ class TransformersEmbeddingDataset(BaseDataset, RegisterableObject):
         return vectors
 
     def get_session_path(self, filename) -> str:
-        return self.output_path + "transformer/" + filename
+        return self.output_path + "transformer/all-distilroberta-v1/" + filename
+
+class CaseSensitiveBertEmbeddingDataset(TransformersEmbeddingDataset):
+    
+    @classmethod
+    def short_name(cls) -> str:
+        return "tranformer/bert-base-cased"
+    
+    def init_encoder(self, tokens_records):
+        encoder = TransformersEmbeddingEncoder(transformer_identifier="bert-base-cased", device=self.device)
+
+        return encoder
+
+    def get_session_path(self, filename) -> str:
+        return self.output_path + "tranformer/bert-base-cased/" + filename
