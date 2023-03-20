@@ -68,6 +68,16 @@ class ANNModule(Baseline, torch.nn.Module):
 
     def get_session_path(self, *args):
         return f"{self.session_path}" + "ann/" + "/".join([str(a) for a in args])
+    
+    def reset_modules(self, module, parents_modules_names=[]):
+        for name, module in module.named_children():
+            if name in settings.IGNORED_PARAM_RESET:
+                continue
+            if isinstance(module, nn.ModuleList):
+                self.reset_modules(module, parents_modules_names=[*parents_modules_names, name])
+            else:
+                logger.info(f"resetting module parameters {'.'.join([name, *parents_modules_names])}")
+                module.reset_parameters()
 
     def learn(self, epoch_num: int, batch_size: int, k_fold: int, train_dataset: Dataset):
 
@@ -89,19 +99,7 @@ class ANNModule(Baseline, torch.nn.Module):
             # Train phase
             total_loss = []
             # resetting module parameters
-            for name, module in self.named_children():
-                try:
-                    if name in settings.IGNORED_PARAM_RESET:
-                        continue
-                    if isinstance(module, nn.ModuleList):
-                        for name_, layer in module.named_children():
-                            logger.info("resetting layer parameters")
-                            layer.reset_parameters()
-                    else:
-                        logger.info(f"resetting module parameters {name}")
-                        module.reset_parameters()
-                except Exception as e:
-                    logger.error(e)
+            self.reset_modules(module=self)
             for i in range(epoch_num):
                 loss = 0
                 for batch_index, (X, y) in enumerate(train_loader):
