@@ -31,20 +31,25 @@ class GloveEmbeddingEncoder:
         self.embedding_path = embedding_path
         self.__glove__ = None
         self.__default_vector__ = torch.zeros(size=(int(self.embedding_path.split(".")[-2].replace("d","")),))
+        self.__zero_vector__ = self.__default_vector__
 
     def glove(self):
         if self.__glove__ is None:
             self.__glove__ = dict()
             with open(self.embedding_path, "r", encoding="utf8") as f:
                 logger.info(f"loading glove encoder at {self.embedding_path}")
-                for i, l in enumerate(f.readlines()):
+                for l in f.readlines():
                     word, *vec = l.split(" ")
                     self.__glove__[word] = torch.Tensor([float(num) for num in vec])
                 logger.debug("done loading glove encoder")
         return self.__glove__
 
     def transform(self, record):
-        return (self.glove().get(record, self.__default_vector__))
+        result = [self.glove().get(token, self.__default_vector__) for token in record]
+
+        if len(result) == 0:
+            result = [self.__zero_vector__,]
+        return result
 
     def fit(self, *args, **kwargs):
         pass
