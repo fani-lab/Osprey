@@ -83,12 +83,12 @@ def main():
     # model.test(test_dataset)
     logger.info('Done!')
 
-def create_model_configs(session_name: str, session: dict):
+def create_model_configs(session_name: str, session: dict, device: str):
     activation, activation_kwargs = mappings.ACTIVATIONS[session["model_configs"]["activation"][0]], session["model_configs"]["activation"][1]
     loss, loss_kwargs = mappings.LOSS_FUNCTIONS[session["model_configs"]["loss_func"][0]], session["model_configs"]["loss_func"][1]
 
     configs = {**session["model_configs"], "activation": activation(**activation_kwargs),
-                         "loss_func": loss(**loss_kwargs),
+                         "loss_func": loss(**loss_kwargs), "device": device,
                          "module_session_path": session["model_configs"]["module_session_path"] + "/" + START_TIME + "/" + session_name
                             if session["model_configs"]["session_path_include_time"] else session["model_configs"]["module_session_path"] + "/" + session_name,
                         }
@@ -120,7 +120,7 @@ def run():
     for model_name, session in settings.sessions.items():
         commands = session["commands"]
 
-        model_configs = create_model_configs(model_name, session=session)
+        model_configs = create_model_configs(model_name, session=session, device=device)
         
         model_class = mappings.MODELS[session["model"]]
         

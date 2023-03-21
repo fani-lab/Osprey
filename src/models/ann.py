@@ -110,7 +110,7 @@ class ANNModule(Baseline, torch.nn.Module):
                     loss.backward()
                     self.optimizer.step()
                     logger.info(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
-                total_loss.append(loss.item())
+                    total_loss.append(loss.item())
             # Validation phase
             all_preds = []
             all_targets = []
@@ -137,8 +137,8 @@ class ANNModule(Baseline, torch.nn.Module):
 
             snapshot_path = self.get_session_path("weights", f"f{fold}", f"model_fold{fold}.pth")
             self.save(snapshot_path)
+            plt.clf()
             plt.plot(np.array(total_loss))
-            plt.axis([0, epoch_num, 0, 1])
             with force_open(self.get_session_path("figures", f"f{fold}", f"model_fold{fold}_loss.png"), "wb") as f:
                 plt.savefig(f)
             # plt.show()
