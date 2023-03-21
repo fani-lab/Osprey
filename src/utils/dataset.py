@@ -62,7 +62,39 @@ class BaseDataset(Dataset, RegisterableObject):
         if self.__df__ is None:
             self.__df__ = pd.read_csv(self.df_path)
         return self.__df__
+    
+    def vectorize(self, tokens_records, encoder):
+        raise NotImplementedError()
+    
+    def __init_encoder__(self, tokens_records):
+        try:
+            if self.parent_dataset is not None:
+                encoder = self.parent_dataset.encoder
+                return encoder
+        except Exception as e:
+            raise e
+
+        try:
+            if not self.load_from_pkl:
+                raise FileNotFoundError()
+            with open(self.get_session_path("encoder.pkl"), "rb") as f:
+                encoder = pickle.load(f)
+        except FileNotFoundError:
+            encoder = self.init_encoder(tokens_records)
+
+        return encoder
+
+    def __vectorize__(self, tokens_records, encoder):
+        try:
+            if not self.load_from_pkl:
+                raise FileNotFoundError()
+            with open(self.get_session_path("vectors.pkl"), "rb") as f:
+                vectors = pickle.load(f)
+        except FileNotFoundError:
+            vectors = self.vectorize(tokens_records, encoder)
         
+        return vectors
+
     def get_session_path(self, filename) -> str:
         return self.output_path + self.short_name() +"/" + ".".join([pp.short_name() for pp in self.preprocessings]) + "/" + filename
     
@@ -95,14 +127,14 @@ class BaseDataset(Dataset, RegisterableObject):
 
         tokens = self.preprocess()
 
-        self.encoder = self.init_encoder(tokens_records=tokens)
+        self.encoder = self.__init_encoder__(tokens_records=tokens)
 
         vectors = self.vectorize(tokens, self.encoder)
 
         # Persisting changes
         if self.persist_data:
             vectors_path = self.get_session_path("vectors.pkl")
-            encoder_path = self.get_session_path("one-hot-encoder.pkl")
+            encoder_path = self.get_session_path("encoder.pkl")
             tokens_path = self.get_session_path("tokens.pkl")
             logger.info(f"saving tokens as pickle at {tokens_path}")
             with force_open(tokens_path, "wb") as f:
@@ -162,28 +194,13 @@ class BagOfWordsDataset(BaseDataset):
         return nltk_tokenize(input)
 
     def init_encoder(self, tokens_records):
-        try:
-            if self.parent_dataset is not None:
-                encoder = self.parent_dataset.encoder
-                return encoder
-        except Exception as e:
-            raise e
-
-        try:
-            if not self.load_from_pkl:
-                raise FileNotFoundError()
-            with open(self.get_session_path("one-hot-encoder.pkl"), "rb") as f:
-                encoder = pickle.load(f)
-        except FileNotFoundError:
-            encoder = OneHotEncoder()
-            logger.info("started generating bag of words vector encoder")
-            data = set()
-            data.update(*tokens_records)
-            pattern = lambda x: x
-            logger.debug("fitting data into one hot encoder")
-            encoder.fit(self.get_data_generator(data=data, pattern=pattern))
-
-        return encoder
+        encoder = OneHotEncoder()
+        logger.info("started generating bag of words vector encoder")
+        data = set()
+        data.update(*tokens_records)
+        pattern = lambda x: x
+        logger.debug("fitting data into one hot encoder")
+        encoder.fit(self.get_data_generator(data=data, pattern=pattern))
 
     def vectorize(self, tokens_records, encoder):
         logger.debug("started transforming message records into sparse vectors")
