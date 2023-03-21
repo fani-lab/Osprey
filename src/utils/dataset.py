@@ -95,8 +95,11 @@ class BaseDataset(Dataset, RegisterableObject):
         
         return vectors
 
+    def __str__(self):
+        return self.short_name() +"/" + ".".join([pp.short_name() for pp in self.preprocessings])
+
     def get_session_path(self, filename) -> str:
-        return self.output_path + self.short_name() +"/" + ".".join([pp.short_name() for pp in self.preprocessings]) + "/" + filename
+        return self.output_path + self.__str__() + "/" + filename
     
     def tokenize(self, input) -> list[list[str]]:
         raise NotImplementedError()
@@ -268,8 +271,6 @@ class TransformersEmbeddingDataset(BaseDataset, RegisterableObject):
             vectors[i] = torch.cat(encoder.transform(record))
         return vectors
 
-    def get_session_path(self, filename) -> str:
-        return self.output_path + "transformer/all-distilroberta-v1/" + filename
 
 class CaseSensitiveBertEmbeddingDataset(TransformersEmbeddingDataset):
     
@@ -290,7 +291,7 @@ class GloveEmbeddingDataset(BaseDataset, RegisterableObject):
     
     @classmethod
     def short_name(cls) -> str:
-        return "glove/twitter.100d"
+        return "glove/twitter.50d"
         
     def init_encoder(self, tokens_records):
         logger.debug("Glove Embedding Dataset being initialized")
@@ -307,6 +308,3 @@ class GloveEmbeddingDataset(BaseDataset, RegisterableObject):
         for i, record in enumerate(tokens_records):
             vectors[i] = torch.cat(encoder.transform(record))
         return vectors
-
-    def get_session_path(self, filename) -> str:
-        return self.output_path + "glove/twitter.100d/" + filename
