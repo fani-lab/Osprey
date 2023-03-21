@@ -173,15 +173,6 @@ class BagOfWordsDataset(BaseDataset):
     def short_name(cls) -> str:
         return "bow"
     
-    # def __init__(self, df: pd.DataFrame, output_path: str, load_from_pkl: bool,
-    #              preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None,
-    #              copy: bool = False):
-    #     self.output_path = output_path
-    #     self.parent_dataset = parent_dataset
-    #     self.load_from_pkl = load_from_pkl
-    #     self.preprocessings = preprocessings
-    #     self.persist_data = persist_data
-        
     def get_data_generator(self, data, pattern):
         def func():
             for record in data:
