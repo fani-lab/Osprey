@@ -7,7 +7,7 @@ from torch.utils.data import Dataset
 
 from src.preprocessing.base import BasePreprocessing
 from src.utils.one_hot_encoder import OneHotEncoder
-from src.utils.transformers_encoders import TransformersEmbeddingEncoder
+from src.utils.transformers_encoders import TransformersEmbeddingEncoder, GloveEmbeddingEncoder
 from src.utils.commons import nltk_tokenize, force_open, RegisterableObject
 
 
@@ -95,8 +95,11 @@ class BaseDataset(Dataset, RegisterableObject):
         
         return vectors
 
+    def __str__(self):
+        return self.short_name() +"/" + ".".join([pp.short_name() for pp in self.preprocessings])
+
     def get_session_path(self, filename) -> str:
-        return self.output_path + self.short_name() +"/" + ".".join([pp.short_name() for pp in self.preprocessings]) + "/" + filename
+        return self.output_path + self.__str__() + "/" + filename
     
     def tokenize(self, input) -> list[list[str]]:
         raise NotImplementedError()
@@ -129,7 +132,7 @@ class BaseDataset(Dataset, RegisterableObject):
 
         self.encoder = self.__init_encoder__(tokens_records=tokens)
 
-        vectors = self.vectorize(tokens, self.encoder)
+        vectors = self.__vectorize__(tokens, self.encoder)
 
         # Persisting changes
         if self.persist_data:
@@ -172,16 +175,7 @@ class BagOfWordsDataset(BaseDataset):
     @classmethod
     def short_name(cls) -> str:
         return "bow"
-    
-    # def __init__(self, df: pd.DataFrame, output_path: str, load_from_pkl: bool,
-    #              preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None,
-    #              copy: bool = False):
-    #     self.output_path = output_path
-    #     self.parent_dataset = parent_dataset
-    #     self.load_from_pkl = load_from_pkl
-    #     self.preprocessings = preprocessings
-    #     self.persist_data = persist_data
-        
+
     def get_data_generator(self, data, pattern):
         def func():
             for record in data:
@@ -277,8 +271,6 @@ class TransformersEmbeddingDataset(BaseDataset, RegisterableObject):
             vectors[i] = torch.cat(encoder.transform(record))
         return vectors
 
-    def get_session_path(self, filename) -> str:
-        return self.output_path + "transformer/all-distilroberta-v1/" + filename
 
 class CaseSensitiveBertEmbeddingDataset(TransformersEmbeddingDataset):
     
@@ -293,3 +285,26 @@ class CaseSensitiveBertEmbeddingDataset(TransformersEmbeddingDataset):
 
     def get_session_path(self, filename) -> str:
         return self.output_path + "tranformer/bert-base-cased/" + filename
+
+
+class GloveEmbeddingDataset(BaseDataset, RegisterableObject):
+    
+    @classmethod
+    def short_name(cls) -> str:
+        return "glove/twitter.50d"
+        
+    def init_encoder(self, tokens_records):
+        logger.debug("Glove Embedding Dataset being initialized")
+        path = "data/embeddings/glove.twitter.27B/glove.twitter.27B.50d.txt"
+        encoder = GloveEmbeddingEncoder(path)
+        return encoder
+
+    def tokenize(self, input):
+        logger.debug("tokenizing using nltk")
+        return nltk_tokenize(input)
+
+    def vectorize(self, tokens_records, encoder):
+        vectors = [None] * len(tokens_records)
+        for i, record in enumerate(tokens_records):
+            vectors[i] = torch.cat(encoder.transform(record))
+        return vectors

@@ -70,6 +70,9 @@ class ANNModule(Baseline, torch.nn.Module):
     def get_session_path(self, *args):
         return f"{self.session_path}" + "ann/" + "/".join([str(a) for a in args])
     
+    def get_detailed_session_path(self, dataset, *args):
+        return self.get_session_path(str(dataset), *args)
+    
     def reset_modules(self, module, parents_modules_names=[]):
         for name, module in module.named_children():
             if name in settings.IGNORED_PARAM_RESET:
@@ -136,11 +139,11 @@ class ANNModule(Baseline, torch.nn.Module):
             logger.info(f'torchmetrics precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
             logger.info(f'torchmetrics Recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
 
-            snapshot_path = self.get_session_path("weights", f"f{fold}", f"model_fold{fold}.pth")
+            snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_fold{fold}.pth")
             self.save(snapshot_path)
             plt.clf()
             plt.plot(np.array(total_loss))
-            with force_open(self.get_session_path("figures", f"f{fold}", f"model_fold{fold}_loss.png"), "wb") as f:
+            with force_open(self.get_detailed_session_path(train_dataset, "figures", f"f{fold}", f"model_fold{fold}_loss.png"), "wb") as f:
                 plt.savefig(f)
             # plt.show()
 
@@ -158,10 +161,10 @@ class ANNModule(Baseline, torch.nn.Module):
 
         all_preds = torch.stack(all_preds)
         all_targets = torch.tensor(all_targets)
-        with force_open(self.get_session_path('preds.pkl'), 'wb') as file:
+        with force_open(self.get_detailed_session_path(test_dataset, 'preds.pkl'), 'wb') as file:
             pickle.dump(all_preds, file)
             logger.info('predictions are saved.')
-        with force_open(self.get_session_path('targets.pkl'), 'wb') as file:
+        with force_open(self.get_detailed_session_path(test_dataset, 'targets.pkl'), 'wb') as file:
             pickle.dump(all_targets, file)
             logger.info('targets are saved.')
 
