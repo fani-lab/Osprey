@@ -49,7 +49,9 @@ class GloveEmbeddingEncoder:
 
         if len(result) == 0:
             result = [self.__zero_vector__,]
-        return result
+        vec = torch.stack(result).sum(dim=0).div(len(result))
+        
+        return (vec,)
 
     def fit(self, *args, **kwargs):
         pass
