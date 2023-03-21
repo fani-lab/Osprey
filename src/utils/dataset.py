@@ -132,7 +132,7 @@ class BaseDataset(Dataset, RegisterableObject):
 
         self.encoder = self.__init_encoder__(tokens_records=tokens)
 
-        vectors = self.vectorize(tokens, self.encoder)
+        vectors = self.__vectorize__(tokens, self.encoder)
 
         # Persisting changes
         if self.persist_data:
@@ -175,7 +175,7 @@ class BagOfWordsDataset(BaseDataset):
     @classmethod
     def short_name(cls) -> str:
         return "bow"
-    
+
     def get_data_generator(self, data, pattern):
         def func():
             for record in data:
