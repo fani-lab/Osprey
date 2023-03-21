@@ -201,6 +201,7 @@ class BagOfWordsDataset(BaseDataset):
         pattern = lambda x: x
         logger.debug("fitting data into one hot encoder")
         encoder.fit(self.get_data_generator(data=data, pattern=pattern))
+        return encoder
 
     def vectorize(self, tokens_records, encoder):
         logger.debug("started transforming message records into sparse vectors")
