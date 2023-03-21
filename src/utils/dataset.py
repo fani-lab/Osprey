@@ -7,7 +7,7 @@ from torch.utils.data import Dataset
 
 from src.preprocessing.base import BasePreprocessing
 from src.utils.one_hot_encoder import OneHotEncoder
-from src.utils.transformers_encoders import TransformersEmbeddingEncoder
+from src.utils.transformers_encoders import TransformersEmbeddingEncoder, GloveEmbeddingEncoder
 from src.utils.commons import nltk_tokenize, force_open, RegisterableObject
 
 
@@ -293,3 +293,29 @@ class CaseSensitiveBertEmbeddingDataset(TransformersEmbeddingDataset):
 
     def get_session_path(self, filename) -> str:
         return self.output_path + "tranformer/bert-base-cased/" + filename
+
+
+class GloveEmbeddingDataset(BaseDataset, RegisterableObject):
+    
+    @classmethod
+    def short_name(cls) -> str:
+        return "glove/twitter.100d"
+        
+    def init_encoder(self, tokens_records):
+        logger.debug("Glove Embedding Dataset being initialized")
+        path = "data/embeddings/glove.twitter.27B/glove.twitter.27B.50d.txt"
+        encoder = GloveEmbeddingEncoder(path)
+        return encoder
+
+    def tokenize(self, input):
+        logger.debug("tokenizing using nltk")
+        return nltk_tokenize(input)
+
+    def vectorize(self, tokens_records, encoder):
+        vectors = [None] * len(tokens_records)
+        for i, record in enumerate(tokens_records):
+            vectors[i] = torch.cat(encoder.transform(record))
+        return vectors
+
+    def get_session_path(self, filename) -> str:
+        return self.output_path + "glove/twitter.100d/" + filename
