@@ -139,8 +139,11 @@ def run():
                 model.to(device=device)
                 model.test(**command_kwargs, test_dataset=dataset)
             if command == "eval":
-                # dataset = datasets[dataset_name][0]
-                # dataset.prepare()
+                path = command_kwargs.get("path", "")
+                if command_kwargs.get("use_current_session", False):
+                    path = model.get_detailed_session_path(dataset)
+                if path == "":
+                    raise ValueError("the given path is empty. It should point to the directory of model objects.")
                 model = model_class(**model_configs, input_size=1)
-                # model.to(device=device)
-                model.eval(**command_kwargs)
+                model.to(device=device)
+                model.eval(path)

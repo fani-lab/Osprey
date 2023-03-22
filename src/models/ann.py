@@ -23,21 +23,23 @@ logger = logging.getLogger()
 class ANNModule(Baseline, torch.nn.Module):
 
     def __init__(self, dimension_list, activation, loss_func, lr, input_size, module_session_path,
-                 number_of_classes=2, device='cpu', **kwargs):
+                 device='cpu', **kwargs):
         Baseline.__init__(self, input_size=input_size)
         torch.nn.Module.__init__(self)
+        
+        self.init_lr = lr
+        self.dimension_list = dimension_list
 
-        self.number_of_classes = number_of_classes
+        
         self.i2h = nn.Linear(input_size,
-                             dimension_list[0] if len(dimension_list) > 0 else self.number_of_classes)
+                             dimension_list[0] if len(dimension_list) > 0 else 2)
         self.layers = nn.ModuleList()
         for i, j in zip(dimension_list, dimension_list[1:]):
             self.layers.append(nn.Linear(in_features=i, out_features=j))
-        self.h2o = torch.nn.Linear(dimension_list[-1] if len(dimension_list) > 0 else input_size,
-                                   self.number_of_classes)
+        self.h2o = torch.nn.Linear(dimension_list[-1] if len(dimension_list) > 0 else input_size, 2)
         self.activation = activation
         self.optimizer = torch.optim.SGD(self.parameters(), lr=lr, momentum=0.9)
-        self.scheduler = ExponentialLR(self.optimizer, gamma=0.9)
+        self.scheduler = ExponentialLR(self.optimizer, gamma=0.9, verbose=True)
 
         self.loss_function = loss_func
 
@@ -73,7 +75,8 @@ class ANNModule(Baseline, torch.nn.Module):
         return f"{self.session_path}" + "ann/" + "/".join([str(a) for a in args])
     
     def get_detailed_session_path(self, dataset, *args):
-        return self.get_session_path(str(dataset), *args)
+        details = str(dataset) + "-" + str(self)
+        return self.get_session_path(details, *args)
     
     def reset_modules(self, module, parents_modules_names=[]):
         for name, module in module.named_children():
@@ -87,20 +90,19 @@ class ANNModule(Baseline, torch.nn.Module):
 
     def learn(self, epoch_num: int, batch_size: int, k_fold: int, train_dataset: Dataset):
 
-        self.train_dataset = train_dataset
-        self.train_dataset.to(self.device)
-        accuracy = torchmetrics.Accuracy('multiclass', num_classes=2, top_k=1)
-        precision = torchmetrics.Precision('multiclass', num_classes=2, top_k=1)
-        recall = torchmetrics.Recall('multiclass', num_classes=2, top_k=1)
+        train_dataset.to(self.device)
+        accuracy = torchmetrics.Accuracy('multiclass', num_classes=2, top_k=1).to(self.device)
+        precision = torchmetrics.Precision('multiclass', num_classes=2, top_k=1).to(self.device)
+        recall = torchmetrics.Recall('multiclass', num_classes=2, top_k=1).to(self.device)
         logger.info("training phase started")
         kfold = KFold(n_splits=k_fold)
-        for fold, (train_ids, validation_ids) in enumerate(kfold.split(self.train_dataset)):
+        for fold, (train_ids, validation_ids) in enumerate(kfold.split(train_dataset)):
             logger.info(f'getting data for fold #{fold}')
             train_subsampler = torch.utils.data.SubsetRandomSampler(train_ids)
             validation_subsampler = torch.utils.data.SubsetRandomSampler(validation_ids)
-            train_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size,
+            train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size,
                                                        sampler=train_subsampler)
-            validation_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size,
+            validation_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size,
                                                             sampler=validation_subsampler)
             # Train phase
             total_loss = []
@@ -163,7 +165,7 @@ class ANNModule(Baseline, torch.nn.Module):
                 all_targets.extend(y)
 
         all_preds = torch.stack(all_preds)
-        all_targets = torch.tensor(all_targets)
+        all_targets = torch.stack(all_targets)
         with force_open(self.get_detailed_session_path(test_dataset, 'preds.pkl'), 'wb') as file:
             pickle.dump(all_preds, file)
             logger.info('predictions are saved.')
@@ -185,3 +187,7 @@ class ANNModule(Baseline, torch.nn.Module):
             logger.info("parameters loaded successfully")
         except Exception as e:
             logger.debug(e)
+
+    def __str__(self) -> str:
+        return str(self.init_lr) + "-" +".".join((str(l) for l in self.dimension_list))
+    
