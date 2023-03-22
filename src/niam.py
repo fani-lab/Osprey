@@ -141,7 +141,10 @@ def run():
             if command == "eval":
                 path = command_kwargs.get("path", "")
                 if command_kwargs.get("use_current_session", False):
-                    path = model.get_detailed_session_path(dataset)
+                    try:
+                        path = model.get_detailed_session_path(dataset)
+                    except UnboundLocalError as e:
+                        raise Exception("in order to use use_current_session, you should run the previous steps at the same time.") from e
                 if path == "":
                     raise ValueError("the given path is empty. It should point to the directory of model objects.")
                 model = model_class(**model_configs, input_size=1)
