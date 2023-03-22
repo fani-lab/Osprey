@@ -7,3 +7,7 @@ venv/
 .idea
 *.log
 output/
+*.png
+*.jpg
+*.jpeg
+*.fig
