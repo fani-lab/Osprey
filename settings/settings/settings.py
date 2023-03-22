@@ -51,62 +51,80 @@ preconfiged_datasets = {
     #     }
     # ),
 
-    # "bow-onehot": (
-    #     "bow",  # short name of the dataset
-    #     {       # train configs
-    #         "data_path": "data/train/train.csv",
-    #         "output_path": "data/preprocessed/ann/",
-    #         "load_from_pkl": True,
-    #         "preprocessings": ["sw", "pr", "rr"],
-    #         "persist_data": True,
-    #     },
-    #     {      # test configs
-    #         "data_path": "data/test/test.csv",
-    #         "output_path": "data/preprocessed/ann/test-",
-    #         "load_from_pkl": True,
-    #         "preprocessings": ["sw", "pr", "rr"],
-    #         "persist_data": True,
-    #     }
-    # ),
-
-    "balanced-bert-base-cased": (
-        "tranformer/bert-base-cased",  # short name of the dataset
+    "bow-onehot": (
+        "bow",  # short name of the dataset
         {       # train configs
             "data_path": "data/balanced/train.csv",
-            "output_path": "data/preprocessed/balanced-ann/",
+            "output_path": "data/preprocessed/balanced/ann/",
             "load_from_pkl": True,
             "preprocessings": ["sw", "pr", "rr"],
             "persist_data": True,
         },
         {      # test configs
-            "data_path": "data/balanced/test.csv",
-            "output_path": "data/preprocessed/balanced-ann/test-",
+            "data_path": "data/balanced/train.csv",
+            "output_path": "data/preprocessed/balanced/ann/test-",
             "load_from_pkl": True,
             "preprocessings": ["sw", "pr", "rr"],
             "persist_data": True,
         }
     ),
+
+    "glove-v0": (
+        "glove/twitter.50d",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/balanced/train.csv",
+            "output_path": "data/preprocessed/lolbalanced-ann/",
+            "load_from_pkl": True,
+            "preprocessings": ["sw"],
+            "persist_data": False,
+        },
+        {      # test configs
+            "data_path": "data/balanced/test.csv",
+            "output_path": "data/preprocessed/lolbalanced-ann/test-",
+            "load_from_pkl": True,
+            "preprocessings": ["sw"],
+            "persist_data": False,
+        }
+    ),
+
+    # "balanced-bert-base-cased": (
+    #     "tranformer/bert-base-cased",  # short name of the dataset
+    #     {       # train configs
+    #         "data_path": "data/balanced/train.csv",
+    #         "output_path": "data/preprocessed/balanced-ann/",
+    #         "load_from_pkl": True,
+    #         "preprocessings": ["sw", "pr", "rr"],
+    #         "persist_data": True,
+    #     },
+    #     {      # test configs
+    #         "data_path": "data/balanced/test.csv",
+    #         "output_path": "data/preprocessed/balanced-ann/test-",
+    #         "load_from_pkl": True,
+    #         "preprocessings": ["sw", "pr", "rr"],
+    #         "persist_data": True,
+    #     }
+    # ),
 }
 
 sessions = {
-    # "ann-onehot": {
-    #     "model": "ann",
-    #     "commands": [
-    #         ("train", {"epoch_num": 110, "batch_size": 500, "k_fold": 10}, "bow-onehot"),
-    #         ("test", dict(), "bow-onehot"),
-    #         ("eval", {"path": 'output/ann/'}, ""),
-    #         ],
-    #     "model_configs": {
-    #         "dimension_list": list([32]),
-    #         "activation": ("relu", dict()),
-    #         "loss_func": ("BCEW", dict()),
-    #         "lr": 0.01,
-    #         "module_session_path": "output",
-    #         "session_path_include_time": False,
-    #         "number_of_classes": 1,
-    #         "device": 'cuda'
-    #     },
-    # },
+    "ann-onehot": {
+        "model": "ann",
+        "commands": [
+            # ("train", {"epoch_num": 2, "batch_size": 64, "k_fold": 3}, "bow-onehot"),
+            ("test", dict(), "bow-onehot"),
+            ("eval", {"path": 'output/ann/', "use_current_session": True}, None),
+            ],
+        "model_configs": {
+            "dimension_list": list([64, 16]),
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", dict()),
+            "lr": 0.9,
+            "module_session_path": "output",
+            "session_path_include_time": False,
+            # "number_of_classes": 2,
+            # "device": 'cuda'
+        },
+    },
 
     # "ann-word2vec": {
     #     "commands": [
@@ -126,24 +144,24 @@ sessions = {
     #     },
     # },
 
-    "ann-bert": {
-        "model": "ann",
-        "commands": [
-            ("train", {"epoch_num": 10, "batch_size": 128, "k_fold": 5}, "balanced-bert-base-cased"),
-            ("test", dict(), "balanced-bert-base-cased"),
-            # ("eval", {"path": 'output/ann/'}, ""),
-            ],
-        "model_configs": {
-            "dimension_list": list([128, ]),
-            "activation": ("relu", dict()),
-            "loss_func": ("BCEW", dict()),
-            "lr": 0.001,
-            "module_session_path": "output",
-            "session_path_include_time": False,
-            "number_of_classes": 1,
-            "device": 'cuda'
-        },
-    },
+    # "ann-glove": {
+    #     "model": "ann",
+    #     "commands": [
+    #         ("train", {"epoch_num": 3, "batch_size": 128, "k_fold": 2}, "glove-v0"),
+    #         ("test", dict(), "glove-v0"),
+    #         # ("eval", {"path": 'output/ann/'}, ""),
+    #         ],
+    #     "model_configs": {
+    #         "dimension_list": list([32, 8]),
+    #         "activation": ("relu", dict()),
+    #         "loss_func": ("BCEW", {"reduction": "sum"}),
+    #         "lr": 0.001,
+    #         "module_session_path": "output",
+    #         "session_path_include_time": False,
+    #         "number_of_classes": 1,
+    #         "device": 'cuda'
+    #     },
+    # },
 }
 
 datasets = preconfiged_datasets
