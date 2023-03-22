@@ -2,6 +2,7 @@ import pickle
 import logging
 
 import torchmetrics
+from torch.optim.lr_scheduler import ExponentialLR
 
 from src.models.baseline import Baseline
 from src.utils.commons import force_open
@@ -35,8 +36,9 @@ class ANNModule(Baseline, torch.nn.Module):
         self.h2o = torch.nn.Linear(dimension_list[-1] if len(dimension_list) > 0 else input_size,
                                    self.number_of_classes)
         self.activation = activation
-        self.optimizer = torch.optim.Adam(lr=lr, params=self.parameters())
-        # self.optimizer = torch.optim.SGD(self.parameters(), lr=lr)
+        self.optimizer = torch.optim.SGD(self.parameters(), lr=lr, momentum=0.9)
+        self.scheduler = ExponentialLR(self.optimizer, gamma=0.9)
+
         self.loss_function = loss_func
 
         self.session_path = module_session_path if module_session_path[-1] == "\\" or module_session_path[
@@ -115,6 +117,7 @@ class ANNModule(Baseline, torch.nn.Module):
                     self.optimizer.step()
                     logger.info(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
                     total_loss.append(loss.item())
+                self.scheduler.step()
             # Validation phase
             all_preds = []
             all_targets = []

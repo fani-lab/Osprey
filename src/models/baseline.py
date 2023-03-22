@@ -33,11 +33,11 @@ class Baseline(RegisterableObject):
         raise NotImplementedError()
 
     def eval(self,path ,device):
-        accuracy = torchmetrics.Accuracy('binary', )
-        precision = torchmetrics.Precision('binary', )
-        recall = torchmetrics.Recall('binary', )
-        roc = torchmetrics.ROC(task="binary")
-        auroc = torchmetrics.AUROC(task="binary")
+        accuracy = torchmetrics.Accuracy('multiclass', num_classes=2, top_k=1)
+        precision = torchmetrics.Precision('multiclass', num_classes=2, top_k=1)
+        recall = torchmetrics.Recall('multiclass', num_classes=2, top_k=1)
+        roc = torchmetrics.ROC(task="multiclass", num_classes=2)
+        auroc = torchmetrics.AUROC(task="multiclass", num_classes=2)
         preds = None
         targets = None
         with open(path+'preds.pkl', 'rb') as file:
@@ -49,7 +49,7 @@ class Baseline(RegisterableObject):
         preds = preds.to(device)
         targets = targets.to(device)
         fpr, tpr, thresholds = roc(preds, targets)
-        plt.plot(fpr, tpr)
+        plt.plot(fpr[1], tpr[1])
         plt.title("ROC")
         plt.savefig("ROC.png")
         plt.show()
