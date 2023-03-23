@@ -2,6 +2,7 @@ import pickle
 import logging
 import matplotlib.pyplot as plt
 import torchmetrics
+import torch
 
 from src.utils.commons import RegisterableObject
 
@@ -33,23 +34,23 @@ class Baseline(RegisterableObject):
         raise NotImplementedError()
 
     def eval(self,path ,device):
-        accuracy = torchmetrics.Accuracy('multiclass', num_classes=2, top_k=1)
-        precision = torchmetrics.Precision('multiclass', num_classes=2, top_k=1)
-        recall = torchmetrics.Recall('multiclass', num_classes=2, top_k=1)
-        roc = torchmetrics.ROC(task="multiclass", num_classes=2)
-        auroc = torchmetrics.AUROC(task="multiclass", num_classes=2)
+        accuracy = torchmetrics.Accuracy('multiclass', num_classes=2, top_k=1).to(device)
+        precision = torchmetrics.Precision('multiclass', num_classes=2, top_k=1).to(device)
+        recall = torchmetrics.Recall('multiclass', num_classes=2, top_k=1).to(device)
+        roc = torchmetrics.ROC(task="multiclass", num_classes=2).to(device)
+        auroc = torchmetrics.AUROC(task="multiclass", num_classes=2).to(device)
         preds = None
         targets = None
-        with open(path+'preds.pkl', 'rb') as file:
+        with open(path+'/preds.pkl', 'rb') as file:
             preds = pickle.load(file)
-        with open(path+'targets.pkl', 'rb') as file:
+        with open(path+'/targets.pkl', 'rb') as file:
             targets = pickle.load(file)
         if preds.ndim > targets.ndim:
             preds = preds.squeeze()
         preds = preds.to(device)
-        targets = targets.to(device)
+        targets = torch.argmax(targets.to(device), dim=1)
         fpr, tpr, thresholds = roc(preds, targets)
-        plt.plot(fpr[1], tpr[1])
+        plt.plot(fpr[1].cpu(), tpr[1].cpu())
         plt.title("ROC")
         plt.savefig("ROC.png")
         plt.show()
