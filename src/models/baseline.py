@@ -33,7 +33,7 @@ class Baseline(RegisterableObject):
     def get_session_path(self, *args):
         raise NotImplementedError()
 
-    def eval(self,path ,device):
+    def eval(self, path, device):
         accuracy = torchmetrics.Accuracy('multiclass', num_classes=2, top_k=1).to(device)
         precision = torchmetrics.Precision('multiclass', num_classes=2, top_k=1).to(device)
         recall = torchmetrics.Recall('multiclass', num_classes=2, top_k=1).to(device)
@@ -52,7 +52,7 @@ class Baseline(RegisterableObject):
         fpr, tpr, thresholds = roc(preds, targets)
         plt.plot(fpr[1].cpu(), tpr[1].cpu())
         plt.title("ROC")
-        plt.savefig("ROC.png")
+        plt.savefig(path + "ROC.png")
         plt.show()
 
         logger.info('Evaluation:')
