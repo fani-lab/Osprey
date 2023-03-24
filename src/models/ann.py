@@ -2,7 +2,7 @@ import pickle
 import logging
 
 import torchmetrics
-from torch.optim.lr_scheduler import ExponentialLR
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 from src.models.baseline import Baseline
 from src.utils.commons import force_open
@@ -38,8 +38,6 @@ class ANNModule(Baseline, torch.nn.Module):
             self.layers.append(nn.Linear(in_features=i, out_features=j))
         self.h2o = torch.nn.Linear(dimension_list[-1] if len(dimension_list) > 0 else input_size, 2)
         self.activation = activation
-        self.optimizer = torch.optim.SGD(self.parameters(), lr=lr, momentum=0.9)
-        self.scheduler = ExponentialLR(self.optimizer, gamma=0.9, verbose=True)
 
         self.loss_function = loss_func
 
@@ -97,7 +95,10 @@ class ANNModule(Baseline, torch.nn.Module):
         logger.info("training phase started")
         kfold = KFold(n_splits=k_fold)
         for fold, (train_ids, validation_ids) in enumerate(kfold.split(train_dataset)):
-            logger.info(f'getting data for fold #{fold}')
+            logger.info("Resetting Optimizer, Learning rate, and Scheduler")
+            self.optimizer = torch.optim.SGD(self.parameters(), lr=self.init_lr, momentum=0.9)
+            self.scheduler = ReduceLROnPlateau(self.optimizer, verbose=True)
+            logger.info(f'fetching data for fold #{fold}')
             train_subsampler = torch.utils.data.SubsetRandomSampler(train_ids)
             validation_subsampler = torch.utils.data.SubsetRandomSampler(validation_ids)
             train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size,
@@ -119,38 +120,30 @@ class ANNModule(Baseline, torch.nn.Module):
                     self.optimizer.step()
                     logger.info(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
                     total_loss.append(loss.item())
-                self.scheduler.step()
+                self.scheduler.step(loss)
             # Validation phase
             all_preds = []
             all_targets = []
-            size = len(validation_loader)
-            num_batches = len(validation_loader)
-            test_loss, correct = 0, 0
             with torch.no_grad():
                 for batch_index, (X, y) in enumerate(validation_loader):
                     # y = y.type(torch.float)
                     pred = self.forward(X)
                     all_preds.extend(pred)
-                    # all_preds.extend(pred.argmax(1))
                     all_targets.extend(y)
-                    # test_loss += self.loss_function(pred, y).item()
-                    # correct += (pred.argmax(1) == y).type(torch.float).sum().item()
-            # test_loss /= num_batches
-            # correct /= size
             all_preds = torch.stack(all_preds)
             all_targets = torch.stack(all_targets)
-            # logger.info(f"Validation Error: Avg loss: {test_loss:>8f}")
-            logger.info(f'torchmetrics Accuracy: {(100 * accuracy(all_preds, all_targets)):>0.1f}')
-            logger.info(f'torchmetrics precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
-            logger.info(f'torchmetrics Recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
+            logger.info(f'Validation Accuracy: {(100 * accuracy(all_preds, all_targets)):>0.1f}')
+            logger.info(f'Validation precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
+            logger.info(f'Validation Recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
 
             snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_fold{fold}.pth")
             self.save(snapshot_path)
             plt.clf()
             plt.plot(np.array(total_loss))
+            plt.axis([0, len(total_loss), 0, 1])
             with force_open(self.get_detailed_session_path(train_dataset, "figures", f"f{fold}", f"model_fold{fold}_loss.png"), "wb") as f:
                 plt.savefig(f)
-            # plt.show()
+            plt.show()
 
     def test(self, test_dataset):
         all_preds = []
@@ -168,10 +161,10 @@ class ANNModule(Baseline, torch.nn.Module):
         all_targets = torch.stack(all_targets)
         with force_open(self.get_detailed_session_path(test_dataset, 'preds.pkl'), 'wb') as file:
             pickle.dump(all_preds, file)
-            logger.info('predictions are saved.')
+            logger.info(f'predictions are saved at {file.name}.')
         with force_open(self.get_detailed_session_path(test_dataset, 'targets.pkl'), 'wb') as file:
             pickle.dump(all_targets, file)
-            logger.info('targets are saved.')
+            logger.info(f'targets are saved at {file.name}.')
 
     def eval(self, path):
         Baseline.eval(self, path, device=self.device)
@@ -189,5 +182,5 @@ class ANNModule(Baseline, torch.nn.Module):
             logger.debug(e)
 
     def __str__(self) -> str:
-        return str(self.init_lr) + "-" +".".join((str(l) for l in self.dimension_list))
+        return str(self.init_lr) + "-" + ".".join((str(l) for l in self.dimension_list))
     
