@@ -40,7 +40,7 @@ sessions = {
     "ann-onehot": {
         "model": "ann",
         "commands": [
-            # ("train", {"epoch_num": 2, "batch_size": 64, "k_fold": 3}, "bow-onehot"),
+            ("train", {"epoch_num": 2, "batch_size": 64, "k_fold": 3}, "bow-onehot"),
             ("test", dict(), "bow-onehot"),
             ("eval", {"path": 'output/ann/', "use_current_session": True}, None),
             ],
@@ -51,8 +51,6 @@ sessions = {
             "lr": 0.9,
             "module_session_path": "output",
             "session_path_include_time": False,
-            # "number_of_classes": 2,
-            # "device": 'cuda'
         },
     },
 }
