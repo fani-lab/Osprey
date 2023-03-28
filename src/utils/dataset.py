@@ -149,7 +149,7 @@ class BaseDataset(Dataset, RegisterableObject):
             with force_open(encoder_path, "wb") as f:
                 pickle.dump(self.encoder, f)
 
-        self.labels = torch.zeros((self.df.shape[0], 2), dtype=torch.float16)
+        self.labels = torch.zeros((self.df.shape[0], 2), dtype=torch.float)
         for i in range(len(self.df)):
         # for _, v in self.df.iterrows():
             self.labels[i, self.df.iloc[i]["tagged_msg"]] = 1.0
