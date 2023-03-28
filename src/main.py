@@ -10,10 +10,10 @@ import pandas as pd
 # from classifier import msg_classifier
 # from classifier import conv_msg_classifier
 # import datetime
-from models.ann import ANNModule
-from preprocessing.stopwords import NLTKStopWordRemoving
-from preprocessing.punctuations import PunctuationRemoving
-from utils.dataset import TimeBasedBagOfWordsDataset
+# from models.ann import ANNModule
+# from preprocessing.stopwords import NLTKStopWordRemoving
+# from preprocessing.punctuations import PunctuationRemoving
+# from utils.dataset import TimeBasedBagOfWordsDataset
 
 
 def get_prev_msg_cat(prev, text):
@@ -50,7 +50,7 @@ def get_next_msg_cat(conv, start_line, result):
     return result
 
 
-def read_xml(xmlfile, tagged_msgs, predators):
+def read_xml(xmlfile, predatorsfile):
     """Reads xml file to create dataset for training and testing sets
 
     Args:
@@ -61,36 +61,34 @@ def read_xml(xmlfile, tagged_msgs, predators):
     Returns:
         Dataframe: dataset with text features and labels
     """
-    dictionary_list = []
-    df = pd.DataFrame(columns=['conv_id', 'msg_id', 'author_id', 'time', 'text'], index=['conv_id'])
-    root = etree.parse(xmlfile).getroot()  # <conversations>
-    for conv in root.getchildren():
+    with open(predatorsfile, "r") as f:
+        predators = set(l.strip() for l in f.readlines())
+        if len(predators) == 0:
+            raise Exception(f"No predator was specified at '{predatorsfile}'")
+    
+    rows_list = []
+    root = etree.parse(xmlfile).getroot()
+    for counter, conv in enumerate(root.getchildren()):
+        if counter % 500 == 0:
+            print(counter)
+        conversation_authors = set(conv.xpath("message/author/text()"))
+        nauthor = len(conversation_authors)
+        predatory_conversation = 1.0 if len(conversation_authors & predators) > 0 else 0.0
         for msg in conv.getchildren():
-            author, time, body = msg.getchildren()
-            print(conv.get('id'))
-            row = {'conv_id': conv.get('id'),
-                   'msg_line': int(msg.get('line')),
-                   'author_id': author.text,
-                   'time': float(time.text.replace(":", ".")),
-                   # previous messages in conversation & current message
-                   # TODO Frightening space Complexity in following three lines
-                   # 'prv_cat': "" if len(dictionary_list)==0 else get_prev_msg_cat(dictionary_list[-1], str(body.text)),
-                   # # future messages in conversation & current message
-                   # 'nxt_cat': get_next_msg_cat(conv.getchildren(), int(msg.get('line')), str(body.text)),
-                   'msg_char_count': len(body.text) if body.text is not None else 0,
-                   'msg_word_count': len(body.text.split()) if body.text is not None else 0,
-                   'conv_size': len(conv.getchildren()),
-                   # number of authors in the conversation, first index of msg
-                   'nauthor': len(set([m.getchildren()[0].text for m in conv.getchildren()])),
-                   'text': '' if body.text is None else body.text,
-                   'tagged_msg': 0 if tagged_msgs.loc[(tagged_msgs['conv_id'] == conv.get('id')) & (
-                           tagged_msgs['line'] == int(msg.get('line')))].empty else 1,
-                   'tagged_conv': 0 if tagged_msgs.loc[tagged_msgs['conv_id'] == conv.get('id')].empty else 1,
-                   'tagged_predator': None if predators.empty else (
-                       1 if author.text in predators['tagged_pred'].tolist() else 0),
-                   }
-            dictionary_list.append(row)
-    return df.from_dict(dictionary_list)
+            author = msg.xpath("author/text()")
+            author = author[0] if len(author) else ""
+
+            time = msg.xpath("time/text()")
+            time = time[0] if len(time) else ""
+
+            body = msg.xpath("text/text()")
+            body = body[0] if len(body) > 0 else ""
+
+            row = [conv.get('id'), int(msg.get('line')), author, float(time.replace(":", ".")),
+                   len(body) if body is not None else 0, len(body.split()) if body is not None else 0,
+                   len(conv.getchildren()), nauthor, '' if body is None else body, 1.0 if author in predators else 0.0, predatory_conversation]
+            rows_list.append(row)
+    return pd.DataFrame(rows_list, columns=["conv_id", "msg_line", "author_id", "time", "msg_char_count", "msg_word_count", "conv_size", "nauthor", "text", "tagged_predator", "predatory_conv"])
 
 
 def get_stats(data):
@@ -159,7 +157,7 @@ logger.addHandler(info_terminal_handler)
 logger.setLevel(logging.DEBUG)
 
 if __name__ == "__main__":
-    # test_path, train_path = "/data/test/test.csv", "/data/train/train.csv"
+    test_path, train_path = "/data/test/test.csv", "/data/train/train.csv"
     test_path, train_path = "data/toy.test/toy-test.csv", "data/toy.train/toy-train.csv"
     logger.info("reading test csv file")
     test_df = pd.read_csv(test_path)
