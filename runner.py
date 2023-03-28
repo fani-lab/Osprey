@@ -1,5 +1,5 @@
 # This file is for sake of compatibility between different development environment
-from src.main import main, run
+from src.main import run
 from src.preprocessing import NLTKStopWordRemoving, PunctuationRemoving, RepetitionRemoving
 from src.utils.dataset import BagOfWordsDataset, TimeBasedBagOfWordsDataset, TransformersEmbeddingDataset, CaseSensitiveBertEmbeddingDataset, GloveEmbeddingDataset
 from src.models import ANNModule, RnnModule
