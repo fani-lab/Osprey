@@ -56,6 +56,10 @@ class BaseDataset(Dataset, RegisterableObject):
         self.__df__ = None
 
         self.already_prepared = False
+        
+        self.__new_tokens__ = False
+        self.__new_encoder__ = False
+        self.__new_vectors__ = False
 
     @property
     def df(self):
@@ -80,6 +84,7 @@ class BaseDataset(Dataset, RegisterableObject):
             with open(self.get_session_path("encoder.pkl"), "rb") as f:
                 encoder = pickle.load(f)
         except FileNotFoundError:
+            self.__new_encoder__ = True
             encoder = self.init_encoder(tokens_records)
 
         return encoder
@@ -89,8 +94,11 @@ class BaseDataset(Dataset, RegisterableObject):
             if not self.load_from_pkl:
                 raise FileNotFoundError()
             with open(self.get_session_path("vectors.pkl"), "rb") as f:
+                logger.info("loading vectors from file")
                 vectors = pickle.load(f)
         except FileNotFoundError:
+            logger.info("trying to create vectors from scratch")
+            self.__new_vectors__ = True
             vectors = self.vectorize(tokens_records, encoder)
         
         return vectors
@@ -109,9 +117,11 @@ class BaseDataset(Dataset, RegisterableObject):
             if not self.load_from_pkl:
                 raise FileNotFoundError()
             with open(self.get_session_path("tokens.pkl"), "rb") as f:
+                logger.info("trying to load tokens from file")
                 tokens = pickle.load(f)
         except FileNotFoundError:
             logger.info("generating tokens from scratch")
+            self.__new_tokens__ = True
             tokens = self.tokenize(self.df["text"])
             logger.info("applying preprocessing modules")
             for preprocessor in self.preprocessings:
@@ -135,16 +145,18 @@ class BaseDataset(Dataset, RegisterableObject):
         vectors = self.__vectorize__(tokens, self.encoder)
 
         # Persisting changes
-        if self.persist_data:
-            vectors_path = self.get_session_path("vectors.pkl")
-            encoder_path = self.get_session_path("encoder.pkl")
+        if self.persist_data and self.__new_tokens__:
             tokens_path = self.get_session_path("tokens.pkl")
             logger.info(f"saving tokens as pickle at {tokens_path}")
             with force_open(tokens_path, "wb") as f:
                 pickle.dump(tokens, f)
+        if self.persist_data and self.__new_vectors__:
+            vectors_path = self.get_session_path("vectors.pkl")
             logger.info(f"saving vectors as pickle at {vectors_path}")
             with force_open(vectors_path, "wb") as f:
                 pickle.dump(vectors, f)
+        if self.persist_data and self.__new_encoder__:
+            encoder_path = self.get_session_path("encoder.pkl")
             logger.info(f"saving encoder as pickle at {encoder_path}")
             with force_open(encoder_path, "wb") as f:
                 pickle.dump(self.encoder, f)
@@ -152,7 +164,7 @@ class BaseDataset(Dataset, RegisterableObject):
         self.labels = torch.zeros((self.df.shape[0], 2), dtype=torch.float)
         for i in range(len(self.df)):
         # for _, v in self.df.iterrows():
-            self.labels[i, self.df.iloc[i]["tagged_msg"]] = 1.0
+            self.labels[i, int(self.df.iloc[i]["tagged_predator"])] = 1.0
         self.data = torch.stack(vectors)
         self.already_prepared = True
         logger.info("data preparation finished")
