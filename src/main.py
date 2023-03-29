@@ -69,6 +69,7 @@ def run():
         datasets[dataset_name] = (train_dataset, test_dataset)
 
     for model_name, session in settings.sessions.items():
+        logger.info(f"started new session: {model_name}")
         commands = session["commands"]
 
         model_configs = create_model_configs(model_name, session=session, device=device)
@@ -76,7 +77,8 @@ def run():
         model_class = mappings.MODELS[session["model"]]
         
         for command, command_kwargs, dataset_name, *_ in commands:
-
+            logger.info(f"started new command `{command}` of session `{model_name}`")
+            logger.debug(f"command `{command}`; dataset name: {dataset_name}; arguments: {command_kwargs}")
             if command == "train":
                 dataset = datasets[dataset_name][0]
                 dataset.prepare()
