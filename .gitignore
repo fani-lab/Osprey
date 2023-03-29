@@ -11,4 +11,4 @@ output/
 *.jpg
 *.jpeg
 *.fig
-*settings.py
+settings/settings/settings.py
