@@ -112,6 +112,12 @@ class BaseDataset(Dataset, RegisterableObject):
     def tokenize(self, input) -> list[list[str]]:
         raise NotImplementedError()
     
+    def get_labels(self):
+        labels = torch.zeros((self.df.shape[0], 2), dtype=torch.float)
+        for i in range(len(self.df)):
+            labels[i, int(self.df.iloc[i]["tagged_predator"])] = 1.0
+        return labels
+
     def preprocess(self):
         try:
             if not self.load_from_pkl:
@@ -161,10 +167,8 @@ class BaseDataset(Dataset, RegisterableObject):
             with force_open(encoder_path, "wb") as f:
                 pickle.dump(self.encoder, f)
 
-        self.labels = torch.zeros((self.df.shape[0], 2), dtype=torch.float)
-        for i in range(len(self.df)):
-        # for _, v in self.df.iterrows():
-            self.labels[i, int(self.df.iloc[i]["tagged_predator"])] = 1.0
+        self.labels = self.get_labels()
+        
         self.data = torch.stack(vectors)
         self.already_prepared = True
         logger.info("data preparation finished")
