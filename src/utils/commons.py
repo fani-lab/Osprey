@@ -44,6 +44,15 @@ def pan12_xml2csv(xmlfile, predatorsfile):
             rows_list.append(row)
     return pd.DataFrame(rows_list, columns=["conv_id", "msg_line", "author_id", "time", "msg_char_count", "msg_word_count", "conv_size", "nauthor", "text", "tagged_predator", "predatory_conv"])
 
+def message_csv2conversation_csv(path):
+    df = pd.read_csv(path)
+    groups = df.sort_values(by=["conv_id", "msg_line"])[["conv_id", "msg_line", "text", "predatory_conv"]].groupby("conv_id")
+    conversations = []
+    for name, group in groups:
+        conversations.append((name, "; ".join(group["text"].fillna('')), group["predatory_conv"].iloc[0]))
+
+    return pd.DataFrame(conversations, columns=["conv_id", "text", "predatory_conv"])
+
 def get_prev_msg_cat(prev, text):
     """Concatenates previous message with current message text
 
