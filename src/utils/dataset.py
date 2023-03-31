@@ -229,6 +229,18 @@ class BagOfWordsDataset(BaseDataset):
         smote = SMOTE(random_state=42)
         self.data, self.labels = smote.fit_resample(self.data.to_dense(), self.labels)
 
+class ConversationBagOfWords(BagOfWordsDataset):
+    
+    @classmethod
+    def short_name(cls) -> str:
+        return "conversation-bow"
+    
+    def get_labels(self):
+        labels = torch.zeros((self.df.shape[0], 2), dtype=torch.float)
+        for i in range(len(self.df)):
+            labels[i, int(self.df.iloc[i]["predatory_conv"])] = 1.0
+        return labels
+
 
 class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
     
