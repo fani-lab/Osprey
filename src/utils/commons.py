@@ -49,7 +49,7 @@ def message_csv2conversation_csv(path):
     groups = df.sort_values(by=["conv_id", "msg_line"])[["conv_id", "msg_line", "text", "predatory_conv"]].groupby("conv_id")
     conversations = []
     for name, group in groups:
-        conversations.append((name, "; ".join(group["text"].fillna('')), group["predatory_conv"].iloc[0]))
+        conversations.append((name, ". ".join(group["text"].fillna('')), group["predatory_conv"].iloc[0]))
 
     return pd.DataFrame(conversations, columns=["conv_id", "text", "predatory_conv"])
 
