@@ -15,7 +15,7 @@ from torch.utils.data import DataLoader, Dataset
 import matplotlib.pyplot as plt
 import numpy as np
 
-from sklearn.model_selection import KFold
+from sklearn.model_selection import KFold, StratifiedKFold
 
 logger = logging.getLogger()
 
@@ -66,7 +66,7 @@ class ANNModule(Baseline, torch.nn.Module):
 
         x = self.h2o(x)
         x = torch.softmax(x, dim=1)
-        # x = torch.sigmoid(x)
+        x = torch.clamp(x, min=1.e-7, max=1. - 1.e-7)
         return x
 
     def get_session_path(self, *args):
@@ -88,16 +88,25 @@ class ANNModule(Baseline, torch.nn.Module):
 
     def learn(self, epoch_num: int, batch_size: int, k_fold: int, train_dataset: Dataset):
 
-        train_dataset.to(self.device)
+        # train_dataset.to(self.device)
         accuracy = torchmetrics.Accuracy('multiclass', num_classes=2, top_k=1).to(self.device)
         precision = torchmetrics.Precision('multiclass', num_classes=2, top_k=1).to(self.device)
         recall = torchmetrics.Recall('multiclass', num_classes=2, top_k=1).to(self.device)
         logger.info("training phase started")
-        kfold = KFold(n_splits=k_fold)
-        for fold, (train_ids, validation_ids) in enumerate(kfold.split(train_dataset)):
+        scheduler_args = {"verbose":True, "min_lr":1e-8, "threshold":8e-3, "patience":0, "factor":0.075}
+        # kfold = KFold(n_splits=k_fold)
+        kfold = StratifiedKFold(n_splits=k_fold, shuffle=True)
+        xs, ys = [], []
+        for entry in train_dataset:
+            xs.append(entry[0])
+            ys.append(entry[1])
+        xs = torch.stack(xs)
+        ys = torch.stack(ys)
+        for fold, (train_ids, validation_ids) in enumerate(kfold.split(xs, ys.argmax(dim=1))):
             logger.info("Resetting Optimizer, Learning rate, and Scheduler")
             self.optimizer = torch.optim.SGD(self.parameters(), lr=self.init_lr, momentum=0.9)
-            self.scheduler = ReduceLROnPlateau(self.optimizer, verbose=True)
+            self.scheduler = ReduceLROnPlateau(self.optimizer, **scheduler_args)
+            logger.debug(f"scheduler settings: {scheduler_args}")
             logger.info(f'fetching data for fold #{fold}')
             train_subsampler = torch.utils.data.SubsetRandomSampler(train_ids)
             validation_subsampler = torch.utils.data.SubsetRandomSampler(validation_ids)
@@ -113,6 +122,8 @@ class ANNModule(Baseline, torch.nn.Module):
                 loss = 0
                 for batch_index, (X, y) in enumerate(train_loader):
                     # y = y.type(torch.float)
+                    X = X.to(self.device)
+                    y = y.to(self.device)
                     y_hat = self.forward(X)
                     self.optimizer.zero_grad()
                     loss = self.loss_function(y_hat, y)
@@ -127,6 +138,8 @@ class ANNModule(Baseline, torch.nn.Module):
             with torch.no_grad():
                 for batch_index, (X, y) in enumerate(validation_loader):
                     # y = y.type(torch.float)
+                    X = X.to(self.device)
+                    y = y.to(self.device)
                     pred = self.forward(X)
                     all_preds.extend(pred)
                     all_targets.extend(y)
@@ -140,7 +153,7 @@ class ANNModule(Baseline, torch.nn.Module):
             self.save(snapshot_path)
             plt.clf()
             plt.plot(np.array(total_loss))
-            plt.axis([0, len(total_loss), 0, 1])
+            # plt.axis([0, len(total_loss), 0, 1])
             with force_open(self.get_detailed_session_path(train_dataset, "figures", f"f{fold}", f"model_fold{fold}_loss.png"), "wb") as f:
                 plt.savefig(f)
             plt.show()
