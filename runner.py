@@ -3,6 +3,7 @@ from src.main import run
 from src.preprocessing import NLTKStopWordRemoving, PunctuationRemoving, RepetitionRemoving
 from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, TransformersEmbeddingDataset,
                                CaseSensitiveBertEmbeddingDataset, GloveEmbeddingDataset, ConversationBagOfWords)
+from src.utils.loss_functions import WeightedBinaryCrossEntropy
 from src.utils.commons import message_csv2conversation_csv, force_open
 from src.models import ANNModule, RnnModule
 from settings.mappings import register_mappings, register_mappings_torch
@@ -32,6 +33,8 @@ if __name__ == "__main__":
     register_mappings(CaseSensitiveBertEmbeddingDataset)
     register_mappings(GloveEmbeddingDataset)
     register_mappings(ConversationBagOfWords)
+
+    register_mappings(WeightedBinaryCrossEntropy)
 
     register_mappings(ANNModule)
     register_mappings(RnnModule)
