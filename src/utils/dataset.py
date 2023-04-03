@@ -241,6 +241,23 @@ class ConversationBagOfWords(BagOfWordsDataset):
             labels[i, int(self.df.iloc[i]["predatory_conv"])] = 1.0
         return labels
 
+    def get_data_generator(self, data, pattern):
+        def func():
+            for record in data:
+                for token in record:
+                    yield pattern(token)
+
+        return func
+
+    def init_encoder(self, tokens_records):
+        encoder = OneHotEncoder(vector_size=5500, buffer_cap=64)
+        logger.info("started generating bag of words vector encoder")
+        data = tokens_records
+        pattern = lambda x: x
+        logger.debug("fitting conversation tokens into one hot encoder")
+        encoder.fit(self.get_data_generator(data=data, pattern=pattern))
+        return encoder
+
 
 class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
     

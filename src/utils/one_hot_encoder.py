@@ -1,12 +1,15 @@
 from torch import sparse_coo_tensor, float32
 
+from heapq import nlargest
+
 
 class OneHotEncoder:
 
-    def __init__(self, buffer_cap=20, device="cpu") -> None:
+    def __init__(self, buffer_cap=20, device="cpu", vector_size=-1) -> None:
         
         self.__buffer_cap = buffer_cap
-        self.__records = dict()
+        self.vector_size = vector_size
+        self.records = dict()
         self.device = device
         self.transform_started = False
         self.__vectors_dimension = (1,1)
@@ -15,10 +18,10 @@ class OneHotEncoder:
         self.__zero_vector = None
     
     def __generate_sparse_vectors(self):
-        for k, v in self.__records.items():
-            self.vectors[k] = sparse_coo_tensor(((0,), (v,)),(1.0), size=self.__vectors_dimension, dtype=float32)
+        for i, (k, _) in enumerate(self.records.items()):
+            self.vectors[k] = sparse_coo_tensor(((0,), (i,)),(1.0), size=self.__vectors_dimension, dtype=float32)
         
-        del self.__records
+        del self.records
     
     def __get_default_vector(self):
         if self.__default_vector is None:
@@ -46,18 +49,24 @@ class OneHotEncoder:
 
     def flush_buffer(self, buffer):
         for record in buffer:
-            if record not in self.__records:
-                self.__records[record] = len(self.__records)
-        buffer = {}
+            count = self.records.get(record, 0)
+            self.records[record] = count + 1
 
     def fit(self, data_generator):
         buffer = []
-        for i, record in enumerate(data_generator()):
+        for i, record in enumerate(data_generator(), start=1):
             if self.transform_started:
                 raise Exception("cannot fit the encoder as this encoder has already transformed some records.")
-            buffer.append(record) # todo
+            buffer.append(record)
             if i % self.__buffer_cap == 0:
                 self.flush_buffer(buffer)
+                buffer = []
         
         self.flush_buffer(buffer)
-        self.__vectors_dimension = (1, len(self.__records) + 1)
+        
+        if self.vector_size > 0:
+            all_tokens_count = [(k, v) for k,v in self.records.items()]
+            mostfrequent = nlargest(self.vector_size, all_tokens_count, key=lambda x:x[1])
+            self.records = {entry[0]: entry[1] for entry in mostfrequent}
+
+        self.__vectors_dimension = (1, len(self.records) + 1)
