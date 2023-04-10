@@ -27,20 +27,17 @@ class OneHotEncoder:
     def __generate_sparse_vectors(self):
         for i, (k, _) in enumerate(self.records.items()):
             self.vectors[k] = self.__create_sparse_vector(i)
-            # self.vectors[k] = sparse_coo_tensor(((0,), (i,)),(1.0), size=self.__vectors_dimension, dtype=float32)
         
         del self.records
     
     def __get_default_vector(self):
         if self.__default_vector is None:
             self.__default_vector = self.__create_sparse_vector(self.__vectors_dimension[1]-1)
-            # self.__default_vector = sparse_coo_tensor(((0,), (self.__vectors_dimension[1]-1,)),(1.0), size=self.__vectors_dimension, dtype=float32)
         return self.__default_vector
 
     def __get_zero_vector(self):
         if self.__zero_vector is None:
             self.__zero_vector = self.__create_sparse_vector(None)
-            # self.__zero_vector = sparse_coo_tensor(([], []),[], size=self.__vectors_dimension, dtype=float32)
         return self.__zero_vector
 
     def transform(self, record):
