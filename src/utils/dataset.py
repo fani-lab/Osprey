@@ -265,6 +265,21 @@ class ConversationBagOfWords(BagOfWordsDataset):
     def normalize_vector(self, vectors):
         return [vector/torch.sparse.sum(vector) for vector in vectors]
 
+class CNNConversationBagOfWords(ConversationBagOfWords):
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "cnn-conversation-bow"
+    
+    def init_encoder(self, tokens_records):
+        logger.info("started generating bag of words vector encoder")
+        encoder = OneHotEncoder(vector_size=5500, buffer_cap=64, default_vectors_dimension=[1, 1, 1])
+        data = tokens_records
+        pattern = lambda x: x
+        logger.debug("fitting conversation tokens into one hot encoder")
+        encoder.fit(self.get_data_generator(data=data, pattern=pattern))
+        return encoder
+
 
 class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
     
