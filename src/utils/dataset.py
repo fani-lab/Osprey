@@ -102,6 +102,9 @@ class BaseDataset(Dataset, RegisterableObject):
             vectors = self.vectorize(tokens_records, encoder)
         
         return vectors
+    
+    def normalize_vector(self, vectors):
+        return vectors
 
     def __str__(self):
         return self.short_name() +"/" + ".".join([pp.short_name() for pp in self.preprocessings])
@@ -149,6 +152,7 @@ class BaseDataset(Dataset, RegisterableObject):
         self.encoder = self.__init_encoder__(tokens_records=tokens)
 
         vectors = self.__vectorize__(tokens, self.encoder)
+        vectors = self.normalize_vector(vectors)
 
         # Persisting changes
         if self.persist_data and self.__new_tokens__:
@@ -257,6 +261,9 @@ class ConversationBagOfWords(BagOfWordsDataset):
         logger.debug("fitting conversation tokens into one hot encoder")
         encoder.fit(self.get_data_generator(data=data, pattern=pattern))
         return encoder
+
+    def normalize_vector(self, vectors):
+        return [vector/torch.sparse.sum(vector) for vector in vectors]
 
 
 class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
