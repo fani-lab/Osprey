@@ -86,6 +86,52 @@ def get_next_msg_cat(conv, start_line, result):
         result += " " + body.text
     return result
 
+def get_stats_v2(data):
+    predators_count = len(set(data[data["tagged_predator"] > 0.0]["author_id"]))
+    chatters_count  = len(set(data["author_id"]))
+    conversations = data.groupby("conv_id")
+    predatory_conversations = data[data["predatory_conv"] > 0.0].groupby("conv_id")
+
+    conversations_authors_count = conversations.apply(lambda x: len(set(x["author_id"])))
+    conversations_messages_count = conversations.apply(lambda x: x.shape[0])
+
+    predatory_conversations_authors_count = predatory_conversations.apply(lambda x: len(set(x["author_id"])))
+    predatory_conversations_messages_count = predatory_conversations.apply(lambda x: x.shape[0])
+    
+    stats = {
+        "number_of_chatters": chatters_count,
+        "number_of_predatory_chatters": predators_count,
+        "number_of_conversations": len(conversations),
+        "number_of_messages": data.shape[0],
+        "number_of_conversations_per_n_author": {
+            "n==1":(conversations_authors_count == 1).sum(),
+            "n==2": (conversations_authors_count == 2).sum(),
+            "n>2":(conversations_authors_count > 2).sum(),
+        },
+        "average_number_of_conversations_messages_per_n_author": {
+            "n==1": (conversations_messages_count[conversations_authors_count == 1].mean()),
+            "n==2": (conversations_messages_count[conversations_authors_count == 2].mean()),
+            "n>2": (conversations_messages_count[conversations_authors_count > 2].mean()),
+        },
+        
+        "number_of_predatory_conversations": len(predatory_conversations),
+        "number_of_predatory_conversations_per_n_author": {
+            "n==1":(predatory_conversations_authors_count == 1).sum(),
+            "n==2": (predatory_conversations_authors_count == 2).sum(),
+            "n>2":(predatory_conversations_authors_count > 2).sum(),
+        },
+        "average_number_of_predatory_conversations_messages_per_n_author": {
+            "n==1": (predatory_conversations_messages_count[predatory_conversations_authors_count == 1].mean()),
+            "n==2": (predatory_conversations_messages_count[predatory_conversations_authors_count == 2].mean()),
+            "n>2": (predatory_conversations_messages_count[predatory_conversations_authors_count > 2].mean()),
+        },
+
+        "average_conversations_per_predator": len(predatory_conversations) / predators_count,
+
+    }
+    
+    return stats
+
 def get_stats(data):
     """_summary_
 
