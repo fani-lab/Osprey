@@ -32,7 +32,7 @@ class ANNModule(Baseline, torch.nn.Module):
 
         
         self.i2h = nn.Linear(input_size,
-                             dimension_list[0] if len(dimension_list) > 0 else 2)
+        dimension_list[0] if len(dimension_list) > 0 else 2)
         self.layers = nn.ModuleList()
         for i, j in zip(dimension_list, dimension_list[1:]):
             self.layers.append(nn.Linear(in_features=i, out_features=j))
@@ -66,11 +66,11 @@ class ANNModule(Baseline, torch.nn.Module):
 
         x = self.h2o(x)
         x = torch.softmax(x, dim=1)
-        x = torch.clamp(x, min=1.e-7, max=1. - 1.e-7)
+        x = torch.clamp(x, min=1e-12, max=1 - 1e-12)
         return x
 
     def get_session_path(self, *args):
-        return f"{self.session_path}" + "ann/" + "/".join([str(a) for a in args])
+        return f"{self.session_path}" + self.__class__.short_name() + "/" + "/".join([str(a) for a in args])
     
     def get_detailed_session_path(self, dataset, *args):
         details = str(dataset) + "-" + str(self)
@@ -157,7 +157,7 @@ class ANNModule(Baseline, torch.nn.Module):
             # plt.axis([0, len(total_loss), 0, 1])
             with force_open(self.get_detailed_session_path(train_dataset, "figures", f"f{fold}", f"model_fold{fold}_loss.png"), "wb") as f:
                 plt.savefig(f)
-            plt.show()
+            # plt.show()
 
     def test(self, test_dataset):
         all_preds = []
