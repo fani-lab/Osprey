@@ -93,13 +93,14 @@ class ANNModule(Baseline, torch.nn.Module):
         precision = torchmetrics.Precision('multiclass', num_classes=2, top_k=1).to(self.device)
         recall = torchmetrics.Recall('multiclass', num_classes=2, top_k=1).to(self.device)
         logger.info("training phase started")
-        scheduler_args = {"verbose":True, "min_lr":1e-8, "threshold":8e-3, "patience":0, "factor":0.075}
+        scheduler_args = {"verbose":True, "min_lr":1e-6, "threshold":8e-3, "patience":0, "factor":0.075}
         # kfold = KFold(n_splits=k_fold)
         kfold = StratifiedKFold(n_splits=k_fold, shuffle=True)
-        xs, ys = [], []
-        for entry in train_dataset:
-            xs.append(entry[0])
-            ys.append(entry[1])
+        xs, ys = [0] * len(train_dataset), [0] * len(train_dataset)
+        for i in range(len(train_dataset)):
+            entry = train_dataset[i]
+            xs[i] = entry[0]
+            ys[i] = entry[1]
         xs = torch.stack(xs)
         ys = torch.stack(ys)
         for fold, (train_ids, validation_ids) in enumerate(kfold.split(xs, ys.argmax(dim=1))):
