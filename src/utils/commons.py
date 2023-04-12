@@ -53,6 +53,14 @@ def message_csv2conversation_csv(path):
     
     return pd.DataFrame(conversations, columns=["conv_id", "predatory_conv", "text", "number_of_messages", "number_of_authors"])
 
+# ratio: predatory/(predatory+non-predatory)
+def balance_dataset(dataset, ratio=0.5):
+    predators_indices = dataset["predatory_conv"] == 1
+    predators = dataset[predators_indices]
+    non_predators = dataset[~predators_indices].sample(n=int(predators.shape[0] * (1-ratio)/ratio))
+
+    return pd.concat([predators, non_predators], axis=0).sample(frac=1.0)
+
 def get_stats_v2(data):
     predators_count = len(set(data[data["tagged_predator"] > 0.0]["author_id"]))
     chatters_count  = len(set(data["author_id"]))
