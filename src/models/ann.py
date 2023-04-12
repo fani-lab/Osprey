@@ -88,7 +88,6 @@ class ANNModule(Baseline, torch.nn.Module):
 
     def learn(self, epoch_num: int, batch_size: int, k_fold: int, train_dataset: Dataset):
 
-        # train_dataset.to(self.device)
         accuracy = torchmetrics.Accuracy('multiclass', num_classes=2, top_k=1).to(self.device)
         precision = torchmetrics.Precision('multiclass', num_classes=2, top_k=1).to(self.device)
         recall = torchmetrics.Recall('multiclass', num_classes=2, top_k=1).to(self.device)
@@ -122,7 +121,6 @@ class ANNModule(Baseline, torch.nn.Module):
             for i in range(epoch_num):
                 loss = 0
                 for batch_index, (X, y) in enumerate(train_loader):
-                    # y = y.type(torch.float)
                     X = X.to(self.device)
                     y = y.to(self.device)
                     y_hat = self.forward(X)
@@ -138,7 +136,6 @@ class ANNModule(Baseline, torch.nn.Module):
             all_targets = []
             with torch.no_grad():
                 for batch_index, (X, y) in enumerate(validation_loader):
-                    # y = y.type(torch.float)
                     X = X.to(self.device)
                     y = y.to(self.device)
                     pred = self.forward(X)
@@ -166,7 +163,6 @@ class ANNModule(Baseline, torch.nn.Module):
         test_dataloader = DataLoader(test_dataset, batch_size=64)
         with torch.no_grad():
             for X, y in test_dataloader:
-                # y = y.type(torch.float)
                 pred = self.forward(X)
                 all_preds.extend(pred)
                 all_targets.extend(y)
@@ -179,9 +175,6 @@ class ANNModule(Baseline, torch.nn.Module):
         with force_open(self.get_detailed_session_path(test_dataset, 'targets.pkl'), 'wb') as file:
             pickle.dump(all_targets, file)
             logger.info(f'targets are saved at {file.name}.')
-
-    def eval(self, path):
-        Baseline.eval(self, path, device=self.device)
 
     def save(self, path):
         with force_open(path, "wb") as f:

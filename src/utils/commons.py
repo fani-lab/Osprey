@@ -44,8 +44,7 @@ def pan12_xml2csv(xmlfile, predatorsfile):
             rows_list.append(row)
     return pd.DataFrame(rows_list, columns=["conv_id", "msg_line", "author_id", "time", "msg_char_count", "msg_word_count", "conv_size", "nauthor", "text", "tagged_predator", "predatory_conv"])
 
-def message_csv2conversation_csv(path):
-    df = pd.read_csv(path)
+def message_csv2conversation_csv(df):
     groups = df.sort_values(by=["conv_id", "msg_line"]).groupby("conv_id")
     conversations = []
     for _, group in groups:

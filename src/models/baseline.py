@@ -6,7 +6,6 @@ import torch
 
 from src.utils.commons import RegisterableObject
 
-from src.utils.commons import force_open
 
 logger = logging.getLogger()
 
@@ -15,20 +14,13 @@ class Baseline(RegisterableObject):
     def __init__(self, input_size: int):
         self.input_size = input_size
 
-    def prep(self):
-        # if the features are saved => load it
-        # else:
-        #   extract
-        #   save
-        pass
-
     def learn(self):
-        pass
+        raise NotImplementedError()
 
     def test(self):
         # load the saved model and apply it on test set
         # save the prediction results
-        pass
+        raise NotImplementedError()
 
     def get_session_path(self, *args):
         raise NotImplementedError()
@@ -60,8 +52,3 @@ class Baseline(RegisterableObject):
         logger.info(f'torchmetrics precision: {(100 * precision(preds, targets)):>0.1f}')
         logger.info(f'torchmetrics Recall: {(100 * recall(preds, targets)):>0.1f}')
         logger.info(f'torchmetrics AUCROC: {(auroc(preds, targets)):>0.1f}')
-
-
-    def main(self, *args, **kwargs):
-        # call the pipeline or part of it for prep, train, test, eval
-        raise NotImplementedError()
