@@ -268,6 +268,18 @@ class ConversationBagOfWords(BagOfWordsDataset):
     def normalize_vector(self, vectors):
         return [vector/torch.sparse.sum(vector) for vector in vectors]
 
+
+class ConversationBagOfWordsCleaned(ConversationBagOfWords):
+    
+    def filter_records(self, df):
+        logger.info("applying record filtering by 'number_of_authors == 2' & 'number_of_messages > 3'")
+        return df[((df["number_of_authors"] == 2) & (df["number_of_messages"] > 3))]
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "conversation-bow-cleaned"
+
+
 class CNNConversationBagOfWords(ConversationBagOfWords):
 
     @classmethod

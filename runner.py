@@ -3,7 +3,7 @@ from src.main import run
 from src.preprocessing import NLTKStopWordRemoving, PunctuationRemoving, RepetitionRemoving
 from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, TransformersEmbeddingDataset,
                                CaseSensitiveBertEmbeddingDataset, GloveEmbeddingDataset, ConversationBagOfWords,
-                               CNNConversationBagOfWords)
+                               CNNConversationBagOfWords, ConversationBagOfWordsCleaned)
 from src.utils.loss_functions import WeightedBinaryCrossEntropy
 from src.models import ANNModule, RnnModule, EbrahimiCNN
 from settings.mappings import register_mappings, register_mappings_torch
@@ -25,6 +25,7 @@ if __name__ == "__main__":
     register_mappings(GloveEmbeddingDataset)
     register_mappings(ConversationBagOfWords)
     register_mappings(CNNConversationBagOfWords)
+    register_mappings(ConversationBagOfWordsCleaned)
 
     register_mappings(WeightedBinaryCrossEntropy)
 
