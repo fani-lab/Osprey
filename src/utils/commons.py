@@ -46,12 +46,12 @@ def pan12_xml2csv(xmlfile, predatorsfile):
 
 def message_csv2conversation_csv(path):
     df = pd.read_csv(path)
-    groups = df.sort_values(by=["conv_id", "msg_line"])[["conv_id", "msg_line", "text", "predatory_conv"]].groupby("conv_id")
+    groups = df.sort_values(by=["conv_id", "msg_line"]).groupby("conv_id")
     conversations = []
-    for name, group in groups:
-        conversations.append((name, ". ".join(group["text"].fillna('')), group["predatory_conv"].iloc[0]))
-
-    return pd.DataFrame(conversations, columns=["conv_id", "text", "predatory_conv"])
+    for _, group in groups:
+        conversations.append((group["conv_id"].iloc[0], group["predatory_conv"].iloc[0], ". ".join(group["text"].fillna('')), group.shape[0], len(set(group["author_id"]))))
+    
+    return pd.DataFrame(conversations, columns=["conv_id", "predatory_conv", "text", "number_of_messages", "number_of_authors"])
 
 def get_stats_v2(data):
     predators_count = len(set(data[data["tagged_predator"] > 0.0]["author_id"]))
