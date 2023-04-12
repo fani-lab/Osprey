@@ -53,6 +53,15 @@ def message_csv2conversation_csv(path):
     
     return pd.DataFrame(conversations, columns=["conv_id", "predatory_conv", "text", "number_of_messages", "number_of_authors"])
 
+def create_toy_dataset(df, fraction=0.1, keep_distribution=True):
+    if keep_distribution:
+        predatories = df[df["predatory_conv"] > 0.5].sample(frac=fraction)
+        nonpredators = df[df["predatory_conv"] <= 0.5].sample(frac=fraction)
+        new_df = pd.concat([predatories, nonpredators], axis=0)
+        return new_df
+    
+    return df.sample(frac=fraction)
+
 # ratio: predatory/(predatory+non-predatory)
 def balance_dataset(dataset, ratio=0.5):
     predators_indices = dataset["predatory_conv"] == 1
