@@ -53,39 +53,6 @@ def message_csv2conversation_csv(path):
 
     return pd.DataFrame(conversations, columns=["conv_id", "text", "predatory_conv"])
 
-def get_prev_msg_cat(prev, text):
-    """Concatenates previous message with current message text
-
-    Args:
-        prev (dict): previous messages in conversation
-        text (str): current message text
-
-    Returns:
-        str: past messages and current message text
-    """
-    return prev['prv_cat'] + " " + text
-
-
-def get_next_msg_cat(conv, start_line, result):
-    """Starts from message line and concats all future messages
-
-    Args:
-        conv (list): the entire conversation
-        start_line (int): current message line number
-        result (str): current message text
-
-    Returns:
-        str: "future messages" and current message text
-    """
-    if result is None:
-        result = ""
-    for msgs in conv[start_line:]:
-        author, time, body = msgs.getchildren()
-        if body.text is None:
-            body.text = ""
-        result += " " + body.text
-    return result
-
 def get_stats_v2(data):
     predators_count = len(set(data[data["tagged_predator"] > 0.0]["author_id"]))
     chatters_count  = len(set(data["author_id"]))
