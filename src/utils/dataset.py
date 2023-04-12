@@ -64,7 +64,7 @@ class BaseDataset(Dataset, RegisterableObject):
     @property
     def df(self):
         if self.__df__ is None:
-            self.__df__ = pd.read_csv(self.df_path)
+            self.__df__ = self.filter_records(pd.read_csv(self.df_path))
         return self.__df__
     
     def vectorize(self, tokens_records, encoder):
@@ -108,6 +108,9 @@ class BaseDataset(Dataset, RegisterableObject):
 
     def __str__(self):
         return self.short_name() +"/" + ".".join([pp.short_name() for pp in self.preprocessings])
+    
+    def filter_records(self, df):
+        return df
 
     def get_session_path(self, filename) -> str:
         return self.output_path + self.__str__() + "/" + filename
