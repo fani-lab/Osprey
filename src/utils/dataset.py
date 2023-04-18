@@ -288,7 +288,7 @@ class CNNConversationBagOfWords(ConversationBagOfWords):
     
     def init_encoder(self, tokens_records):
         logger.info("started generating bag of words vector encoder")
-        encoder = OneHotEncoder(vector_size=5500, buffer_cap=64, default_vectors_dimension=[1, 1, 1])
+        encoder = OneHotEncoder(vector_size=5500, buffer_cap=64, default_vectors_dimensions=[3])
         data = tokens_records
         pattern = lambda x: x
         logger.debug("fitting conversation tokens into one hot encoder")
