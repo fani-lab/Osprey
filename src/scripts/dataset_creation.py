@@ -20,9 +20,9 @@ def balance_datasets_for_version_two():
     
     df = pd.read_csv(train)
     train = balance_dataset(df, ratio=0.4)
-    df.to_csv("data/dataset-v2/conversation/balanced-train-v2-04.csv")
+    train.to_csv("data/dataset-v2/conversation/balanced-train-v2-04.csv")
 
     df = pd.read_csv(test)
-    df = balance_dataset(df, ratio=0.4)
-    df.to_csv("data/dataset-v2/conversation/balanced-test-v2-04.csv")
+    test = balance_dataset(df, ratio=0.4)
+    test.to_csv("data/dataset-v2/conversation/balanced-test-v2-04.csv")
 
