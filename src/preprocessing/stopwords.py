@@ -13,7 +13,7 @@ class NLTKStopWordRemoving(BasePreprocessing):
         nltk.download('stopwords')
         
     def opt(self, input: list[list[str]]) -> list[str]:
-        sw_set = stopwords.words()
+        sw_set = set(stopwords.words())
         for record in input:
             result = []
             for token in record:

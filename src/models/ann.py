@@ -47,6 +47,8 @@ class ANNModule(Baseline, torch.nn.Module):
         self.snapshot_steps = 2
         self.device = device
 
+        logger.info(f"dimension list of nodes: {self.dimension_list}")
+
     @classmethod
     def short_name(cls) -> str:
         return "ann"
@@ -66,7 +68,7 @@ class ANNModule(Baseline, torch.nn.Module):
 
         x = self.h2o(x)
         x = torch.softmax(x, dim=1)
-        x = torch.clamp(x, min=1e-12, max=1 - 1e-12)
+        # x = torch.clamp(x, min=1e-12, max=1 - 1e-12)
         return x
 
     def get_session_path(self, *args):
@@ -92,7 +94,7 @@ class ANNModule(Baseline, torch.nn.Module):
         precision = torchmetrics.Precision('multiclass', num_classes=2, top_k=1).to(self.device)
         recall = torchmetrics.Recall('multiclass', num_classes=2, top_k=1).to(self.device)
         logger.info("training phase started")
-        scheduler_args = {"verbose":True, "min_lr":1e-6, "threshold":8e-3, "patience":0, "factor":0.075}
+        scheduler_args = {"verbose":True, "min_lr":1e-10, "threshold":8e-1, "patience":10, "factor":0.25}
         # kfold = KFold(n_splits=k_fold)
         kfold = StratifiedKFold(n_splits=k_fold, shuffle=True)
         xs, ys = [0] * len(train_dataset), [0] * len(train_dataset)
@@ -121,10 +123,10 @@ class ANNModule(Baseline, torch.nn.Module):
             for i in range(epoch_num):
                 loss = 0
                 for batch_index, (X, y) in enumerate(train_loader):
+                    self.optimizer.zero_grad()
                     X = X.to(self.device)
                     y = y.to(self.device)
                     y_hat = self.forward(X)
-                    self.optimizer.zero_grad()
                     loss = self.loss_function(y_hat, y)
                     loss.backward()
                     self.optimizer.step()

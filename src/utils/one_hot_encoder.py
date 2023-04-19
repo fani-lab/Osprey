@@ -6,14 +6,14 @@ from heapq import nlargest
 
 class OneHotEncoder:
 
-    def __init__(self, buffer_cap=20, device="cpu", vector_size=-1, default_vectors_dimensions=[2]) -> None:
+    def __init__(self, buffer_cap=20, device="cpu", vector_size=-1, vectors_dimensions=2) -> None:
         
         self.__buffer_cap = buffer_cap
         self.vector_size = vector_size
         self.records = dict()
         self.device = device
         self.transform_started = False
-        self.__vectors_dimension = np.ones(default_vectors_dimensions, dtype=int)
+        self.__vectors_dimension = [1] * vectors_dimensions
         self.vectors = dict()
         self.__default_vector = None
         self.__zero_vector = None
