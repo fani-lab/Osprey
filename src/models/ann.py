@@ -1,5 +1,6 @@
 import pickle
 import logging
+import shutil
 
 import torchmetrics
 from torch.optim.lr_scheduler import ReduceLROnPlateau
@@ -94,7 +95,7 @@ class ANNModule(Baseline, torch.nn.Module):
         precision = torchmetrics.Precision('multiclass', num_classes=2, top_k=1).to(self.device)
         recall = torchmetrics.Recall('multiclass', num_classes=2, top_k=1).to(self.device)
         logger.info("training phase started")
-        scheduler_args = {"verbose":True, "min_lr":1e-10, "threshold":8e-1, "patience":10, "factor":0.25}
+        scheduler_args = {"verbose":True, "min_lr":1e-10, "threshold":8e-1, "patience":3, "factor":0.25}
         # kfold = KFold(n_splits=k_fold)
         kfold = StratifiedKFold(n_splits=k_fold, shuffle=True)
         xs, ys = [0] * len(train_dataset), [0] * len(train_dataset)
@@ -104,6 +105,7 @@ class ANNModule(Baseline, torch.nn.Module):
             ys[i] = entry[1]
         xs = torch.stack(xs)
         ys = torch.stack(ys)
+        folds_metrics = []
         for fold, (train_ids, validation_ids) in enumerate(kfold.split(xs, ys.argmax(dim=1))):
             logger.info("Resetting Optimizer, Learning rate, and Scheduler")
             self.optimizer = torch.optim.SGD(self.parameters(), lr=self.init_lr, momentum=0.9)
@@ -145,9 +147,16 @@ class ANNModule(Baseline, torch.nn.Module):
                     all_targets.extend(y)
             all_preds = torch.stack(all_preds)
             all_targets = torch.stack(all_targets)
-            logger.info(f'Validation Accuracy: {(100 * accuracy(all_preds, all_targets)):>0.1f}')
-            logger.info(f'Validation precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
-            logger.info(f'Validation Recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
+            
+            accuracy_value = accuracy(all_preds, all_targets)
+            precision_value = precision(all_preds, all_targets)
+            recall_value = recall(all_preds, all_targets)
+
+            logger.info(f'validation accuracy: {(100 * accuracy_value):>0.1f}')
+            logger.info(f'validation precision: {(100 * precision_value):>0.1f}')
+            logger.info(f'validation recall: {(100 * recall_value):>0.1f}')
+
+            folds_metrics.append((accuracy_value, precision_value, recall_value))
 
             snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_fold{fold}.pth")
             self.save(snapshot_path)
@@ -157,8 +166,20 @@ class ANNModule(Baseline, torch.nn.Module):
             with force_open(self.get_detailed_session_path(train_dataset, "figures", f"f{fold}", f"model_fold{fold}_loss.png"), "wb") as f:
                 plt.savefig(f)
             # plt.show()
+        max_metric = (0, folds_metrics[0][1])
+        for i in range(1, len(folds_metrics)):
+            if folds_metrics[i][1] > max_metric[1]:
+                max_metric = (i, folds_metrics[i][1])
+        logger.info(f"best model of cross validation for current training phase: fold #{max_metric[0]} with metric value of '{max_metric[1]}'")
+        best_model_dest = self.get_detailed_session_path(train_dataset, "weights", f"best_model.pth")
+        best_model_src = self.get_detailed_session_path(train_dataset, "weights", f"f{max_metric[0]}", f"model_fold{max_metric[0]}.pth")
+        shutil.copyfile(best_model_src, best_model_dest)
+        return best_model_dest
 
-    def test(self, test_dataset):
+    def test(self, test_dataset, weights_checkpoint_path):
+        checkpoint = torch.load(weights_checkpoint_path)
+        self.load_state_dict(checkpoint.get("model", checkpoint))
+
         all_preds = []
         all_targets = []
         test_dataset.to(self.device)
