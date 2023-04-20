@@ -42,10 +42,11 @@ class Baseline(RegisterableObject):
         preds = preds.to(device)
         targets = torch.argmax(targets.to(device), dim=1)
         fpr, tpr, thresholds = roc(preds, targets)
+        plt.clf()
         plt.plot(fpr[1].cpu(), tpr[1].cpu())
         plt.title("ROC")
         plt.savefig(path + "ROC.png")
-        plt.show()
+        # plt.show()
 
         logger.info('Evaluation:')
         logger.info(f'torchmetrics Accuracy: {(100 * accuracy(preds, targets)):>0.1f}')
