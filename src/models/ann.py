@@ -103,7 +103,7 @@ class ANNModule(Baseline, torch.nn.Module):
     def learn(self, epoch_num: int, batch_size: int, k_fold: int, train_dataset: Dataset):
 
         logger.info("training phase started")
-        scheduler_args = {"verbose":False, "min_lr":1e-10, "threshold":1e-4, "patience":10, "factor":0.25}
+        scheduler_args = {"verbose":False, "min_lr":1e-10, "threshold":1e-4, "patience":5, "factor":0.25}
         # kfold = KFold(n_splits=k_fold)
         kfold = StratifiedKFold(n_splits=k_fold, shuffle=True)
         xs, ys = [0] * len(train_dataset), [0] * len(train_dataset)
@@ -116,11 +116,11 @@ class ANNModule(Baseline, torch.nn.Module):
         folds_metrics = []
         
         fig, ax = plt.subplots(nrows=(k_fold//2) + (k_fold%2), ncols=2)
-        last_lr = self.init_lr
         for fold, (train_ids, validation_ids) in enumerate(kfold.split(xs, ys.argmax(dim=1))):
             self.train()
             logger.info("Resetting Optimizer, Learning rate, and Scheduler")
             self.optimizer = torch.optim.SGD(self.parameters(), lr=self.init_lr, momentum=0.9)
+            last_lr = self.init_lr
             self.scheduler = ReduceLROnPlateau(self.optimizer, **scheduler_args)
             logger.debug(f"scheduler settings: {scheduler_args}")
             logger.info(f'fetching data for fold #{fold}')
