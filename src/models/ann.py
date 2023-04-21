@@ -95,6 +95,8 @@ class ANNModule(Baseline, torch.nn.Module):
                 continue
             if isinstance(module, nn.ModuleList):
                 self.reset_modules(module, parents_modules_names=[*parents_modules_names, name])
+            elif isinstance(module, nn.Dropout):
+                continue
             else:
                 logger.info(f"resetting module parameters {'.'.join([name, *parents_modules_names])}")
                 module.reset_parameters()
@@ -226,5 +228,5 @@ class ANNModule(Baseline, torch.nn.Module):
             logger.debug(e)
 
     def __str__(self) -> str:
-        return str(self.init_lr) + "-" + ".".join((str(l) for l in self.dimension_list) + "-" + ".".join((str(d) for d in self.dropout_list)))
+        return str(self.init_lr) + "-" + ".".join((str(l) for l in self.dimension_list)) + "-" + ".".join((str(d) for d in self.dropout_list))
     
