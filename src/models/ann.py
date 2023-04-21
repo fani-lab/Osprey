@@ -23,7 +23,7 @@ logger = logging.getLogger()
 
 class ANNModule(Baseline, torch.nn.Module):
 
-    def __init__(self, dimension_list, dropout_list, activation, loss_func, lr, input_size, module_session_path,
+    def __init__(self, dimension_list, dropout_list, activation, loss_func, lr, input_size, module_session_path, validation_steps=-1,
                  device='cpu', **kwargs):
         Baseline.__init__(self, input_size=input_size)
         torch.nn.Module.__init__(self)
@@ -34,7 +34,7 @@ class ANNModule(Baseline, torch.nn.Module):
         
         self.init_lr = lr
         self.dimension_list = dimension_list + [2]
-
+        self.validation_steps = validation_steps
         
         self.i2h = nn.Linear(input_size,
         self.dimension_list[0] if len(self.dimension_list) > 0 else 2)
@@ -42,9 +42,9 @@ class ANNModule(Baseline, torch.nn.Module):
         self.layers = nn.ModuleList()
         for i, j, d in zip(self.dimension_list, self.dimension_list[1:], self.dropout_list):
             l = nn.Linear(in_features=i, out_features=j)
+            self.layers.append(nn.Dropout(d))
             torch.nn.init.normal_(l.weight)
             self.layers.append(l)
-            self.layers.append(nn.Dropout(d))
         # self.h2o = torch.nn.Linear(self.dimension_list[-1] if len(self.dimension_list) > 0 else input_size, 2)
         # torch.nn.init.normal_(self.h2o.weight)
         self.activation = activation
@@ -129,7 +129,7 @@ class ANNModule(Baseline, torch.nn.Module):
             validation_subsampler = torch.utils.data.SubsetRandomSampler(validation_ids)
             train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size,
                                                        sampler=train_subsampler)
-            validation_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size,
+            validation_loader = torch.utils.data.DataLoader(train_dataset, batch_size=(256 if len(validation_ids) > 1024 else len(validation_ids)),
                                                             sampler=validation_subsampler)
             # Train phase
             total_loss = []
@@ -137,6 +137,7 @@ class ANNModule(Baseline, torch.nn.Module):
             self.reset_modules(module=self)
             for i in range(epoch_num):
                 loss = 0
+                epoch_loss = 0
                 for batch_index, (X, y) in enumerate(train_loader):
                     self.optimizer.zero_grad()
                     X = X.to(self.device)
@@ -145,32 +146,35 @@ class ANNModule(Baseline, torch.nn.Module):
                     loss = self.loss_function(y_hat, y)
                     loss.backward()
                     self.optimizer.step()
-                    logger.info(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
+                    logger.debug(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
                     total_loss.append(loss.item())
+                    epoch_loss += loss
                 self.scheduler.step(loss)
                 if self.optimizer.param_groups[0]["lr"] != last_lr:
                     logger.info(f"fold: {fold} | epoch: {i} | Learning rate changed from: {last_lr} -> {self.optimizer.param_groups[0]['lr']}")
                     last_lr = self.optimizer.param_groups[0]["lr"]
-            # Validation phase
-            all_preds = []
-            all_targets = []
-            with torch.no_grad():
-                for batch_index, (X, y) in enumerate(validation_loader):
-                    X = X.to(self.device)
-                    y = y.to(self.device)
-                    pred = self.forward(X)
-                    all_preds.extend(pred)
-                    all_targets.extend(y)
-            all_preds = torch.stack(all_preds)
-            all_targets = torch.stack(all_targets)
-            
-            accuracy_value = accuracy(all_preds, all_targets)
-            precision_value = precision(all_preds, all_targets)
-            recall_value = recall(all_preds, all_targets)
-
-            logger.info(f'validation accuracy: {(100 * accuracy_value):>0.4f}')
-            logger.info(f'validation precision: {(100 * precision_value):>0.4f}')
-            logger.info(f'validation recall: {(100 * recall_value):>0.4f}')
+                
+                if (self.validation_steps == -1 and epoch_num-1 == i) or i % self.validation_steps == 0 or epoch_num-1 == i:
+                    # Validation phase
+                    all_preds = []
+                    all_targets = []
+                    validation_loss = 0
+                    with torch.no_grad():
+                        for batch_index, (X, y) in enumerate(validation_loader):
+                            X = X.to(self.device)
+                            y = y.to(self.device)
+                            pred = self.forward(X)
+                            loss = self.loss_function(pred, y)
+                            validation_loss += loss
+                            all_preds.extend(pred)
+                            all_targets.extend(y)
+                    all_preds = torch.stack(all_preds)
+                    all_targets = torch.stack(all_targets)
+                    
+                    accuracy_value = accuracy(all_preds, all_targets)
+                    precision_value = precision(all_preds, all_targets)
+                    recall_value = recall(all_preds, all_targets)
+                    logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f}")
 
             folds_metrics.append((accuracy_value, precision_value, recall_value))
 
