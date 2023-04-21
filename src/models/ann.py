@@ -114,6 +114,8 @@ class ANNModule(Baseline, torch.nn.Module):
         xs = torch.stack(xs)
         ys = torch.stack(ys)
         folds_metrics = []
+        
+        fig, ax = plt.subplots(nrows=(k_fold//2) + (k_fold%2), ncols=2)
         last_lr = self.init_lr
         for fold, (train_ids, validation_ids) in enumerate(kfold.split(xs, ys.argmax(dim=1))):
             self.train()
@@ -130,6 +132,7 @@ class ANNModule(Baseline, torch.nn.Module):
                                                             sampler=validation_subsampler)
             # Train phase
             total_loss = []
+            total_validation_loss = []
             # resetting module parameters
             self.reset_modules(module=self)
             for i in range(epoch_num):
@@ -144,44 +147,47 @@ class ANNModule(Baseline, torch.nn.Module):
                     loss.backward()
                     self.optimizer.step()
                     logger.debug(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
-                    total_loss.append(loss.item())
-                    epoch_loss += loss
+                    epoch_loss += loss.item()
+                total_loss.append(epoch_loss)
                 self.scheduler.step(loss)
                 if self.optimizer.param_groups[0]["lr"] != last_lr:
                     logger.info(f"fold: {fold} | epoch: {i} | Learning rate changed from: {last_lr} -> {self.optimizer.param_groups[0]['lr']}")
                     last_lr = self.optimizer.param_groups[0]["lr"]
                 
-                if (self.validation_steps == -1 and epoch_num-1 == i) or i % self.validation_steps == 0 or epoch_num-1 == i:
-                    # Validation phase
-                    all_preds = []
-                    all_targets = []
-                    validation_loss = 0
-                    with torch.no_grad():
-                        for batch_index, (X, y) in enumerate(validation_loader):
-                            X = X.to(self.device)
-                            y = y.to(self.device)
-                            pred = self.forward(X)
-                            loss = self.loss_function(pred, y)
-                            validation_loss += loss
-                            all_preds.extend(pred)
-                            all_targets.extend(y)
-                    all_preds = torch.stack(all_preds)
-                    all_targets = torch.stack(all_targets)
+                all_preds = []
+                all_targets = []
+                validation_loss = 0
+                with torch.no_grad():
+                    for batch_index, (X, y) in enumerate(validation_loader):
+                        X = X.to(self.device)
+                        y = y.to(self.device)
+                        pred = self.forward(X)
+                        loss = self.loss_function(pred, y)
+                        validation_loss += loss
+                        all_preds.extend(pred)
+                        all_targets.extend(y)
+                    total_validation_loss.append(validation_loss.item())
+                all_preds = torch.stack(all_preds)
+                all_targets = torch.stack(all_targets)
+                
+                accuracy_value, recall_value, precision_value = calculate_metrics(all_preds, all_targets)
+
+                logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f}")
                     
-                    accuracy_value, recall_value, precision_value = calculate_metrics(all_preds, all_targets)
-
-                    logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f}")
-
             folds_metrics.append((accuracy_value, precision_value, recall_value))
-
+            
             snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_fold{fold}.pth")
             self.save(snapshot_path)
-            plt.clf()
-            plt.plot(np.array(total_loss))
-            # plt.axis([0, len(total_loss), 0, 1])
-            with force_open(self.get_detailed_session_path(train_dataset, "figures", f"f{fold}", f"model_fold{fold}_loss.png"), "wb") as f:
-                plt.savefig(f)
-            # plt.show()
+            
+            ax[fold//2][fold%2].plot(np.array(total_loss), "-r", label="training")
+            ax[fold//2][fold%2].plot(np.array(total_validation_loss), "-b", label="validation")
+            ax[fold//2][fold%2].legend()
+            ax[fold//2][fold%2].set_title(f"fold #{fold}")
+
+        # plt.axis([0, len(total_loss), 0, 1])
+        with force_open(self.get_detailed_session_path(train_dataset, "figures", f"losses.png"), "wb") as f:
+            fig.savefig(f, dpi=300)
+
         max_metric = (0, folds_metrics[0][0])
         for i in range(1, len(folds_metrics)):
             if folds_metrics[i][0] > max_metric[1]:
