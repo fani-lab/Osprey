@@ -110,6 +110,7 @@ class ANNModule(Baseline, torch.nn.Module):
         xs = torch.stack(xs)
         ys = torch.stack(ys)
         folds_metrics = []
+        last_lr = self.init_lr
         for fold, (train_ids, validation_ids) in enumerate(kfold.split(xs, ys.argmax(dim=1))):
             logger.info("Resetting Optimizer, Learning rate, and Scheduler")
             self.optimizer = torch.optim.SGD(self.parameters(), lr=self.init_lr, momentum=0.9)
@@ -139,6 +140,9 @@ class ANNModule(Baseline, torch.nn.Module):
                     logger.info(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
                     total_loss.append(loss.item())
                 self.scheduler.step(loss)
+                if self.optimizer.param_groups[0]["lr"] != last_lr:
+                    logger.info(f"fold: {fold} | epoch: {i} | Learning rate changed from: {last_lr} -> {self.optimizer.param_groups[0]['lr']}")
+                    last_lr = self.optimizer.param_groups[0]["lr"]
             # Validation phase
             all_preds = []
             all_targets = []
@@ -156,9 +160,9 @@ class ANNModule(Baseline, torch.nn.Module):
             precision_value = precision(all_preds, all_targets)
             recall_value = recall(all_preds, all_targets)
 
-            logger.info(f'validation accuracy: {(100 * accuracy_value):>0.1f}')
-            logger.info(f'validation precision: {(100 * precision_value):>0.1f}')
-            logger.info(f'validation recall: {(100 * recall_value):>0.1f}')
+            logger.info(f'validation accuracy: {(100 * accuracy_value):>0.4f}')
+            logger.info(f'validation precision: {(100 * precision_value):>0.4f}')
+            logger.info(f'validation recall: {(100 * recall_value):>0.4f}')
 
             folds_metrics.append((accuracy_value, precision_value, recall_value))
 
