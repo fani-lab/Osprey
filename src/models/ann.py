@@ -23,10 +23,14 @@ logger = logging.getLogger()
 
 class ANNModule(Baseline, torch.nn.Module):
 
-    def __init__(self, dimension_list, activation, loss_func, lr, input_size, module_session_path,
+    def __init__(self, dimension_list, dropout_list, activation, loss_func, lr, input_size, module_session_path,
                  device='cpu', **kwargs):
         Baseline.__init__(self, input_size=input_size)
         torch.nn.Module.__init__(self)
+        if len(dropout_list) > len(dimension_list):
+            raise ValueError(f"the length of dropout_list should be less equal than that of dimension_list: {len(dropout_list)} > {len(dimension_list)} ")
+        self.dropout_list = [0] * len(dimension_list)
+        self.dropout_list[:len(dropout_list)] = dropout_list
         
         self.init_lr = lr
         self.dimension_list = dimension_list + [2]
@@ -36,10 +40,11 @@ class ANNModule(Baseline, torch.nn.Module):
         self.dimension_list[0] if len(self.dimension_list) > 0 else 2)
         torch.nn.init.normal_(self.i2h.weight)
         self.layers = nn.ModuleList()
-        for i, j in zip(self.dimension_list, self.dimension_list[1:]):
+        for i, j, d in zip(self.dimension_list, self.dimension_list[1:], self.dropout_list):
             l = nn.Linear(in_features=i, out_features=j)
             torch.nn.init.normal_(l.weight)
             self.layers.append(l)
+            self.layers.append(nn.Dropout(d))
         # self.h2o = torch.nn.Linear(self.dimension_list[-1] if len(self.dimension_list) > 0 else input_size, 2)
         # torch.nn.init.normal_(self.h2o.weight)
         self.activation = activation
@@ -53,6 +58,7 @@ class ANNModule(Baseline, torch.nn.Module):
         self.device = device
 
         logger.info(f"dimension list of nodes: {self.dimension_list}")
+        logger.info(f"dropout list: {self.dropout_list}")
 
     @classmethod
     def short_name(cls) -> str:
@@ -220,5 +226,5 @@ class ANNModule(Baseline, torch.nn.Module):
             logger.debug(e)
 
     def __str__(self) -> str:
-        return str(self.init_lr) + "-" + ".".join((str(l) for l in self.dimension_list))
+        return str(self.init_lr) + "-" + ".".join((str(l) for l in self.dimension_list) + "-" + ".".join((str(d) for d in self.dropout_list)))
     
