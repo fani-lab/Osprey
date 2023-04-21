@@ -1,6 +1,8 @@
 import os
 
 import pandas as pd
+import numpy as np
+import torch
 from nltk.tokenize import word_tokenize
 from lxml import etree
 
@@ -160,6 +162,34 @@ def get_stats(data):
 
     return stats
 
+def confusion_matrix(prediction, target, threshold=0.5):
+    tp = ((prediction > threshold) & (target > threshold)).sum()
+    fp = ((prediction > threshold) & ~(target > threshold)).sum()
+    tn = (~(prediction > threshold) & ~(target > threshold)).sum()
+    fn = (~(prediction > threshold) & (target > threshold)).sum()
+    return tp, fp, tn, fn
+
+def calculate_metrics(prediction, target):
+    tp, fp, tn, fn = confusion_matrix(prediction, target)
+    accuracy = (tp+tn) / (tp+tn+fp+fn)
+    recall = tp / (tp+fn)
+    precision = tp / (tp+fp)
+    return accuracy, recall, precision
+
+def roc_auc(prediction, target, bins=100):
+    fprs, tprs = torch.zeros(bins, dtype=torch.float32), torch.zeros(bins, dtype=torch.float32)
+    thresholds = np.linspace(0, 1, bins)
+    for i, threshold in enumerate(thresholds):
+        tp, fp, tn, fn = confusion_matrix(prediction, target, threshold=threshold)
+        fpr = fp / (fp+tn)
+        tpr = tp / (tp+fn)
+        fprs[i] = fpr
+        tprs[i] = tpr
+    # It might be problematic some day but it works for now
+    fprs[fprs.isnan()] = 0.0
+    tprs[tprs.isnan()] = 0.0
+    return fprs, tprs, thresholds
+    
 
 class RegisterableObject:
 

@@ -1,10 +1,9 @@
 import pickle
 import logging
 import matplotlib.pyplot as plt
-import torchmetrics
-import torch
+from sklearn.metrics import auc
 
-from src.utils.commons import RegisterableObject
+from src.utils.commons import RegisterableObject, roc_auc, calculate_metrics
 
 
 logger = logging.getLogger()
@@ -26,11 +25,7 @@ class Baseline(RegisterableObject):
         raise NotImplementedError()
 
     def eval(self, path, device):
-        accuracy = torchmetrics.Accuracy('multiclass', num_classes=2, top_k=1).to(device)
-        precision = torchmetrics.Precision('multiclass', num_classes=2, top_k=1).to(device)
-        recall = torchmetrics.Recall('multiclass', num_classes=2, top_k=1).to(device)
-        roc = torchmetrics.ROC(task="multiclass", num_classes=2).to(device)
-        auroc = torchmetrics.AUROC(task="multiclass", num_classes=2).to(device)
+
         preds = None
         targets = None
         with open(path+'/preds.pkl', 'rb') as file:
@@ -39,17 +34,15 @@ class Baseline(RegisterableObject):
             targets = pickle.load(file)
         if preds.ndim > targets.ndim:
             preds = preds.squeeze()
-        preds = preds.to(device)
-        targets = torch.argmax(targets.to(device), dim=1)
-        fpr, tpr, thresholds = roc(preds, targets)
+        preds = preds
+        fpr, tpr, _ = roc_auc(preds, targets)
+        auroc = auc(fpr, tpr)
+        roc_path = path + "/ROC.png"
         plt.clf()
-        plt.plot(fpr[1].cpu(), tpr[1].cpu())
+        plt.plot(fpr.cpu(), tpr.cpu())
         plt.title("ROC")
-        plt.savefig(path + "ROC.png")
+        plt.savefig(roc_path)
+        logger.info(f"saving ROC curve at: {roc_path}")
         # plt.show()
-
-        logger.info('Evaluation:')
-        logger.info(f'torchmetrics Accuracy: {(100 * accuracy(preds, targets)):>0.1f}')
-        logger.info(f'torchmetrics precision: {(100 * precision(preds, targets)):>0.1f}')
-        logger.info(f'torchmetrics Recall: {(100 * recall(preds, targets)):>0.1f}')
-        logger.info(f'torchmetrics AUCROC: {(auroc(preds, targets)):>0.1f}')
+        accuracy, precision, recall = calculate_metrics(preds, targets)
+        logger.info(f"test set -> AUCROC: {(auroc):>0.7f} | accuracy: {(accuracy):>0.7f} | precision: {(precision):>0.7f} | recall: {(recall):>0.7f}")

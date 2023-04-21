@@ -2,11 +2,10 @@ import pickle
 import logging
 import shutil
 
-import torchmetrics
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 from src.models.baseline import Baseline
-from src.utils.commons import force_open
+from src.utils.commons import force_open, calculate_metrics
 from settings import settings
 
 import torch
@@ -103,11 +102,8 @@ class ANNModule(Baseline, torch.nn.Module):
 
     def learn(self, epoch_num: int, batch_size: int, k_fold: int, train_dataset: Dataset):
 
-        accuracy = torchmetrics.Accuracy('multiclass', num_classes=2, top_k=1).to(self.device)
-        precision = torchmetrics.Precision('multiclass', num_classes=2, top_k=1).to(self.device)
-        recall = torchmetrics.Recall('multiclass', num_classes=2, top_k=1).to(self.device)
         logger.info("training phase started")
-        scheduler_args = {"verbose":True, "min_lr":1e-10, "threshold":1e-4, "patience":3, "factor":0.25}
+        scheduler_args = {"verbose":False, "min_lr":1e-10, "threshold":1e-4, "patience":10, "factor":0.25}
         # kfold = KFold(n_splits=k_fold)
         kfold = StratifiedKFold(n_splits=k_fold, shuffle=True)
         xs, ys = [0] * len(train_dataset), [0] * len(train_dataset)
@@ -171,9 +167,8 @@ class ANNModule(Baseline, torch.nn.Module):
                     all_preds = torch.stack(all_preds)
                     all_targets = torch.stack(all_targets)
                     
-                    accuracy_value = accuracy(all_preds, all_targets)
-                    precision_value = precision(all_preds, all_targets)
-                    recall_value = recall(all_preds, all_targets)
+                    accuracy_value, recall_value, precision_value = calculate_metrics(all_preds, all_targets)
+
                     logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f}")
 
             folds_metrics.append((accuracy_value, precision_value, recall_value))
