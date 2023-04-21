@@ -116,6 +116,7 @@ class ANNModule(Baseline, torch.nn.Module):
         folds_metrics = []
         last_lr = self.init_lr
         for fold, (train_ids, validation_ids) in enumerate(kfold.split(xs, ys.argmax(dim=1))):
+            self.train()
             logger.info("Resetting Optimizer, Learning rate, and Scheduler")
             self.optimizer = torch.optim.SGD(self.parameters(), lr=self.init_lr, momentum=0.9)
             self.scheduler = ReduceLROnPlateau(self.optimizer, **scheduler_args)
@@ -181,10 +182,10 @@ class ANNModule(Baseline, torch.nn.Module):
             with force_open(self.get_detailed_session_path(train_dataset, "figures", f"f{fold}", f"model_fold{fold}_loss.png"), "wb") as f:
                 plt.savefig(f)
             # plt.show()
-        max_metric = (0, folds_metrics[0][1])
+        max_metric = (0, folds_metrics[0][0])
         for i in range(1, len(folds_metrics)):
-            if folds_metrics[i][1] > max_metric[1]:
-                max_metric = (i, folds_metrics[i][1])
+            if folds_metrics[i][0] > max_metric[1]:
+                max_metric = (i, folds_metrics[i][0])
         logger.info(f"best model of cross validation for current training phase: fold #{max_metric[0]} with metric value of '{max_metric[1]}'")
         best_model_dest = self.get_detailed_session_path(train_dataset, "weights", f"best_model.pth")
         best_model_src = self.get_detailed_session_path(train_dataset, "weights", f"f{max_metric[0]}", f"model_fold{max_metric[0]}.pth")
@@ -199,6 +200,7 @@ class ANNModule(Baseline, torch.nn.Module):
         all_targets = []
         test_dataset.to(self.device)
         test_dataloader = DataLoader(test_dataset, batch_size=64)
+        self.eval()
         with torch.no_grad():
             for X, y in test_dataloader:
                 pred = self.forward(X)
