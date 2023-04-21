@@ -29,15 +29,19 @@ class ANNModule(Baseline, torch.nn.Module):
         torch.nn.Module.__init__(self)
         
         self.init_lr = lr
-        self.dimension_list = dimension_list
+        self.dimension_list = dimension_list + [2]
 
         
         self.i2h = nn.Linear(input_size,
-        dimension_list[0] if len(dimension_list) > 0 else 2)
+        self.dimension_list[0] if len(self.dimension_list) > 0 else 2)
+        torch.nn.init.normal_(self.i2h.weight)
         self.layers = nn.ModuleList()
-        for i, j in zip(dimension_list, dimension_list[1:]):
-            self.layers.append(nn.Linear(in_features=i, out_features=j))
-        self.h2o = torch.nn.Linear(dimension_list[-1] if len(dimension_list) > 0 else input_size, 2)
+        for i, j in zip(self.dimension_list, self.dimension_list[1:]):
+            l = nn.Linear(in_features=i, out_features=j)
+            torch.nn.init.normal_(l.weight)
+            self.layers.append(l)
+        # self.h2o = torch.nn.Linear(self.dimension_list[-1] if len(self.dimension_list) > 0 else input_size, 2)
+        # torch.nn.init.normal_(self.h2o.weight)
         self.activation = activation
 
         self.loss_function = loss_func
@@ -63,11 +67,11 @@ class ANNModule(Baseline, torch.nn.Module):
         Returns: prediction of the model
 
         """
-        x = self.activation(self.i2h(x))
+        x = self.i2h(x)
         for layer in self.layers:
-            x = self.activation(layer(x))
+            x = layer(self.activation(x))
 
-        x = self.h2o(x)
+        # x = self.h2o(x)
         x = torch.softmax(x, dim=1)
         # x = torch.clamp(x, min=1e-12, max=1 - 1e-12)
         return x
@@ -95,7 +99,7 @@ class ANNModule(Baseline, torch.nn.Module):
         precision = torchmetrics.Precision('multiclass', num_classes=2, top_k=1).to(self.device)
         recall = torchmetrics.Recall('multiclass', num_classes=2, top_k=1).to(self.device)
         logger.info("training phase started")
-        scheduler_args = {"verbose":True, "min_lr":1e-10, "threshold":8e-1, "patience":3, "factor":0.25}
+        scheduler_args = {"verbose":True, "min_lr":1e-10, "threshold":1e-4, "patience":3, "factor":0.25}
         # kfold = KFold(n_splits=k_fold)
         kfold = StratifiedKFold(n_splits=k_fold, shuffle=True)
         xs, ys = [0] * len(train_dataset), [0] * len(train_dataset)
