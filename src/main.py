@@ -94,4 +94,4 @@ def run():
                 if path == "":
                     raise ValueError("the given path is empty. It should point to the directory of model objects.")
                 model = model_class(**model_configs, input_size=1)
-                model.eval(path, device=device)
+                model.evaluate(path, device=device)

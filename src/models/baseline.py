@@ -24,7 +24,7 @@ class Baseline(RegisterableObject):
     def get_session_path(self, *args):
         raise NotImplementedError()
 
-    def eval(self, path, device):
+    def evaluate(self, path, device):
 
         preds = None
         targets = None
