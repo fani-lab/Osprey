@@ -1,9 +1,10 @@
 import pickle
 import logging
 import matplotlib.pyplot as plt
-from sklearn.metrics import auc
-
-from src.utils.commons import RegisterableObject, roc_auc, calculate_metrics
+import torchmetrics
+# from sklearn.metrics import auc
+import torch
+from src.utils.commons import RegisterableObject, roc_auc, calculate_metrics, roc
 
 
 logger = logging.getLogger()
@@ -34,9 +35,10 @@ class Baseline(RegisterableObject):
             targets = pickle.load(file)
         if preds.ndim > targets.ndim:
             preds = preds.squeeze()
-        preds = preds
-        fpr, tpr, _ = roc_auc(preds, targets)
-        auroc = auc(fpr, tpr)
+        preds = preds.to(device)
+        targets = torch.argmax(targets.to(device), dim=1)
+        fpr, tpr, _ = roc(preds, targets, device=device)
+        auroc = roc_auc(preds, targets, device=device)
         roc_path = path + "/ROC.png"
         plt.clf()
         plt.plot(fpr.cpu(), tpr.cpu())
@@ -44,5 +46,5 @@ class Baseline(RegisterableObject):
         plt.savefig(roc_path)
         logger.info(f"saving ROC curve at: {roc_path}")
         # plt.show()
-        accuracy, precision, recall = calculate_metrics(preds, targets)
+        accuracy, precision, recall = calculate_metrics(preds, targets, device=device)
         logger.info(f"test set -> AUCROC: {(auroc):>0.7f} | accuracy: {(accuracy):>0.7f} | precision: {(precision):>0.7f} | recall: {(recall):>0.7f}")

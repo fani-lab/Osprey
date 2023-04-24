@@ -170,7 +170,7 @@ class ANNModule(Baseline, torch.nn.Module):
                 all_preds = torch.stack(all_preds)
                 all_targets = torch.stack(all_targets)
                 
-                accuracy_value, recall_value, precision_value = calculate_metrics(all_preds, all_targets)
+                accuracy_value, recall_value, precision_value = calculate_metrics(all_preds, all_targets, device=self.device)
 
                 logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f}")
                     
