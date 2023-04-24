@@ -3,6 +3,7 @@ import os
 import pandas as pd
 import numpy as np
 import torch
+import torchmetrics
 from nltk.tokenize import word_tokenize
 from lxml import etree
 
@@ -169,14 +170,31 @@ def confusion_matrix(prediction, target, threshold=0.5):
     fn = (~(prediction > threshold) & (target > threshold)).sum()
     return tp, fp, tn, fn
 
-def calculate_metrics(prediction, target):
+def calculate_metrics(prediction, target, device="cpu"):
+    accuracy = torchmetrics.Accuracy("multiclass", num_classes=2, top_k=1, average="macro").to(device)
+    recall = torchmetrics.Recall("multiclass", num_classes=2, top_k=1, average="macro").to(device)
+    precision = torchmetrics.Precision("multiclass", num_classes=2, top_k=1, average="macro").to(device)
+    return accuracy(prediction, target), recall(prediction, target), precision(prediction, target)
+
+def _calculate_metrics(prediction, target, *args, **kwargs):
     tp, fp, tn, fn = confusion_matrix(prediction, target)
     accuracy = (tp+tn) / (tp+tn+fp+fn)
     recall = tp / (tp+fn)
     precision = tp / (tp+fp)
     return accuracy, recall, precision
 
-def roc_auc(prediction, target, bins=100):
+def roc(prediction, target, bins=None, device="cpu"):
+    roc = torchmetrics.ROC("multiclass", thresholds=bins, num_classes=2).to(device)
+    fpr, tpr, thresholds = roc(prediction, target)
+
+    return fpr[1], tpr[1], thresholds[1]
+
+def roc_auc(prediction, target, bins=None, device="cpu"):
+    auroc = torchmetrics.AUROC(task="multiclass", thresholds=bins, num_classes=2, average="macro").to(device)
+    return auroc(prediction, target)
+
+
+def _roc_auc(prediction, target, bins=100, *args, **kwargs):
     fprs, tprs = torch.zeros(bins, dtype=torch.float32), torch.zeros(bins, dtype=torch.float32)
     thresholds = np.linspace(0, 1, bins)
     for i, threshold in enumerate(thresholds):
