@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import torchmetrics
 # from sklearn.metrics import auc
 import torch
-from src.utils.commons import RegisterableObject, roc_auc, calculate_metrics, roc
+from src.utils.commons import RegisterableObject, roc_auc, calculate_metrics, roc, precision_recall_auc, precision_recall_curve
 
 
 logger = logging.getLogger()
@@ -40,12 +40,21 @@ class Baseline(RegisterableObject):
         # targets = torch.argmax(targets, dim=1)
         fpr, tpr, _ = roc(preds, targets, device=device)
         auroc = roc_auc(preds, targets, device=device)
-        roc_path = path + "/ROC.png"
+
+        roc_path = path + "/ROC-curve.png"
+        precision_recall_path = path + "/precision-recall-curve.png"
         plt.clf()
         plt.plot(fpr.cpu(), tpr.cpu())
         plt.title("ROC")
         plt.savefig(roc_path)
         logger.info(f"saving ROC curve at: {roc_path}")
+        precisions, recalls, _ = precision_recall_curve(preds, targets)
+        pr_auc = precision_recall_auc(preds, targets, device=device)
+        plt.clf()
+        plt.plot(recalls.cpu(), precisions.cpu())
+        plt.title("Recall-Precision Curve")
+        plt.savefig(precision_recall_path)
+        logger.info(f"saving precision-recall curve at: {precision_recall_path}")
         # plt.show()
         accuracy, precision, recall = calculate_metrics(preds, targets, device=device)
-        logger.info(f"test set -> AUCROC: {(auroc):>0.7f} | accuracy: {(accuracy):>0.7f} | precision: {(precision):>0.7f} | recall: {(recall):>0.7f}")
+        logger.info(f"test set -> AUCROC: {(auroc):>0.7f} | AUCPR: {(pr_auc):>0.7f} | accuracy: {(accuracy):>0.7f} | precision: {(precision):>0.7f} | recall: {(recall):>0.7f}")

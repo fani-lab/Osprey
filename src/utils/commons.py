@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import torch
 import torchmetrics
+from sklearn.metrics import auc
 from nltk.tokenize import word_tokenize
 from lxml import etree
 
@@ -194,6 +195,15 @@ def roc_auc(prediction, target, bins=None, device="cpu"):
     auroc = torchmetrics.AUROC(task="binary", thresholds=bins).to(device)
     return auroc(prediction, target.long())
 
+def precision_recall_curve(prediction, target, bins=None, device="cpu"):
+    metric = torchmetrics.PrecisionRecallCurve("binary", thresholds=bins)
+    if target.dtype not in (torch.long, torch.int):
+        return metric(prediction, target.long())
+    return metric(prediction, target)
+
+def precision_recall_auc(prediction, target, bins=None, device="cpu"):
+    precisions, recalls, _ = precision_recall_curve(prediction, target, bins, device)
+    return auc(recalls.cpu(), precisions.cpu())
 
 def _roc_auc(prediction, target, bins=100, *args, **kwargs):
     fprs, tprs = torch.zeros(bins, dtype=torch.float32), torch.zeros(bins, dtype=torch.float32)
