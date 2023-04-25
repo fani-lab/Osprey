@@ -171,10 +171,12 @@ def confusion_matrix(prediction, target, threshold=0.5):
     return tp, fp, tn, fn
 
 def calculate_metrics(prediction, target, device="cpu"):
-    accuracy = torchmetrics.Accuracy("multiclass", num_classes=2, top_k=1, average="macro").to(device)
-    recall = torchmetrics.Recall("multiclass", num_classes=2, top_k=1, average="macro").to(device)
-    precision = torchmetrics.Precision("multiclass", num_classes=2, top_k=1, average="macro").to(device)
-    return accuracy(prediction, target), recall(prediction, target), precision(prediction, target)
+    accuracy = torchmetrics.Accuracy("binary").to(device)
+    recall = torchmetrics.Recall("binary").to(device)
+    precision = torchmetrics.Precision("binary").to(device)
+    _p = prediction
+    _t = target
+    return accuracy(_p, _t), recall(_p, _t), precision(_p, _t)
 
 def _calculate_metrics(prediction, target, *args, **kwargs):
     tp, fp, tn, fn = confusion_matrix(prediction, target)
@@ -184,14 +186,13 @@ def _calculate_metrics(prediction, target, *args, **kwargs):
     return accuracy, recall, precision
 
 def roc(prediction, target, bins=None, device="cpu"):
-    roc = torchmetrics.ROC("multiclass", thresholds=bins, num_classes=2).to(device)
-    fpr, tpr, thresholds = roc(prediction, target)
-
-    return fpr[1], tpr[1], thresholds[1]
+    roc = torchmetrics.ROC("binary", thresholds=bins).to(device)    
+    fpr, tpr, thresholds = roc(prediction, target.long())
+    return fpr, tpr, thresholds
 
 def roc_auc(prediction, target, bins=None, device="cpu"):
-    auroc = torchmetrics.AUROC(task="multiclass", thresholds=bins, num_classes=2, average="macro").to(device)
-    return auroc(prediction, target)
+    auroc = torchmetrics.AUROC(task="binary", thresholds=bins).to(device)
+    return auroc(prediction, target.long())
 
 
 def _roc_auc(prediction, target, bins=100, *args, **kwargs):

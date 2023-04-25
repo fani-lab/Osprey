@@ -33,10 +33,11 @@ class Baseline(RegisterableObject):
             preds = pickle.load(file)
         with open(path+'/targets.pkl', 'rb') as file:
             targets = pickle.load(file)
+            targets = targets.to(device)
         if preds.ndim > targets.ndim:
             preds = preds.squeeze()
         preds = preds.to(device)
-        targets = torch.argmax(targets.to(device), dim=1)
+        # targets = torch.argmax(targets, dim=1)
         fpr, tpr, _ = roc(preds, targets, device=device)
         auroc = roc_auc(preds, targets, device=device)
         roc_path = path + "/ROC.png"

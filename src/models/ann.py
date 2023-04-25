@@ -18,7 +18,7 @@ import numpy as np
 from sklearn.model_selection import KFold, StratifiedKFold
 
 logger = logging.getLogger()
-
+OUTPUT_LAYER_NODES = 1
 
 class ANNModule(Baseline, torch.nn.Module):
 
@@ -32,11 +32,11 @@ class ANNModule(Baseline, torch.nn.Module):
         self.dropout_list[:len(dropout_list)] = dropout_list
         
         self.init_lr = lr
-        self.dimension_list = dimension_list + [2]
+        self.dimension_list = dimension_list + [OUTPUT_LAYER_NODES]
         self.validation_steps = validation_steps
         
         self.i2h = nn.Linear(input_size,
-        self.dimension_list[0] if len(self.dimension_list) > 0 else 2)
+        self.dimension_list[0] if len(self.dimension_list) > 0 else OUTPUT_LAYER_NODES)
         torch.nn.init.normal_(self.i2h.weight)
         self.layers = nn.ModuleList()
         for i, j, d in zip(self.dimension_list, self.dimension_list[1:], self.dropout_list):
@@ -44,7 +44,7 @@ class ANNModule(Baseline, torch.nn.Module):
             self.layers.append(nn.Dropout(d))
             torch.nn.init.normal_(l.weight)
             self.layers.append(l)
-        # self.h2o = torch.nn.Linear(self.dimension_list[-1] if len(self.dimension_list) > 0 else input_size, 2)
+        # self.h2o = torch.nn.Linear(self.dimension_list[-1] if len(self.dimension_list) > 0 else input_size, OUTPUT_LAYER_NODES)
         # torch.nn.init.normal_(self.h2o.weight)
         self.activation = activation
 
@@ -77,7 +77,7 @@ class ANNModule(Baseline, torch.nn.Module):
             x = layer(self.activation(x))
 
         # x = self.h2o(x)
-        x = torch.softmax(x, dim=1)
+        x = torch.sigmoid(x)
         # x = torch.clamp(x, min=1e-12, max=1 - 1e-12)
         return x
 
@@ -106,6 +106,7 @@ class ANNModule(Baseline, torch.nn.Module):
         scheduler_args = {"verbose":False, "min_lr":1e-10, "threshold":1e-4, "patience":5, "factor":0.25}
         # kfold = KFold(n_splits=k_fold)
         kfold = StratifiedKFold(n_splits=k_fold, shuffle=True)
+        
         xs, ys = [0] * len(train_dataset), [0] * len(train_dataset)
         for i in range(len(train_dataset)):
             entry = train_dataset[i]
@@ -116,7 +117,7 @@ class ANNModule(Baseline, torch.nn.Module):
         folds_metrics = []
         
         fig, ax = plt.subplots(nrows=(k_fold//2) + (k_fold%2), ncols=2)
-        for fold, (train_ids, validation_ids) in enumerate(kfold.split(xs, ys.argmax(dim=1))):
+        for fold, (train_ids, validation_ids) in enumerate(kfold.split(xs, ys)):
             self.train()
             logger.info("Resetting Optimizer, Learning rate, and Scheduler")
             self.optimizer = torch.optim.SGD(self.parameters(), lr=self.init_lr, momentum=0.9)
@@ -142,7 +143,7 @@ class ANNModule(Baseline, torch.nn.Module):
                     self.optimizer.zero_grad()
                     X = X.to(self.device)
                     y = y.to(self.device)
-                    y_hat = self.forward(X)
+                    y_hat = self.forward(X).squeeze()
                     loss = self.loss_function(y_hat, y)
                     loss.backward()
                     self.optimizer.step()
@@ -161,7 +162,7 @@ class ANNModule(Baseline, torch.nn.Module):
                     for batch_index, (X, y) in enumerate(validation_loader):
                         X = X.to(self.device)
                         y = y.to(self.device)
-                        pred = self.forward(X)
+                        pred = self.forward(X).squeeze()
                         loss = self.loss_function(pred, y)
                         validation_loss += loss
                         all_preds.extend(pred)

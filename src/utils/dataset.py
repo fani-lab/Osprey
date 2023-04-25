@@ -43,7 +43,7 @@ class MyDataset(Dataset):
 class BaseDataset(Dataset, RegisterableObject):
 
     
-    def __init__(self, data_path: str, output_path: str, load_from_pkl: bool,
+    def __init__(self, data_path: str, output_path: str, load_from_pkl: bool, apply_record_filter: bool=True,
                  preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, device="cpu", *args, **kwargs):
         self.output_path = output_path
         self.parent_dataset = parent_dataset
@@ -52,6 +52,7 @@ class BaseDataset(Dataset, RegisterableObject):
         self.persist_data = persist_data
         self.df_path = data_path
         self.device = device
+        self.apply_filter = apply_record_filter
 
         self.__df__ = None
 
@@ -64,7 +65,10 @@ class BaseDataset(Dataset, RegisterableObject):
     @property
     def df(self):
         if self.__df__ is None:
-            self.__df__ = self.filter_records(pd.read_csv(self.df_path))
+            self.__df__ = pd.read_csv(self.df_path)
+            if self.apply_filter:
+                self.__df__ = self.filter_records(self.__df__)
+
         return self.__df__
     
     def vectorize(self, tokens_records, encoder):
@@ -119,9 +123,9 @@ class BaseDataset(Dataset, RegisterableObject):
         raise NotImplementedError()
     
     def get_labels(self):
-        labels = torch.zeros((self.df.shape[0], 2), dtype=torch.float)
+        labels = torch.zeros((self.df.shape[0], 1), dtype=torch.float)
         for i in range(len(self.df)):
-            labels[i, int(self.df.iloc[i]["tagged_predator"])] = 1.0
+            labels[i] = self.df.iloc[i]["tagged_predator"]
         return labels
 
     def preprocess(self):
@@ -243,9 +247,9 @@ class ConversationBagOfWords(BagOfWordsDataset):
         return "conversation-bow"
     
     def get_labels(self):
-        labels = torch.zeros((self.df.shape[0], 2), dtype=torch.float)
+        labels = torch.zeros((self.df.shape[0]), dtype=torch.float)
         for i in range(len(self.df)):
-            labels[i, int(self.df.iloc[i]["predatory_conv"])] = 1.0
+            labels[i] = self.df.iloc[i]["predatory_conv"]
         return labels
 
     def get_data_generator(self, data, pattern):
