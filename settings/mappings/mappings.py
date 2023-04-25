@@ -4,7 +4,7 @@ from src.models.baseline import Baseline
 from src.utils.commons import RegisterableObject
 from src.utils.loss_functions import BaseLossCalculator
 
-from torch.nn import ReLU, CrossEntropyLoss, BCEWithLogitsLoss
+from torch.nn import ReLU, CrossEntropyLoss, BCEWithLogitsLoss, BCELoss
 
 MODELS = dict()
 
@@ -44,5 +44,6 @@ def register_mappings_torch():
     ACTIVATIONS["relu"] = ReLU
     LOSS_FUNCTIONS["cross-entropy"] = CrossEntropyLoss
     LOSS_FUNCTIONS["BCEW"] = BCEWithLogitsLoss
+    LOSS_FUNCTIONS["BCELoss"] = BCELoss
 
     pass
