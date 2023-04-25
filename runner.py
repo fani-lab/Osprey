@@ -7,7 +7,7 @@ from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, Tr
 from src.utils.loss_functions import WeightedBinaryCrossEntropy
 from src.models import ANNModule, RnnModule, EbrahimiCNN
 from settings.mappings import register_mappings, register_mappings_torch
-from src.scripts import create_conversations, balance_datasets_for_version_two, create_conversation_toy_set
+from src.scripts import create_conversations, balance_datasets_for_version_two, create_conversation_toy_set, generate_stats
 
 
 if __name__ == "__main__":
@@ -36,3 +36,4 @@ if __name__ == "__main__":
     run()
     # balance_datasets_for_version_two()
     # create_conversation_toy_set()
+    # generate_stats()

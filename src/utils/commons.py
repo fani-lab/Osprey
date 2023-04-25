@@ -90,6 +90,20 @@ def get_stats_v2(data):
         "number_of_predatory_chatters": predators_count,
         "number_of_conversations": len(conversations),
         "number_of_messages": data.shape[0],
+        "number_of_conversations_with_m_messages": {
+            "m<=1": (conversations_messages_count <= 1).sum(),
+            "m==2": (conversations_messages_count == 2).sum(),
+            "m==3": (conversations_messages_count == 3).sum(),
+            "m==4": (conversations_messages_count == 4).sum(),
+            "m>=5": (conversations_messages_count >= 5).sum(),
+        },
+        "number_of_predatory_conversations_with_m_messages": {
+            "m<=1": (predatory_conversations_messages_count <= 1).sum(),
+            "m==2": (predatory_conversations_messages_count == 2).sum(),
+            "m==3": (predatory_conversations_messages_count == 3).sum(),
+            "m==4": (predatory_conversations_messages_count == 4).sum(),
+            "m>=5": (predatory_conversations_messages_count >= 5).sum(),
+        },
         "number_of_conversations_per_n_author": {
             "n==1":(conversations_authors_count == 1).sum(),
             "n==2": (conversations_authors_count == 2).sum(),
