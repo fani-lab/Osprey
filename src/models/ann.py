@@ -103,7 +103,7 @@ class ANNModule(Baseline, torch.nn.Module):
     def learn(self, epoch_num: int, batch_size: int, k_fold: int, train_dataset: Dataset):
 
         logger.info("training phase started")
-        scheduler_args = {"verbose":False, "min_lr":1e-10, "threshold":1e-4, "patience":5, "factor":0.25}
+        scheduler_args = {"verbose":False, "min_lr":0, "threshold":1e-4, "patience":10, "factor":0.25}
         # kfold = KFold(n_splits=k_fold)
         kfold = StratifiedKFold(n_splits=k_fold, shuffle=True)
         
@@ -116,7 +116,7 @@ class ANNModule(Baseline, torch.nn.Module):
         ys = torch.stack(ys)
         folds_metrics = []
         
-        fig, ax = plt.subplots(nrows=(k_fold//2) + (k_fold%2), ncols=2)
+        
         for fold, (train_ids, validation_ids) in enumerate(kfold.split(xs, ys)):
             self.train()
             logger.info("Resetting Optimizer, Learning rate, and Scheduler")
@@ -142,8 +142,8 @@ class ANNModule(Baseline, torch.nn.Module):
                 for batch_index, (X, y) in enumerate(train_loader):
                     self.optimizer.zero_grad()
                     X = X.to(self.device)
-                    y = y.to(self.device)
-                    y_hat = self.forward(X).squeeze()
+                    y = y.reshape(-1, 1).to(self.device)
+                    y_hat = self.forward(X)
                     loss = self.loss_function(y_hat, y)
                     loss.backward()
                     self.optimizer.step()
@@ -179,20 +179,19 @@ class ANNModule(Baseline, torch.nn.Module):
             
             snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_fold{fold}.pth")
             self.save(snapshot_path)
-            
-            ax[fold//2][fold%2].plot(np.array(total_loss), "-r", label="training")
-            ax[fold//2][fold%2].plot(np.array(total_validation_loss), "-b", label="validation")
-            ax[fold//2][fold%2].legend()
-            ax[fold//2][fold%2].set_title(f"fold #{fold}")
+            plt.clf()
+            plt.plot(np.arange(1, 1 + len(total_loss)), np.array(total_loss), "-r", label="training")
+            plt.plot(np.arange(1, 1 + len(total_loss)), np.array(total_validation_loss), "-b", label="validation")
+            plt.legend()
+            plt.title(f"fold #{fold}")
+            with force_open(self.get_detailed_session_path(train_dataset, "figures", f"loss_f{fold}.png"), "wb") as f:
+                plt.savefig(f, dpi=300)
 
-        # plt.axis([0, len(total_loss), 0, 1])
-        with force_open(self.get_detailed_session_path(train_dataset, "figures", f"losses.png"), "wb") as f:
-            fig.savefig(f, dpi=300)
-
-        max_metric = (0, folds_metrics[0][0])
+        MAHAK = 2
+        max_metric = (0, folds_metrics[0][MAHAK])
         for i in range(1, len(folds_metrics)):
-            if folds_metrics[i][0] > max_metric[1]:
-                max_metric = (i, folds_metrics[i][0])
+            if folds_metrics[i][MAHAK] > max_metric[1]:
+                max_metric = (i, folds_metrics[i][MAHAK])
         logger.info(f"best model of cross validation for current training phase: fold #{max_metric[0]} with metric value of '{max_metric[1]}'")
         best_model_dest = self.get_detailed_session_path(train_dataset, "weights", f"best_model.pth")
         best_model_src = self.get_detailed_session_path(train_dataset, "weights", f"f{max_metric[0]}", f"model_fold{max_metric[0]}.pth")
