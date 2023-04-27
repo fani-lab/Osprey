@@ -12,7 +12,7 @@ from src.utils.transformers_encoders import TransformersEmbeddingEncoder, GloveE
 from src.utils.commons import nltk_tokenize, force_open, RegisterableObject
 
 
-from imblearn.over_sampling import SMOTE
+# from imblearn.over_sampling import SMOTE
 
 logger = logging.getLogger()
 
@@ -36,9 +36,9 @@ class MyDataset(Dataset):
     def shape(self):
         return self.data.shape
 
-    def oversample_by_smote(self):
-        smote = SMOTE(random_state=42)
-        self.data, self.labels = smote.fit_resample(self.data.to_dense(), self.labels)
+    # def oversample_by_smote(self):
+    #     smote = SMOTE(random_state=42)
+    #     self.data, self.labels = smote.fit_resample(self.data.to_dense(), self.labels)
 
 
 class BaseDataset(Dataset, RegisterableObject):
@@ -155,6 +155,8 @@ class BaseDataset(Dataset, RegisterableObject):
             if not split_again:
                 with open(splits_path, "rb") as f:
                     splits = pickle.load(f)
+                logger.info(f"loading splits from: {splits_path}")
+                return splits
         except FileNotFoundError as e:
             logger.warning("could not find the splits file. going to create splits from scratch.")
         
@@ -287,9 +289,9 @@ class BagOfWordsDataset(BaseDataset):
         logger.debug("transforming of records into vectors is finished")
         return vectors
 
-    def oversample_by_smote(self):
-        smote = SMOTE(random_state=42)
-        self.data, self.labels = smote.fit_resample(self.data.to_dense(), self.labels)
+    # def oversample_by_smote(self):
+    #     smote = SMOTE(random_state=42)
+    #     self.data, self.labels = smote.fit_resample(self.data.to_dense(), self.labels)
 
 class ConversationBagOfWords(BagOfWordsDataset):
     

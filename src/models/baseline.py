@@ -1,9 +1,6 @@
 import pickle
 import logging
 import matplotlib.pyplot as plt
-import torchmetrics
-# from sklearn.metrics import auc
-import torch
 from src.utils.commons import RegisterableObject, roc_auc, calculate_metrics, roc, precision_recall_auc, precision_recall_curve
 
 
@@ -11,8 +8,22 @@ logger = logging.getLogger()
 
 
 class Baseline(RegisterableObject):
-    def __init__(self, input_size: int):
+
+    def __init__(self, input_size: int, activation, loss_func, lr, module_session_path, validation_steps=-1,
+                 device='cpu', **kwargs):
+        super().__init__()
         self.input_size = input_size
+        self.init_lr = lr
+        self.validation_steps = validation_steps
+        self.activation = activation
+
+        self.loss_function = loss_func
+
+        self.session_path = module_session_path if module_session_path[-1] == "\\" or module_session_path[
+            -1] == "/" else module_session_path + "/"
+
+        self.snapshot_steps = 2
+        self.device = device
 
     def learn(self):
         raise NotImplementedError()

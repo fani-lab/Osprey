@@ -15,72 +15,23 @@ from torch.utils.data import DataLoader, Dataset
 import matplotlib.pyplot as plt
 import numpy as np
 
-from sklearn.model_selection import KFold, StratifiedKFold
 
 logger = logging.getLogger()
 OUTPUT_LAYER_NODES = 1
 
-class ANNModule(Baseline, torch.nn.Module):
-
-    def __init__(self, dimension_list, dropout_list, activation, loss_func, lr, input_size, module_session_path, validation_steps=-1,
-                 device='cpu', **kwargs):
-        Baseline.__init__(self, input_size=input_size)
+class AbstractFeedForward(Baseline, torch.nn.Module):
+    
+    def __init__(self, *args, **kwargs):
+        Baseline.__init__(self, *args, **kwargs)
         torch.nn.Module.__init__(self)
-        if len(dropout_list) > len(dimension_list):
-            raise ValueError(f"the length of dropout_list should be less equal than that of dimension_list: {len(dropout_list)} > {len(dimension_list)} ")
-        self.dropout_list = [0] * len(dimension_list)
-        self.dropout_list[:len(dropout_list)] = dropout_list
-        
-        self.init_lr = lr
-        self.dimension_list = dimension_list + [OUTPUT_LAYER_NODES]
-        self.validation_steps = validation_steps
-        
-        self.i2h = nn.Linear(input_size,
-        self.dimension_list[0] if len(self.dimension_list) > 0 else OUTPUT_LAYER_NODES)
-        torch.nn.init.normal_(self.i2h.weight)
-        self.layers = nn.ModuleList()
-        for i, j, d in zip(self.dimension_list, self.dimension_list[1:], self.dropout_list):
-            l = nn.Linear(in_features=i, out_features=j)
-            self.layers.append(nn.Dropout(d))
-            torch.nn.init.normal_(l.weight)
-            self.layers.append(l)
-        # self.h2o = torch.nn.Linear(self.dimension_list[-1] if len(self.dimension_list) > 0 else input_size, OUTPUT_LAYER_NODES)
-        # torch.nn.init.normal_(self.h2o.weight)
-        self.activation = activation
-
-        self.loss_function = loss_func
-
-        self.session_path = module_session_path if module_session_path[-1] == "\\" or module_session_path[
-            -1] == "/" else module_session_path + "/"
-
-        self.snapshot_steps = 2
-        self.device = device
-
-        logger.info(f"dimension list of nodes: {self.dimension_list}")
-        logger.info(f"dropout list: {self.dropout_list}")
 
     @classmethod
     def short_name(cls) -> str:
-        return "ann"
+        return "baisc-feedforward"
 
     def forward(self, x):
-        """
-
-        Args:
-            x: Tensor object
-
-        Returns: prediction of the model
-
-        """
-        x = self.i2h(x)
-        for layer in self.layers:
-            x = layer(self.activation(x))
-
-        # x = self.h2o(x)
-        x = torch.sigmoid(x)
-        # x = torch.clamp(x, min=1e-12, max=1 - 1e-12)
-        return x
-
+        raise NotImplementedError()
+    
     def get_session_path(self, *args):
         return f"{self.session_path}" + self.__class__.short_name() + "/" + "/".join([str(a) for a in args])
     
@@ -225,7 +176,59 @@ class ANNModule(Baseline, torch.nn.Module):
             logger.info("parameters loaded successfully")
         except Exception as e:
             logger.debug(e)
+    def __str__(self) -> str:
+        return str(self.init_lr)
+
+
+class ANNModule(AbstractFeedForward):
+
+    def __init__(self, dimension_list, dropout_list, *args, **kwargs):
+        super(AbstractFeedForward, self).__init__(*args, **kwargs)
+
+        if len(dropout_list) > len(dimension_list):
+            raise ValueError(f"the length of dropout_list should be less equal than that of dimension_list: {len(dropout_list)} > {len(dimension_list)} ")
+        
+        self.dropout_list = [0] * len(dimension_list)
+        self.dropout_list[:len(dropout_list)] = dropout_list
+        
+        self.dimension_list = dimension_list + [OUTPUT_LAYER_NODES]
+        
+        self.i2h = nn.Linear(self.input_size,
+        self.dimension_list[0] if len(self.dimension_list) > 0 else OUTPUT_LAYER_NODES)
+        torch.nn.init.normal_(self.i2h.weight)
+        self.layers = nn.ModuleList()
+        for i, j, d in zip(self.dimension_list, self.dimension_list[1:], self.dropout_list):
+            l = nn.Linear(in_features=i, out_features=j)
+            self.layers.append(nn.Dropout(d))
+            torch.nn.init.normal_(l.weight)
+            self.layers.append(l)
+        # self.h2o = torch.nn.Linear(self.dimension_list[-1] if len(self.dimension_list) > 0 else input_size, OUTPUT_LAYER_NODES)
+        # torch.nn.init.normal_(self.h2o.weight)
+
+        logger.info(f"dimension list of nodes: {self.dimension_list}")
+        logger.info(f"dropout list: {self.dropout_list}")
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "ann"
+
+    def forward(self, x):
+        """
+
+        Args:
+            x: Tensor object
+
+        Returns: prediction of the model
+
+        """
+        x = self.i2h(x)
+        for layer in self.layers:
+            x = layer(self.activation(x))
+
+        # x = self.h2o(x)
+        x = torch.sigmoid(x)
+        # x = torch.clamp(x, min=1e-12, max=1 - 1e-12)
+        return x
 
     def __str__(self) -> str:
         return str(self.init_lr) + "-" + ".".join((str(l) for l in self.dimension_list)) + "-" + ".".join((str(d) for d in self.dropout_list))
-    

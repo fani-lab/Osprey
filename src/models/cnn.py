@@ -1,20 +1,15 @@
 import torch
 
-from src.models import ANNModule
+from src.models import AbstractFeedForward
 
 
-class EbrahimiCNN(ANNModule):
+class EbrahimiCNN(AbstractFeedForward):
 
-    def __init__(self, input_size, activation, loss_func, lr, module_session_path, device="cpu"):
-
-        super().__init__([], None, loss_func, lr, input_size, module_session_path, device)
+    def __init__(self, *args, **kwargs):
+        super(AbstractFeedForward, self).__init__(*args, **kwargs)
         
-        del self.model_stack
-
-        self.cnn = torch.nn.Conv1d(input_size, 2000, 1, groups=1)
-        self.out = torch.nn.Linear(2000, 2)
-        self.activation = activation
-
+        self.cnn = torch.nn.Conv1d(self.input_size, 2000, 1, groups=1)
+        self.out = torch.nn.Linear(2000, 1)
 
     def forward(self, x):
         if x.is_sparse:
@@ -30,3 +25,5 @@ class EbrahimiCNN(ANNModule):
     def short_name(cls) -> str:
         return "ebrahimi-cnn"
 
+    def __str__(self) -> str:
+        return str(self.init_lr) + "-" + "2000.1"
