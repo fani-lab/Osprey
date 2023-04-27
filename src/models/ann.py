@@ -100,24 +100,16 @@ class ANNModule(Baseline, torch.nn.Module):
                 logger.info(f"resetting module parameters {'.'.join([name, *parents_modules_names])}")
                 module.reset_parameters()
 
-    def learn(self, epoch_num: int, batch_size: int, k_fold: int, train_dataset: Dataset):
+    def learn(self, epoch_num: int, batch_size: int, splits: list, train_dataset: Dataset, weights_checkpoint_path: str=None):
+        if weights_checkpoint_path is not None and len(weights_checkpoint_path):
+            checkpoint = torch.load(weights_checkpoint_path)
+            self.load_state_dict(checkpoint.get("model", checkpoint))
 
         logger.info("training phase started")
         scheduler_args = {"verbose":False, "min_lr":0, "threshold":1e-4, "patience":10, "factor":0.25}
-        # kfold = KFold(n_splits=k_fold)
-        kfold = StratifiedKFold(n_splits=k_fold, shuffle=True)
-        
-        xs, ys = [0] * len(train_dataset), [0] * len(train_dataset)
-        for i in range(len(train_dataset)):
-            entry = train_dataset[i]
-            xs[i] = entry[0]
-            ys[i] = entry[1]
-        xs = torch.stack(xs)
-        ys = torch.stack(ys)
         folds_metrics = []
-        
-        
-        for fold, (train_ids, validation_ids) in enumerate(kfold.split(xs, ys)):
+        logger.info(f"number of folds: {len(splits)}")
+        for fold, (train_ids, validation_ids) in enumerate(splits):
             self.train()
             logger.info("Resetting Optimizer, Learning rate, and Scheduler")
             self.optimizer = torch.optim.SGD(self.parameters(), lr=self.init_lr, momentum=0.9)
@@ -154,7 +146,7 @@ class ANNModule(Baseline, torch.nn.Module):
                 if self.optimizer.param_groups[0]["lr"] != last_lr:
                     logger.info(f"fold: {fold} | epoch: {i} | Learning rate changed from: {last_lr} -> {self.optimizer.param_groups[0]['lr']}")
                     last_lr = self.optimizer.param_groups[0]["lr"]
-                
+
                 all_preds = []
                 all_targets = []
                 validation_loss = 0
@@ -174,7 +166,7 @@ class ANNModule(Baseline, torch.nn.Module):
                 accuracy_value, recall_value, precision_value = calculate_metrics(all_preds, all_targets, device=self.device)
 
                 logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f}")
-                    
+
             folds_metrics.append((accuracy_value, precision_value, recall_value))
             
             snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_fold{fold}.pth")
