@@ -4,6 +4,7 @@ import pickle
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
+from sklearn.model_selection import KFold, StratifiedKFold
 
 from src.preprocessing.base import BasePreprocessing
 from src.utils.one_hot_encoder import OneHotEncoder
@@ -55,6 +56,7 @@ class BaseDataset(Dataset, RegisterableObject):
         self.apply_filter = apply_record_filter
 
         self.__df__ = None
+        self.__labels__ = None
 
         self.already_prepared = False
         
@@ -123,10 +125,59 @@ class BaseDataset(Dataset, RegisterableObject):
         raise NotImplementedError()
     
     def get_labels(self):
+        if not self.already_prepared:
+            raise ValueError("the dataset is not prepared. Firt run `prepapre` method.")
+        
+        if self.__labels__ is not None:
+            return self.__labels__
         labels = torch.zeros((self.df.shape[0], 1), dtype=torch.float)
         for i in range(len(self.df)):
             labels[i] = self.df.iloc[i]["tagged_predator"]
+        self.__labels__ = labels
         return labels
+
+    def get_data(self):
+        if not self.already_prepared:
+            raise ValueError("the dataset is not prepared. Firt run `prepapre` method.")
+        return self.data
+    
+    def split_dataset_by_label(self, n_splits, split_again, persist_splits=True, stratified=True, load_splits_from=""):
+        if load_splits_from is not None and len(load_splits_from) > 0:
+            if split_again:
+                logger.warning("split again flag is `True`, but it won't be effective because splits are being loaded from a file.")
+            logger.info(f"loading splits from: `{load_splits_from}`")
+            with open(load_splits_from, "rb") as f:
+                splits = pickle.load(f)
+                return splits
+        splits_path = self.get_session_path(f"splits-n{n_splits}" + ("stratified" if stratified else "") + ".pkl")
+        
+        try:
+            if not split_again:
+                with open(splits_path, "rb") as f:
+                    splits = pickle.load(f)
+        except FileNotFoundError as e:
+            logger.warning("could not find the splits file. going to create splits from scratch.")
+        
+        if stratified:
+            labels = self.get_labels()
+            data = self.get_data()
+
+            kfolder = StratifiedKFold(n_splits=n_splits, shuffle=True)
+        else:
+            data = self.get_data()
+            labels = None
+            kfolder = KFold(n_splits=n_splits, shuffle=True)
+        
+        splits = [None] * n_splits
+        for fold_index, (train_ids, label_ids) in enumerate(kfolder.split(data, labels)):
+            splits[fold_index] = (train_ids, label_ids)
+        
+        if persist_splits:
+            with force_open(splits_path, "wb") as f:
+                logger.info(f"saving splits at {splits_path}")
+                pickle.dump(splits, f)
+        logger.info(f"splits created by the following configs: n_splits: `{n_splits}`, stratified: {stratified}, persist_splits: {persist_splits} ")
+        return splits
 
     def preprocess(self):
         try:

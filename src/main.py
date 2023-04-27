@@ -70,13 +70,22 @@ def run():
         model_configs = create_model_configs(model_name, session=session, device=device)
         
         model_class = mappings.MODELS[session["model"]]
-        
-        for command, command_kwargs, dataset_name, *_ in commands:
+
+        for command, command_kwargs, dataset_configs, *_ in commands:
+            dataset_name = dataset_configs["dataset"]
             logger.info(f"started new command `{command}` of session `{model_name}`")
             logger.debug(f"command `{command}`; dataset name: {dataset_name}; arguments: {command_kwargs}")
             if command == "train":
                 dataset = datasets[dataset_name][0]
                 dataset.prepare()
+
+                split_again = dataset_configs.get("rerun_splitting", False)
+                n_splits = dataset_configs.get("n_splits")
+                persist_splits = dataset_configs.get("persist_splits", True)
+                persist_splits = dataset_configs.get("persist_splits", True)
+                load_splits_from = dataset_configs.get("load_splits_from", True)
+                dataset.split_dataset_by_label(n_splits, split_again, persist_splits, True, load_splits_from)
+
                 model = model_class(**model_configs, input_size=datasets[dataset_name][0].shape[1])
                 model.to(device=device)
                 model.learn(**command_kwargs, train_dataset=dataset)
