@@ -30,7 +30,7 @@ def balance_datasets_for_version_two(ratio=0.3):
 
 def create_conversation_toy_set(train = "data/dataset-v2/conversation/balanced-train-v2-04.csv", test = "data/dataset-v2/conversation/balanced-test-v2-04.csv", ratio=0.1):
     df = pd.read_csv(train)
-    df = create_toy_dataset(df)
+    df = create_toy_dataset(df, ratio)
     temp = re.split(r"(/|\\)", train)
     new_path = "".join(temp[:-1] + ["toy-" + temp[-1]])
     df.to_csv(new_path)
@@ -38,5 +38,5 @@ def create_conversation_toy_set(train = "data/dataset-v2/conversation/balanced-t
     temp = re.split(r"(/|\\)", test)
     new_path = "".join(temp[:-1] + ["toy-" + temp[-1]])
     df = pd.read_csv(test)
-    df = create_toy_dataset(df)
+    df = create_toy_dataset(df, ratio)
     df.to_csv(new_path)
