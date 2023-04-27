@@ -22,6 +22,7 @@ ALL_FILTERED_CONFIGS = {
     "load_from_pkl",
     "preprocessings",
     "persist_data",
+    "splitting_configs",
 } or FILTERED_CONFIGS
 
 ALL_IGNORED_PARAM_RESET = {"activation", "loss_function"} or IGNORED_PARAM_RESET

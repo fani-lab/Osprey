@@ -1,18 +1,18 @@
 datasets = {
-    "bow-onehot": (
-        "bow",  # short name of the dataset
+    "toy-conversation-v2-dataset-onehot-raw": (
+        "conversation-bow",  # short name of the dataset
         {       # train configs
-            "data_path": "data/balanced/train.csv",
-            "output_path": "data/preprocessed/balanced/ann/",
+            "data_path": "data/dataset-v2/conversation/toy-balanced-train-v2-04.csv",
+            "output_path": "data/preprocessed/toy-conversation-v2/",
             "load_from_pkl": True,
-            "preprocessings": ["sw", "pr", "rr"],
+            "preprocessings": ["rr"],
             "persist_data": True,
         },
         {      # test configs
-            "data_path": "data/balanced/train.csv",
-            "output_path": "data/preprocessed/balanced/ann/test-",
+            "data_path": "data/dataset-v2/conversation/toy-balanced-test-v2-04.csv",
+            "output_path": "data/preprocessed/toy-conversation-v2/test-",
             "load_from_pkl": True,
-            "preprocessings": ["sw", "pr", "rr"],
+            "preprocessings": ["rr"],
             "persist_data": True,
         }
     ),
@@ -37,18 +37,32 @@ datasets = {
 }
 
 sessions = {
-    "ann-onehot": {
+    "toy-balanced-v2-04": {
         "model": "ann",
         "commands": [
-            ("train", {"epoch_num": 2, "batch_size": 64, "k_fold": 3}, "bow-onehot"),
-            ("test", dict(), "bow-onehot"),
-            ("eval", {"path": 'output/ann/', "use_current_session": True}, None),
-            ],
+            ("train", {
+                "epoch_num": 100,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "toy-conversation-v2-dataset-onehot-raw",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": None,
+                    "n_splits": 3,
+                }
+            ),
+            ("test", dict(), {"dataset": "toy-conversation-v2-dataset-onehot-raw"}),
+            ("eval", {"path": '', "use_current_session": True}, dict()),
+        ],
         "model_configs": {
-            "dimension_list": list([64, 16]),
+            "dimension_list": list([32]),
+            "dropout_list": [0.0],
             "activation": ("relu", dict()),
-            "loss_func": ("BCEW", dict()),
-            "lr": 0.9,
+            "loss_func": ("weighted-binary-cross-entropy", {"pos_weight": 1.5}),
+            # "loss_func": ("weighted-binary-cross-entropy", {"reduction": "sum"}),
+            "lr": 0.0008,
             "module_session_path": "output",
             "session_path_include_time": False,
         },
