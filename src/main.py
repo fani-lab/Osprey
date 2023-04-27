@@ -29,11 +29,12 @@ logger.setLevel(logging.DEBUG)
 def create_model_configs(session_name: str, session: dict, device: str):
     activation, activation_kwargs = mappings.ACTIVATIONS[session["model_configs"]["activation"][0]], session["model_configs"]["activation"][1]
     loss, loss_kwargs = mappings.LOSS_FUNCTIONS[session["model_configs"]["loss_func"][0]], session["model_configs"]["loss_func"][1]
-
+    logger.info(f"activation module kwargs: {activation_kwargs}")
+    logger.info(f"loss module kwargs: {loss_kwargs}")
     configs = {**session["model_configs"], "activation": activation(**activation_kwargs),
                          "loss_func": loss(**loss_kwargs), "device": device,
-                         "module_session_path": session["model_configs"]["module_session_path"] + "/" + START_TIME + "/" + session_name
-                            if session["model_configs"]["session_path_include_time"] else session["model_configs"]["module_session_path"] + "/" + session_name,
+                         "module_session_path": session["model_configs"]["module_session_path"] + "/" + f"{START_TIME}-{session_name}"
+                            if session["model_configs"]["session_path_include_time"] else session["model_configs"]["module_session_path"] + "/" + session_name
                         }
     configs = {k: v for k, v in configs.items() if k not in settings.FILTERED_CONFIGS}
     return configs
@@ -56,8 +57,10 @@ def run():
             except Exception as e:
                 raise Exception(f"preprocessing `{pp}` either not implemented or not registered") from e
         
-        train_dataset = dataset_class(**{**train_configs, "preprocessings": [pp() for pp in preprocessings], "device": device})
-        test_dataset = dataset_class(**{**test_configs, "parent_dataset": train_dataset, "preprocessings": [pp() for pp in preprocessings], "device": device})
+        train_dataset = dataset_class(**{**train_configs, "preprocessings": [pp() for pp in preprocessings], "device": device, "apply_record_filter": False})
+        test_dataset = dataset_class(**{**test_configs, "parent_dataset": train_dataset, "preprocessings": [pp() for pp in preprocessings], "device": device, "apply_record_filter": False})
+        logger.info(f"train dataset `{dataset_name}`, shortname: `{short_name}` kwargs -> {train_configs}")
+        logger.info(f"test dataset `{dataset_name}`, shortname: `{short_name}` kwargs -> {test_configs}")
         datasets[dataset_name] = (train_dataset, test_dataset)
 
     for model_name, session in settings.sessions.items():
