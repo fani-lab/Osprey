@@ -7,7 +7,7 @@ from torch.utils.data import Dataset
 from sklearn.model_selection import KFold, StratifiedKFold
 
 from src.preprocessing.base import BasePreprocessing
-from src.utils.one_hot_encoder import OneHotEncoder
+from src.utils.one_hot_encoder import OneHotEncoder, SequentialOneHotEncoder
 from src.utils.transformers_encoders import TransformersEmbeddingEncoder, GloveEmbeddingEncoder
 from src.utils.commons import nltk_tokenize, force_open, RegisterableObject
 
@@ -230,27 +230,28 @@ class BaseDataset(Dataset, RegisterableObject):
             logger.info(f"saving encoder as pickle at {encoder_path}")
             with force_open(encoder_path, "wb") as f:
                 pickle.dump(self.encoder, f)
+        
+        self.already_prepared = True
 
         self.labels = self.get_labels()
         
-        self.data = torch.stack(vectors)
-        self.already_prepared = True
+        self.data = vectors
         logger.info("data preparation finished")
 
     def __getitem__(self, index):
         return self.data[index], self.labels[index]
 
     def __len__(self):
-        return self.data.shape[0]
+        return len(self.data)
 
     def to(self, device):
-        self.data = self.data.to(device)
         self.labels = self.labels.to(device)
-
+        for i in range(len(self.data)):
+            self.data[i] = self.data[i].to(device)
 
     @property
     def shape(self):
-        return self.data.shape
+        return (len(self.data), self.data[0].shape[-1])
 
 
 class BagOfWordsDataset(BaseDataset):
@@ -450,3 +451,88 @@ class GloveEmbeddingDataset(BaseDataset, RegisterableObject):
         for i, record in enumerate(tokens_records):
             vectors[i] = torch.cat(encoder.transform(record))
         return vectors
+
+
+class SequentialConversationDataset(BaseDataset):
+    """
+    a dataset where each record is a sorted sequence of any size and each record has one label
+    """
+    def __init__(self, data_path: str, output_path: str, load_from_pkl: bool, apply_record_filter: bool = True, preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, device="cpu", *args, **kwargs):
+        super().__init__(data_path, output_path, load_from_pkl, apply_record_filter, preprocessings, persist_data, parent_dataset, device, *args, **kwargs)
+        self.__sequence__ = None
+
+    @property
+    def sequence(self):
+        if self.__sequence__ is None:
+            df = self.df
+            self.__sequence__ = df.sort_values("msg_line").groupby("conv_id")
+        return self.__sequence__
+
+    def get_data_generator(self, data, pattern):
+        def func():
+            for sequence in data:
+                for record in sequence:
+                    for token in record:
+                        yield pattern(token)
+
+        return func
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "basic-sequential"
+
+    def preprocess(self):
+        try:
+            if not self.load_from_pkl:
+                raise FileNotFoundError()
+            with open(self.get_session_path("tokens.pkl"), "rb") as f:
+                logger.info("trying to load tokens from file")
+                messages = pickle.load(f)
+        except FileNotFoundError:
+            logger.info("generating tokens from scratch")
+            self.__new_tokens__ = True
+            messages = [self.tokenize(g["text"]) for k, g in self.sequence]
+            logger.info("applying preprocessing modules")
+            for preprocessor in self.preprocessings:
+                logger.info(f"applying {preprocessor.name()}")
+                messages = [[*preprocessor.opt(sequence)] for sequence in messages]
+        return messages
+    
+    def tokenize(self, input) -> list[list[str]]:
+        logger.debug("tokenizing using nltk")
+        return nltk_tokenize(input)
+
+    def init_encoder(self, tokens_records):
+        encoder = SequentialOneHotEncoder()
+        logger.info("started generating bag of words vector encoder")
+        pattern = lambda x: x
+        logger.debug("fitting data into one hot encoder")
+        encoder.fit(self.get_data_generator(data=tokens_records, pattern=pattern))
+        return encoder
+
+    def vectorize(self, tokens_records: list[list[str]], encoder):
+        logger.info("vectorizing message records")
+        vectors = []
+        for record in tokens_records:
+            sequence = encoder.transform(record=record)
+            temp = torch.stack([torch.sparse.sum(torch.cat(t), dim=0) for t in sequence])
+            vectors.append(temp)
+        logger.debug("vectorizing finished")
+        
+        return vectors
+    
+    def get_labels(self):
+        if not self.already_prepared:
+            raise ValueError("the dataset is not prepared. Firt run `prepapre` method.")
+        if self.__labels__ is not None:
+            return self.__labels__
+        labels = torch.zeros((len(self.sequence), 1), dtype=torch.float)
+
+        for i, (_, group) in enumerate(self.sequence):
+            labels[i] = group.iloc[0]["predatory_conv"]
+        self.__labels__ = labels
+        return labels
+
+    @property
+    def shape(self):
+        return (len(self.data), -1, self.data[0].shape[-1])

@@ -52,7 +52,7 @@ class OneHotEncoder:
             result.append(self.vectors.get(token, default_vector))
         
         if len(result) == 0:
-            return (self.__get_zero_vector(),)
+            return (self.get_zero_vector(),)
         return result
 
     def flush_buffer(self, buffer):
@@ -78,3 +78,16 @@ class OneHotEncoder:
             self.records = {entry[0]: entry[1] for entry in mostfrequent}
 
         self.__vectors_dimension[1] = len(self.records) + 1
+
+    get_zero_vector = __get_zero_vector
+
+class SequentialOneHotEncoder(OneHotEncoder):
+
+    def transform(self, record):
+        result = []
+        for sequence_records in record:
+            result.append(super().transform(sequence_records))
+        
+        if len(result) == 0:
+            return ((self.get_zero_vector(),),)
+        return result
