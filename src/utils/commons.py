@@ -3,6 +3,7 @@ import os
 import pandas as pd
 import numpy as np
 import torch
+from torch.nn.utils.rnn import pad_sequence
 import torchmetrics
 from sklearn.metrics import auc
 from nltk.tokenize import word_tokenize
@@ -232,7 +233,17 @@ def _roc_auc(prediction, target, bins=100, *args, **kwargs):
     fprs[fprs.isnan()] = 0.0
     tprs[tprs.isnan()] = 0.0
     return fprs, tprs, thresholds
+
+
+def padding_collate_sequence_batch(batch):
     
+    label_list, data_list = [], []
+    for data, label in batch:
+        label_list.append(label)
+        data_list.append(data.to_dense())
+    
+    return pad_sequence(data_list, batch_first=True, padding_value=1.0/data_list[0].shape[-1]), torch.tensor(label_list)
+
 
 class RegisterableObject:
 

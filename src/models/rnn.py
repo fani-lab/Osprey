@@ -1,76 +1,83 @@
 import pickle
 import logging
-import time
-import pandas as pd
-import torchmetrics
+import shutil
 
 from src.models.baseline import Baseline
+from settings import settings
 
 import torch
-from sklearn.model_selection import KFold
 from torch import nn
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Dataset, SubsetRandomSampler
 import matplotlib.pyplot as plt
 import numpy as np
 
-from src.utils.commons import force_open
+from src.utils.commons import force_open, calculate_metrics, padding_collate_sequence_batch
 
 logger = logging.getLogger()
 
 
-class RnnModule(Baseline, nn.Module):
-    def __init__(self, input_size, hidden_dim, num_layers, activation, loss_func, lr, train_dataset,
-                 learning_batch_size, module_session_path, number_of_classes=2, **kwargs):
-        Baseline.__init__(self, input_size=input_size)
+class BaseRnnModule(Baseline, nn.Module):
+    
+    def __init__(self, hidden_size, num_layers, *args, **kwargs):
         nn.Module.__init__(self)
+        Baseline.__init__(self, *args, **kwargs)
 
-        self.rnn = nn.RNN(input_size=input_size, hidden_size=hidden_dim, num_layers=num_layers, nonlinearity='relu',
-                          batch_first=True)
-        self.hidden_size = hidden_dim
+        self.hidden_size = hidden_size
         self.num_layers = num_layers
-        self.hidden2out = nn.Linear(in_features=hidden_dim, out_features=number_of_classes)
-        self.batch_size = learning_batch_size
-        self.activation = activation
-        self.loss_function = loss_func
-        self.train_dataset = train_dataset
-        self.number_of_classes = number_of_classes
-        self.optimizer = torch.optim.SGD(self.parameters(), lr=lr)
-        self.session_path = module_session_path if module_session_path[-1] == "\\" or module_session_path[
-            -1] == "/" else module_session_path + "/"
         self.snapshot_steps = 2
+        self.rnn = nn.RNN(input_size=self.input_size, hidden_size=self.hidden_size, num_layers=self.num_layers, nonlinearity='relu',
+                          batch_first=True)
+        self.hidden2out = nn.Linear(in_features=self.hidden_size, out_features=settings.OUTPUT_LAYER_NODES)
+
+        self.optimizer = torch.optim.SGD(self.parameters(), lr=self.init_lr)
     
     @classmethod
     def short_name(cls) -> str:
-        return "rnn"
+        return "base-rnn"
 
     def forward(self, x):
-        # h0 = torch.zeros(1 * self.num_layers, self.batch_size, self.hidden_size)
         out, hn = self.rnn(x)
-        out = self.hidden2out(out)
-        # out = torch.softmax(out, dim=1)
-        out = torch.sigmoid(out)
-        return out
+        y_hat = self.hidden2out(out[:, -1])
+        # y_hat = torch.sigmoid(y_hat)
+        if y_hat.isnan().sum() > 0:
+            print(end="")
+        return hn, y_hat
 
     def get_session_path(self, *args):
-        return f"{self.session_path}" + "rnn/" + "/".join([str(a) for a in args])
+        return f"{self.session_path}" + self.__class__.short_name() + "/" + "/".join([str(a) for a in args])
 
-    def learn(self, epoch_num=10, batch_size=64, k_fold: int = 5):
-        accuracy = torchmetrics.Accuracy('binary', )
-        precision = torchmetrics.Precision('binary', )
-        recall = torchmetrics.Recall('binary', )
+    def get_detailed_session_path(self, dataset, *args):
+        details = str(dataset) + "-" + str(self)
+        return self.get_session_path(details, *args)
+    
+    def reset_modules(self, module, parents_modules_names=[]):
+        for name, module in module.named_children():
+            if name in settings.IGNORED_PARAM_RESET:
+                continue
+            if isinstance(module, nn.ModuleList):
+                self.reset_modules(module, parents_modules_names=[*parents_modules_names, name])
+            elif isinstance(module, nn.Dropout):
+                continue
+            else:
+                logger.info(f"resetting module parameters {'.'.join([name, *parents_modules_names])}")
+                module.reset_parameters()
+
+    def learn(self, epoch_num:int , batch_size: int, splits: list, train_dataset: Dataset, weights_checkpoint_path: str=None):
+        if weights_checkpoint_path is not None and len(weights_checkpoint_path):
+            self.load_params(weights_checkpoint_path)
+        
         logger.info("training phase started")
-        kfold = KFold(n_splits=k_fold)
-        for fold, (train_ids, validation_ids) in enumerate(kfold.split(self.train_dataset)):
-            logger.info(f'FOLD {fold + 1}')
-            logger.info('--------------------------------')
-            train_subsampler = torch.utils.data.SubsetRandomSampler(train_ids)
-            validation_subsampler = torch.utils.data.SubsetRandomSampler(validation_ids)
-            train_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size, drop_last=True,
-                                                       sampler=train_subsampler)
-            validation_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size, drop_last=True,
-                                                            sampler=validation_subsampler)
+        folds_metrics = []
+        for fold, (train_ids, validation_ids) in enumerate(splits):
+            train_subsampler = SubsetRandomSampler(train_ids)
+            validation_subsampler = SubsetRandomSampler(validation_ids)
+            train_loader = DataLoader(train_dataset, batch_size=batch_size, drop_last=False,
+                                                       sampler=train_subsampler, collate_fn=padding_collate_sequence_batch)
+            validation_loader = DataLoader(train_dataset, batch_size=batch_size, drop_last=False,
+                                                            sampler=validation_subsampler, collate_fn=padding_collate_sequence_batch)
+            last_lr = self.init_lr
             total_loss = []
-            valid_loss = []
+            total_validation_loss = []
             # resetting module parameters
             for name, module in self.named_children():
                 try:
@@ -86,75 +93,80 @@ class RnnModule(Baseline, nn.Module):
             # Train phase
             for i in range(1, epoch_num + 1):
                 loss = 0
-
-                # train_dataloader = DataLoader(self.train_dataset, batch_size, drop_last=True, shuffle=True)
+                epoch_loss = 0
                 for batch_index, (X, y) in enumerate(train_loader):
-                    # search for sparse with rnn
-                    y = y.type(torch.float)
-                    X = X.to_dense()
-                    X = X.unsqueeze(1)
-                    y_hat = self.forward(X)
+                    X = X.to(self.device)
+                    y = y.to(self.device)
+                    _, y_hat = self.forward(X)
                     y_hat = y_hat.squeeze()
                     self.optimizer.zero_grad()
                     loss = self.loss_function(y_hat, y)
                     loss.backward()
+                    epoch_loss += loss.item()
                     self.optimizer.step()
-                    logger.info(f"epoch: {i} | batch: {batch_index} | loss: {loss}")
-                total_loss.append(loss.item())
-                logger.info(f'epoch {i}:\n Loss: {loss}')
-            # Validation phase
-            all_preds = []
-            all_targets = []
-            size = len(validation_loader)
-            num_batches = len(validation_loader)
-            # test_loss, correct = 0, 0
-            with torch.no_grad():
-                for batch_index, (X, y) in enumerate(validation_loader):
-                    y = y.type(torch.float)
-                    X = X.to_dense()
-                    X = X.unsqueeze(1)
-                    pred = self.forward(X)
-                    pred = pred.squeeze()
-                    all_preds.extend(pred)
-                    # all_preds.extend(pred.argmax(1))
-                    all_targets.extend(y)
-                    valid_loss.append(self.loss_function(pred, y).item())
-                    # test_loss += self.loss_function(pred, y).item()
-                    # correct += (pred.argmax(1) == y).type(torch.float).sum().item()
-
-            # test_loss /= num_batches
-            # correct /= size
-            all_preds = torch.tensor(all_preds)
-            all_targets = torch.tensor(all_targets)
-            # logger.info(f"Validation Error: Avg loss: {test_loss:>8f}")
-            logger.info(f'torchmetrics Accuracy: {(100 * accuracy(all_preds, all_targets)):>0.1f}')
-            logger.info(f'torchmetrics precision: {(100 * precision(all_preds, all_targets)):>0.1f}')
-            logger.info(f'torchmetrics Recall: {(100 * recall(all_preds, all_targets)):>0.1f}')
-
-            # saving the whole model at the end of each fold
-            snapshot_path = self.get_session_path(f"f{fold}", f"model_fold{fold}.pth")
+                    logger.debug(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
+                total_loss.append(epoch_loss)
+                if self.optimizer.param_groups[0]["lr"] != last_lr:
+                    logger.info(f"fold: {fold} | epoch: {i} | Learning rate changed from: {last_lr} -> {self.optimizer.param_groups[0]['lr']}")
+                    last_lr = self.optimizer.param_groups[0]["lr"]
+                # self.scheduler.step(loss)
+                # logger.info(f'epoch {i}:\n Loss: {loss}')
+                # Validation phase
+                all_preds = []
+                all_targets = []
+                validation_loss = 0
+                with torch.no_grad():
+                    for batch_index, (X, y) in enumerate(validation_loader):
+                        X = X.to(self.device)
+                        y = y.to(self.device)
+                        _, y_hat = self.forward(X)
+                        y_hat = y_hat.squeeze()
+                        loss = self.loss_function(y_hat, y)
+                        validation_loss += loss.item()
+                        all_preds.extend(y_hat)
+                        all_targets.extend(y)
+                    total_validation_loss.append(validation_loss)
+                all_preds = torch.tensor(all_preds)
+                all_targets = torch.tensor(all_targets)
+                accuracy_value, recall_value, precision_value = calculate_metrics(all_preds, all_targets, device=self.device)
+                logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f}")
+            folds_metrics.append((accuracy_value, precision_value, recall_value))
+            snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_fold{fold}.pth")
             self.save(snapshot_path)
-            plt.plot(np.array(total_loss))
-            # plt.axis([0, epoch_num, 0, 1])
-            plt.title(f"fold{fold}_train_loss")
-            plt.savefig(self.get_session_path(f"f{fold}", f"model_fold{fold}_loss.png"))
-            plt.show()
+            plt.clf()
+            plt.plot(np.arange(1, 1 + len(total_loss)), np.array(total_loss), "-r", label="training")
+            plt.plot(np.arange(1, 1 + len(total_loss)), np.array(total_validation_loss), "-b", label="validation")
+            plt.legend()
+            plt.title(f"fold #{fold}")
+            with force_open(self.get_detailed_session_path(train_dataset, "figures", f"loss_f{fold}.png"), "wb") as f:
+                plt.savefig(f, dpi=300)
+        MAHAK = 2
+        max_metric = (0, folds_metrics[0][MAHAK])
+        for i in range(1, len(folds_metrics)):
+            if folds_metrics[i][MAHAK] > max_metric[1]:
+                max_metric = (i, folds_metrics[i][MAHAK])
+        logger.info(f"best model of cross validation for current training phase: fold #{max_metric[0]} with metric value of '{max_metric[1]}'")
+        best_model_dest = self.get_detailed_session_path(train_dataset, "weights", f"best_model.pth")
+        best_model_src = self.get_detailed_session_path(train_dataset, "weights", f"f{max_metric[0]}", f"model_fold{max_metric[0]}.pth")
+        shutil.copyfile(best_model_src, best_model_dest)
 
-    def test(self, test_dataset):
+    def test(self, test_dataset, weights_checkpoint_path):
+        self.load_params(weights_checkpoint_path)
         all_preds = []
         all_targets = []
-        test_dataloader = DataLoader(test_dataset, batch_size=64, drop_last=True)
-        size = len(test_dataset)
-        num_batches = len(test_dataloader)
-        test_loss, correct = 0, 0
+        test_dataloader = DataLoader(test_dataset, batch_size=64, collate_fn=padding_collate_sequence_batch)
+        self.eval()
         with torch.no_grad():
             for X, y in test_dataloader:
-                X = X.to_dense()
-                X = X.unsqueeze(1)
-                pred = self.forward(X)
-                pred = pred.squeeze()
+                # if X.is_sparse:
+                #     X = X.to_dense()
+                # X = X.unsqueeze(1)
+                X = X.to(self.device)
+                y = y.to(self.device)
+                last_hidden, y_hat = self.forward(X)
+                # pred = pred.squeeze()
                 # all_preds.extend(pred.argmax(1))
-                all_preds.extend(pred)
+                all_preds.extend(y_hat)
                 all_targets.extend(y)
                 # test_loss += self.loss_function(pred, y).item()
                 # correct += (pred.argmax(1) == y).type(torch.float).sum().item()
@@ -162,15 +174,12 @@ class RnnModule(Baseline, nn.Module):
         # correct /= size
         all_preds = torch.tensor(all_preds)
         all_targets = torch.tensor(all_targets)
-        with force_open(self.get_session_path('preds.pkl'), 'wb') as file:
+        with force_open(self.get_detailed_session_path(test_dataset, 'preds.pkl'), 'wb') as file:
             pickle.dump(all_preds, file)
-            logger.info('predictions are saved.')
-        with force_open(self.get_session_path('targets.pkl'), 'wb') as file:
+            logger.info(f'predictions are saved at: {file.name}')
+        with force_open(self.get_detailed_session_path(test_dataset, 'targets.pkl'), 'wb') as file:
             pickle.dump(all_targets, file)
-            logger.info('targets are saved.')
-
-    def eval(self):
-        Baseline.eval(self)
+            logger.info(f'targets are saved at: {file.name}')
 
     def save(self, path):
         with force_open(path, "wb") as f:
@@ -178,8 +187,8 @@ class RnnModule(Baseline, nn.Module):
             logger.info(f"saving sanpshot at {path}")
 
     def load_params(self, path):
-        try:
-            self.load_state_dict(torch.load(path))
-            logger.info("parameters loaded successfully")
-        except Exception as e:
-            logger.debug(e)
+        self.load_state_dict(torch.load(path))
+        logger.info(f"loaded model weights from file: {path}")
+    
+    def __str__(self) -> str:
+        return str(self.init_lr)
