@@ -353,6 +353,10 @@ class CNNConversationBagOfWords(ConversationBagOfWords):
         encoder.fit(self.get_data_generator(data=data, pattern=pattern))
         return encoder
 
+    @property
+    def shape(self):
+        return (len(self.data), self.data[0].shape[0])
+
 
 class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
     
