@@ -6,6 +6,7 @@ venv/
 .vscode
 .idea
 *.log
+!logs/persist/*
 output/
 *.png
 *.jpg
