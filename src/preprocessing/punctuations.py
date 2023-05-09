@@ -11,14 +11,10 @@ class PunctuationRemoving(BasePreprocessing):
     def opt(self, input: list[list[str]]) -> list[str]:
         for record in input:
             result = []
-            
             for token in record:
-                try:
-                    t = re.sub(r"[^A-Za-z0-9\s]+", '', token)
-                    if t:
-                        result.append(t)
-                except:
-                    print()
+                t = re.sub(r"[^A-Za-z0-9\s]+", '', token)
+                if t:
+                    result.append(t)
             yield result
 
     def name(self) -> str:

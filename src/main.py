@@ -88,13 +88,13 @@ def run():
                 load_splits_from = dataset_configs.get("load_splits_from", True)
                 splits = dataset.split_dataset_by_label(n_splits, split_again, persist_splits, True, load_splits_from)
 
-                model = model_class(**model_configs, input_size=datasets[dataset_name][0].shape[1])
+                model = model_class(**model_configs, input_size=dataset.shape[-1])
                 model.to(device=device)
                 model.learn(**command_kwargs, train_dataset=dataset, splits=splits)
             if command == "test":
                 dataset = datasets[dataset_name][1]
                 dataset.prepare()
-                model = model_class(**model_configs, input_size=datasets[dataset_name][0].shape[1])
+                model = model_class(**model_configs, input_size=datasets[dataset_name][0].shape[-1])
                 model.to(device=device)
                 command_kwargs["weights_checkpoint_path"] = command_kwargs.get("weights_checkpoint_path", None) or model.get_detailed_session_path(datasets[dataset_name][0], "weights", f"best_model.pth")
                 model.test(**command_kwargs, test_dataset=dataset)

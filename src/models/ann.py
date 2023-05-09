@@ -7,6 +7,7 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from src.models.baseline import Baseline
 from src.utils.commons import force_open, calculate_metrics
 from settings import settings
+from settings.settings import OUTPUT_LAYER_NODES
 
 import torch
 from torch import nn
@@ -17,7 +18,7 @@ import numpy as np
 
 
 logger = logging.getLogger()
-OUTPUT_LAYER_NODES = 1
+
 
 class AbstractFeedForward(Baseline, torch.nn.Module):
     
@@ -27,7 +28,7 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
 
     @classmethod
     def short_name(cls) -> str:
-        return "baisc-feedforward"
+        return "basic-feedforward"
 
     def forward(self, x):
         raise NotImplementedError()
@@ -85,6 +86,7 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
                 for batch_index, (X, y) in enumerate(train_loader):
                     self.optimizer.zero_grad()
                     X = X.to(self.device)
+                    y = y.to(self.device)
                     y = y.reshape(-1, 1).to(self.device)
                     y_hat = self.forward(X)
                     loss = self.loss_function(y_hat, y)
