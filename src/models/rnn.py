@@ -123,7 +123,7 @@ class BaseRnnModule(Baseline, nn.Module):
                         y_hat = y_hat.squeeze()
                         loss = self.loss_function(y_hat, y)
                         validation_loss += loss.item()
-                        all_preds.extend(y_hat)
+                        all_preds.extend(torch.sigmoid(y_hat) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else y_hat)
                         all_targets.extend(y)
                     total_validation_loss.append(validation_loss)
                 all_preds = torch.tensor(all_preds)
@@ -158,20 +158,13 @@ class BaseRnnModule(Baseline, nn.Module):
         self.eval()
         with torch.no_grad():
             for X, y in test_dataloader:
-                # if X.is_sparse:
-                #     X = X.to_dense()
-                # X = X.unsqueeze(1)
                 X = X.to(self.device)
                 y = y.to(self.device)
                 last_hidden, y_hat = self.forward(X)
-                # pred = pred.squeeze()
-                # all_preds.extend(pred.argmax(1))
-                all_preds.extend(y_hat)
+                pred = pred.squeeze()
+                all_preds.extend(torch.sigmoid(y_hat) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else y_hat)
                 all_targets.extend(y)
-                # test_loss += self.loss_function(pred, y).item()
-                # correct += (pred.argmax(1) == y).type(torch.float).sum().item()
-        # test_loss /= num_batches
-        # correct /= size
+
         all_preds = torch.tensor(all_preds)
         all_targets = torch.tensor(all_targets)
         with force_open(self.get_detailed_session_path(test_dataset, 'preds.pkl'), 'wb') as file:

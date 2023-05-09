@@ -110,7 +110,7 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
                         pred = self.forward(X).squeeze()
                         loss = self.loss_function(pred, y)
                         validation_loss += loss
-                        all_preds.extend(pred)
+                        all_preds.extend(torch.sigmoid(pred) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else pred)
                         all_targets.extend(y)
                     total_validation_loss.append(validation_loss.item())
                 all_preds = torch.stack(all_preds)
@@ -155,7 +155,7 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
         with torch.no_grad():
             for X, y in test_dataloader:
                 pred = self.forward(X)
-                all_preds.extend(pred)
+                all_preds.extend(torch.sigmoid(pred) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else pred)
                 all_targets.extend(y)
 
         all_preds = torch.stack(all_preds)
