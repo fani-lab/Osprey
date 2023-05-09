@@ -1,4 +1,4 @@
-from .defaults import FILTERED_CONFIGS, IGNORED_PARAM_RESET, USE_CUDA_IF_AVAILABLE
+from .defaults import FILTERED_CONFIGS, IGNORED_PARAM_RESET, USE_CUDA_IF_AVAILABLE, OUTPUT_LAYER_NODES
 from .settings import sessions, datasets
 
 __all__ = [
@@ -7,4 +7,5 @@ __all__ = [
     "FILTERED_CONFIGS",
     "IGNORED_PARAM_RESET",
     "USE_CUDA_IF_AVAILABLE",
+    "OUTPUT_LAYER_NODES",
 ]
