@@ -110,7 +110,6 @@ class BaseRnnModule(Baseline, nn.Module):
                     logger.info(f"fold: {fold} | epoch: {i} | Learning rate changed from: {last_lr} -> {self.optimizer.param_groups[0]['lr']}")
                     last_lr = self.optimizer.param_groups[0]["lr"]
                 # self.scheduler.step(loss)
-                # logger.info(f'epoch {i}:\n Loss: {loss}')
                 # Validation phase
                 all_preds = []
                 all_targets = []
@@ -161,7 +160,7 @@ class BaseRnnModule(Baseline, nn.Module):
                 X = X.to(self.device)
                 y = y.to(self.device)
                 last_hidden, y_hat = self.forward(X)
-                pred = pred.squeeze()
+                y_hat = y_hat.squeeze()
                 all_preds.extend(torch.sigmoid(y_hat) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else y_hat)
                 all_targets.extend(y)
 
@@ -184,4 +183,4 @@ class BaseRnnModule(Baseline, nn.Module):
         logger.info(f"loaded model weights from file: {path}")
     
     def __str__(self) -> str:
-        return str(self.init_lr)
+        return "lr"+ format(self.init_lr, "f") + "-h" + str(self.hidden_size) + "-l" + str(self.num_layers)
