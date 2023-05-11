@@ -103,6 +103,7 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
                 all_preds = []
                 all_targets = []
                 validation_loss = 0
+                self.eval()
                 with torch.no_grad():
                     for batch_index, (X, y) in enumerate(validation_loader):
                         X = X.to(self.device)
@@ -113,6 +114,7 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
                         all_preds.extend(torch.sigmoid(pred) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else pred)
                         all_targets.extend(y)
                     total_validation_loss.append(validation_loss.item())
+                self.train()
                 all_preds = torch.stack(all_preds)
                 all_targets = torch.stack(all_targets)
                 
@@ -228,7 +230,7 @@ class ANNModule(AbstractFeedForward):
             x = layer(self.activation(x))
 
         # x = self.h2o(x)
-        x = torch.sigmoid(x)
+        # x = torch.sigmoid(x)
         # x = torch.clamp(x, min=1e-12, max=1 - 1e-12)
         return x
 

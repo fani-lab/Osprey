@@ -72,8 +72,8 @@ class BaseRnnModule(Baseline, nn.Module):
         folds_metrics = []
         for fold, (train_ids, validation_ids) in enumerate(splits):
             logger.debug(f"scheduler settings: {scheduler_args}")
-            self.scheduler = ReduceLROnPlateau(self.optimizer, **scheduler_args)
             self.optimizer = torch.optim.SGD(self.parameters(), lr=self.init_lr)
+            self.scheduler = ReduceLROnPlateau(self.optimizer, **scheduler_args)
             logger.info(f'fetching data for fold #{fold}')
             train_subsampler = SubsetRandomSampler(train_ids)
             validation_subsampler = SubsetRandomSampler(validation_ids)
@@ -100,6 +100,10 @@ class BaseRnnModule(Baseline, nn.Module):
             for i in range(1, epoch_num + 1):
                 loss = 0
                 epoch_loss = 0
+                self.train()
+                if self.optimizer.param_groups[0]["lr"] != last_lr:
+                    logger.info(f"fold: {fold} | epoch: {i} | Learning rate changed from: {last_lr} -> {self.optimizer.param_groups[0]['lr']}")
+                    last_lr = self.optimizer.param_groups[0]["lr"]
                 for batch_index, (X, y) in enumerate(train_loader):
                     X = X.to(self.device)
                     y = y.to(self.device)
@@ -114,13 +118,11 @@ class BaseRnnModule(Baseline, nn.Module):
                     self.optimizer.step()
                     logger.debug(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
                 total_loss.append(epoch_loss)
-                if self.optimizer.param_groups[0]["lr"] != last_lr:
-                    logger.info(f"fold: {fold} | epoch: {i} | Learning rate changed from: {last_lr} -> {self.optimizer.param_groups[0]['lr']}")
-                    last_lr = self.optimizer.param_groups[0]["lr"]
                 # Validation phase
                 all_preds = []
                 all_targets = []
                 validation_loss = 0
+                self.eval()
                 with torch.no_grad():
                     for batch_index, (X, y) in enumerate(validation_loader):
                         X = X.to(self.device)
@@ -137,6 +139,7 @@ class BaseRnnModule(Baseline, nn.Module):
                 accuracy_value, recall_value, precision_value = calculate_metrics(all_preds, all_targets, device=self.device)
                 logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f}")
                 self.scheduler.step(recall_value)
+                self.train()
             folds_metrics.append((accuracy_value, precision_value, recall_value))
             snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_fold{fold}.pth")
             self.save(snapshot_path)
