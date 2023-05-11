@@ -5,6 +5,8 @@ import shutil
 from src.models.baseline import Baseline
 from settings import settings
 
+from torch.optim.lr_scheduler import ReduceLROnPlateau
+
 import torch
 from torch import nn
 from torch.utils.data import DataLoader, Dataset, SubsetRandomSampler
@@ -25,11 +27,10 @@ class BaseRnnModule(Baseline, nn.Module):
         self.hidden_size = hidden_size
         self.num_layers = num_layers
         self.snapshot_steps = 2
-        self.rnn = nn.RNN(input_size=self.input_size, hidden_size=self.hidden_size, num_layers=self.num_layers, nonlinearity='relu',
+        self.rnn = nn.RNN(input_size=self.input_size, hidden_size=self.hidden_size, num_layers=self.num_layers, nonlinearity='tanh',
                           batch_first=True)
         self.hidden2out = nn.Linear(in_features=self.hidden_size, out_features=settings.OUTPUT_LAYER_NODES)
 
-        self.optimizer = torch.optim.SGD(self.parameters(), lr=self.init_lr)
     
     @classmethod
     def short_name(cls) -> str:
@@ -66,9 +67,14 @@ class BaseRnnModule(Baseline, nn.Module):
         if weights_checkpoint_path is not None and len(weights_checkpoint_path):
             self.load_params(weights_checkpoint_path)
         
+        scheduler_args = {"verbose":False, "min_lr":0, "threshold":2e-2, "patience":5, "factor":0.25}
         logger.info("training phase started")
         folds_metrics = []
         for fold, (train_ids, validation_ids) in enumerate(splits):
+            logger.debug(f"scheduler settings: {scheduler_args}")
+            self.scheduler = ReduceLROnPlateau(self.optimizer, **scheduler_args)
+            self.optimizer = torch.optim.SGD(self.parameters(), lr=self.init_lr)
+            logger.info(f'fetching data for fold #{fold}')
             train_subsampler = SubsetRandomSampler(train_ids)
             validation_subsampler = SubsetRandomSampler(validation_ids)
             train_loader = DataLoader(train_dataset, batch_size=batch_size, drop_last=False,
@@ -101,6 +107,8 @@ class BaseRnnModule(Baseline, nn.Module):
                     y_hat = y_hat.squeeze()
                     self.optimizer.zero_grad()
                     loss = self.loss_function(y_hat, y)
+                    if loss.isnan():
+                        print(end="")
                     loss.backward()
                     epoch_loss += loss.item()
                     self.optimizer.step()
@@ -109,7 +117,6 @@ class BaseRnnModule(Baseline, nn.Module):
                 if self.optimizer.param_groups[0]["lr"] != last_lr:
                     logger.info(f"fold: {fold} | epoch: {i} | Learning rate changed from: {last_lr} -> {self.optimizer.param_groups[0]['lr']}")
                     last_lr = self.optimizer.param_groups[0]["lr"]
-                # self.scheduler.step(loss)
                 # Validation phase
                 all_preds = []
                 all_targets = []
@@ -129,6 +136,7 @@ class BaseRnnModule(Baseline, nn.Module):
                 all_targets = torch.tensor(all_targets)
                 accuracy_value, recall_value, precision_value = calculate_metrics(all_preds, all_targets, device=self.device)
                 logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f}")
+                self.scheduler.step(recall_value)
             folds_metrics.append((accuracy_value, precision_value, recall_value))
             snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_fold{fold}.pth")
             self.save(snapshot_path)
