@@ -503,7 +503,6 @@ class SequentialConversationDataset(BaseDataset):
         return messages
     
     def tokenize(self, input) -> list[list[str]]:
-        logger.debug("tokenizing using nltk")
         return nltk_tokenize(input)
 
     def init_encoder(self, tokens_records):
@@ -536,6 +535,10 @@ class SequentialConversationDataset(BaseDataset):
             labels[i] = group.iloc[0]["predatory_conv"]
         self.__labels__ = labels
         return labels
+
+    def prepare(self):
+        super().prepare()
+        self.data = [r.to_dense() for r in self.data]
 
     @property
     def shape(self):

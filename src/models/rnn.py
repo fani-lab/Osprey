@@ -67,7 +67,7 @@ class BaseRnnModule(Baseline, nn.Module):
         if weights_checkpoint_path is not None and len(weights_checkpoint_path):
             self.load_params(weights_checkpoint_path)
         
-        scheduler_args = {"verbose":False, "min_lr":0, "threshold":2e-2, "patience":5, "factor":0.25}
+        scheduler_args = {"verbose":False, "min_lr":0, "threshold":2e-2, "cooldown": 5, "patience": 10, "factor":0.25, "mode": "max"}
         logger.info("training phase started")
         folds_metrics = []
         for fold, (train_ids, validation_ids) in enumerate(splits):
