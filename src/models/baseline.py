@@ -35,6 +35,12 @@ class Baseline(RegisterableObject):
 
     def get_session_path(self, *args):
         raise NotImplementedError()
+    
+    def get_new_optimizer(self, lr, *args, **kwargs):
+        raise NotImplementedError()
+    
+    def get_new_scheduler(self, optimizer, *args, **kwargs):
+        raise NotImplementedError()
 
     def evaluate(self, path, device):
 

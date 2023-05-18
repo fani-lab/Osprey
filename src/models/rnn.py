@@ -27,7 +27,7 @@ class BaseRnnModule(Baseline, nn.Module):
         self.hidden_size = hidden_size
         self.num_layers = num_layers
         self.snapshot_steps = 2
-        self.rnn = nn.RNN(input_size=self.input_size, hidden_size=self.hidden_size, num_layers=self.num_layers, nonlinearity='tanh',
+        self.core = nn.RNN(input_size=self.input_size, hidden_size=self.hidden_size, num_layers=self.num_layers, nonlinearity='tanh',
                           batch_first=True)
         self.hidden2out = nn.Linear(in_features=self.hidden_size, out_features=settings.OUTPUT_LAYER_NODES)
 
@@ -37,7 +37,7 @@ class BaseRnnModule(Baseline, nn.Module):
         return "base-rnn"
 
     def forward(self, x):
-        out, hn = self.rnn(x)
+        out, hn = self.core(x)
         y_hat = self.hidden2out(out[:, -1])
         # y_hat = torch.sigmoid(y_hat)
         if y_hat.isnan().sum() > 0:
@@ -63,17 +63,25 @@ class BaseRnnModule(Baseline, nn.Module):
                 logger.info(f"resetting module parameters {'.'.join([name, *parents_modules_names])}")
                 module.reset_parameters()
 
+    def get_new_optimizer(self, lr, *args, **kwargs):
+        return torch.optim.Adam(self.parameters(), lr=lr)
+    
+    def get_new_scheduler(self, optimizer, *args, **kwargs):
+        scheduler_args = {"verbose":False, "min_lr":1e-6, "threshold":2e-2, "cooldown": 5, "patience": 10, "factor":0.25, "mode": "max"}
+        logger.debug(f"scheduler settings: {scheduler_args}")
+        return ReduceLROnPlateau(optimizer, **scheduler_args)
+
     def learn(self, epoch_num:int , batch_size: int, splits: list, train_dataset: Dataset, weights_checkpoint_path: str=None):
         if weights_checkpoint_path is not None and len(weights_checkpoint_path):
             self.load_params(weights_checkpoint_path)
         
-        scheduler_args = {"verbose":False, "min_lr":0, "threshold":2e-2, "cooldown": 5, "patience": 10, "factor":0.25, "mode": "max"}
         logger.info("training phase started")
         folds_metrics = []
         for fold, (train_ids, validation_ids) in enumerate(splits):
-            logger.debug(f"scheduler settings: {scheduler_args}")
-            self.optimizer = torch.optim.SGD(self.parameters(), lr=self.init_lr)
-            self.scheduler = ReduceLROnPlateau(self.optimizer, **scheduler_args)
+            self.optimizer = self.get_new_optimizer(self.init_lr)
+            self.scheduler = self.get_new_scheduler(self.optimizer)
+            logger.info(self.optimizer)
+            logger.info(self.scheduler)
             logger.info(f'fetching data for fold #{fold}')
             train_subsampler = SubsetRandomSampler(train_ids)
             validation_subsampler = SubsetRandomSampler(validation_ids)
