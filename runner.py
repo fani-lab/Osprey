@@ -5,7 +5,7 @@ from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, Tr
                                CaseSensitiveBertEmbeddingDataset, GloveEmbeddingDataset, ConversationBagOfWords,
                                CNNConversationBagOfWords, ConversationBagOfWordsCleaned, SequentialConversationDataset)
 from src.utils.loss_functions import WeightedBinaryCrossEntropy
-from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule
+from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule
 from settings.mappings import register_mappings, register_mappings_torch
 from src.scripts import create_conversations, balance_datasets_for_version_two, create_conversation_toy_set, generate_stats
 from src.utils.dataset import SequentialConversationDataset
@@ -35,6 +35,7 @@ if __name__ == "__main__":
     register_mappings(EbrahimiCNN)
     register_mappings(BaseRnnModule)
     register_mappings(LSTMModule)
+    register_mappings(GRUModule)
 
     run()
     # balance_datasets_for_version_two()

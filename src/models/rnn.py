@@ -214,3 +214,15 @@ class LSTMModule(BaseRnnModule):
     def __init__(self, hidden_size, num_layers, *args, **kwargs):
         super().__init__(hidden_size, num_layers, *args, **kwargs)
         self.core = nn.LSTM(input_size=self.input_size, hidden_size=self.hidden_size, num_layers=self.num_layers, batch_first=True)
+
+
+class GRUModule(BaseRnnModule):
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "gru"
+
+    def __init__(self, hidden_size, num_layers, *args, **kwargs):
+        super().__init__(hidden_size, num_layers, *args, **kwargs)
+        self.core = nn.GRU(input_size=self.input_size, hidden_size=self.hidden_size, num_layers=self.num_layers, batch_first=True)
+
