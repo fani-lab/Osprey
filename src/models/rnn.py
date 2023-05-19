@@ -67,7 +67,7 @@ class BaseRnnModule(Baseline, nn.Module):
         return torch.optim.Adam(self.parameters(), lr=lr)
     
     def get_new_scheduler(self, optimizer, *args, **kwargs):
-        scheduler_args = {"verbose":False, "min_lr":1e-6, "threshold":2e-2, "cooldown": 5, "patience": 10, "factor":0.25, "mode": "max"}
+        scheduler_args = {"verbose":False, "min_lr":1e-9, "threshold": 20, "cooldown": 5, "patience": 10, "factor":0.25, "mode": "min"}
         logger.debug(f"scheduler settings: {scheduler_args}")
         return ReduceLROnPlateau(optimizer, **scheduler_args)
 
@@ -146,7 +146,7 @@ class BaseRnnModule(Baseline, nn.Module):
                 all_targets = torch.tensor(all_targets)
                 accuracy_value, recall_value, precision_value = calculate_metrics(all_preds, all_targets, device=self.device)
                 logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f}")
-                self.scheduler.step(recall_value)
+                self.scheduler.step(validation_loss)
                 self.train()
             folds_metrics.append((accuracy_value, precision_value, recall_value))
             snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_fold{fold}.pth")
@@ -203,3 +203,14 @@ class BaseRnnModule(Baseline, nn.Module):
     
     def __str__(self) -> str:
         return "lr"+ format(self.init_lr, "f") + "-h" + str(self.hidden_size) + "-l" + str(self.num_layers)
+
+
+class LSTMModule(BaseRnnModule):
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "lstm"
+
+    def __init__(self, hidden_size, num_layers, *args, **kwargs):
+        super().__init__(hidden_size, num_layers, *args, **kwargs)
+        self.core = nn.LSTM(input_size=self.input_size, hidden_size=self.hidden_size, num_layers=self.num_layers, batch_first=True)

@@ -1,4 +1,4 @@
-from .rnn import BaseRnnModule
+from .rnn import BaseRnnModule, LSTMModule
 from .ann import ANNModule, AbstractFeedForward
 from .cnn import EbrahimiCNN
 from .baseline import Baseline
@@ -9,4 +9,5 @@ __all__ = [
     "EbrahimiCNN",
     "AbstractFeedForward",
     "BaseRnnModule",
+    "LSTMModule",
 ]
