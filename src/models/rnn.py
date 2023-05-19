@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader, Dataset, SubsetRandomSampler
 import matplotlib.pyplot as plt
 import numpy as np
 
-from src.utils.commons import force_open, calculate_metrics, padding_collate_sequence_batch
+from src.utils.commons import force_open, calculate_metrics_extended, padding_collate_sequence_batch
 
 logger = logging.getLogger()
 
@@ -144,8 +144,8 @@ class BaseRnnModule(Baseline, nn.Module):
                     total_validation_loss.append(validation_loss)
                 all_preds = torch.tensor(all_preds)
                 all_targets = torch.tensor(all_targets)
-                accuracy_value, recall_value, precision_value = calculate_metrics(all_preds, all_targets, device=self.device)
-                logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f}")
+                accuracy_value, recall_value, precision_value, f2score = calculate_metrics_extended(all_preds, all_targets, device=self.device)
+                logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f} | f2: {(100 * f2score):>0.6f}")
                 self.scheduler.step(validation_loss)
                 self.train()
             folds_metrics.append((accuracy_value, precision_value, recall_value))

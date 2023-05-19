@@ -5,7 +5,7 @@ import shutil
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 from src.models.baseline import Baseline
-from src.utils.commons import force_open, calculate_metrics
+from src.utils.commons import force_open, calculate_metrics_extended
 from settings import settings
 from settings.settings import OUTPUT_LAYER_NODES
 
@@ -118,9 +118,9 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
                 all_preds = torch.stack(all_preds)
                 all_targets = torch.stack(all_targets)
                 
-                accuracy_value, recall_value, precision_value = calculate_metrics(all_preds, all_targets, device=self.device)
+                accuracy_value, recall_value, precision_value, f2score = calculate_metrics_extended(all_preds, all_targets, device=self.device)
 
-                logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f}")
+                logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f} | f2: {(100 * f2score):>0.6f}")
 
             folds_metrics.append((accuracy_value, precision_value, recall_value))
             

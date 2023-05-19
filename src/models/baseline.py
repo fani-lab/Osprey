@@ -1,7 +1,7 @@
 import pickle
 import logging
 import matplotlib.pyplot as plt
-from src.utils.commons import RegisterableObject, roc_auc, calculate_metrics, roc, precision_recall_auc, precision_recall_curve
+from src.utils.commons import RegisterableObject, roc_auc, calculate_metrics_extended, roc, precision_recall_auc, precision_recall_curve
 
 
 logger = logging.getLogger()
@@ -73,5 +73,5 @@ class Baseline(RegisterableObject):
         plt.savefig(precision_recall_path)
         logger.info(f"saving precision-recall curve at: {precision_recall_path}")
         # plt.show()
-        accuracy, precision, recall = calculate_metrics(preds, targets, device=device)
+        accuracy, precision, recall, f2score = calculate_metrics_extended(preds, targets, device=device)
         logger.info(f"test set -> AUCROC: {(auroc):>0.7f} | AUCPR: {(pr_auc):>0.7f} | accuracy: {(accuracy):>0.7f} | precision: {(precision):>0.7f} | recall: {(recall):>0.7f}")

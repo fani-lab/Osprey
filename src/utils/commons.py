@@ -194,6 +194,10 @@ def calculate_metrics(prediction, target, device="cpu"):
     _t = target
     return accuracy(_p, _t), recall(_p, _t), precision(_p, _t)
 
+def calculate_metrics_extended(prediction, target, device="cpu"):
+    f2score = torchmetrics.FBetaScore("binary", beta=2).to(device)
+    return *calculate_metrics(prediction, target, device), f2score(prediction, target)
+
 def _calculate_metrics(prediction, target, *args, **kwargs):
     tp, fp, tn, fn = confusion_matrix(prediction, target)
     accuracy = (tp+tn) / (tp+tn+fp+fn)
