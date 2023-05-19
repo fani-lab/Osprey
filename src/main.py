@@ -16,12 +16,17 @@ debug_file_handler = logging.FileHandler(f"logs/{START_TIME}.log")
 debug_file_handler.setLevel(logging.DEBUG)
 debug_file_handler.setFormatter(FORMATTER_VERBOSE)
 
+info_file_handler = logging.FileHandler(f"logs/{START_TIME}-info.log")
+info_file_handler.setLevel(logging.INFO)
+info_file_handler.setFormatter(FORMATTER_VERBOSE)
+
 info_terminal_handler = logging.StreamHandler(sys.stdout)
 info_terminal_handler.setLevel(logging.INFO)
 info_terminal_handler.setFormatter(FORMATTER)
 
 logger = logging.getLogger()
 logger.addHandler(debug_file_handler)
+logger.addHandler(info_file_handler)
 logger.addHandler(info_terminal_handler)
 logger.setLevel(logging.DEBUG)
 
