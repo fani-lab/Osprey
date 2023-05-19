@@ -67,7 +67,7 @@ class BaseRnnModule(Baseline, nn.Module):
         return torch.optim.Adam(self.parameters(), lr=lr)
     
     def get_new_scheduler(self, optimizer, *args, **kwargs):
-        scheduler_args = {"verbose":False, "min_lr":1e-9, "threshold": 20, "cooldown": 5, "patience": 10, "factor":0.25, "mode": "min"}
+        scheduler_args = {"verbose":False, "min_lr":1e-9, "threshold": 20, "cooldown": 5, "patience": 20, "factor":0.25, "mode": "min"}
         logger.debug(f"scheduler settings: {scheduler_args}")
         return ReduceLROnPlateau(optimizer, **scheduler_args)
 

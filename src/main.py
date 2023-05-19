@@ -46,6 +46,7 @@ def create_model_configs(session_name: str, session: dict, device: str):
 
 def run():
     device = 'cuda' if settings.USE_CUDA_IF_AVAILABLE and torch.cuda.is_available() else 'cpu'
+    torch.autograd.set_detect_anomaly(True)
     logger.info(f'processing unit: {device}')
     datasets = dict()
     for dataset_name, (short_name, train_configs, test_configs) in settings.datasets.items():
