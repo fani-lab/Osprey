@@ -327,6 +327,16 @@ class ConversationBagOfWords(BagOfWordsDataset):
         return [vector/torch.sparse.sum(vector) for vector in vectors]
 
 
+class ConversationBagOfWordsWithTriple(ConversationBagOfWords):
+    
+    @classmethod
+    def short_name(cls) -> str:
+        return "conversation-bow-with-triple"
+    
+    def __getitem__(self, index):
+        return self.data[index], self.labels[index], index
+
+
 class ConversationBagOfWordsCleaned(ConversationBagOfWords):
     
     def filter_records(self, df):

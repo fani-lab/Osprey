@@ -6,6 +6,7 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 from src.models.baseline import Baseline
 from src.utils.commons import force_open, calculate_metrics_extended
+from src.utils.loss_functions import DynamicSuperLoss
 from settings import settings
 from settings.settings import OUTPUT_LAYER_NODES
 
@@ -236,3 +237,128 @@ class ANNModule(AbstractFeedForward):
 
     def __str__(self) -> str:
         return str(self.init_lr) + "-" + ".".join((str(l) for l in self.dimension_list)) + "-" + ".".join((str(d) for d in self.dropout_list))
+
+class SuperDynamicLossANN(ANNModule):
+
+    def learn(self, epoch_num: int, batch_size: int, splits: list, train_dataset: Dataset, weights_checkpoint_path: str=None):
+        if weights_checkpoint_path is not None and len(weights_checkpoint_path):
+            checkpoint = torch.load(weights_checkpoint_path)
+            self.load_state_dict(checkpoint.get("model", checkpoint))
+
+        logger.info("training phase started")
+        scheduler_args = {"verbose":False, "min_lr":0, "threshold":1e-4, "patience":10, "factor":0.25}
+        folds_metrics = []
+        logger.info(f"number of folds: {len(splits)}")
+        for fold, (train_ids, validation_ids) in enumerate(splits):
+            self.train()
+            logger.info("Resetting Optimizer, Learning rate, and Scheduler")
+            self.optimizer = torch.optim.SGD(self.parameters(), lr=self.init_lr, momentum=0.9)
+            last_lr = self.init_lr
+            self.scheduler = ReduceLROnPlateau(self.optimizer, **scheduler_args)
+            logger.debug(f"scheduler settings: {scheduler_args}")
+            logger.info(f'fetching data for fold #{fold}')
+            train_subsampler = torch.utils.data.SubsetRandomSampler(train_ids)
+            validation_subsampler = torch.utils.data.SubsetRandomSampler(validation_ids)
+            train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size,
+                                                       sampler=train_subsampler)
+            validation_loader = torch.utils.data.DataLoader(train_dataset, batch_size=(256 if len(validation_ids) > 1024 else len(validation_ids)),
+                                                            sampler=validation_subsampler)
+            # Train phase
+            total_loss = []
+            total_validation_loss = []
+            # resetting module parameters
+            self.reset_modules(module=self)
+            fold_loss_function = DynamicSuperLoss(len(train_ids), 1, self.loss_function)
+            validation_fold_loss_function = DynamicSuperLoss(len(validation_ids), 1, self.loss_function)
+            for i in range(epoch_num):
+                loss = 0
+                epoch_loss = 0
+                for batch_index, (X, y, items_indices) in enumerate(train_loader):
+                    self.optimizer.zero_grad()
+                    X = X.to(self.device)
+                    y = y.to(self.device)
+                    y = y.reshape(-1, 1).to(self.device)
+                    y_hat = self.forward(X)
+                    loss = fold_loss_function(y_hat, y, items_indices)
+                    loss.backward()
+                    self.optimizer.step()
+                    logger.debug(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
+                    epoch_loss += loss.item()
+                total_loss.append(epoch_loss)
+                self.scheduler.step(loss)
+                if self.optimizer.param_groups[0]["lr"] != last_lr:
+                    logger.info(f"fold: {fold} | epoch: {i} | Learning rate changed from: {last_lr} -> {self.optimizer.param_groups[0]['lr']}")
+                    last_lr = self.optimizer.param_groups[0]["lr"]
+
+                all_preds = []
+                all_targets = []
+                validation_loss = 0
+                self.eval()
+                with torch.no_grad():
+                    for batch_index, (X, y, items_indices) in enumerate(validation_loader):
+                        X = X.to(self.device)
+                        y = y.to(self.device)
+                        pred = self.forward(X).squeeze()
+                        loss = validation_fold_loss_function(pred, y, items_indices)
+                        validation_loss += loss
+                        all_preds.extend(torch.sigmoid(pred) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else pred)
+                        all_targets.extend(y)
+                    total_validation_loss.append(validation_loss.item())
+                self.train()
+                all_preds = torch.stack(all_preds)
+                all_targets = torch.stack(all_targets)
+                
+                accuracy_value, recall_value, precision_value, f2score = calculate_metrics_extended(all_preds, all_targets, device=self.device)
+
+                logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f} | f2: {(100 * f2score):>0.6f}")
+
+            folds_metrics.append((accuracy_value, precision_value, recall_value))
+            
+            snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_fold{fold}.pth")
+            self.save(snapshot_path)
+            plt.clf()
+            plt.plot(np.arange(1, 1 + len(total_loss)), np.array(total_loss), "-r", label="training")
+            plt.plot(np.arange(1, 1 + len(total_loss)), np.array(total_validation_loss), "-b", label="validation")
+            plt.legend()
+            plt.title(f"fold #{fold}")
+            with force_open(self.get_detailed_session_path(train_dataset, "figures", f"loss_f{fold}.png"), "wb") as f:
+                plt.savefig(f, dpi=300)
+
+        MAHAK = 2
+        max_metric = (0, folds_metrics[0][MAHAK])
+        for i in range(1, len(folds_metrics)):
+            if folds_metrics[i][MAHAK] > max_metric[1]:
+                max_metric = (i, folds_metrics[i][MAHAK])
+        logger.info(f"best model of cross validation for current training phase: fold #{max_metric[0]} with metric value of '{max_metric[1]}'")
+        best_model_dest = self.get_detailed_session_path(train_dataset, "weights", f"best_model.pth")
+        best_model_src = self.get_detailed_session_path(train_dataset, "weights", f"f{max_metric[0]}", f"model_fold{max_metric[0]}.pth")
+        shutil.copyfile(best_model_src, best_model_dest)
+        return best_model_dest
+
+    def test(self, test_dataset, weights_checkpoint_path):
+        checkpoint = torch.load(weights_checkpoint_path)
+        self.load_state_dict(checkpoint.get("model", checkpoint))
+
+        all_preds = []
+        all_targets = []
+        test_dataset.to(self.device)
+        test_dataloader = DataLoader(test_dataset, batch_size=64)
+        self.eval()
+        with torch.no_grad():
+            for X, y, _ in test_dataloader:
+                pred = self.forward(X)
+                all_preds.extend(torch.sigmoid(pred) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else pred)
+                all_targets.extend(y)
+
+        all_preds = torch.stack(all_preds)
+        all_targets = torch.stack(all_targets)
+        with force_open(self.get_detailed_session_path(test_dataset, 'preds.pkl'), 'wb') as file:
+            pickle.dump(all_preds, file)
+            logger.info(f'predictions are saved at {file.name}.')
+        with force_open(self.get_detailed_session_path(test_dataset, 'targets.pkl'), 'wb') as file:
+            pickle.dump(all_targets, file)
+            logger.info(f'targets are saved at {file.name}.')
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "ann-with-superloss"
