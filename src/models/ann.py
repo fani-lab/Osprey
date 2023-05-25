@@ -95,6 +95,7 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
                     self.optimizer.step()
                     logger.debug(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
                     epoch_loss += loss.item()
+                epoch_loss /= len(train_ids)
                 total_loss.append(epoch_loss)
                 self.scheduler.step(loss)
                 if self.optimizer.param_groups[0]["lr"] != last_lr:
@@ -111,10 +112,11 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
                         y = y.to(self.device)
                         pred = self.forward(X).squeeze()
                         loss = self.loss_function(pred, y)
-                        validation_loss += loss
+                        validation_loss += loss.item()
                         all_preds.extend(torch.sigmoid(pred) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else pred)
                         all_targets.extend(y)
-                    total_validation_loss.append(validation_loss.item())
+                    validation_loss /= len(validation_ids)
+                    total_validation_loss.append(validation_loss)
                 self.train()
                 all_preds = torch.stack(all_preds)
                 all_targets = torch.stack(all_targets)
@@ -284,6 +286,7 @@ class SuperDynamicLossANN(ANNModule):
                     self.optimizer.step()
                     logger.debug(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
                     epoch_loss += loss.item()
+                epoch_loss /= len(train_ids)
                 total_loss.append(epoch_loss)
                 self.scheduler.step(loss)
                 if self.optimizer.param_groups[0]["lr"] != last_lr:
@@ -303,7 +306,8 @@ class SuperDynamicLossANN(ANNModule):
                         validation_loss += loss
                         all_preds.extend(torch.sigmoid(pred) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else pred)
                         all_targets.extend(y)
-                    total_validation_loss.append(validation_loss.item())
+                    validation_loss /= len(validation_ids)
+                    total_validation_loss.append(validation_loss)
                 self.train()
                 all_preds = torch.stack(all_preds)
                 all_targets = torch.stack(all_targets)
@@ -334,30 +338,6 @@ class SuperDynamicLossANN(ANNModule):
         best_model_src = self.get_detailed_session_path(train_dataset, "weights", f"f{max_metric[0]}", f"model_fold{max_metric[0]}.pth")
         shutil.copyfile(best_model_src, best_model_dest)
         return best_model_dest
-
-    def test(self, test_dataset, weights_checkpoint_path):
-        checkpoint = torch.load(weights_checkpoint_path)
-        self.load_state_dict(checkpoint.get("model", checkpoint))
-
-        all_preds = []
-        all_targets = []
-        test_dataset.to(self.device)
-        test_dataloader = DataLoader(test_dataset, batch_size=64)
-        self.eval()
-        with torch.no_grad():
-            for X, y, _ in test_dataloader:
-                pred = self.forward(X)
-                all_preds.extend(torch.sigmoid(pred) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else pred)
-                all_targets.extend(y)
-
-        all_preds = torch.stack(all_preds)
-        all_targets = torch.stack(all_targets)
-        with force_open(self.get_detailed_session_path(test_dataset, 'preds.pkl'), 'wb') as file:
-            pickle.dump(all_preds, file)
-            logger.info(f'predictions are saved at {file.name}.')
-        with force_open(self.get_detailed_session_path(test_dataset, 'targets.pkl'), 'wb') as file:
-            pickle.dump(all_targets, file)
-            logger.info(f'targets are saved at {file.name}.')
 
     @classmethod
     def short_name(cls) -> str:

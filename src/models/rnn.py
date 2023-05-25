@@ -124,7 +124,8 @@ class BaseRnnModule(Baseline, nn.Module):
                     loss.backward()
                     epoch_loss += loss.item()
                     self.optimizer.step()
-                    logger.debug(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
+                    logger.debug(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss/X.shape[0]}")
+                epoch_loss /= len(train_ids)
                 total_loss.append(epoch_loss)
                 # Validation phase
                 all_preds = []
@@ -141,6 +142,7 @@ class BaseRnnModule(Baseline, nn.Module):
                         validation_loss += loss.item()
                         all_preds.extend(torch.sigmoid(y_hat) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else y_hat)
                         all_targets.extend(y)
+                    validation_loss /= len(validation_ids)
                     total_validation_loss.append(validation_loss)
                 all_preds = torch.tensor(all_preds)
                 all_targets = torch.tensor(all_targets)
