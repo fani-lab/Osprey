@@ -110,7 +110,7 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
                     for batch_index, (X, y) in enumerate(validation_loader):
                         X = X.to(self.device)
                         y = y.to(self.device)
-                        pred = self.forward(X).squeeze()
+                        pred = self.forward(X).reshape(-1)
                         loss = self.loss_function(pred, y)
                         validation_loss += loss.item()
                         all_preds.extend(torch.sigmoid(pred) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else pred)
@@ -301,7 +301,7 @@ class SuperDynamicLossANN(ANNModule):
                     for batch_index, (X, y, items_indices) in enumerate(validation_loader):
                         X = X.to(self.device)
                         y = y.to(self.device)
-                        pred = self.forward(X).squeeze()
+                        pred = self.forward(X).reshape(-1)
                         loss = validation_fold_loss_function(pred, y, items_indices)
                         validation_loss += loss
                         all_preds.extend(torch.sigmoid(pred) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else pred)

@@ -116,7 +116,7 @@ class BaseRnnModule(Baseline, nn.Module):
                     X = X.to(self.device)
                     y = y.to(self.device)
                     _, y_hat = self.forward(X)
-                    y_hat = y_hat.squeeze()
+                    y_hat = y_hat.reshape(-1)
                     self.optimizer.zero_grad()
                     loss = self.loss_function(y_hat, y)
                     if loss.isnan():
@@ -137,7 +137,7 @@ class BaseRnnModule(Baseline, nn.Module):
                         X = X.to(self.device)
                         y = y.to(self.device)
                         _, y_hat = self.forward(X)
-                        y_hat = y_hat.squeeze()
+                        y_hat = y_hat.reshape(-1)
                         loss = self.loss_function(y_hat, y)
                         validation_loss += loss.item()
                         all_preds.extend(torch.sigmoid(y_hat) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else y_hat)
@@ -181,7 +181,7 @@ class BaseRnnModule(Baseline, nn.Module):
                 X = X.to(self.device)
                 y = y.to(self.device)
                 last_hidden, y_hat = self.forward(X)
-                y_hat = y_hat.squeeze()
+                y_hat = y_hat.reshape(-1)
                 all_preds.extend(torch.sigmoid(y_hat) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else y_hat)
                 all_targets.extend(y)
 

@@ -546,10 +546,6 @@ class SequentialConversationDataset(BaseDataset):
         self.__labels__ = labels
         return labels
 
-    def prepare(self):
-        super().prepare()
-        self.data = [r.to_dense() for r in self.data]
-
     @property
     def shape(self):
         return (len(self.data), -1, self.data[0].shape[-1])

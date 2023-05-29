@@ -52,7 +52,7 @@ class Baseline(RegisterableObject):
             targets = pickle.load(file)
             targets = targets.to(device)
         if preds.ndim > targets.ndim:
-            preds = preds.squeeze()
+            preds = preds.reshape(-1)
         preds = preds.to(device)
         # targets = torch.argmax(targets, dim=1)
         fpr, tpr, _ = roc(preds, targets, device=device)

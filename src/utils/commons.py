@@ -244,7 +244,7 @@ def padding_collate_sequence_batch(batch):
     label_list, data_list = [], []
     for data, label in batch:
         label_list.append(label)
-        data_list.append(data)
+        data_list.append(data.to_dense())
     
     return pad_sequence(data_list, batch_first=True, padding_value=1.0/data_list[0].shape[-1]), torch.tensor(label_list)
 

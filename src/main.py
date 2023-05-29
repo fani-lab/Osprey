@@ -2,7 +2,7 @@ import time
 import logging
 import sys
 
-import torch.nn
+import torch
 
 from settings import settings, mappings
 
@@ -83,6 +83,7 @@ def run():
                 logger.warning("no dataset was specified.")
             logger.info(f"started new command `{command}` of session `{model_name}`")
             logger.debug(f"command `{command}`; dataset name: {dataset_name}; arguments: {command_kwargs}")
+            torch.cuda.empty_cache()
             if command == "train":
                 dataset = datasets[dataset_name][0]
                 dataset.prepare()
