@@ -28,6 +28,19 @@ def balance_datasets_for_version_two(ratio=0.3):
     test = balance_dataset(df, ratio=ratio)
     test.to_csv(f"data/dataset-v2/conversation/balanced-test-v2-{str(ratio).replace('.', '')}.csv")
 
+def balance_sequential_datasets_for_version_two(ratio=0.3, name_post_fix="-04"):
+    train = "data/dataset-v2/train"+name_post_fix+".csv"
+    test  = "data/dataset-v2/test"+name_post_fix+".csv"
+    
+    df = pd.read_csv(train)
+    train = balance_dataset(df, ratio=ratio)
+    train.to_csv(f"data/dataset-v2/train-{str(ratio).replace('.', '')}.csv")
+
+    df = pd.read_csv(test)
+    test = balance_dataset(df, ratio=ratio)
+    test.to_csv(f"data/dataset-v2/test-{str(ratio).replace('.', '')}.csv")
+
+
 def create_conversation_toy_set(train = "data/dataset-v2/conversation/balanced-train-v2-04.csv", test = "data/dataset-v2/conversation/balanced-test-v2-04.csv", ratio=0.1):
     df = pd.read_csv(train)
     df = create_toy_dataset(df, ratio)

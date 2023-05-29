@@ -8,7 +8,8 @@ from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, Tr
 from src.utils.loss_functions import WeightedBinaryCrossEntropy, DynamicSuperLoss
 from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule, SuperDynamicLossANN
 from settings.mappings import register_mappings, register_mappings_torch
-from src.scripts import create_conversations, balance_datasets_for_version_two, create_conversation_toy_set, generate_stats
+from src.scripts import (create_conversations, balance_datasets_for_version_two, create_conversation_toy_set, generate_stats,
+                         balance_sequential_datasets_for_version_two)
 from src.utils.dataset import SequentialConversationDataset
 
 if __name__ == "__main__":
