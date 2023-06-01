@@ -2,6 +2,7 @@ import logging
 import pickle
 
 import pandas as pd
+import numpy as np
 import torch
 from torch.utils.data import Dataset
 from sklearn.model_selection import KFold, StratifiedKFold
@@ -517,6 +518,9 @@ class SequentialConversationDataset(BaseDataset):
     def tokenize(self, input) -> list[list[str]]:
         return nltk_tokenize(input)
 
+    # def normalize_vector(self, vectors):
+    #     return [vector/torch.sparse.sum(vector) for vector in vectors]
+
     def init_encoder(self, tokens_records):
         encoder = SequentialOneHotEncoder(vector_size=self.vector_size)
         logger.info("started generating bag of words vector encoder")
@@ -551,3 +555,49 @@ class SequentialConversationDataset(BaseDataset):
     @property
     def shape(self):
         return (len(self.data), -1, self.data[0].shape[-1])
+
+class TemporalSequentialConversationDataset(SequentialConversationDataset):
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "temporal-sequential"
+    
+    def get_data_generator(self, data, pattern):
+        def func():
+            for _, sequence in data:
+                for record in sequence:
+                    for token in record:
+                        yield pattern(token)
+
+        return func
+
+    def preprocess(self):
+        try:
+            if not self.load_from_pkl:
+                raise FileNotFoundError()
+            with open(self.get_session_path("tokens.pkl"), "rb") as f:
+                logger.info("trying to load tokens from file")
+                messages = pickle.load(f)
+        except FileNotFoundError:
+            logger.info("generating tokens from scratch")
+            self.__new_tokens__ = True
+            messages = [(g["time"].tolist(), self.tokenize(g["text"])) for k, g in self.sequence]
+            logger.info("applying preprocessing modules")
+            for preprocessor in self.preprocessings:
+                logger.info(f"applying {preprocessor.name()}")
+                messages = [[time, tuple(preprocessor.opt(sequence))] for time, sequence in messages]
+        return messages
+    
+    def vectorize(self, tokens_records, encoder):
+        logger.debug("started transforming message records into sparse vectors")
+        vectors = []
+        
+        for i, (time, record) in enumerate(tokens_records):
+            sequence = encoder.transform(record=record)
+            onehots = torch.stack([torch.sparse.sum(torch.cat(t), dim=0) for t in sequence])
+            temp = np.floor(time)
+            context = torch.tensor(temp + (time - temp) / 0.6, dtype=torch.float32).reshape(-1, 1).to_sparse_coo()
+            
+            vectors.append(torch.hstack((context, onehots)))
+        logger.debug("transforming of records into vectors is finished")
+        return vectors
