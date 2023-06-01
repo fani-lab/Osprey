@@ -17,6 +17,7 @@ datasets = {
             "load_from_pkl": True,
             "preprocessings": ["rr"],
             "persist_data": True,
+            "vector_size": 7500, # default is -1 which will be infered by the model
         }
     ),
 

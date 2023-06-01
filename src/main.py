@@ -87,7 +87,7 @@ def run():
             if command == "train":
                 dataset = datasets[dataset_name][0]
                 dataset.prepare()
-
+                logger.info(f"dataset short-name: {str(dataset)}")
                 split_again = dataset_configs.get("rerun_splitting", False)
                 n_splits = dataset_configs.get("n_splits")
                 persist_splits = dataset_configs.get("persist_splits", True)
@@ -101,6 +101,7 @@ def run():
             if command == "test":
                 dataset = datasets[dataset_name][1]
                 dataset.prepare()
+                logger.info(f"dataset short-name: {str(dataset)}")
                 model = model_class(**model_configs, input_size=datasets[dataset_name][0].shape[-1])
                 model.to(device=device)
                 command_kwargs["weights_checkpoint_path"] = command_kwargs.get("weights_checkpoint_path", None) or model.get_detailed_session_path(datasets[dataset_name][0], "weights", f"best_model.pth")

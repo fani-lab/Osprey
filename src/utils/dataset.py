@@ -45,7 +45,7 @@ class BaseDataset(Dataset, RegisterableObject):
 
     
     def __init__(self, data_path: str, output_path: str, load_from_pkl: bool, apply_record_filter: bool=True,
-                 preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, device="cpu", *args, **kwargs):
+                 preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, device="cpu", vector_size=-1, *args, **kwargs):
         self.output_path = output_path
         self.parent_dataset = parent_dataset
         self.load_from_pkl = load_from_pkl
@@ -63,6 +63,8 @@ class BaseDataset(Dataset, RegisterableObject):
         self.__new_tokens__ = False
         self.__new_encoder__ = False
         self.__new_vectors__ = False
+
+        self.vector_size = vector_size
 
     @property
     def df(self):
@@ -113,7 +115,7 @@ class BaseDataset(Dataset, RegisterableObject):
         return vectors
 
     def __str__(self):
-        return self.short_name() +"/" + ".".join([pp.short_name() for pp in self.preprocessings])
+        return self.short_name() +"/p" + ".".join([pp.short_name() for pp in self.preprocessings]) + "-v" + str(self.vector_size)
     
     def filter_records(self, df):
         return df
@@ -213,7 +215,7 @@ class BaseDataset(Dataset, RegisterableObject):
 
         vectors = self.__vectorize__(tokens, self.encoder)
         vectors = self.normalize_vector(vectors)
-
+        self.vector_size = vectors[0].shape[-1]
         # Persisting changes
         if self.persist_data and self.__new_tokens__:
             tokens_path = self.get_session_path("tokens.pkl")
@@ -272,7 +274,7 @@ class BagOfWordsDataset(BaseDataset):
         return nltk_tokenize(input)
 
     def init_encoder(self, tokens_records):
-        encoder = OneHotEncoder()
+        encoder = OneHotEncoder(vector_size=self.vector_size)
         logger.info("started generating bag of words vector encoder")
         data = set()
         data.update(*tokens_records)
@@ -315,7 +317,7 @@ class ConversationBagOfWords(BagOfWordsDataset):
         return func
 
     def init_encoder(self, tokens_records):
-        encoder = OneHotEncoder(vector_size=5500, buffer_cap=64)
+        encoder = OneHotEncoder(vector_size=self.vector_size, buffer_cap=64)
         logger.info("started generating bag of words vector encoder")
         data = tokens_records
         pattern = lambda x: x
@@ -356,7 +358,7 @@ class CNNConversationBagOfWords(ConversationBagOfWords):
     
     def init_encoder(self, tokens_records):
         logger.info("started generating bag of words vector encoder")
-        encoder = OneHotEncoder(vector_size=5500, buffer_cap=64, vectors_dimensions=3)
+        encoder = OneHotEncoder(vector_size=self.vector_size, buffer_cap=64, vectors_dimensions=3)
         data = tokens_records
         pattern = lambda x: x
         logger.debug("fitting conversation tokens into one hot encoder")
@@ -516,7 +518,7 @@ class SequentialConversationDataset(BaseDataset):
         return nltk_tokenize(input)
 
     def init_encoder(self, tokens_records):
-        encoder = SequentialOneHotEncoder()
+        encoder = SequentialOneHotEncoder(vector_size=self.vector_size)
         logger.info("started generating bag of words vector encoder")
         pattern = lambda x: x
         logger.debug("fitting data into one hot encoder")
