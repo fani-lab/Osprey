@@ -8,7 +8,7 @@ from torch.utils.data import Dataset
 from sklearn.model_selection import KFold, StratifiedKFold
 
 from src.preprocessing.base import BasePreprocessing
-from src.utils.one_hot_encoder import OneHotEncoder, SequentialOneHotEncoder
+from src.utils.one_hot_encoder import OneHotEncoder, SequentialOneHotEncoder, SequentialOneHotEncoderWithContext
 from src.utils.transformers_encoders import TransformersEmbeddingEncoder, GloveEmbeddingEncoder
 from src.utils.commons import nltk_tokenize, force_open, RegisterableObject
 
@@ -119,6 +119,7 @@ class BaseDataset(Dataset, RegisterableObject):
         return self.short_name() +"/p" + ".".join([pp.short_name() for pp in self.preprocessings]) + "-v" + str(self.vector_size)
     
     def filter_records(self, df):
+        logger.info(f"no filter is applied to dataset: {self.short_name()}")
         return df
 
     def get_session_path(self, filename) -> str:
@@ -478,6 +479,10 @@ class SequentialConversationDataset(BaseDataset):
         super().__init__(data_path, output_path, load_from_pkl, apply_record_filter, preprocessings, persist_data, parent_dataset, device, *args, **kwargs)
         self.__sequence__ = None
 
+    def filter_records(self, df):
+        logger.info("applying record filtering by 'nauthor == 2'")
+        return df[(df["nauthor"] == 2)]
+
     @property
     def sequence(self):
         if self.__sequence__ is None:
@@ -518,9 +523,6 @@ class SequentialConversationDataset(BaseDataset):
     def tokenize(self, input) -> list[list[str]]:
         return nltk_tokenize(input)
 
-    # def normalize_vector(self, vectors):
-    #     return [vector/torch.sparse.sum(vector) for vector in vectors]
-
     def init_encoder(self, tokens_records):
         encoder = SequentialOneHotEncoder(vector_size=self.vector_size)
         logger.info("started generating bag of words vector encoder")
@@ -557,7 +559,7 @@ class SequentialConversationDataset(BaseDataset):
         return (len(self.data), -1, self.data[0].shape[-1])
 
 class TemporalSequentialConversationDataset(SequentialConversationDataset):
-
+    CONTEXT_LENGTH = 1
     @classmethod
     def short_name(cls) -> str:
         return "temporal-sequential"
@@ -570,6 +572,14 @@ class TemporalSequentialConversationDataset(SequentialConversationDataset):
                         yield pattern(token)
 
         return func
+    
+    def init_encoder(self, tokens_records):
+        encoder = SequentialOneHotEncoderWithContext(context_length=self.CONTEXT_LENGTH, vector_size=self.vector_size, )
+        logger.info("started generating bag of words vector encoder")
+        pattern = lambda x: x
+        logger.debug("fitting data into one hot encoder")
+        encoder.fit(self.get_data_generator(data=tokens_records, pattern=pattern))
+        return encoder
 
     def preprocess(self):
         try:
@@ -581,7 +591,11 @@ class TemporalSequentialConversationDataset(SequentialConversationDataset):
         except FileNotFoundError:
             logger.info("generating tokens from scratch")
             self.__new_tokens__ = True
-            messages = [(g["time"].tolist(), self.tokenize(g["text"])) for k, g in self.sequence]
+            messages = [None] * len(self.sequence)
+            for i, (k, g) in enumerate(self.sequence):
+                temp = np.floor(g["time"].tolist())
+                messages[i] = (temp + (g["time"].tolist()- temp) / 0.6, self.tokenize(g["text"]))
+            # messages = [((g["time"].tolist(),), self.tokenize(g["text"])) for k, g in self.sequence]
             logger.info("applying preprocessing modules")
             for preprocessor in self.preprocessings:
                 logger.info(f"applying {preprocessor.name()}")
@@ -592,12 +606,11 @@ class TemporalSequentialConversationDataset(SequentialConversationDataset):
         logger.debug("started transforming message records into sparse vectors")
         vectors = []
         
-        for i, (time, record) in enumerate(tokens_records):
+        for i, record in enumerate(tokens_records):
             sequence = encoder.transform(record=record)
             onehots = torch.stack([torch.sparse.sum(torch.cat(t), dim=0) for t in sequence])
-            temp = np.floor(time)
-            context = torch.tensor(temp + (time - temp) / 0.6, dtype=torch.float32).reshape(-1, 1).to_sparse_coo()
-            
-            vectors.append(torch.hstack((context, onehots)))
+
+            vectors.append(onehots)
+
         logger.debug("transforming of records into vectors is finished")
         return vectors
