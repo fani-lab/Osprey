@@ -1,0 +1,356 @@
+2023-06-06 14:10:57,707 | root | INFO | main.py run @ 50 : processing unit: cuda
+2023-06-06 14:10:57,848 | root | INFO | main.py run @ 68 : train dataset `temporal-sequential-conversation-v2-dataset-onehot-04`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/train-04.csv', 'output_path': 'data/preprocessed/sequential-v2-04/', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': False}
+2023-06-06 14:10:57,849 | root | INFO | main.py run @ 69 : test dataset `temporal-sequential-conversation-v2-dataset-onehot-04`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/test-04.csv', 'output_path': 'data/preprocessed/sequential-v2-04/test-', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': False}
+2023-06-06 14:10:57,855 | root | INFO | main.py run @ 68 : train dataset `temporal-sequential-conversation-v2-dataset-onehot-04-realtest`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/train-04.csv', 'output_path': 'data/preprocessed/sequential-v2-04/', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': True}
+2023-06-06 14:10:57,857 | root | INFO | main.py run @ 69 : test dataset `temporal-sequential-conversation-v2-dataset-onehot-04-realtest`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/test.csv', 'output_path': 'data/preprocessed/sequential-v2/test-', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': False}
+2023-06-06 14:10:57,861 | root | INFO | main.py run @ 68 : train dataset `temporal-sequential-conversation-v2-dataset-onehot-03-realtest`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/train-03.csv', 'output_path': 'data/preprocessed/sequential-v2-03/', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': True}
+2023-06-06 14:10:57,862 | root | INFO | main.py run @ 69 : test dataset `temporal-sequential-conversation-v2-dataset-onehot-03-realtest`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/test.csv', 'output_path': 'data/preprocessed/sequential-v2/test-', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': False}
+2023-06-06 14:10:57,866 | root | INFO | main.py run @ 68 : train dataset `temporal-sequential-conversation-v2-dataset-onehot-02-realtest`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/train-02.csv', 'output_path': 'data/preprocessed/sequential-v2-02/', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': True}
+2023-06-06 14:10:57,867 | root | INFO | main.py run @ 69 : test dataset `temporal-sequential-conversation-v2-dataset-onehot-02-realtest`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/test.csv', 'output_path': 'data/preprocessed/sequential-v2/test-', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': False}
+2023-06-06 14:10:57,870 | root | INFO | main.py run @ 68 : train dataset `temporal-sequential-conversation-v2-dataset-onehot-01-realtest`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/train-01.csv', 'output_path': 'data/preprocessed/sequential-v2-01/', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': True}
+2023-06-06 14:10:57,871 | root | INFO | main.py run @ 69 : test dataset `temporal-sequential-conversation-v2-dataset-onehot-01-realtest`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/test.csv', 'output_path': 'data/preprocessed/sequential-v2/test-', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': False}
+2023-06-06 14:10:57,872 | root | INFO | main.py run @ 73 : started new session: lstm-balanced-v2-04-temporal
+2023-06-06 14:10:57,873 | root | INFO | main.py create_model_configs @ 37 : activation module kwargs: {}
+2023-06-06 14:10:57,874 | root | INFO | main.py create_model_configs @ 38 : loss module kwargs: {'reduction': 'sum', 'pos_weight': tensor(2)}
+2023-06-06 14:10:57,875 | root | INFO | main.py run @ 84 : started new command `train` of session `lstm-balanced-v2-04-temporal`
+2023-06-06 14:10:57,876 | root | INFO | dataset.py preprocess @ 592 : generating tokens from scratch
+2023-06-06 14:11:11,660 | root | INFO | dataset.py preprocess @ 599 : applying preprocessing modules
+2023-06-06 14:11:11,661 | root | INFO | dataset.py preprocess @ 601 : applying nltk stopwords remover
+2023-06-06 14:12:07,121 | root | INFO | dataset.py preprocess @ 601 : applying repetition remover
+2023-06-06 14:12:07,674 | root | INFO | dataset.py preprocess @ 601 : applying author id replacer
+2023-06-06 14:12:07,953 | root | INFO | dataset.py init_encoder @ 578 : started generating bag of words vector encoder
+2023-06-06 14:12:08,279 | root | INFO | dataset.py __vectorize__ @ 109 : trying to create vectors from scratch
+2023-06-06 14:12:22,188 | root | INFO | dataset.py prepare @ 224 : saving tokens as pickle at data/preprocessed/sequential-v2-04/temporal-sequential/psw.rr.idr-v13000nofilter/tokens.pkl
+2023-06-06 14:12:22,348 | root | INFO | dataset.py prepare @ 229 : saving vectors as pickle at data/preprocessed/sequential-v2-04/temporal-sequential/psw.rr.idr-v13000nofilter/vectors.pkl
+2023-06-06 14:12:23,037 | root | INFO | dataset.py prepare @ 234 : saving encoder as pickle at data/preprocessed/sequential-v2-04/temporal-sequential/psw.rr.idr-v13000nofilter/encoder.pkl
+2023-06-06 14:12:26,117 | root | INFO | dataset.py prepare @ 243 : data preparation finished
+2023-06-06 14:12:26,144 | root | INFO | main.py run @ 90 : dataset short-name: temporal-sequential/psw.rr.idr-v13000nofilter
+2023-06-06 14:12:26,145 | root | WARNING | dataset.py split_dataset_by_label @ 165 : could not find the splits file. going to create splits from scratch.
+2023-06-06 14:12:26,148 | root | INFO | dataset.py split_dataset_by_label @ 183 : saving splits at data/preprocessed/sequential-v2-04/temporal-sequential/psw.rr.idr-v13000nofilter/splits-n5stratified.pkl
+2023-06-06 14:12:26,149 | root | INFO | dataset.py split_dataset_by_label @ 185 : splits created by the following configs: n_splits: `5`, stratified: True, persist_splits: True 
+2023-06-06 14:12:29,622 | root | INFO | rnn.py learn @ 78 : training phase started
+2023-06-06 14:12:29,625 | root | INFO | rnn.py learn @ 83 : Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.0005
+    maximize: False
+    weight_decay: 0
+)
+2023-06-06 14:12:29,629 | root | INFO | rnn.py learn @ 84 : <torch.optim.lr_scheduler.ReduceLROnPlateau object at 0x000002403341B880>
+2023-06-06 14:12:29,629 | root | INFO | rnn.py learn @ 85 : fetching data for fold #0
+2023-06-06 14:12:29,631 | root | ERROR | rnn.py learn @ 106 : 'ReLU' object has no attribute 'reset_parameters'
+2023-06-06 14:12:29,632 | root | ERROR | rnn.py learn @ 106 : 'BCEWithLogitsLoss' object has no attribute 'reset_parameters'
+2023-06-06 14:12:29,633 | root | INFO | rnn.py learn @ 104 : parameters reset
+2023-06-06 14:12:29,634 | root | INFO | rnn.py learn @ 104 : parameters reset
+2023-06-06 14:13:00,021 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 1 | train -> loss: 0.94465 | validation -> loss: 0.93668 | accuracy: 39.980160 | precision: 39.980160 | recall: 100.000000 | f2: 76.908401
+2023-06-06 14:13:30,780 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 2 | train -> loss: 0.92320 | validation -> loss: 0.83513 | accuracy: 40.476192 | precision: 40.179462 | recall: 100.000000 | f2: 77.055450
+2023-06-06 14:14:01,522 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 3 | train -> loss: 0.91900 | validation -> loss: 0.93182 | accuracy: 39.980160 | precision: 39.960239 | recall: 99.751862 | f2: 76.776161
+2023-06-06 14:14:32,213 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 4 | train -> loss: 0.88473 | validation -> loss: 1.02836 | accuracy: 64.880959 | precision: 96.226418 | recall: 12.655087 | f2: 15.315315
+2023-06-06 14:15:02,502 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 5 | train -> loss: 0.90214 | validation -> loss: 0.75556 | accuracy: 78.571426 | precision: 82.807014 | recall: 58.560795 | f2: 62.203480
+2023-06-06 14:15:33,263 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 6 | train -> loss: 0.87673 | validation -> loss: 0.96249 | accuracy: 53.472221 | precision: 45.703125 | recall: 87.096771 | f2: 73.739494
+2023-06-06 14:16:03,952 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 7 | train -> loss: 0.89420 | validation -> loss: 0.91329 | accuracy: 58.035713 | precision: 48.575500 | recall: 84.615387 | f2: 73.681938
+2023-06-06 14:16:33,956 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 8 | train -> loss: 0.90497 | validation -> loss: 0.89031 | accuracy: 57.043655 | precision: 47.945206 | recall: 86.848633 | f2: 74.722458
+2023-06-06 14:17:04,519 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 9 | train -> loss: 0.80114 | validation -> loss: 0.52075 | accuracy: 89.781746 | precision: 84.722221 | recall: 90.818855 | f2: 89.530334
+2023-06-06 14:17:34,770 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 10 | train -> loss: 0.86904 | validation -> loss: 0.71317 | accuracy: 77.480164 | precision: 69.909500 | recall: 76.674942 | f2: 75.219086
+2023-06-06 14:18:05,050 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 11 | train -> loss: 0.66531 | validation -> loss: 0.58164 | accuracy: 80.456345 | precision: 70.934959 | recall: 86.600494 | f2: 82.937263
+2023-06-06 14:18:34,930 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 12 | train -> loss: 0.47346 | validation -> loss: 0.38613 | accuracy: 89.880959 | precision: 84.918793 | recall: 90.818855 | f2: 89.574158
+2023-06-06 14:19:05,091 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 13 | train -> loss: 0.49790 | validation -> loss: 0.83312 | accuracy: 39.980160 | precision: 39.980160 | recall: 100.000000 | f2: 76.908401
+2023-06-06 14:19:35,650 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 14 | train -> loss: 0.80935 | validation -> loss: 0.79633 | accuracy: 40.079365 | precision: 40.019859 | recall: 100.000000 | f2: 76.937767
+2023-06-06 14:20:05,956 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 15 | train -> loss: 0.49669 | validation -> loss: 0.38666 | accuracy: 91.269836 | precision: 90.909096 | recall: 86.848633 | f2: 87.631447
+2023-06-06 14:20:36,354 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 16 | train -> loss: 0.28177 | validation -> loss: 0.35590 | accuracy: 89.186508 | precision: 79.282867 | recall: 98.759308 | f2: 94.134346
+2023-06-06 14:21:06,693 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 17 | train -> loss: 0.17397 | validation -> loss: 0.26006 | accuracy: 92.261902 | precision: 84.946236 | recall: 98.014893 | f2: 95.089073
+2023-06-06 14:21:37,525 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 18 | train -> loss: 0.13237 | validation -> loss: 0.32150 | accuracy: 89.186508 | precision: 78.937004 | recall: 99.503723 | f2: 94.575470
+2023-06-06 14:22:07,799 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 19 | train -> loss: 0.10472 | validation -> loss: 0.25079 | accuracy: 93.750000 | precision: 89.906105 | recall: 95.037224 | f2: 93.964676
+2023-06-06 14:22:38,459 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 20 | train -> loss: 0.10213 | validation -> loss: 0.25726 | accuracy: 92.162697 | precision: 85.064934 | recall: 97.518608 | f2: 94.744453
+2023-06-06 14:23:08,651 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 21 | train -> loss: 0.08368 | validation -> loss: 0.34160 | accuracy: 88.888893 | precision: 79.041916 | recall: 98.263023 | f2: 93.705627
+2023-06-06 14:23:08,652 | root | INFO | rnn.py learn @ 113 : fold: 0 | epoch: 22 | Learning rate changed from: 0.0005 -> 0.000125
+2023-06-06 14:23:38,482 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 22 | train -> loss: 0.05963 | validation -> loss: 0.27110 | accuracy: 91.567459 | precision: 83.125000 | recall: 99.007446 | f2: 95.363289
+2023-06-06 14:24:08,404 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 23 | train -> loss: 0.05317 | validation -> loss: 0.27286 | accuracy: 93.253967 | precision: 87.305122 | recall: 97.270470 | f2: 95.099464
+2023-06-06 14:24:38,808 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 24 | train -> loss: 0.04777 | validation -> loss: 0.30274 | accuracy: 92.559525 | precision: 85.193130 | recall: 98.511162 | f2: 95.524544
+2023-06-06 14:25:09,271 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 25 | train -> loss: 0.04488 | validation -> loss: 0.30760 | accuracy: 93.750000 | precision: 89.534882 | recall: 95.533493 | f2: 94.270325
+2023-06-06 14:25:39,662 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 26 | train -> loss: 0.04627 | validation -> loss: 0.28141 | accuracy: 92.857140 | precision: 86.534210 | recall: 97.270470 | f2: 94.915253
+2023-06-06 14:26:09,956 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 27 | train -> loss: 0.05277 | validation -> loss: 0.29864 | accuracy: 93.353180 | precision: 89.622643 | recall: 94.292801 | f2: 93.320236
+2023-06-06 14:26:40,028 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 28 | train -> loss: 0.04130 | validation -> loss: 0.29293 | accuracy: 93.750000 | precision: 89.170509 | recall: 96.029778 | f2: 94.574776
+2023-06-06 14:27:10,274 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 29 | train -> loss: 0.04266 | validation -> loss: 0.25456 | accuracy: 93.353180 | precision: 86.842110 | recall: 98.263023 | f2: 95.744682
+2023-06-06 14:27:41,128 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 30 | train -> loss: 0.04811 | validation -> loss: 0.26204 | accuracy: 93.353180 | precision: 87.837837 | recall: 96.774193 | f2: 94.844360
+2023-06-06 14:28:10,866 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 31 | train -> loss: 0.04135 | validation -> loss: 0.34994 | accuracy: 90.773811 | precision: 81.632652 | recall: 99.255585 | f2: 95.147476
+2023-06-06 14:28:41,031 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 32 | train -> loss: 0.04105 | validation -> loss: 0.28951 | accuracy: 93.154762 | precision: 86.946907 | recall: 97.518608 | f2: 95.203491
+2023-06-06 14:29:10,652 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 33 | train -> loss: 0.03827 | validation -> loss: 0.32632 | accuracy: 93.055557 | precision: 88.275864 | recall: 95.285362 | f2: 93.795799
+2023-06-06 14:29:40,984 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 34 | train -> loss: 0.04061 | validation -> loss: 0.28682 | accuracy: 93.154762 | precision: 86.946907 | recall: 97.518608 | f2: 95.203491
+2023-06-06 14:30:11,376 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 35 | train -> loss: 0.04352 | validation -> loss: 0.23789 | accuracy: 94.047615 | precision: 88.026604 | recall: 98.511162 | f2: 96.219101
+2023-06-06 14:30:41,804 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 36 | train -> loss: 0.03610 | validation -> loss: 0.24084 | accuracy: 94.146820 | precision: 89.449539 | recall: 96.774193 | f2: 95.214844
+2023-06-06 14:31:12,118 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 37 | train -> loss: 0.03576 | validation -> loss: 0.24204 | accuracy: 93.353180 | precision: 86.521736 | recall: 98.759308 | f2: 96.042473
+2023-06-06 14:31:42,038 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 38 | train -> loss: 0.03610 | validation -> loss: 0.31048 | accuracy: 92.261902 | precision: 84.648186 | recall: 98.511162 | f2: 95.386833
+2023-06-06 14:32:12,185 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 39 | train -> loss: 0.03441 | validation -> loss: 0.32096 | accuracy: 93.154762 | precision: 88.657410 | recall: 95.037224 | f2: 93.688843
+2023-06-06 14:32:42,779 | root | INFO | rnn.py learn @ 150 : fold: 0 | epoch: 40 | train -> loss: 0.04830 | validation -> loss: 0.23852 | accuracy: 94.246033 | precision: 89.473686 | recall: 97.022331 | f2: 95.412399
+2023-06-06 14:32:44,382 | root | INFO | rnn.py save @ 200 : saving sanpshot at output/06-06-2023-14-10-57-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000nofilter-lr0.000500-h1024-l1/weights/f0/model_fold0.pth
+2023-06-06 14:32:44,969 | root | INFO | rnn.py learn @ 83 : Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.0005
+    maximize: False
+    weight_decay: 0
+)
+2023-06-06 14:32:44,972 | root | INFO | rnn.py learn @ 84 : <torch.optim.lr_scheduler.ReduceLROnPlateau object at 0x000002403840DD90>
+2023-06-06 14:32:44,973 | root | INFO | rnn.py learn @ 85 : fetching data for fold #1
+2023-06-06 14:32:44,974 | root | ERROR | rnn.py learn @ 106 : 'ReLU' object has no attribute 'reset_parameters'
+2023-06-06 14:32:44,975 | root | ERROR | rnn.py learn @ 106 : 'BCEWithLogitsLoss' object has no attribute 'reset_parameters'
+2023-06-06 14:32:44,976 | root | INFO | rnn.py learn @ 104 : parameters reset
+2023-06-06 14:32:44,977 | root | INFO | rnn.py learn @ 104 : parameters reset
+2023-06-06 14:33:16,327 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 1 | train -> loss: 0.93498 | validation -> loss: 0.92519 | accuracy: 39.980160 | precision: 39.980160 | recall: 100.000000 | f2: 76.908401
+2023-06-06 14:33:47,683 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 2 | train -> loss: 0.92672 | validation -> loss: 0.91357 | accuracy: 40.178570 | precision: 40.059643 | recall: 100.000000 | f2: 76.967148
+2023-06-06 14:34:18,655 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 3 | train -> loss: 0.90310 | validation -> loss: 0.82406 | accuracy: 48.809521 | precision: 43.852013 | recall: 100.000000 | f2: 79.612801
+2023-06-06 14:34:49,985 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 4 | train -> loss: 0.96925 | validation -> loss: 0.89984 | accuracy: 57.837303 | precision: 48.160534 | recall: 71.464020 | f2: 65.158371
+2023-06-06 14:35:21,657 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 5 | train -> loss: 0.96541 | validation -> loss: 0.93929 | accuracy: 46.428570 | precision: 41.318123 | recall: 80.893303 | f2: 67.888382
+2023-06-06 14:35:52,729 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 6 | train -> loss: 0.93134 | validation -> loss: 0.89540 | accuracy: 39.980160 | precision: 39.980160 | recall: 100.000000 | f2: 76.908401
+2023-06-06 14:36:23,888 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 7 | train -> loss: 0.91896 | validation -> loss: 0.91317 | accuracy: 60.515873 | precision: 50.554321 | recall: 56.575680 | f2: 55.259331
+2023-06-06 14:36:55,159 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 8 | train -> loss: 0.88977 | validation -> loss: 0.80665 | accuracy: 71.924606 | precision: 61.718750 | recall: 78.411911 | f2: 74.387947
+2023-06-06 14:37:26,359 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 9 | train -> loss: 0.71504 | validation -> loss: 0.58721 | accuracy: 86.210320 | precision: 89.053253 | recall: 74.689827 | f2: 77.179489
+2023-06-06 14:37:57,382 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 10 | train -> loss: 0.41213 | validation -> loss: 0.43903 | accuracy: 89.880959 | precision: 92.877495 | recall: 80.893303 | f2: 83.036163
+2023-06-06 14:38:29,169 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 11 | train -> loss: 0.29631 | validation -> loss: 0.28541 | accuracy: 92.857140 | precision: 88.045975 | recall: 95.037224 | f2: 93.551544
+2023-06-06 14:39:01,007 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 12 | train -> loss: 0.25109 | validation -> loss: 0.25584 | accuracy: 92.857140 | precision: 88.045975 | recall: 95.037224 | f2: 93.551544
+2023-06-06 14:39:32,215 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 13 | train -> loss: 0.19727 | validation -> loss: 0.55743 | accuracy: 90.277779 | precision: 90.450928 | recall: 84.615387 | f2: 85.721466
+2023-06-06 14:40:03,234 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 14 | train -> loss: 0.18605 | validation -> loss: 0.26006 | accuracy: 92.658730 | precision: 87.133179 | recall: 95.781639 | f2: 93.917274
+2023-06-06 14:40:34,154 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 15 | train -> loss: 0.14094 | validation -> loss: 0.32908 | accuracy: 89.285713 | precision: 79.559120 | recall: 98.511162 | f2: 94.031265
+2023-06-06 14:41:05,586 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 16 | train -> loss: 0.19040 | validation -> loss: 0.33046 | accuracy: 91.369041 | precision: 86.405525 | recall: 93.052109 | f2: 91.642227
+2023-06-06 14:41:36,773 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 17 | train -> loss: 0.16154 | validation -> loss: 0.29311 | accuracy: 90.773811 | precision: 83.695648 | recall: 95.533493 | f2: 92.905411
+2023-06-06 14:42:08,045 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 18 | train -> loss: 0.12840 | validation -> loss: 0.30799 | accuracy: 89.980164 | precision: 81.856544 | recall: 96.277916 | f2: 93.000961
+2023-06-06 14:42:39,596 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 19 | train -> loss: 0.11609 | validation -> loss: 0.33123 | accuracy: 90.575394 | precision: 85.000000 | recall: 92.803970 | f2: 91.130600
+2023-06-06 14:43:10,795 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 20 | train -> loss: 0.10275 | validation -> loss: 0.32727 | accuracy: 90.972221 | precision: 83.913048 | recall: 95.781639 | f2: 93.146721
+2023-06-06 14:43:42,133 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 21 | train -> loss: 0.12274 | validation -> loss: 0.35421 | accuracy: 90.178574 | precision: 81.147537 | recall: 98.263023 | f2: 94.285713
+2023-06-06 14:43:42,134 | root | INFO | rnn.py learn @ 113 : fold: 1 | epoch: 22 | Learning rate changed from: 0.0005 -> 0.000125
+2023-06-06 14:44:13,445 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 22 | train -> loss: 0.07334 | validation -> loss: 0.33589 | accuracy: 91.865082 | precision: 85.430458 | recall: 96.029778 | f2: 93.704597
+2023-06-06 14:44:44,957 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 23 | train -> loss: 0.06980 | validation -> loss: 0.33472 | accuracy: 91.765877 | precision: 85.714287 | recall: 95.285362 | f2: 93.203888
+2023-06-06 14:45:15,636 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 24 | train -> loss: 0.06441 | validation -> loss: 0.32439 | accuracy: 92.063492 | precision: 86.621315 | recall: 94.789085 | f2: 93.034584
+2023-06-06 14:45:46,586 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 25 | train -> loss: 0.07002 | validation -> loss: 0.33869 | accuracy: 91.369041 | precision: 84.051720 | recall: 96.774193 | f2: 93.930641
+2023-06-06 14:46:17,532 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 26 | train -> loss: 0.06175 | validation -> loss: 0.33882 | accuracy: 91.765877 | precision: 86.363640 | recall: 94.292801 | f2: 92.592590
+2023-06-06 14:46:49,071 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 27 | train -> loss: 0.06043 | validation -> loss: 0.31696 | accuracy: 92.162697 | precision: 85.682823 | recall: 96.526054 | f2: 94.143272
+2023-06-06 14:47:20,332 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 28 | train -> loss: 0.05942 | validation -> loss: 0.32205 | accuracy: 91.666672 | precision: 84.901527 | recall: 96.277916 | f2: 93.765106
+2023-06-06 14:47:51,651 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 29 | train -> loss: 0.05380 | validation -> loss: 0.34792 | accuracy: 91.468254 | precision: 84.381775 | recall: 96.526054 | f2: 93.825378
+2023-06-06 14:48:22,842 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 30 | train -> loss: 0.05583 | validation -> loss: 0.32822 | accuracy: 92.460320 | precision: 87.759819 | recall: 94.292801 | f2: 92.909531
+2023-06-06 14:48:54,557 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 31 | train -> loss: 0.05123 | validation -> loss: 0.36213 | accuracy: 91.269836 | precision: 83.582092 | recall: 97.270470 | f2: 94.185486
+2023-06-06 14:49:26,121 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 32 | train -> loss: 0.05210 | validation -> loss: 0.34633 | accuracy: 92.162697 | precision: 86.651581 | recall: 95.037224 | f2: 93.232712
+2023-06-06 14:49:57,689 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 33 | train -> loss: 0.05572 | validation -> loss: 0.31076 | accuracy: 91.964287 | precision: 85.462555 | recall: 96.277916 | f2: 93.901260
+2023-06-06 14:50:28,602 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 34 | train -> loss: 0.05761 | validation -> loss: 0.38464 | accuracy: 91.865082 | precision: 85.430458 | recall: 96.029778 | f2: 93.704597
+2023-06-06 14:50:59,961 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 35 | train -> loss: 0.04448 | validation -> loss: 0.37850 | accuracy: 91.765877 | precision: 85.555557 | recall: 95.533493 | f2: 93.355965
+2023-06-06 14:51:31,363 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 36 | train -> loss: 0.04512 | validation -> loss: 0.40952 | accuracy: 91.269836 | precision: 85.077957 | recall: 94.789085 | f2: 92.673454
+2023-06-06 14:52:02,788 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 37 | train -> loss: 0.04440 | validation -> loss: 0.44158 | accuracy: 90.575394 | precision: 82.083336 | recall: 97.766754 | f2: 94.168259
+2023-06-06 14:52:33,801 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 38 | train -> loss: 0.04974 | validation -> loss: 0.34078 | accuracy: 92.460320 | precision: 86.092720 | recall: 96.774193 | f2: 94.430992
+2023-06-06 14:53:05,343 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 39 | train -> loss: 0.04456 | validation -> loss: 0.38910 | accuracy: 90.575394 | precision: 81.950203 | recall: 98.014893 | f2: 94.317093
+2023-06-06 14:53:36,949 | root | INFO | rnn.py learn @ 150 : fold: 1 | epoch: 40 | train -> loss: 0.04503 | validation -> loss: 0.40123 | accuracy: 91.369041 | precision: 84.051720 | recall: 96.774193 | f2: 93.930641
+2023-06-06 14:53:38,558 | root | INFO | rnn.py save @ 200 : saving sanpshot at output/06-06-2023-14-10-57-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000nofilter-lr0.000500-h1024-l1/weights/f1/model_fold1.pth
+2023-06-06 14:53:39,037 | root | INFO | rnn.py learn @ 83 : Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.0005
+    maximize: False
+    weight_decay: 0
+)
+2023-06-06 14:53:39,042 | root | INFO | rnn.py learn @ 84 : <torch.optim.lr_scheduler.ReduceLROnPlateau object at 0x00000240334C4610>
+2023-06-06 14:53:39,043 | root | INFO | rnn.py learn @ 85 : fetching data for fold #2
+2023-06-06 14:53:39,044 | root | ERROR | rnn.py learn @ 106 : 'ReLU' object has no attribute 'reset_parameters'
+2023-06-06 14:53:39,045 | root | ERROR | rnn.py learn @ 106 : 'BCEWithLogitsLoss' object has no attribute 'reset_parameters'
+2023-06-06 14:53:39,047 | root | INFO | rnn.py learn @ 104 : parameters reset
+2023-06-06 14:53:39,048 | root | INFO | rnn.py learn @ 104 : parameters reset
+2023-06-06 14:54:10,260 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 1 | train -> loss: 0.95012 | validation -> loss: 0.93443 | accuracy: 39.980160 | precision: 39.980160 | recall: 100.000000 | f2: 76.908401
+2023-06-06 14:54:41,829 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 2 | train -> loss: 0.92834 | validation -> loss: 1.34971 | accuracy: 40.376984 | precision: 40.139442 | recall: 100.000000 | f2: 77.025993
+2023-06-06 14:55:12,963 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 3 | train -> loss: 0.92580 | validation -> loss: 1.06661 | accuracy: 40.079365 | precision: 40.019859 | recall: 100.000000 | f2: 76.937767
+2023-06-06 14:55:43,800 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 4 | train -> loss: 0.92187 | validation -> loss: 0.90925 | accuracy: 44.345238 | precision: 41.787945 | recall: 99.751862 | f2: 78.088577
+2023-06-06 14:56:14,060 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 5 | train -> loss: 0.86205 | validation -> loss: 0.81162 | accuracy: 75.496033 | precision: 90.206184 | recall: 43.424316 | f2: 48.449612
+2023-06-06 14:56:44,680 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 6 | train -> loss: 0.70209 | validation -> loss: 0.93071 | accuracy: 40.376984 | precision: 40.119762 | recall: 99.751862 | f2: 76.893654
+2023-06-06 14:57:15,609 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 7 | train -> loss: 0.58820 | validation -> loss: 0.37216 | accuracy: 87.202385 | precision: 77.732796 | recall: 95.285362 | f2: 91.168091
+2023-06-06 14:57:46,194 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 8 | train -> loss: 0.27598 | validation -> loss: 0.38389 | accuracy: 84.920631 | precision: 73.027519 | recall: 98.759308 | f2: 92.257767
+2023-06-06 14:58:16,886 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 9 | train -> loss: 0.16625 | validation -> loss: 0.33505 | accuracy: 88.690475 | precision: 78.500984 | recall: 98.759308 | f2: 93.912216
+2023-06-06 14:58:47,721 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 10 | train -> loss: 0.12880 | validation -> loss: 0.28435 | accuracy: 91.865082 | precision: 86.727692 | recall: 94.044670 | f2: 92.484138
+2023-06-06 14:59:18,666 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 11 | train -> loss: 0.11568 | validation -> loss: 0.24188 | accuracy: 94.047615 | precision: 91.727493 | recall: 93.548386 | f2: 93.178444
+2023-06-06 14:59:50,598 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 12 | train -> loss: 0.10312 | validation -> loss: 0.39129 | accuracy: 88.690475 | precision: 78.389000 | recall: 99.007446 | f2: 94.059410
+2023-06-06 15:00:22,041 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 13 | train -> loss: 0.12731 | validation -> loss: 0.27174 | accuracy: 91.468254 | precision: 84.086021 | recall: 97.022331 | f2: 94.126144
+2023-06-06 15:00:53,653 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 14 | train -> loss: 0.06917 | validation -> loss: 0.29222 | accuracy: 93.650795 | precision: 88.965515 | recall: 96.029778 | f2: 94.528580
+2023-06-06 15:01:25,383 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 15 | train -> loss: 0.13932 | validation -> loss: 0.30805 | accuracy: 91.468254 | precision: 83.651802 | recall: 97.766754 | f2: 94.575134
+2023-06-06 15:01:55,729 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 16 | train -> loss: 0.07985 | validation -> loss: 0.27773 | accuracy: 92.757935 | precision: 86.830360 | recall: 96.526054 | f2: 94.417480
+2023-06-06 15:02:26,384 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 17 | train -> loss: 0.06242 | validation -> loss: 0.39462 | accuracy: 88.988098 | precision: 79.199997 | recall: 98.263023 | f2: 93.750000
+2023-06-06 15:02:57,298 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 18 | train -> loss: 0.07128 | validation -> loss: 0.35640 | accuracy: 91.567459 | precision: 84.120171 | recall: 97.270470 | f2: 94.321465
+2023-06-06 15:03:28,940 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 19 | train -> loss: 0.06146 | validation -> loss: 0.30609 | accuracy: 92.063492 | precision: 85.339172 | recall: 96.774193 | f2: 94.248428
+2023-06-06 15:04:00,804 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 20 | train -> loss: 0.05466 | validation -> loss: 0.31467 | accuracy: 88.888893 | precision: 78.926445 | recall: 98.511162 | f2: 93.853424
+2023-06-06 15:04:31,982 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 21 | train -> loss: 0.04551 | validation -> loss: 0.27577 | accuracy: 92.361107 | precision: 85.903084 | recall: 96.774193 | f2: 94.385284
+2023-06-06 15:04:31,983 | root | INFO | rnn.py learn @ 113 : fold: 2 | epoch: 22 | Learning rate changed from: 0.0005 -> 0.000125
+2023-06-06 15:05:02,800 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 22 | train -> loss: 0.03155 | validation -> loss: 0.34131 | accuracy: 91.369041 | precision: 83.474579 | recall: 97.766754 | f2: 94.529747
+2023-06-06 15:05:34,154 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 23 | train -> loss: 0.03156 | validation -> loss: 0.32371 | accuracy: 92.559525 | precision: 86.283180 | recall: 96.774193 | f2: 94.476738
+2023-06-06 15:06:05,513 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 24 | train -> loss: 0.02750 | validation -> loss: 0.35094 | accuracy: 92.361107 | precision: 85.903084 | recall: 96.774193 | f2: 94.385284
+2023-06-06 15:06:36,501 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 25 | train -> loss: 0.02426 | validation -> loss: 0.36784 | accuracy: 92.658730 | precision: 86.800896 | recall: 96.277916 | f2: 94.220497
+2023-06-06 15:07:07,469 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 26 | train -> loss: 0.02535 | validation -> loss: 0.39936 | accuracy: 93.055557 | precision: 88.100685 | recall: 95.533493 | f2: 93.948273
+2023-06-06 15:07:38,942 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 27 | train -> loss: 0.03159 | validation -> loss: 0.33657 | accuracy: 93.253967 | precision: 89.227165 | recall: 94.540939 | f2: 93.428154
+2023-06-06 15:08:09,795 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 28 | train -> loss: 0.02432 | validation -> loss: 0.36074 | accuracy: 92.063492 | precision: 85.185188 | recall: 97.022331 | f2: 94.398842
+2023-06-06 15:08:40,718 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 29 | train -> loss: 0.02380 | validation -> loss: 0.48495 | accuracy: 90.079369 | precision: 81.894737 | recall: 96.526054 | f2: 93.195976
+2023-06-06 15:09:12,187 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 30 | train -> loss: 0.03017 | validation -> loss: 0.41122 | accuracy: 91.865082 | precision: 85.746101 | recall: 95.533493 | f2: 93.401260
+2023-06-06 15:09:43,695 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 31 | train -> loss: 0.02813 | validation -> loss: 0.42634 | accuracy: 90.277779 | precision: 81.970650 | recall: 97.022331 | f2: 93.585449
+2023-06-06 15:10:15,180 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 32 | train -> loss: 0.02060 | validation -> loss: 0.44431 | accuracy: 92.162697 | precision: 86.322868 | recall: 95.533493 | f2: 93.537415
+2023-06-06 15:10:46,648 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 33 | train -> loss: 0.02358 | validation -> loss: 0.41628 | accuracy: 90.575394 | precision: 82.217575 | recall: 97.518608 | f2: 94.019142
+2023-06-06 15:11:18,527 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 34 | train -> loss: 0.02493 | validation -> loss: 0.33733 | accuracy: 91.567459 | precision: 83.974365 | recall: 97.518608 | f2: 94.471153
+2023-06-06 15:11:50,071 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 35 | train -> loss: 0.02074 | validation -> loss: 0.42223 | accuracy: 91.369041 | precision: 84.347824 | recall: 96.277916 | f2: 93.629341
+2023-06-06 15:12:20,988 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 36 | train -> loss: 0.02290 | validation -> loss: 0.39550 | accuracy: 92.460320 | precision: 86.741570 | recall: 95.781639 | f2: 93.825958
+2023-06-06 15:12:51,785 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 37 | train -> loss: 0.01819 | validation -> loss: 0.43282 | accuracy: 92.162697 | precision: 86.000000 | recall: 96.029778 | f2: 93.840935
+2023-06-06 15:13:23,522 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 38 | train -> loss: 0.01765 | validation -> loss: 0.47696 | accuracy: 92.658730 | precision: 87.471527 | recall: 95.285362 | f2: 93.612877
+2023-06-06 15:13:54,528 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 39 | train -> loss: 0.02227 | validation -> loss: 0.44905 | accuracy: 92.063492 | precision: 85.651215 | recall: 96.277916 | f2: 93.946732
+2023-06-06 15:14:25,205 | root | INFO | rnn.py learn @ 150 : fold: 2 | epoch: 40 | train -> loss: 0.01752 | validation -> loss: 0.44635 | accuracy: 91.765877 | precision: 85.398232 | recall: 95.781639 | f2: 93.507751
+2023-06-06 15:14:26,788 | root | INFO | rnn.py save @ 200 : saving sanpshot at output/06-06-2023-14-10-57-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000nofilter-lr0.000500-h1024-l1/weights/f2/model_fold2.pth
+2023-06-06 15:14:27,494 | root | INFO | rnn.py learn @ 83 : Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.0005
+    maximize: False
+    weight_decay: 0
+)
+2023-06-06 15:14:27,498 | root | INFO | rnn.py learn @ 84 : <torch.optim.lr_scheduler.ReduceLROnPlateau object at 0x00000240338EC6A0>
+2023-06-06 15:14:27,499 | root | INFO | rnn.py learn @ 85 : fetching data for fold #3
+2023-06-06 15:14:27,500 | root | ERROR | rnn.py learn @ 106 : 'ReLU' object has no attribute 'reset_parameters'
+2023-06-06 15:14:27,500 | root | ERROR | rnn.py learn @ 106 : 'BCEWithLogitsLoss' object has no attribute 'reset_parameters'
+2023-06-06 15:14:27,502 | root | INFO | rnn.py learn @ 104 : parameters reset
+2023-06-06 15:14:27,503 | root | INFO | rnn.py learn @ 104 : parameters reset
+2023-06-06 15:14:58,129 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 1 | train -> loss: 0.93730 | validation -> loss: 0.93587 | accuracy: 40.178570 | precision: 40.119164 | recall: 100.000000 | f2: 77.011055
+2023-06-06 15:15:29,238 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 2 | train -> loss: 0.89669 | validation -> loss: 0.94895 | accuracy: 40.674603 | precision: 40.102039 | recall: 97.277229 | f2: 75.693375
+2023-06-06 15:16:00,249 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 3 | train -> loss: 0.91373 | validation -> loss: 0.91582 | accuracy: 40.178570 | precision: 40.119164 | recall: 100.000000 | f2: 77.011055
+2023-06-06 15:16:31,355 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 4 | train -> loss: 0.92301 | validation -> loss: 0.90930 | accuracy: 40.873016 | precision: 40.400002 | recall: 100.000000 | f2: 77.217125
+2023-06-06 15:17:02,684 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 5 | train -> loss: 0.90189 | validation -> loss: 0.83953 | accuracy: 51.587303 | precision: 45.259594 | recall: 99.257431 | f2: 80.135895
+2023-06-06 15:17:33,693 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 6 | train -> loss: 0.92723 | validation -> loss: 0.90339 | accuracy: 55.059521 | precision: 44.927536 | recall: 53.712868 | f2: 51.691280
+2023-06-06 15:18:04,787 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 7 | train -> loss: 0.97376 | validation -> loss: 0.95107 | accuracy: 47.420635 | precision: 42.045452 | recall: 82.425743 | f2: 69.144516
+2023-06-06 15:18:35,559 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 8 | train -> loss: 0.92207 | validation -> loss: 0.95627 | accuracy: 68.253967 | precision: 95.652176 | recall: 21.782177 | f2: 25.761124
+2023-06-06 15:19:06,166 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 9 | train -> loss: 0.53913 | validation -> loss: 0.30433 | accuracy: 93.253967 | precision: 90.000000 | recall: 93.564354 | f2: 92.829079
+2023-06-06 15:19:37,122 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 10 | train -> loss: 0.44243 | validation -> loss: 0.39349 | accuracy: 86.309525 | precision: 75.675674 | recall: 97.029701 | f2: 91.846298
+2023-06-06 15:20:08,227 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 11 | train -> loss: 0.22933 | validation -> loss: 0.25463 | accuracy: 93.353180 | precision: 88.914551 | recall: 95.297035 | f2: 93.948273
+2023-06-06 15:20:39,201 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 12 | train -> loss: 0.19536 | validation -> loss: 0.26635 | accuracy: 93.253967 | precision: 87.168137 | recall: 97.524750 | f2: 95.261124
+2023-06-06 15:21:10,229 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 13 | train -> loss: 0.20246 | validation -> loss: 0.30478 | accuracy: 90.873016 | precision: 82.500000 | recall: 98.019806 | f2: 94.465652
+2023-06-06 15:21:41,594 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 14 | train -> loss: 0.54115 | validation -> loss: 0.39356 | accuracy: 86.111107 | precision: 75.680939 | recall: 96.287132 | f2: 91.314552
+2023-06-06 15:22:12,944 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 15 | train -> loss: 0.23617 | validation -> loss: 0.28888 | accuracy: 92.361107 | precision: 86.907448 | recall: 95.297035 | f2: 93.491989
+2023-06-06 15:22:44,356 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 16 | train -> loss: 0.15952 | validation -> loss: 0.36545 | accuracy: 92.063492 | precision: 91.116753 | recall: 88.861389 | f2: 89.303482
+2023-06-06 15:23:15,094 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 17 | train -> loss: 0.13292 | validation -> loss: 0.27698 | accuracy: 93.353180 | precision: 88.558350 | recall: 95.792076 | f2: 94.252312
+2023-06-06 15:23:46,288 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 18 | train -> loss: 0.10844 | validation -> loss: 0.28012 | accuracy: 91.468254 | precision: 83.829788 | recall: 97.524750 | f2: 94.439117
+2023-06-06 15:24:16,851 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 19 | train -> loss: 0.08812 | validation -> loss: 0.30917 | accuracy: 92.261902 | precision: 86.061951 | recall: 96.287132 | f2: 94.052223
+2023-06-06 15:24:47,420 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 20 | train -> loss: 0.07805 | validation -> loss: 0.38122 | accuracy: 90.476189 | precision: 82.627121 | recall: 96.534653 | f2: 93.390808
+2023-06-06 15:25:18,654 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 21 | train -> loss: 0.08316 | validation -> loss: 0.32556 | accuracy: 92.162697 | precision: 86.191536 | recall: 95.792076 | f2: 93.704597
+2023-06-06 15:25:18,655 | root | INFO | rnn.py learn @ 113 : fold: 3 | epoch: 22 | Learning rate changed from: 0.0005 -> 0.000125
+2023-06-06 15:25:49,668 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 22 | train -> loss: 0.05358 | validation -> loss: 0.37419 | accuracy: 91.369041 | precision: 83.795311 | recall: 97.277229 | f2: 94.244606
+2023-06-06 15:26:20,483 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 23 | train -> loss: 0.04774 | validation -> loss: 0.38508 | accuracy: 91.765877 | precision: 85.120354 | recall: 96.287132 | f2: 93.825378
+2023-06-06 15:26:51,461 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 24 | train -> loss: 0.04786 | validation -> loss: 0.43158 | accuracy: 89.682541 | precision: 80.737701 | recall: 97.524750 | f2: 93.631180
+2023-06-06 15:27:22,536 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 25 | train -> loss: 0.05141 | validation -> loss: 0.38903 | accuracy: 92.162697 | precision: 85.714287 | recall: 96.534653 | f2: 94.157410
+2023-06-06 15:27:53,461 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 26 | train -> loss: 0.04200 | validation -> loss: 0.40769 | accuracy: 90.873016 | precision: 82.500000 | recall: 98.019806 | f2: 94.465652
+2023-06-06 15:28:24,107 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 27 | train -> loss: 0.03787 | validation -> loss: 0.42057 | accuracy: 90.873016 | precision: 82.911392 | recall: 97.277229 | f2: 94.019142
+2023-06-06 15:28:55,305 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 28 | train -> loss: 0.04713 | validation -> loss: 0.39588 | accuracy: 92.162697 | precision: 85.714287 | recall: 96.534653 | f2: 94.157410
+2023-06-06 15:29:26,177 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 29 | train -> loss: 0.03706 | validation -> loss: 0.42086 | accuracy: 91.964287 | precision: 85.339172 | recall: 96.534653 | f2: 94.066574
+2023-06-06 15:29:57,609 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 30 | train -> loss: 0.03574 | validation -> loss: 0.47542 | accuracy: 91.666672 | precision: 84.482758 | recall: 97.029701 | f2: 94.230774
+2023-06-06 15:30:30,368 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 31 | train -> loss: 0.03747 | validation -> loss: 0.39258 | accuracy: 92.261902 | precision: 86.061951 | recall: 96.287132 | f2: 94.052223
+2023-06-06 15:31:01,854 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 32 | train -> loss: 0.03213 | validation -> loss: 0.43436 | accuracy: 91.071426 | precision: 83.262711 | recall: 97.277229 | f2: 94.109192
+2023-06-06 15:31:33,419 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 33 | train -> loss: 0.03088 | validation -> loss: 0.47790 | accuracy: 92.658730 | precision: 88.372093 | recall: 94.059410 | f2: 92.864128
+2023-06-06 15:32:05,417 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 34 | train -> loss: 0.03189 | validation -> loss: 0.50042 | accuracy: 91.666672 | precision: 84.782608 | recall: 96.534653 | f2: 93.930641
+2023-06-06 15:32:36,879 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 35 | train -> loss: 0.03814 | validation -> loss: 0.42103 | accuracy: 92.757935 | precision: 87.699318 | recall: 95.297035 | f2: 93.673965
+2023-06-06 15:33:08,348 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 36 | train -> loss: 0.03132 | validation -> loss: 0.46263 | accuracy: 92.559525 | precision: 87.133179 | recall: 95.544556 | f2: 93.734825
+2023-06-06 15:33:40,140 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 37 | train -> loss: 0.02775 | validation -> loss: 0.46004 | accuracy: 92.460320 | precision: 86.936935 | recall: 95.544556 | f2: 93.689323
+2023-06-06 15:34:11,749 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 38 | train -> loss: 0.04015 | validation -> loss: 0.44202 | accuracy: 91.666672 | precision: 85.242287 | recall: 95.792076 | f2: 93.478264
+2023-06-06 15:34:42,856 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 39 | train -> loss: 0.02885 | validation -> loss: 0.35933 | accuracy: 92.361107 | precision: 86.252769 | recall: 96.287132 | f2: 94.097725
+2023-06-06 15:35:14,373 | root | INFO | rnn.py learn @ 150 : fold: 3 | epoch: 40 | train -> loss: 0.03082 | validation -> loss: 0.40168 | accuracy: 92.857140 | precision: 88.785049 | recall: 94.059410 | f2: 92.954987
+2023-06-06 15:35:15,980 | root | INFO | rnn.py save @ 200 : saving sanpshot at output/06-06-2023-14-10-57-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000nofilter-lr0.000500-h1024-l1/weights/f3/model_fold3.pth
+2023-06-06 15:35:16,306 | root | INFO | rnn.py learn @ 83 : Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.0005
+    maximize: False
+    weight_decay: 0
+)
+2023-06-06 15:35:16,310 | root | INFO | rnn.py learn @ 84 : <torch.optim.lr_scheduler.ReduceLROnPlateau object at 0x0000024034958F40>
+2023-06-06 15:35:16,311 | root | INFO | rnn.py learn @ 85 : fetching data for fold #4
+2023-06-06 15:35:16,312 | root | ERROR | rnn.py learn @ 106 : 'ReLU' object has no attribute 'reset_parameters'
+2023-06-06 15:35:16,313 | root | ERROR | rnn.py learn @ 106 : 'BCEWithLogitsLoss' object has no attribute 'reset_parameters'
+2023-06-06 15:35:16,314 | root | INFO | rnn.py learn @ 104 : parameters reset
+2023-06-06 15:35:16,315 | root | INFO | rnn.py learn @ 104 : parameters reset
+2023-06-06 15:35:48,037 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 1 | train -> loss: 0.94250 | validation -> loss: 0.93874 | accuracy: 40.019859 | precision: 40.019859 | recall: 100.000000 | f2: 76.937767
+2023-06-06 15:36:19,486 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 2 | train -> loss: 0.90946 | validation -> loss: 0.91278 | accuracy: 40.119164 | precision: 40.019958 | recall: 99.503723 | f2: 76.702377
+2023-06-06 15:36:49,921 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 3 | train -> loss: 0.85264 | validation -> loss: 0.94454 | accuracy: 63.356506 | precision: 94.736847 | recall: 8.933002 | f2: 10.909091
+2023-06-06 15:37:21,117 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 4 | train -> loss: 0.89108 | validation -> loss: 0.53470 | accuracy: 86.196625 | precision: 86.065575 | recall: 78.163773 | f2: 79.625885
+2023-06-06 15:37:52,929 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 5 | train -> loss: 0.80723 | validation -> loss: 0.89731 | accuracy: 43.694141 | precision: 41.546394 | recall: 100.000000 | f2: 78.040276
+2023-06-06 15:38:24,638 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 6 | train -> loss: 0.79898 | validation -> loss: 0.75568 | accuracy: 47.368423 | precision: 43.194000 | recall: 100.000000 | f2: 79.174850
+2023-06-06 15:38:56,156 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 7 | train -> loss: 0.82041 | validation -> loss: 0.51896 | accuracy: 77.954323 | precision: 65.417381 | recall: 95.285362 | f2: 87.312408
+2023-06-06 15:39:27,147 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 8 | train -> loss: 0.58748 | validation -> loss: 0.59894 | accuracy: 86.792450 | precision: 87.709496 | recall: 77.915634 | f2: 79.695435
+2023-06-06 15:39:59,332 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 9 | train -> loss: 0.73748 | validation -> loss: 0.36450 | accuracy: 91.360481 | precision: 87.089203 | recall: 92.059555 | f2: 91.020607
+2023-06-06 15:40:30,914 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 10 | train -> loss: 0.27877 | validation -> loss: 0.28751 | accuracy: 93.147964 | precision: 88.302750 | recall: 95.533493 | f2: 93.994141
+2023-06-06 15:41:02,305 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 11 | train -> loss: 0.22205 | validation -> loss: 0.57595 | accuracy: 79.741806 | precision: 66.722694 | recall: 98.511162 | f2: 89.941093
+2023-06-06 15:41:33,750 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 12 | train -> loss: 0.36242 | validation -> loss: 0.43605 | accuracy: 87.189674 | precision: 76.968506 | recall: 97.022331 | f2: 92.216980
+2023-06-06 15:42:04,978 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 13 | train -> loss: 0.28691 | validation -> loss: 0.43071 | accuracy: 85.402184 | precision: 73.970039 | recall: 98.014893 | f2: 92.031685
+2023-06-06 15:42:36,993 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 14 | train -> loss: 0.18195 | validation -> loss: 0.32904 | accuracy: 91.261169 | precision: 84.768211 | recall: 95.285362 | f2: 92.978210
+2023-06-06 15:43:08,441 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 15 | train -> loss: 0.13813 | validation -> loss: 0.35385 | accuracy: 88.679245 | precision: 79.550102 | recall: 96.526054 | f2: 92.574966
+2023-06-06 15:43:39,094 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 16 | train -> loss: 0.12032 | validation -> loss: 0.40762 | accuracy: 87.686195 | precision: 77.623764 | recall: 97.270470 | f2: 92.583847
+2023-06-06 15:44:09,974 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 17 | train -> loss: 0.12463 | validation -> loss: 0.34938 | accuracy: 91.459778 | precision: 85.300667 | recall: 95.037224 | f2: 92.916061
+2023-06-06 15:44:41,395 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 18 | train -> loss: 0.09431 | validation -> loss: 0.33972 | accuracy: 91.360481 | precision: 84.347824 | recall: 96.277916 | f2: 93.629341
+2023-06-06 15:45:12,975 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 19 | train -> loss: 0.08327 | validation -> loss: 0.35461 | accuracy: 89.970207 | precision: 81.856544 | recall: 96.277916 | f2: 93.000961
+2023-06-06 15:45:44,277 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 20 | train -> loss: 0.08611 | validation -> loss: 0.44179 | accuracy: 85.898712 | precision: 74.762810 | recall: 97.766754 | f2: 92.099113
+2023-06-06 15:46:16,106 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 21 | train -> loss: 0.10175 | validation -> loss: 0.41131 | accuracy: 89.076462 | precision: 80.457382 | recall: 96.029778 | f2: 92.451027
+2023-06-06 15:46:16,107 | root | INFO | rnn.py learn @ 113 : fold: 4 | epoch: 22 | Learning rate changed from: 0.0005 -> 0.000125
+2023-06-06 15:46:46,745 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 22 | train -> loss: 0.08091 | validation -> loss: 0.42617 | accuracy: 89.076462 | precision: 80.331261 | recall: 96.277916 | f2: 92.601433
+2023-06-06 15:47:17,864 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 23 | train -> loss: 0.06964 | validation -> loss: 0.42510 | accuracy: 88.977158 | precision: 80.165291 | recall: 96.277916 | f2: 92.557251
+2023-06-06 15:47:48,935 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 24 | train -> loss: 0.06515 | validation -> loss: 0.41059 | accuracy: 90.466728 | precision: 82.869377 | recall: 96.029778 | f2: 93.073593
+2023-06-06 15:48:19,957 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 25 | train -> loss: 0.05967 | validation -> loss: 0.42625 | accuracy: 89.175766 | precision: 80.497925 | recall: 96.277916 | f2: 92.645660
+2023-06-06 15:48:50,964 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 26 | train -> loss: 0.05559 | validation -> loss: 0.39816 | accuracy: 91.261169 | precision: 84.615387 | recall: 95.533493 | f2: 93.130142
+2023-06-06 15:49:22,189 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 27 | train -> loss: 0.05387 | validation -> loss: 0.39982 | accuracy: 91.559090 | precision: 85.176994 | recall: 95.533493 | f2: 93.265503
+2023-06-06 15:49:53,415 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 28 | train -> loss: 0.04786 | validation -> loss: 0.39082 | accuracy: 91.261169 | precision: 84.463898 | recall: 95.781639 | f2: 93.281776
+2023-06-06 15:50:24,996 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 29 | train -> loss: 0.07234 | validation -> loss: 0.32324 | accuracy: 91.062561 | precision: 84.547462 | recall: 95.037224 | f2: 92.736076
+2023-06-06 15:50:56,219 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 30 | train -> loss: 0.05155 | validation -> loss: 0.37056 | accuracy: 91.062561 | precision: 84.095856 | recall: 95.781639 | f2: 93.191696
+2023-06-06 15:51:27,652 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 31 | train -> loss: 0.04694 | validation -> loss: 0.39253 | accuracy: 90.963257 | precision: 83.620689 | recall: 96.277916 | f2: 93.448944
+2023-06-06 15:51:58,933 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 32 | train -> loss: 0.05062 | validation -> loss: 0.36258 | accuracy: 92.254219 | precision: 86.681717 | recall: 95.285362 | f2: 93.430656
+2023-06-06 15:52:30,181 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 33 | train -> loss: 0.04674 | validation -> loss: 0.35540 | accuracy: 90.466728 | precision: 82.315788 | recall: 97.022331 | f2: 93.675133
+2023-06-06 15:53:01,996 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 34 | train -> loss: 0.16239 | validation -> loss: 0.51342 | accuracy: 87.090370 | precision: 76.608185 | recall: 97.518608 | f2: 92.470589
+2023-06-06 15:53:33,871 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 35 | train -> loss: 0.07185 | validation -> loss: 0.36071 | accuracy: 91.559090 | precision: 85.176994 | recall: 95.533493 | f2: 93.265503
+2023-06-06 15:54:05,178 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 36 | train -> loss: 0.05083 | validation -> loss: 0.35097 | accuracy: 91.559090 | precision: 85.022026 | recall: 95.781639 | f2: 93.417236
+2023-06-06 15:54:36,507 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 37 | train -> loss: 0.04552 | validation -> loss: 0.36474 | accuracy: 92.552139 | precision: 86.936935 | recall: 95.781639 | f2: 93.871597
+2023-06-06 15:55:07,958 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 38 | train -> loss: 0.04163 | validation -> loss: 0.41435 | accuracy: 90.367432 | precision: 82.142860 | recall: 97.022331 | f2: 93.630264
+2023-06-06 15:55:39,081 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 39 | train -> loss: 0.04149 | validation -> loss: 0.38297 | accuracy: 91.559090 | precision: 84.868416 | recall: 96.029778 | f2: 93.568665
+2023-06-06 15:56:10,721 | root | INFO | rnn.py learn @ 150 : fold: 4 | epoch: 40 | train -> loss: 0.04401 | validation -> loss: 0.39056 | accuracy: 90.764648 | precision: 82.563026 | recall: 97.518608 | f2: 94.109192
+2023-06-06 15:56:12,517 | root | INFO | rnn.py save @ 200 : saving sanpshot at output/06-06-2023-14-10-57-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000nofilter-lr0.000500-h1024-l1/weights/f4/model_fold4.pth
+2023-06-06 15:56:12,961 | root | INFO | rnn.py learn @ 168 : best model of cross validation for current training phase: fold #4 with metric value of '0.9751861095428467'
+2023-06-06 15:56:13,181 | root | INFO | main.py run @ 84 : started new command `test` of session `lstm-balanced-v2-04-temporal`
+2023-06-06 15:56:13,304 | root | INFO | dataset.py preprocess @ 592 : generating tokens from scratch
+2023-06-06 15:56:36,140 | root | INFO | dataset.py preprocess @ 599 : applying preprocessing modules
+2023-06-06 15:56:36,141 | root | INFO | dataset.py preprocess @ 601 : applying nltk stopwords remover
+2023-06-06 15:58:14,497 | root | INFO | dataset.py preprocess @ 601 : applying repetition remover
+2023-06-06 15:58:15,744 | root | INFO | dataset.py preprocess @ 601 : applying author id replacer
+2023-06-06 15:58:16,286 | root | INFO | dataset.py __vectorize__ @ 109 : trying to create vectors from scratch
+2023-06-06 15:58:38,421 | root | INFO | dataset.py prepare @ 224 : saving tokens as pickle at data/preprocessed/sequential-v2-04/test-temporal-sequential/psw.rr.idr-v13000nofilter/tokens.pkl
+2023-06-06 15:58:38,720 | root | INFO | dataset.py prepare @ 229 : saving vectors as pickle at data/preprocessed/sequential-v2-04/test-temporal-sequential/psw.rr.idr-v13000nofilter/vectors.pkl
+2023-06-06 15:58:41,823 | root | INFO | dataset.py prepare @ 243 : data preparation finished
+2023-06-06 15:58:41,854 | root | INFO | main.py run @ 104 : dataset short-name: temporal-sequential/psw.rr.idr-v13000nofilter
+2023-06-06 15:58:42,676 | root | INFO | rnn.py load_params @ 204 : loaded model weights from file: output/06-06-2023-14-10-57-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000nofilter-lr0.000500-h1024-l1/weights/best_model.pth
+2023-06-06 15:59:14,849 | root | INFO | rnn.py test @ 192 : predictions are saved at: output/06-06-2023-14-10-57-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000nofilter-lr0.000500-h1024-l1/preds.pkl
+2023-06-06 15:59:14,850 | root | INFO | rnn.py test @ 195 : targets are saved at: output/06-06-2023-14-10-57-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000nofilter-lr0.000500-h1024-l1/targets.pkl
+2023-06-06 15:59:14,851 | root | WARNING | main.py run @ 83 : no dataset was specified.
+2023-06-06 15:59:14,851 | root | INFO | main.py run @ 84 : started new command `eval` of session `lstm-balanced-v2-04-temporal`
+2023-06-06 15:59:15,398 | root | INFO | baseline.py evaluate @ 67 : saving ROC curve at: output/06-06-2023-14-10-57-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000nofilter-lr0.000500-h1024-l1/ROC-curve.png
+2023-06-06 15:59:15,732 | root | INFO | baseline.py evaluate @ 74 : saving precision-recall curve at: output/06-06-2023-14-10-57-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000nofilter-lr0.000500-h1024-l1/precision-recall-curve.png
+2023-06-06 15:59:15,755 | root | INFO | baseline.py evaluate @ 77 : test set -> AUCROC: 0.9776518 | AUCPR: 0.9626508 | accuracy: 0.9324556 | precision: 0.9649451 | recall: 0.8782270
