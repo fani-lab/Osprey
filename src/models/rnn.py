@@ -150,7 +150,7 @@ class BaseRnnModule(Baseline, nn.Module):
                 logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f} | f2: {(100 * f2score):>0.6f}")
                 self.scheduler.step(validation_loss)
                 self.train()
-            folds_metrics.append((accuracy_value, precision_value, recall_value))
+            folds_metrics.append((accuracy_value, precision_value, recall_value, f2score))
             snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_fold{fold}.pth")
             self.save(snapshot_path)
             plt.clf()
@@ -160,7 +160,7 @@ class BaseRnnModule(Baseline, nn.Module):
             plt.title(f"fold #{fold}")
             with force_open(self.get_detailed_session_path(train_dataset, "figures", f"loss_f{fold}.png"), "wb") as f:
                 plt.savefig(f, dpi=300)
-        MAHAK = 2
+        MAHAK = 3
         max_metric = (0, folds_metrics[0][MAHAK])
         for i in range(1, len(folds_metrics)):
             if folds_metrics[i][MAHAK] > max_metric[1]:

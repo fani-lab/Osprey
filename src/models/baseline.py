@@ -74,4 +74,4 @@ class Baseline(RegisterableObject):
         logger.info(f"saving precision-recall curve at: {precision_recall_path}")
         # plt.show()
         accuracy, precision, recall, f2score = calculate_metrics_extended(preds, targets, device=device)
-        logger.info(f"test set -> AUCROC: {(auroc):>0.7f} | AUCPR: {(pr_auc):>0.7f} | accuracy: {(accuracy):>0.7f} | precision: {(precision):>0.7f} | recall: {(recall):>0.7f}")
+        logger.info(f"test set -> AUCROC: {(auroc):>0.7f} | AUCPR: {(pr_auc):>0.7f} | accuracy: {(accuracy):>0.7f} | precision: {(precision):>0.7f} | recall: {(recall):>0.7f} | f2score: {(f2score):>0.7f}")
