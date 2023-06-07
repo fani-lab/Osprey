@@ -116,7 +116,7 @@ class BaseDataset(Dataset, RegisterableObject):
         return vectors
 
     def __str__(self):
-        return self.short_name() +"/p" + ".".join([pp.short_name() for pp in self.preprocessings]) + "-v" + str(self.vector_size)
+        return self.short_name() +"/p" + ".".join([pp.short_name() for pp in self.preprocessings]) + "-v" + str(self.vector_size) +("-filtered" if self.apply_filter else "-nofilter")
     
     def filter_records(self, df):
         logger.info(f"no filter is applied to dataset: {self.short_name()}")

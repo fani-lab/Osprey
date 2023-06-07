@@ -93,17 +93,8 @@ class BaseRnnModule(Baseline, nn.Module):
             total_loss = []
             total_validation_loss = []
             # resetting module parameters
-            for name, module in self.named_children():
-                try:
-                    if isinstance(module, nn.ModuleList):
-                        for name_, layer in module.named_children():
-                            layer.reset_parameters()
-                            logger.info("parameters reset")
-                    else:
-                        module.reset_parameters()
-                        logger.info("parameters reset")
-                except Exception as e:
-                    logger.error(e)
+            self.reset_modules(module=self)
+            
             # Train phase
             for i in range(1, epoch_num + 1):
                 loss = 0
