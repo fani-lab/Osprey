@@ -43,7 +43,7 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
     
     def reset_modules(self, module, parents_modules_names=[]):
         for name, module in module.named_children():
-            if name in settings.IGNORED_PARAM_RESET:
+            if name in settings.ALL_IGNORED_PARAM_RESET:
                 continue
             if isinstance(module, nn.ModuleList):
                 self.reset_modules(module, parents_modules_names=[*parents_modules_names, name])

@@ -41,21 +41,20 @@ def create_model_configs(session_name: str, session: dict, device: str):
                          "module_session_path": session["model_configs"]["module_session_path"] + "/" + f"{START_TIME}-{session_name}"
                             if session["model_configs"]["session_path_include_time"] else session["model_configs"]["module_session_path"] + "/" + session_name
                         }
-    configs = {k: v for k, v in configs.items() if k not in settings.FILTERED_CONFIGS}
+    configs = {k: v for k, v in configs.items() if k not in settings.ALL_FILTERED_CONFIGS}
     return configs
 
-def run():
-    device = 'cuda' if settings.USE_CUDA_IF_AVAILABLE and torch.cuda.is_available() else 'cpu'
-    torch.autograd.set_detect_anomaly(True)
-    logger.info(f'processing unit: {device}')
+def initiate_datasets(datasets_maps, device):
     datasets = dict()
-    for dataset_name, (short_name, train_configs, test_configs) in settings.datasets.items():
+    if not datasets_maps:
+        return datasets
+    for dataset_name, (short_name, train_configs, test_configs) in datasets_maps.items():
         dataset_class = None
         try:
             dataset_class = mappings.DATASETS[short_name]
         except Exception as e:
             raise Exception(f"the dataset {short_name} is either not implemented or not registered")
-                
+        
         preprocessings = []
         for pp in train_configs["preprocessings"]:
             try:
@@ -68,6 +67,14 @@ def run():
         logger.info(f"train dataset `{dataset_name}`, shortname: `{short_name}` kwargs -> {train_configs}")
         logger.info(f"test dataset `{dataset_name}`, shortname: `{short_name}` kwargs -> {test_configs}")
         datasets[dataset_name] = (train_dataset, test_dataset)
+    
+    return datasets
+
+def run():
+    device = 'cuda' if settings.USE_CUDA_IF_AVAILABLE and torch.cuda.is_available() else 'cpu'
+    torch.autograd.set_detect_anomaly(True)
+    logger.info(f'processing unit: {device}')
+    datasets = initiate_datasets(settings.datasets, device)
 
     for model_name, session in settings.sessions.items():
         logger.info(f"started new session: {model_name}")

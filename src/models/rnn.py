@@ -53,14 +53,14 @@ class BaseRnnModule(Baseline, nn.Module):
     
     def reset_modules(self, module, parents_modules_names=[]):
         for name, module in module.named_children():
-            if name in settings.IGNORED_PARAM_RESET:
+            if name in settings.ALL_IGNORED_PARAM_RESET:
                 continue
             if isinstance(module, nn.ModuleList):
                 self.reset_modules(module, parents_modules_names=[*parents_modules_names, name])
             elif isinstance(module, nn.Dropout):
                 continue
             else:
-                logger.info(f"resetting module parameters {'.'.join([name, *parents_modules_names])}")
+                logger.info(f"resetting module parameters: {'.'.join([name, *parents_modules_names])}")
                 module.reset_parameters()
 
     def get_new_optimizer(self, lr, *args, **kwargs):
@@ -94,7 +94,7 @@ class BaseRnnModule(Baseline, nn.Module):
             total_validation_loss = []
             # resetting module parameters
             self.reset_modules(module=self)
-            
+
             # Train phase
             for i in range(1, epoch_num + 1):
                 loss = 0

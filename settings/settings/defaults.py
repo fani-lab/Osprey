@@ -5,7 +5,7 @@ except:
 try:
     from .settings import IGNORED_PARAM_RESET
 except:
-    IGNORED_PARAM_RESET = dict()
+    IGNORED_PARAM_RESET = set()
 
 try:
     from .settings import FILTERED_CONFIGS
