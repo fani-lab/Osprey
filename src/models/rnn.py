@@ -71,10 +71,11 @@ class BaseRnnModule(Baseline, nn.Module):
         logger.debug(f"scheduler settings: {scheduler_args}")
         return ReduceLROnPlateau(optimizer, **scheduler_args)
 
-    def learn(self, epoch_num:int , batch_size: int, splits: list, train_dataset: Dataset, weights_checkpoint_path: str=None):
+    def learn(self, epoch_num:int , batch_size: int, splits: list, train_dataset: Dataset, weights_checkpoint_path: str=None, condition_save_threshold=0.9):
         if weights_checkpoint_path is not None and len(weights_checkpoint_path):
             self.load_params(weights_checkpoint_path)
         
+        logger.info(f"saving epoch condition: f2score>{condition_save_threshold}")
         logger.info("training phase started")
         folds_metrics = []
         for fold, (train_ids, validation_ids) in enumerate(splits):
@@ -140,9 +141,13 @@ class BaseRnnModule(Baseline, nn.Module):
                 accuracy_value, recall_value, precision_value, f2score = calculate_metrics_extended(all_preds, all_targets, device=self.device)
                 logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f} | f2: {(100 * f2score):>0.6f}")
                 self.scheduler.step(validation_loss)
+                epoch_snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_f{fold}_e{i}.pth")
+                if f2score >= condition_save_threshold:
+                    logger.info(f"fold: {fold} | epoch: {i} | saving model at {epoch_snapshot_path}")
+                    self.save(epoch_snapshot_path)
                 self.train()
             folds_metrics.append((accuracy_value, precision_value, recall_value, f2score))
-            snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_fold{fold}.pth")
+            snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_f{fold}.pth")
             self.save(snapshot_path)
             plt.clf()
             plt.plot(np.arange(1, 1 + len(total_loss)), np.array(total_loss), "-r", label="training")
@@ -158,7 +163,7 @@ class BaseRnnModule(Baseline, nn.Module):
                 max_metric = (i, folds_metrics[i][MAHAK])
         logger.info(f"best model of cross validation for current training phase: fold #{max_metric[0]} with metric value of '{max_metric[1]}'")
         best_model_dest = self.get_detailed_session_path(train_dataset, "weights", f"best_model.pth")
-        best_model_src = self.get_detailed_session_path(train_dataset, "weights", f"f{max_metric[0]}", f"model_fold{max_metric[0]}.pth")
+        best_model_src = self.get_detailed_session_path(train_dataset, "weights", f"f{max_metric[0]}", f"model_f{max_metric[0]}.pth")
         shutil.copyfile(best_model_src, best_model_dest)
 
     def test(self, test_dataset, weights_checkpoint_path):
