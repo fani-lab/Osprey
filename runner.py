@@ -4,12 +4,12 @@ from src.preprocessing import NLTKStopWordRemoving, PunctuationRemoving, Repetit
 from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, TransformersEmbeddingDataset,
                                CaseSensitiveBertEmbeddingDataset, GloveEmbeddingDataset, ConversationBagOfWords,
                                CNNConversationBagOfWords, ConversationBagOfWordsCleaned, SequentialConversationDataset,
-                               ConversationBagOfWordsWithTriple, TemporalSequentialConversationDataset)
+                               ConversationBagOfWordsWithTriple, TemporalSequentialConversationDataset, FineTuningBertDataset)
 from src.utils.loss_functions import WeightedBinaryCrossEntropy, DynamicSuperLoss
 from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule, SuperDynamicLossANN
 from settings.mappings import register_mappings, register_mappings_torch
 from src.scripts import (create_conversations, balance_datasets_for_version_two, create_conversation_toy_set, generate_stats,
-                         balance_sequential_datasets_for_version_two)
+                         balance_sequential_datasets_for_version_two, finetune_tranformer_per_message)
 from src.utils.dataset import SequentialConversationDataset
 
 if __name__ == "__main__":
@@ -34,6 +34,7 @@ if __name__ == "__main__":
     register_mappings(SequentialConversationDataset)
     register_mappings(ConversationBagOfWordsWithTriple)
     register_mappings(TemporalSequentialConversationDataset)
+    register_mappings(FineTuningBertDataset)
 
     register_mappings(WeightedBinaryCrossEntropy)
 
@@ -48,3 +49,4 @@ if __name__ == "__main__":
     # balance_datasets_for_version_two()
     # create_conversation_toy_set()
     # generate_stats()
+    # finetune_tranformer_per_message("cuda", dataset_name="finetuning-v2-dataset", model_output_path=None)

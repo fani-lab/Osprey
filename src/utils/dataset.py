@@ -6,6 +6,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 from sklearn.model_selection import KFold, StratifiedKFold
+from transformers import BertTokenizer
 
 from src.preprocessing.base import BasePreprocessing
 from src.utils.one_hot_encoder import OneHotEncoder, SequentialOneHotEncoder, SequentialOneHotEncoderWithContext
@@ -257,6 +258,95 @@ class BaseDataset(Dataset, RegisterableObject):
     def shape(self):
         return (len(self.data), self.data[0].shape[-1])
 
+# It is only for handling fine-tuning
+class FineTuningBertDataset(BaseDataset):
+
+    def __init__(self, tokenizer_path="bert-base-uncased", *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.tokenizer_path = tokenizer_path
+        self.tokenizer = None
+    
+    def preprocess(self):
+        try:
+            if not self.load_from_pkl:
+                raise FileNotFoundError()
+            with open(self.get_session_path("attention_masks.pkl"), "rb") as f:
+                logger.info("trying to load attention_masks from file")
+                attention_masks = pickle.load(f)
+            with open(self.get_session_path("input_ids.pkl"), "rb") as f:
+                logger.info("trying to load input_ids from file")
+                input_ids = pickle.load(f)
+        except FileNotFoundError:
+            logger.info("generating tokens from scratch")
+            self.__new_tokens__ = True
+            tokens = nltk_tokenize(self.df["text"])
+            logger.info("applying preprocessing modules")
+            for preprocessor in self.preprocessings:
+                logger.info(f"applying {preprocessor.name()}")
+                tokens = [*preprocessor.opt(tokens)]
+            input_ids, attention_masks = self.tokenize(tokens)
+
+        return input_ids, attention_masks
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "finetuning-bert"
+    
+    def tokenize(self, input) -> tuple[list]:
+        logger.info("using BertTokenizer.`bert-base-uncased`")
+        self.tokenizer = BertTokenizer.from_pretrained(self.tokenizer_path, do_lower_case=True)
+
+        input_ids = [None] * len(input)
+        attention_masks = [None] * len(input)
+        for i, tokens in enumerate(input):
+            encoded = self.tokenizer.encode_plus(" ".join(tokens), add_special_tokens=True, max_length=512, pad_to_max_length=True, return_attention_mask=True, return_tensors='pt')
+            attention_masks[i] = encoded["attention_mask"]
+            input_ids[i]       = encoded["input_ids"]
+        input_ids       = torch.cat(input_ids, dim=0)
+        attention_masks = torch.cat(attention_masks, dim=0)
+        return input_ids, attention_masks
+    
+    def prepare(self):
+        if self.already_prepared:
+            logger.debug("already called prepared")
+            return
+        
+        
+        self.input_ids, self.attention_masks = self.preprocess()
+
+        self.vector_size = self.input_ids.shape[-1]
+
+        if self.persist_data and self.__new_tokens__:
+            input_ids_path = self.get_session_path("input_ids.pkl")
+            logger.info(f"saving input_ids as pickle at {input_ids_path}")
+            with force_open(input_ids_path, "wb") as f:
+                pickle.dump(self.input_ids, f)
+            attention_mask_path = self.get_session_path("attention_masks.pkl")
+            logger.info(f"saving attention_masks as pickle at {attention_mask_path}")
+            with force_open(attention_mask_path, "wb") as f:
+                pickle.dump(self.attention_masks, f)
+
+        self.already_prepared = True
+        self.labels = self.get_labels()
+        logger.info("data preparation finished")
+        
+
+    def __getitem__(self, index):
+        return self.attention_masks[index], self.input_ids[index], self.labels[index]
+
+    def to(self, device):
+        self.labels = self.labels.to(device)
+        
+        self.attention_masks = self.attention_masks.to(device)
+        self.input_ids = self.input_ids.to(device)
+
+    def __len__(self):
+        return len(self.input_ids)
+    
+    @property
+    def shape(self):
+        return self.input_ids.shape[0, -1]
+
 
 class BagOfWordsDataset(BaseDataset):
 
@@ -431,6 +521,17 @@ class TransformersEmbeddingDataset(BaseDataset, RegisterableObject):
         for i, record in enumerate(tokens_records):
             vectors[i] = torch.cat(encoder.transform(record))
         return vectors
+
+
+class FineTunedBertEmbeddingDataset(TransformersEmbeddingDataset):
+    @classmethod
+    def short_name(cls) -> str:
+        return "transformer/bert-uncased-finetuned"
+        
+    def init_encoder(self, tokens_records):
+        logger.debug("Transformer Embedding Dataset being initialized")
+        encoder = TransformersEmbeddingEncoder(transformer_identifier="data/embeddings/finetuned/finetuning-bert/psw.rr.idr-v512-nofilter/", device=self.device)
+        return encoder
 
 
 class CaseSensitiveBertEmbeddingDataset(TransformersEmbeddingDataset):
