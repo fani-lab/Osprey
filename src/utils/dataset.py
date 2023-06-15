@@ -659,11 +659,11 @@ class SequentialConversationDataset(BaseDataset):
     def shape(self):
         return (len(self.data), -1, self.data[0].shape[-1])
 
-class TemporalSequentialConversationDataset(SequentialConversationDataset):
-    CONTEXT_LENGTH = 1
+class BaseContextualSequentialConversationOneHotDataset(SequentialConversationDataset):
+    CONTEXT_LENGTH = 0
     @classmethod
     def short_name(cls) -> str:
-        return "temporal-sequential"
+        return "contextual-onehot-sequential"
     
     def get_data_generator(self, data, pattern):
         def func():
@@ -676,11 +676,14 @@ class TemporalSequentialConversationDataset(SequentialConversationDataset):
     
     def init_encoder(self, tokens_records):
         encoder = SequentialOneHotEncoderWithContext(context_length=self.CONTEXT_LENGTH, vector_size=self.vector_size, )
-        logger.info("started generating bag of words vector encoder")
+        logger.info("started generating sequential-conversation bag of words vector encoder")
         pattern = lambda x: x
         logger.debug("fitting data into one hot encoder")
         encoder.fit(self.get_data_generator(data=tokens_records, pattern=pattern))
         return encoder
+
+    def tokenize(self, sequence):
+        raise NotImplementedError()
 
     def preprocess(self):
         try:
@@ -692,15 +695,11 @@ class TemporalSequentialConversationDataset(SequentialConversationDataset):
         except FileNotFoundError:
             logger.info("generating tokens from scratch")
             self.__new_tokens__ = True
-            messages = [None] * len(self.sequence)
-            for i, (k, g) in enumerate(self.sequence):
-                temp = np.floor(g["time"].tolist())
-                messages[i] = (temp + (g["time"].tolist()- temp) / 0.6, self.tokenize(g["text"]))
-            # messages = [((g["time"].tolist(),), self.tokenize(g["text"])) for k, g in self.sequence]
+            messages = self.tokenize(self.sequence)
             logger.info("applying preprocessing modules")
             for preprocessor in self.preprocessings:
                 logger.info(f"applying {preprocessor.name()}")
-                messages = [[time, tuple(preprocessor.opt(sequence))] for time, sequence in messages]
+                messages = [[context, tuple(preprocessor.opt(sequence))] for context, sequence in messages]
         return messages
     
     def vectorize(self, tokens_records, encoder):
@@ -715,3 +714,34 @@ class TemporalSequentialConversationDataset(SequentialConversationDataset):
 
         logger.debug("transforming of records into vectors is finished")
         return vectors
+
+
+class TemporalSequentialConversationOneHotDataset(BaseContextualSequentialConversationOneHotDataset):
+    
+    CONTEXT_LENGTH = 1
+    
+    @classmethod
+    def short_name(cls) -> str:
+        return "temporal-sequential"
+    
+    def tokenize(self, sequence):
+        messages = [None] * len(sequence)
+        for i, (k, g) in enumerate(sequence):
+            temp = np.floor(g["time"].tolist())
+            messages[i] = ((temp + (g["time"].tolist()- temp) / 0.6,), nltk_tokenize(g["text"]))
+        return messages
+
+class TemporalAuthorsSequentialConversationOneHotDataset(BaseContextualSequentialConversationOneHotDataset):
+    
+    CONTEXT_LENGTH = 2
+    
+    @classmethod
+    def short_name(cls) -> str:
+        return "time-nauthor-sequential"
+
+    def tokenize(self, sequence):
+        messages = [None] * len(sequence)
+        for i, (k, g) in enumerate(sequence):
+            temp = np.floor(g["time"].tolist())
+            messages[i] = ((temp + (g["time"].tolist()- temp) / 0.6, g["nauthor"].tolist(),), nltk_tokenize(g["text"]))
+        return messages

@@ -1,0 +1,260 @@
+2023-06-10 21:40:04,647 | root | INFO | main.py <module> @ 32 : info-level logger file handler created at: logs/06-10-2023-21-40-04-info.log
+2023-06-10 21:40:04,685 | root | INFO | main.py run @ 76 : processing unit: cuda
+2023-06-10 21:40:04,807 | root | INFO | main.py initiate_datasets @ 67 : train dataset `temporal-sequential-conversation-v2-dataset-onehot-allreal`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/train.csv', 'output_path': 'data/preprocessed/sequential-v2/', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': True}
+2023-06-10 21:40:04,808 | root | INFO | main.py initiate_datasets @ 68 : test dataset `temporal-sequential-conversation-v2-dataset-onehot-allreal`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/test.csv', 'output_path': 'data/preprocessed/sequential-v2/test-', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': False}
+2023-06-10 21:40:04,814 | root | INFO | main.py initiate_datasets @ 67 : train dataset `temporal-sequential-conversation-v2-dataset-onehot-04`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/train-04.csv', 'output_path': 'data/preprocessed/sequential-v2-04/', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': False}
+2023-06-10 21:40:04,814 | root | INFO | main.py initiate_datasets @ 68 : test dataset `temporal-sequential-conversation-v2-dataset-onehot-04`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/test-04.csv', 'output_path': 'data/preprocessed/sequential-v2-04/test-', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': False}
+2023-06-10 21:40:04,818 | root | INFO | main.py initiate_datasets @ 67 : train dataset `temporal-sequential-conversation-v2-dataset-onehot-04-realtest`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/train-04.csv', 'output_path': 'data/preprocessed/sequential-v2-04/', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': False, 'vector_size': 13000, 'apply_record_filter': False}
+2023-06-10 21:40:04,819 | root | INFO | main.py initiate_datasets @ 68 : test dataset `temporal-sequential-conversation-v2-dataset-onehot-04-realtest`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/test.csv', 'output_path': 'data/preprocessed/sequential-v2/test-', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': False}
+2023-06-10 21:40:04,822 | root | INFO | main.py initiate_datasets @ 67 : train dataset `temporal-sequential-conversation-v2-dataset-onehot-03-realtest`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/train-03.csv', 'output_path': 'data/preprocessed/sequential-v2-03/', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': True}
+2023-06-10 21:40:04,823 | root | INFO | main.py initiate_datasets @ 68 : test dataset `temporal-sequential-conversation-v2-dataset-onehot-03-realtest`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/test.csv', 'output_path': 'data/preprocessed/sequential-v2/test-', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': False}
+2023-06-10 21:40:04,825 | root | INFO | main.py initiate_datasets @ 67 : train dataset `temporal-sequential-conversation-v2-dataset-onehot-02-realtest`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/train-02.csv', 'output_path': 'data/preprocessed/sequential-v2-02/', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': True}
+2023-06-10 21:40:04,826 | root | INFO | main.py initiate_datasets @ 68 : test dataset `temporal-sequential-conversation-v2-dataset-onehot-02-realtest`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/test.csv', 'output_path': 'data/preprocessed/sequential-v2/test-', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': False}
+2023-06-10 21:40:04,828 | root | INFO | main.py initiate_datasets @ 67 : train dataset `temporal-sequential-conversation-v2-dataset-onehot-01-realtest`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/train-01.csv', 'output_path': 'data/preprocessed/sequential-v2-01/', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': True}
+2023-06-10 21:40:04,829 | root | INFO | main.py initiate_datasets @ 68 : test dataset `temporal-sequential-conversation-v2-dataset-onehot-01-realtest`, shortname: `temporal-sequential` kwargs -> {'data_path': 'data/dataset-v2/test.csv', 'output_path': 'data/preprocessed/sequential-v2/test-', 'load_from_pkl': True, 'preprocessings': ['sw', 'rr', 'idr'], 'persist_data': True, 'vector_size': 13000, 'apply_record_filter': False}
+2023-06-10 21:40:04,830 | root | INFO | main.py run @ 80 : started new session: lstm-balanced-v2-temporal
+2023-06-10 21:40:04,830 | root | INFO | main.py create_model_configs @ 37 : activation module kwargs: {}
+2023-06-10 21:40:04,831 | root | INFO | main.py create_model_configs @ 38 : loss module kwargs: {'reduction': 'sum', 'pos_weight': tensor(30)}
+2023-06-10 21:40:04,831 | root | INFO | main.py run @ 91 : started new command `train` of session `lstm-balanced-v2-temporal`
+2023-06-10 21:40:04,839 | root | INFO | dataset.py preprocess @ 615 : trying to load tokens from file
+2023-06-10 21:40:09,290 | root | INFO | dataset.py __vectorize__ @ 107 : loading vectors from file
+2023-06-10 21:40:23,016 | root | INFO | dataset.py filter_records @ 509 : applying record filtering by 'nauthor == 2'
+2023-06-10 21:40:30,212 | root | INFO | dataset.py prepare @ 244 : data preparation finished
+2023-06-10 21:40:30,277 | root | INFO | main.py run @ 97 : dataset short-name: temporal-sequential/psw.rr.idr-v13000-filtered
+2023-06-10 21:40:30,286 | root | INFO | dataset.py split_dataset_by_label @ 163 : loading splits from: data/preprocessed/sequential-v2/temporal-sequential/psw.rr.idr-v13000-filtered/splits-n5stratified.pkl
+2023-06-10 21:40:34,010 | root | INFO | rnn.py learn @ 78 : saving epoch condition: f2score>0.9
+2023-06-10 21:40:34,011 | root | INFO | rnn.py learn @ 79 : training phase started
+2023-06-10 21:40:34,012 | root | INFO | rnn.py learn @ 84 : Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.0005
+    maximize: False
+    weight_decay: 0
+)
+2023-06-10 21:40:34,014 | root | INFO | rnn.py learn @ 85 : <torch.optim.lr_scheduler.ReduceLROnPlateau object at 0x000002064057FB80>
+2023-06-10 21:40:34,015 | root | INFO | rnn.py learn @ 86 : fetching data for fold #0
+2023-06-10 21:40:34,016 | root | INFO | rnn.py reset_modules @ 63 : resetting module parameters: core
+2023-06-10 21:40:34,016 | root | INFO | rnn.py reset_modules @ 63 : resetting module parameters: hidden2out
+2023-06-10 21:42:47,443 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 1 | train -> loss: 0.98793 | validation -> loss: 0.63712 | accuracy: 95.453056 | precision: 29.878050 | recall: 67.431190 | f2: 53.885632
+2023-06-10 21:44:55,063 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 2 | train -> loss: 0.38500 | validation -> loss: 0.28012 | accuracy: 92.206802 | precision: 22.891565 | recall: 95.871559 | f2: 58.543419
+2023-06-10 21:47:03,882 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 3 | train -> loss: 0.20115 | validation -> loss: 0.15600 | accuracy: 97.311180 | precision: 46.846848 | recall: 95.412842 | f2: 79.027351
+2023-06-10 21:49:11,926 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 4 | train -> loss: 0.14223 | validation -> loss: 0.13578 | accuracy: 98.404198 | precision: 60.588234 | recall: 94.495415 | f2: 84.983498
+2023-06-10 21:51:20,023 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 5 | train -> loss: 0.10950 | validation -> loss: 0.16739 | accuracy: 99.530006 | precision: 88.546257 | recall: 92.201836 | f2: 91.446770
+2023-06-10 21:51:20,025 | root | INFO | rnn.py learn @ 146 : fold: 0 | epoch: 5 | saving model at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f0/model_f0_e5.pth
+2023-06-10 21:51:20,849 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f0/model_f0_e5.pth
+2023-06-10 21:53:32,306 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 6 | train -> loss: 0.09932 | validation -> loss: 0.10540 | accuracy: 98.185593 | precision: 57.065220 | recall: 96.330276 | f2: 84.677422
+2023-06-10 21:55:46,230 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 7 | train -> loss: 0.07619 | validation -> loss: 0.24338 | accuracy: 94.349113 | precision: 29.264910 | recall: 96.788994 | f2: 66.227249
+2023-06-10 21:57:59,488 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 8 | train -> loss: 0.07360 | validation -> loss: 0.13772 | accuracy: 97.912338 | precision: 53.452682 | recall: 95.871559 | f2: 82.739510
+2023-06-10 22:00:10,340 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 9 | train -> loss: 0.06322 | validation -> loss: 0.18675 | accuracy: 99.650230 | precision: 93.055557 | recall: 92.201836 | f2: 92.371323
+2023-06-10 22:00:10,341 | root | INFO | rnn.py learn @ 146 : fold: 0 | epoch: 9 | saving model at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f0/model_f0_e9.pth
+2023-06-10 22:00:11,106 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f0/model_f0_e9.pth
+2023-06-10 22:02:23,334 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 10 | train -> loss: 0.07499 | validation -> loss: 0.25833 | accuracy: 99.584656 | precision: 90.909096 | recall: 91.743118 | f2: 91.575089
+2023-06-10 22:02:23,335 | root | INFO | rnn.py learn @ 146 : fold: 0 | epoch: 10 | saving model at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f0/model_f0_e10.pth
+2023-06-10 22:02:24,058 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f0/model_f0_e10.pth
+2023-06-10 22:04:35,824 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 11 | train -> loss: 0.04931 | validation -> loss: 0.16640 | accuracy: 95.682594 | precision: 35.126053 | recall: 95.871559 | f2: 71.233810
+2023-06-10 22:06:47,176 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 12 | train -> loss: 0.04408 | validation -> loss: 0.24418 | accuracy: 99.376984 | precision: 82.591095 | recall: 93.577980 | f2: 91.152817
+2023-06-10 22:06:47,177 | root | INFO | rnn.py learn @ 146 : fold: 0 | epoch: 12 | saving model at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f0/model_f0_e12.pth
+2023-06-10 22:06:47,891 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f0/model_f0_e12.pth
+2023-06-10 22:08:59,126 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 13 | train -> loss: 0.04341 | validation -> loss: 0.27432 | accuracy: 99.300468 | precision: 80.800003 | recall: 92.660553 | f2: 90.017822
+2023-06-10 22:08:59,127 | root | INFO | rnn.py learn @ 146 : fold: 0 | epoch: 13 | saving model at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f0/model_f0_e13.pth
+2023-06-10 22:09:00,004 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f0/model_f0_e13.pth
+2023-06-10 22:11:11,458 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 14 | train -> loss: 0.04839 | validation -> loss: 0.14417 | accuracy: 98.688385 | precision: 65.605095 | recall: 94.495415 | f2: 86.846542
+2023-06-10 22:13:23,216 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 15 | train -> loss: 0.04235 | validation -> loss: 0.09516 | accuracy: 98.404198 | precision: 60.285717 | recall: 96.788994 | f2: 86.333878
+2023-06-10 22:15:34,014 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 16 | train -> loss: 0.02382 | validation -> loss: 0.16453 | accuracy: 99.376984 | precision: 83.127571 | recall: 92.660553 | f2: 90.582962
+2023-06-10 22:15:34,014 | root | INFO | rnn.py learn @ 146 : fold: 0 | epoch: 16 | saving model at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f0/model_f0_e16.pth
+2023-06-10 22:15:34,721 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f0/model_f0_e16.pth
+2023-06-10 22:17:48,011 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 17 | train -> loss: 0.02081 | validation -> loss: 0.35858 | accuracy: 99.540932 | precision: 89.639641 | recall: 91.284409 | f2: 90.950638
+2023-06-10 22:17:48,012 | root | INFO | rnn.py learn @ 146 : fold: 0 | epoch: 17 | saving model at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f0/model_f0_e17.pth
+2023-06-10 22:17:48,808 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f0/model_f0_e17.pth
+2023-06-10 22:20:00,511 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 18 | train -> loss: 0.02533 | validation -> loss: 0.26894 | accuracy: 98.819542 | precision: 68.092110 | recall: 94.954124 | f2: 88.010201
+2023-06-10 22:22:12,682 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 19 | train -> loss: 0.02718 | validation -> loss: 0.26269 | accuracy: 99.180237 | precision: 77.394638 | recall: 92.660553 | f2: 89.143867
+2023-06-10 22:24:23,907 | root | INFO | rnn.py learn @ 142 : fold: 0 | epoch: 20 | train -> loss: 0.00952 | validation -> loss: 0.45500 | accuracy: 99.409775 | precision: 85.964912 | recall: 89.908257 | f2: 89.090904
+2023-06-10 22:24:24,647 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f0/model_f0.pth
+2023-06-10 22:24:25,459 | root | INFO | rnn.py learn @ 84 : Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.0005
+    maximize: False
+    weight_decay: 0
+)
+2023-06-10 22:24:25,463 | root | INFO | rnn.py learn @ 85 : <torch.optim.lr_scheduler.ReduceLROnPlateau object at 0x0000020640670850>
+2023-06-10 22:24:25,463 | root | INFO | rnn.py learn @ 86 : fetching data for fold #1
+2023-06-10 22:24:25,464 | root | INFO | rnn.py reset_modules @ 63 : resetting module parameters: core
+2023-06-10 22:24:25,465 | root | INFO | rnn.py reset_modules @ 63 : resetting module parameters: hidden2out
+2023-06-10 22:26:36,944 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 1 | train -> loss: 0.74301 | validation -> loss: 0.41514 | accuracy: 84.368172 | precision: 12.722802 | recall: 95.391701 | f2: 41.482967
+2023-06-10 22:28:48,444 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 2 | train -> loss: 0.30327 | validation -> loss: 0.17200 | accuracy: 95.867950 | precision: 36.239319 | recall: 97.695854 | f2: 72.952515
+2023-06-10 22:31:00,225 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 3 | train -> loss: 0.24875 | validation -> loss: 0.14811 | accuracy: 97.780937 | precision: 51.750000 | recall: 95.391701 | f2: 81.624603
+2023-06-10 22:33:12,900 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 4 | train -> loss: 0.15180 | validation -> loss: 0.21058 | accuracy: 94.851334 | precision: 31.213018 | recall: 97.235023 | f2: 68.329018
+2023-06-10 22:35:24,316 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 5 | train -> loss: 0.12303 | validation -> loss: 0.17491 | accuracy: 94.501534 | precision: 29.915730 | recall: 98.156685 | f2: 67.405060
+2023-06-10 22:37:36,325 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 6 | train -> loss: 0.13675 | validation -> loss: 0.12468 | accuracy: 97.092262 | precision: 44.842106 | recall: 98.156685 | f2: 79.300079
+2023-06-10 22:39:47,671 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 7 | train -> loss: 0.10026 | validation -> loss: 0.12192 | accuracy: 98.152603 | precision: 56.417114 | recall: 97.235023 | f2: 84.943642
+2023-06-10 22:41:59,529 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 8 | train -> loss: 0.06556 | validation -> loss: 0.11526 | accuracy: 99.092697 | precision: 74.100723 | recall: 94.930878 | f2: 89.877838
+2023-06-10 22:44:11,479 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 9 | train -> loss: 0.06896 | validation -> loss: 0.13681 | accuracy: 98.382156 | precision: 60.237389 | recall: 93.548386 | f2: 84.232368
+2023-06-10 22:46:24,666 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 10 | train -> loss: 0.04404 | validation -> loss: 0.30101 | accuracy: 98.240051 | precision: 58.139534 | recall: 92.165901 | f2: 82.508247
+2023-06-10 22:48:36,886 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 11 | train -> loss: 0.04886 | validation -> loss: 0.17821 | accuracy: 97.660690 | precision: 50.359715 | recall: 96.774193 | f2: 81.712059
+2023-06-10 22:50:48,625 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 12 | train -> loss: 0.04137 | validation -> loss: 0.35934 | accuracy: 98.906860 | precision: 71.272728 | recall: 90.322578 | f2: 85.739288
+2023-06-10 22:53:00,887 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 13 | train -> loss: 0.04765 | validation -> loss: 0.12779 | accuracy: 98.655441 | precision: 64.873413 | recall: 94.470047 | f2: 86.570946
+2023-06-10 22:55:12,752 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 14 | train -> loss: 0.02484 | validation -> loss: 0.24877 | accuracy: 98.852203 | precision: 69.444443 | recall: 92.165901 | f2: 86.505196
+2023-06-10 22:57:26,508 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 15 | train -> loss: 0.03023 | validation -> loss: 0.20573 | accuracy: 98.917793 | precision: 70.774651 | recall: 92.626724 | f2: 87.239578
+2023-06-10 22:59:39,108 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 16 | train -> loss: 0.03145 | validation -> loss: 0.26583 | accuracy: 99.234810 | precision: 78.599220 | recall: 93.087563 | f2: 89.777779
+2023-06-10 23:01:51,570 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 17 | train -> loss: 0.02539 | validation -> loss: 0.33131 | accuracy: 99.048973 | precision: 73.722626 | recall: 93.087563 | f2: 88.441330
+2023-06-10 23:04:03,435 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 18 | train -> loss: 0.02744 | validation -> loss: 0.37642 | accuracy: 99.158287 | precision: 77.559052 | recall: 90.783409 | f2: 87.789658
+2023-06-10 23:06:15,816 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 19 | train -> loss: 0.01985 | validation -> loss: 0.30415 | accuracy: 99.158287 | precision: 77.559052 | recall: 90.783409 | f2: 87.789658
+2023-06-10 23:08:28,072 | root | INFO | rnn.py learn @ 142 : fold: 1 | epoch: 20 | train -> loss: 0.02454 | validation -> loss: 0.23367 | accuracy: 98.895935 | precision: 70.000000 | recall: 93.548386 | f2: 87.651123
+2023-06-10 23:08:28,850 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f1/model_f1.pth
+2023-06-10 23:08:29,268 | root | INFO | rnn.py learn @ 84 : Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.0005
+    maximize: False
+    weight_decay: 0
+)
+2023-06-10 23:08:29,272 | root | INFO | rnn.py learn @ 85 : <torch.optim.lr_scheduler.ReduceLROnPlateau object at 0x000002064070E6A0>
+2023-06-10 23:08:29,272 | root | INFO | rnn.py learn @ 86 : fetching data for fold #2
+2023-06-10 23:08:29,273 | root | INFO | rnn.py reset_modules @ 63 : resetting module parameters: core
+2023-06-10 23:08:29,274 | root | INFO | rnn.py reset_modules @ 63 : resetting module parameters: hidden2out
+2023-06-10 23:10:42,199 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 1 | train -> loss: 0.81951 | validation -> loss: 0.52124 | accuracy: 93.375603 | precision: 24.238411 | recall: 84.331802 | f2: 56.377075
+2023-06-10 23:12:54,687 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 2 | train -> loss: 0.35387 | validation -> loss: 0.23364 | accuracy: 92.971138 | precision: 24.882074 | recall: 97.235023 | f2: 61.480186
+2023-06-10 23:15:07,021 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 3 | train -> loss: 0.19835 | validation -> loss: 0.13059 | accuracy: 97.431137 | precision: 47.972973 | recall: 98.156685 | f2: 81.173775
+2023-06-10 23:17:20,429 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 4 | train -> loss: 0.14351 | validation -> loss: 0.12589 | accuracy: 97.857460 | precision: 52.605457 | recall: 97.695854 | f2: 83.398895
+2023-06-10 23:19:32,651 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 5 | train -> loss: 0.09017 | validation -> loss: 0.13686 | accuracy: 99.365982 | precision: 80.459770 | recall: 96.774193 | f2: 93.002663
+2023-06-10 23:19:32,652 | root | INFO | rnn.py learn @ 146 : fold: 2 | epoch: 5 | saving model at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f2/model_f2_e5.pth
+2023-06-10 23:19:33,409 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f2/model_f2_e5.pth
+2023-06-10 23:21:45,693 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 6 | train -> loss: 0.10431 | validation -> loss: 0.19185 | accuracy: 95.485352 | precision: 34.294872 | recall: 98.617516 | f2: 71.715820
+2023-06-10 23:23:58,811 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 7 | train -> loss: 0.07161 | validation -> loss: 0.12181 | accuracy: 99.125496 | precision: 74.729240 | recall: 95.391701 | f2: 90.393013
+2023-06-10 23:23:58,812 | root | INFO | rnn.py learn @ 146 : fold: 2 | epoch: 7 | saving model at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f2/model_f2_e7.pth
+2023-06-10 23:23:59,680 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f2/model_f2_e7.pth
+2023-06-10 23:26:12,269 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 8 | train -> loss: 0.05974 | validation -> loss: 0.17399 | accuracy: 96.119370 | precision: 37.809189 | recall: 98.617516 | f2: 74.616455
+2023-06-10 23:28:24,906 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 9 | train -> loss: 0.07203 | validation -> loss: 0.14821 | accuracy: 99.212944 | precision: 77.358490 | recall: 94.470047 | f2: 90.467789
+2023-06-10 23:28:24,907 | root | INFO | rnn.py learn @ 146 : fold: 2 | epoch: 9 | saving model at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f2/model_f2_e9.pth
+2023-06-10 23:28:25,655 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f2/model_f2_e9.pth
+2023-06-10 23:30:38,178 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 10 | train -> loss: 0.05512 | validation -> loss: 0.15806 | accuracy: 99.300400 | precision: 79.310349 | recall: 95.391701 | f2: 91.674049
+2023-06-10 23:30:38,179 | root | INFO | rnn.py learn @ 146 : fold: 2 | epoch: 10 | saving model at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f2/model_f2_e10.pth
+2023-06-10 23:30:38,979 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f2/model_f2_e10.pth
+2023-06-10 23:32:52,742 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 11 | train -> loss: 0.05356 | validation -> loss: 0.15725 | accuracy: 97.857460 | precision: 52.644836 | recall: 96.313362 | f2: 82.608696
+2023-06-10 23:35:05,134 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 12 | train -> loss: 0.04251 | validation -> loss: 0.22168 | accuracy: 99.212944 | precision: 78.210114 | recall: 92.626724 | f2: 89.333328
+2023-06-10 23:37:18,026 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 13 | train -> loss: 0.03777 | validation -> loss: 0.20840 | accuracy: 97.923042 | precision: 53.470440 | recall: 95.852539 | f2: 82.736679
+2023-06-10 23:39:28,727 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 14 | train -> loss: 0.04019 | validation -> loss: 0.17190 | accuracy: 98.327507 | precision: 59.039543 | recall: 96.313362 | f2: 85.515549
+2023-06-10 23:41:40,075 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 15 | train -> loss: 0.02678 | validation -> loss: 0.20449 | accuracy: 99.267601 | precision: 78.409096 | recall: 95.391701 | f2: 91.431091
+2023-06-10 23:41:40,076 | root | INFO | rnn.py learn @ 146 : fold: 2 | epoch: 15 | saving model at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f2/model_f2_e15.pth
+2023-06-10 23:41:40,791 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f2/model_f2_e15.pth
+2023-06-10 23:43:52,681 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 16 | train -> loss: 0.02828 | validation -> loss: 0.21807 | accuracy: 99.212944 | precision: 76.951668 | recall: 95.391701 | f2: 91.029022
+2023-06-10 23:43:52,681 | root | INFO | rnn.py learn @ 146 : fold: 2 | epoch: 16 | saving model at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f2/model_f2_e16.pth
+2023-06-10 23:43:53,487 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f2/model_f2_e16.pth
+2023-06-10 23:46:05,136 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 17 | train -> loss: 0.04376 | validation -> loss: 0.21839 | accuracy: 98.130737 | precision: 56.284153 | recall: 94.930878 | f2: 83.468399
+2023-06-10 23:48:16,485 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 18 | train -> loss: 0.04391 | validation -> loss: 0.15867 | accuracy: 98.272850 | precision: 58.356941 | recall: 94.930878 | f2: 84.357086
+2023-06-10 23:50:28,018 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 19 | train -> loss: 0.02040 | validation -> loss: 0.26468 | accuracy: 98.972450 | precision: 71.578949 | recall: 94.009216 | f2: 88.464874
+2023-06-10 23:52:39,106 | root | INFO | rnn.py learn @ 142 : fold: 2 | epoch: 20 | train -> loss: 0.02653 | validation -> loss: 0.27477 | accuracy: 99.048973 | precision: 73.381294 | recall: 94.009216 | f2: 89.005241
+2023-06-10 23:52:39,939 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f2/model_f2.pth
+2023-06-10 23:52:40,264 | root | INFO | rnn.py learn @ 84 : Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.0005
+    maximize: False
+    weight_decay: 0
+)
+2023-06-10 23:52:40,268 | root | INFO | rnn.py learn @ 85 : <torch.optim.lr_scheduler.ReduceLROnPlateau object at 0x00000206406CBA60>
+2023-06-10 23:52:40,270 | root | INFO | rnn.py learn @ 86 : fetching data for fold #3
+2023-06-10 23:52:40,270 | root | INFO | rnn.py reset_modules @ 63 : resetting module parameters: core
+2023-06-10 23:52:40,271 | root | INFO | rnn.py reset_modules @ 63 : resetting module parameters: hidden2out
+2023-06-10 23:54:52,260 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 1 | train -> loss: 0.84799 | validation -> loss: 0.91661 | accuracy: 92.850891 | precision: 15.064102 | recall: 43.119267 | f2: 31.417114
+2023-06-10 23:57:04,870 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 2 | train -> loss: 0.39094 | validation -> loss: 0.24071 | accuracy: 95.813293 | precision: 35.500877 | recall: 92.660553 | f2: 70.090218
+2023-06-10 23:59:16,887 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 3 | train -> loss: 0.18556 | validation -> loss: 0.17477 | accuracy: 96.184959 | precision: 38.069214 | recall: 95.871559 | f2: 73.539764
+2023-06-11 00:01:29,258 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 4 | train -> loss: 0.14954 | validation -> loss: 0.17722 | accuracy: 96.622208 | precision: 41.165047 | recall: 97.247711 | f2: 76.423935
+2023-06-11 00:03:43,073 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 5 | train -> loss: 0.10888 | validation -> loss: 0.23666 | accuracy: 99.508087 | precision: 88.444443 | recall: 91.284409 | f2: 90.701912
+2023-06-11 00:03:43,074 | root | INFO | rnn.py learn @ 146 : fold: 3 | epoch: 5 | saving model at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f3/model_f3_e5.pth
+2023-06-11 00:03:43,909 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f3/model_f3_e5.pth
+2023-06-11 00:06:03,405 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 6 | train -> loss: 0.09243 | validation -> loss: 0.19018 | accuracy: 97.955833 | precision: 54.025970 | recall: 95.412842 | f2: 82.736679
+2023-06-11 00:08:18,267 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 7 | train -> loss: 0.07465 | validation -> loss: 0.31117 | accuracy: 92.872757 | precision: 24.470589 | recall: 95.412842 | f2: 60.394890
+2023-06-11 00:10:30,753 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 8 | train -> loss: 0.06648 | validation -> loss: 0.19825 | accuracy: 98.764763 | precision: 67.100975 | recall: 94.495415 | f2: 87.362167
+2023-06-11 00:12:43,391 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 9 | train -> loss: 0.05492 | validation -> loss: 0.24880 | accuracy: 98.983383 | precision: 72.401436 | recall: 92.660553 | f2: 87.749786
+2023-06-11 00:14:57,047 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 10 | train -> loss: 0.04907 | validation -> loss: 0.28406 | accuracy: 98.874069 | precision: 69.759453 | recall: 93.119263 | f2: 87.274292
+2023-06-11 00:17:14,950 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 11 | train -> loss: 0.04837 | validation -> loss: 0.34391 | accuracy: 99.322250 | precision: 83.913048 | recall: 88.532104 | f2: 87.568054
+2023-06-11 00:19:28,197 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 12 | train -> loss: 0.03079 | validation -> loss: 0.26204 | accuracy: 98.043289 | precision: 55.256062 | recall: 94.036697 | f2: 82.461784
+2023-06-11 00:21:41,090 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 13 | train -> loss: 0.03511 | validation -> loss: 0.35420 | accuracy: 99.059906 | precision: 74.087593 | recall: 93.119263 | f2: 88.568939
+2023-06-11 00:23:53,356 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 14 | train -> loss: 0.02836 | validation -> loss: 0.35333 | accuracy: 96.305206 | precision: 38.805969 | recall: 95.412842 | f2: 73.863640
+2023-06-11 00:26:06,375 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 15 | train -> loss: 0.03122 | validation -> loss: 0.51371 | accuracy: 99.234810 | precision: 79.838715 | recall: 90.825691 | f2: 88.392860
+2023-06-11 00:28:19,313 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 16 | train -> loss: 0.04054 | validation -> loss: 0.37001 | accuracy: 98.885002 | precision: 69.863014 | recall: 93.577980 | f2: 87.628868
+2023-06-11 00:30:31,832 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 17 | train -> loss: 0.02490 | validation -> loss: 0.34061 | accuracy: 98.567993 | precision: 63.809525 | recall: 92.201836 | f2: 84.667229
+2023-06-11 00:32:44,997 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 18 | train -> loss: 0.01786 | validation -> loss: 0.32732 | accuracy: 98.830345 | precision: 68.316826 | recall: 94.954124 | f2: 88.085106
+2023-06-11 00:34:58,113 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 19 | train -> loss: 0.03221 | validation -> loss: 0.42064 | accuracy: 99.212944 | precision: 79.674797 | recall: 89.908257 | f2: 87.656525
+2023-06-11 00:37:11,341 | root | INFO | rnn.py learn @ 142 : fold: 3 | epoch: 20 | train -> loss: 0.01685 | validation -> loss: 0.52029 | accuracy: 99.191078 | precision: 79.032257 | recall: 89.908257 | f2: 87.500000
+2023-06-11 00:37:12,101 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f3/model_f3.pth
+2023-06-11 00:37:12,410 | root | INFO | rnn.py learn @ 84 : Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.0005
+    maximize: False
+    weight_decay: 0
+)
+2023-06-11 00:37:12,412 | root | INFO | rnn.py learn @ 85 : <torch.optim.lr_scheduler.ReduceLROnPlateau object at 0x00000206406EC640>
+2023-06-11 00:37:12,413 | root | INFO | rnn.py learn @ 86 : fetching data for fold #4
+2023-06-11 00:37:12,413 | root | INFO | rnn.py reset_modules @ 63 : resetting module parameters: core
+2023-06-11 00:37:12,414 | root | INFO | rnn.py reset_modules @ 63 : resetting module parameters: hidden2out
+2023-06-11 00:39:25,452 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 1 | train -> loss: 0.87403 | validation -> loss: 0.67737 | accuracy: 97.846527 | precision: 54.085602 | recall: 63.761467 | f2: 61.558903
+2023-06-11 00:41:37,724 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 2 | train -> loss: 0.44680 | validation -> loss: 0.27832 | accuracy: 97.365547 | precision: 47.188263 | recall: 88.532104 | f2: 75.331772
+2023-06-11 00:43:49,699 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 3 | train -> loss: 0.30771 | validation -> loss: 0.43023 | accuracy: 93.288147 | precision: 24.083769 | recall: 84.403671 | f2: 56.234718
+2023-06-11 00:46:02,091 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 4 | train -> loss: 0.21336 | validation -> loss: 0.30432 | accuracy: 97.595100 | precision: 49.740932 | recall: 88.073395 | f2: 76.311607
+2023-06-11 00:48:14,856 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 5 | train -> loss: 0.15732 | validation -> loss: 0.24913 | accuracy: 96.797112 | precision: 42.138367 | recall: 92.201836 | f2: 74.499634
+2023-06-11 00:50:26,929 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 6 | train -> loss: 0.12011 | validation -> loss: 0.25819 | accuracy: 97.879318 | precision: 53.278690 | recall: 89.449539 | f2: 78.756058
+2023-06-11 00:52:39,706 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 7 | train -> loss: 0.09798 | validation -> loss: 0.30093 | accuracy: 98.272850 | precision: 58.720928 | recall: 92.660553 | f2: 83.059212
+2023-06-11 00:54:51,910 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 8 | train -> loss: 0.14675 | validation -> loss: 0.25096 | accuracy: 97.999557 | precision: 54.742546 | recall: 92.660553 | f2: 81.385979
+2023-06-11 00:57:05,493 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 9 | train -> loss: 0.07827 | validation -> loss: 0.28326 | accuracy: 98.469612 | precision: 61.963188 | recall: 92.660553 | f2: 84.307175
+2023-06-11 00:59:18,183 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 10 | train -> loss: 0.10408 | validation -> loss: 0.21199 | accuracy: 98.229126 | precision: 58.092487 | recall: 92.201836 | f2: 82.512314
+2023-06-11 01:01:30,744 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 11 | train -> loss: 0.04007 | validation -> loss: 0.40706 | accuracy: 91.517273 | precision: 21.588594 | recall: 97.247711 | f2: 57.173683
+2023-06-11 01:03:44,081 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 12 | train -> loss: 0.06209 | validation -> loss: 0.20329 | accuracy: 96.403587 | precision: 39.548023 | recall: 96.330276 | f2: 74.839630
+2023-06-11 01:05:56,871 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 13 | train -> loss: 0.04442 | validation -> loss: 0.32751 | accuracy: 99.223877 | precision: 79.282867 | recall: 91.284409 | f2: 88.601959
+2023-06-11 01:08:09,340 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 14 | train -> loss: 0.04007 | validation -> loss: 0.34790 | accuracy: 98.742897 | precision: 68.327400 | recall: 88.073395 | f2: 83.261063
+2023-06-11 01:10:22,293 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 15 | train -> loss: 0.02616 | validation -> loss: 0.35960 | accuracy: 99.267601 | precision: 79.841904 | recall: 92.660553 | f2: 89.777779
+2023-06-11 01:12:34,821 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 16 | train -> loss: 0.04463 | validation -> loss: 0.25538 | accuracy: 98.885002 | precision: 70.279716 | recall: 92.201836 | f2: 86.787567
+2023-06-11 01:14:47,349 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 17 | train -> loss: 0.03216 | validation -> loss: 0.31145 | accuracy: 99.355049 | precision: 82.186234 | recall: 93.119263 | f2: 90.705986
+2023-06-11 01:14:47,350 | root | INFO | rnn.py learn @ 146 : fold: 4 | epoch: 17 | saving model at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f4/model_f4_e17.pth
+2023-06-11 01:14:48,109 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f4/model_f4_e17.pth
+2023-06-11 01:17:01,826 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 18 | train -> loss: 0.02206 | validation -> loss: 0.35368 | accuracy: 99.081764 | precision: 74.632355 | recall: 93.119263 | f2: 88.723778
+2023-06-11 01:19:14,044 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 19 | train -> loss: 0.02565 | validation -> loss: 0.29249 | accuracy: 99.442497 | precision: 87.111107 | recall: 89.908257 | f2: 89.334549
+2023-06-11 01:21:26,157 | root | INFO | rnn.py learn @ 142 : fold: 4 | epoch: 20 | train -> loss: 0.02178 | validation -> loss: 0.40648 | accuracy: 99.322250 | precision: 83.050850 | recall: 89.908257 | f2: 88.447655
+2023-06-11 01:21:26,919 | root | INFO | rnn.py save @ 196 : saving sanpshot at output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/f4/model_f4.pth
+2023-06-11 01:21:27,325 | root | INFO | rnn.py learn @ 164 : best model of cross validation for current training phase: fold #0 with metric value of '0.8909090757369995'
+2023-06-11 01:21:27,396 | root | INFO | main.py run @ 91 : started new command `test` of session `lstm-balanced-v2-temporal`
+2023-06-11 01:21:27,488 | root | INFO | dataset.py preprocess @ 615 : trying to load tokens from file
+2023-06-11 01:21:33,131 | root | INFO | dataset.py __vectorize__ @ 107 : loading vectors from file
+2023-06-11 01:22:39,831 | root | INFO | dataset.py prepare @ 244 : data preparation finished
+2023-06-11 01:22:40,185 | root | INFO | main.py run @ 111 : dataset short-name: temporal-sequential/psw.rr.idr-v13000-nofilter
+2023-06-11 01:22:40,703 | root | INFO | rnn.py load_params @ 200 : loaded model weights from file: output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-filtered-lr0.000500-h512-l1/weights/best_model.pth
+2023-06-11 01:31:14,315 | root | INFO | rnn.py test @ 188 : predictions are saved at: output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-nofilter-lr0.000500-h512-l1/preds.pkl
+2023-06-11 01:31:14,318 | root | INFO | rnn.py test @ 191 : targets are saved at: output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-nofilter-lr0.000500-h512-l1/targets.pkl
+2023-06-11 01:31:14,321 | root | WARNING | main.py run @ 90 : no dataset was specified.
+2023-06-11 01:31:14,322 | root | INFO | main.py run @ 91 : started new command `eval` of session `lstm-balanced-v2-temporal`
+2023-06-11 01:31:21,010 | root | INFO | baseline.py evaluate @ 67 : saving ROC curve at: output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-nofilter-lr0.000500-h512-l1/ROC-curve.png
+2023-06-11 01:31:27,388 | root | INFO | baseline.py evaluate @ 74 : saving precision-recall curve at: output/lstm-balanced-v2-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-nofilter-lr0.000500-h512-l1/precision-recall-curve.png
+2023-06-11 01:31:27,409 | root | INFO | baseline.py evaluate @ 77 : test set -> AUCROC: 0.5709262 | AUCPR: 0.0298959 | accuracy: 0.9466505 | precision: 0.0489698 | recall: 0.0373089 | f2score: 0.0460888

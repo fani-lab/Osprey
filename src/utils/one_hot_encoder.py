@@ -115,7 +115,7 @@ class SequentialOneHotEncoderWithContext(OneHotEncoder):
     
     def transform(self, record):
         try:
-            result = [None]*len(record[0])
+            result = [None]*len(record[-1])
         except:
             result = []
         get_context_properly_for_transformation = lambda x: x
@@ -123,8 +123,8 @@ class SequentialOneHotEncoderWithContext(OneHotEncoder):
         if self.context_length == 1:
             get_context_properly_for_transformation = lambda x: [x,]
         dimensions_of_context = ((0,) * self.context_length, tuple(range(0, self.context_length)))
-        
-        for i, (context, sequence_records) in enumerate(zip(record[0], record[1])):
+        contexts = [context for context in zip(*record[0])]
+        for i, (context, sequence_records) in enumerate(zip(contexts, record[1])):
             if len(sequence_records) == 0:
                 result[i] = (self.get_zero_vector(),)
                 continue

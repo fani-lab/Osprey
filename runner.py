@@ -4,7 +4,8 @@ from src.preprocessing import NLTKStopWordRemoving, PunctuationRemoving, Repetit
 from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, TransformersEmbeddingDataset,
                                CaseSensitiveBertEmbeddingDataset, GloveEmbeddingDataset, ConversationBagOfWords,
                                CNNConversationBagOfWords, ConversationBagOfWordsCleaned, SequentialConversationDataset,
-                               ConversationBagOfWordsWithTriple, TemporalSequentialConversationDataset, FineTuningBertDataset)
+                               ConversationBagOfWordsWithTriple, TemporalSequentialConversationOneHotDataset, TemporalAuthorsSequentialConversationOneHotDataset,
+                               FineTuningBertDataset)
 from src.utils.loss_functions import WeightedBinaryCrossEntropy, DynamicSuperLoss
 from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule, SuperDynamicLossANN
 from settings.mappings import register_mappings, register_mappings_torch
@@ -33,7 +34,8 @@ if __name__ == "__main__":
     register_mappings(ConversationBagOfWordsCleaned)
     register_mappings(SequentialConversationDataset)
     register_mappings(ConversationBagOfWordsWithTriple)
-    register_mappings(TemporalSequentialConversationDataset)
+    register_mappings(TemporalSequentialConversationOneHotDataset)
+    register_mappings(TemporalAuthorsSequentialConversationOneHotDataset)
     register_mappings(FineTuningBertDataset)
 
     register_mappings(WeightedBinaryCrossEntropy)
