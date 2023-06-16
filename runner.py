@@ -46,6 +46,7 @@ def init_logger():
 
 
 if __name__ == "__main__":
+    settings.init_settings()
     logger = init_logger()
     # create_conversations()
     register_mappings_torch()
