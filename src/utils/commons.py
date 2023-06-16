@@ -197,7 +197,8 @@ def calculate_metrics(prediction, target, device="cpu"):
 
 def calculate_metrics_extended(prediction, target, device="cpu"):
     f2score = torchmetrics.FBetaScore("binary", beta=2.0).to(device)
-    return *calculate_metrics(prediction, target, device), f2score(prediction, target)
+    f05score = torchmetrics.FBetaScore("binary", beta=0.5).to(device)
+    return *calculate_metrics(prediction, target, device), f2score(prediction, target), f05score(prediction, target)
 
 def _calculate_metrics(prediction, target, *args, **kwargs):
     tp, fp, tn, fn = confusion_matrix(prediction, target)

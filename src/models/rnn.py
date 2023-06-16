@@ -138,8 +138,8 @@ class BaseRnnModule(Baseline, nn.Module):
                     total_validation_loss.append(validation_loss)
                 all_preds = torch.tensor(all_preds)
                 all_targets = torch.tensor(all_targets)
-                accuracy_value, recall_value, precision_value, f2score = calculate_metrics_extended(all_preds, all_targets, device=self.device)
-                logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f} | f2: {(100 * f2score):>0.6f}")
+                accuracy_value, recall_value, precision_value, f2score, f05score = calculate_metrics_extended(all_preds, all_targets, device=self.device)
+                logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f} | f2: {(100 * f2score):>0.6f} | f0.5: {(100 * f05score):>0.6f}")
                 self.scheduler.step(validation_loss)
                 epoch_snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_f{fold}_e{i}.pth")
                 if f2score >= condition_save_threshold:
