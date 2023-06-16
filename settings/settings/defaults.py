@@ -14,6 +14,7 @@ except:
 TRAIN = 1
 TEST  = 2
 EVAL  = 4
+START_TIME = 0
 
 ALL_FILTERED_CONFIGS = {
     "session_path_include_time",
@@ -27,3 +28,10 @@ ALL_FILTERED_CONFIGS = {
 
 ALL_IGNORED_PARAM_RESET = {"activation", "loss_function"} or IGNORED_PARAM_RESET
 OUTPUT_LAYER_NODES = 1
+
+def init_settings():
+    import time
+    if START_TIME == 0:
+        START_TIME = time.strftime("%m-%d-%Y-%H-%M-%S", time.localtime())
+    
+    del time
