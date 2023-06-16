@@ -15,8 +15,8 @@ FORMATTER_VERBOSE = logging.Formatter(
 debug_file_handler = logging.FileHandler(f"logs/{START_TIME}.log")
 debug_file_handler.setLevel(logging.DEBUG)
 debug_file_handler.setFormatter(FORMATTER_VERBOSE)
-
-info_file_handler = logging.FileHandler(f"logs/{START_TIME}-info.log")
+info_logger_file_path = f"logs/{START_TIME}-info.log"
+info_file_handler = logging.FileHandler(info_logger_file_path)
 info_file_handler.setLevel(logging.INFO)
 info_file_handler.setFormatter(FORMATTER_VERBOSE)
 
@@ -29,7 +29,7 @@ logger.addHandler(debug_file_handler)
 logger.addHandler(info_file_handler)
 logger.addHandler(info_terminal_handler)
 logger.setLevel(logging.DEBUG)
-
+logger.info(f"info-level logger file handler created at: {info_logger_file_path}")
 
 def create_model_configs(session_name: str, session: dict, device: str):
     activation, activation_kwargs = mappings.ACTIVATIONS[session["model_configs"]["activation"][0]], session["model_configs"]["activation"][1]

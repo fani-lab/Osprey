@@ -6,12 +6,13 @@ import torch
 from torch.nn.utils.rnn import pad_sequence
 import torchmetrics
 from sklearn.metrics import auc
-from nltk.tokenize import word_tokenize
+import nltk
 from lxml import etree
 
 
 def nltk_tokenize(input) -> list[list[str]]:
-    tokens = [word_tokenize(record.lower()) if pd.notna(record) else [] for record in input]
+    nltk.download('punkt')
+    tokens = [nltk.tokenize.word_tokenize(record.lower()) if pd.notna(record) else [] for record in input]
     return tokens
 
 def force_open(path, *args, **kwargs):
