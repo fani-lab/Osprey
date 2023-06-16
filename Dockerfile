@@ -7,9 +7,8 @@ RUN curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bi
 
 COPY ./environment.yml /opt/environment.yml
 
-RUN micromamba create -n osprey --file /opt/environment.yml && \
-    eval "$(micromamba shell hook --shell=bash)" && \
-    micromamba shell init --shell=bash --prefix=~/micromamba
+RUN micromamba create -n osprey --file /opt/environment.yml && eval "$(micromamba shell hook --shell=bash)"
+RUN micromamba shell init --shell=bash --prefix=~/micromamba
 
 ENV PATH=/root/micromamba/envs/osprey/bin:$PATH
 RUN python -m nltk.downloader stopwords punkt
