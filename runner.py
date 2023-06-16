@@ -23,10 +23,10 @@ def init_logger():
     FORMATTER_VERBOSE = logging.Formatter(
         "%(asctime)s | %(name)s | %(levelname)s | %(filename)s %(funcName)s @ %(lineno)s : %(message)s")
 
-    debug_file_handler = logging.FileHandler(f"logs/{settings.START_TIME}.log")
+    debug_file_handler = logging.FileHandler(f"logs/{settings.get_start_time()}.log")
     debug_file_handler.setLevel(logging.DEBUG)
     debug_file_handler.setFormatter(FORMATTER_VERBOSE)
-    info_logger_file_path = f"logs/{settings.START_TIME}-info.log"
+    info_logger_file_path = f"logs/{settings.get_start_time()}-info.log"
     info_file_handler = logging.FileHandler(info_logger_file_path)
     info_file_handler.setLevel(logging.INFO)
     info_file_handler.setFormatter(FORMATTER_VERBOSE)
@@ -46,7 +46,6 @@ def init_logger():
 
 
 if __name__ == "__main__":
-    settings.init_settings()
     logger = init_logger()
     # create_conversations()
     register_mappings_torch()

@@ -13,7 +13,7 @@ def create_model_configs(session_name: str, session: dict, device: str):
     logger.info(f"loss module kwargs: {loss_kwargs}")
     configs = {**session["model_configs"], "activation": activation(**activation_kwargs),
                          "loss_func": loss(**loss_kwargs), "device": device,
-                         "module_session_path": session["model_configs"]["module_session_path"] + "/" + f"{settings.START_TIME}-{session_name}"
+                         "module_session_path": session["model_configs"]["module_session_path"] + "/" + f"{settings.get_start_time()}-{session_name}"
                             if session["model_configs"]["session_path_include_time"] else session["model_configs"]["module_session_path"] + "/" + session_name
                         }
     configs = {k: v for k, v in configs.items() if k not in settings.ALL_FILTERED_CONFIGS}
