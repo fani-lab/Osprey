@@ -8,7 +8,7 @@ from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, Tr
                                CaseSensitiveBertEmbeddingDataset, GloveEmbeddingDataset, ConversationBagOfWords,
                                CNNConversationBagOfWords, ConversationBagOfWordsCleaned, SequentialConversationDataset,
                                ConversationBagOfWordsWithTriple, TemporalSequentialConversationOneHotDataset, TemporalAuthorsSequentialConversationOneHotDataset,
-                               FineTuningBertDataset)
+                               FineTuningBertDataset, UncasedBaseBertEmbeddingDataset)
 from src.utils.loss_functions import WeightedBinaryCrossEntropy, DynamicSuperLoss
 from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule, SuperDynamicLossANN
 from settings.mappings import register_mappings, register_mappings_torch
@@ -60,6 +60,7 @@ if __name__ == "__main__":
     register_mappings(BagOfWordsDataset)
     register_mappings(TimeBasedBagOfWordsDataset)
     register_mappings(TransformersEmbeddingDataset)
+    register_mappings(UncasedBaseBertEmbeddingDataset)
     register_mappings(CaseSensitiveBertEmbeddingDataset)
     register_mappings(GloveEmbeddingDataset)
     register_mappings(ConversationBagOfWords)

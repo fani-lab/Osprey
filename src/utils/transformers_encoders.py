@@ -9,16 +9,20 @@ logger = logging.getLogger()
 
 class TransformersEmbeddingEncoder:
 
-    def __init__(self, device="cpu", transformer_identifier="sentence-transformers/all-distilroberta-v1", *args, **kwargs):
+    def __init__(self, device="cpu", transformer_identifier="sentence-transformers/all-distilroberta-v1", special_token=[], *args, **kwargs):
         self.device = device
         self.encoder = SentenceTransformer(transformer_identifier, device=device)
+
+        # we should call add_special_tokens for [unusedX] tokens, because the tokenizer consider them unkown.
+        #   Though the size of the vocab won't change because [unusedX] are already there
+        if len(special_token) > 0:
+            self.encoder.tokenizer.add_special_tokens({"additional_special_tokens": special_token})
     
     def transform(self, record):
 
         result = self.encoder.encode(" ".join(record), convert_to_tensor=True, show_progress_bar=False, normalize_embeddings=True)
 
         return (result,) # For the consistency of the transform return value
-
 
     def fit(self, *args, **kwargs):
         pass

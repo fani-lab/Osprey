@@ -12,7 +12,7 @@ from src.preprocessing.base import BasePreprocessing
 from src.utils.one_hot_encoder import OneHotEncoder, SequentialOneHotEncoder, SequentialOneHotEncoderWithContext
 from src.utils.transformers_encoders import TransformersEmbeddingEncoder, GloveEmbeddingEncoder
 from src.utils.commons import nltk_tokenize, force_open, RegisterableObject
-
+from src.preprocessing.author_id_remover import AuthorIDReplacerBert
 
 # from imblearn.over_sampling import SMOTE
 
@@ -265,6 +265,8 @@ class FineTuningBertDataset(BaseDataset):
         super().__init__(*args, **kwargs)
         self.tokenizer_path = tokenizer_path
         self.tokenizer = None
+
+        self.vector_size = 512
     
     def preprocess(self):
         try:
@@ -509,7 +511,7 @@ class TransformersEmbeddingDataset(BaseDataset, RegisterableObject):
         
     def init_encoder(self, tokens_records):
         logger.debug("Transformer Embedding Dataset being initialized")
-        encoder = TransformersEmbeddingEncoder(device=self.device)
+        encoder = TransformersEmbeddingEncoder(device=self.device, special_token=(AuthorIDReplacerBert.AUTHOR_ID_TOKEN,))
         return encoder
 
     def tokenize(self, input):
@@ -523,14 +525,34 @@ class TransformersEmbeddingDataset(BaseDataset, RegisterableObject):
         return vectors
 
 
-class FineTunedBertEmbeddingDataset(TransformersEmbeddingDataset):
+class UncasedBaseBertEmbeddingDataset(TransformersEmbeddingDataset):
+    
     @classmethod
     def short_name(cls) -> str:
-        return "transformer/bert-uncased-finetuned"
+        return "transformer/bert-base-uncased"
         
     def init_encoder(self, tokens_records):
         logger.debug("Transformer Embedding Dataset being initialized")
-        encoder = TransformersEmbeddingEncoder(transformer_identifier="data/embeddings/finetuned/finetuning-bert/psw.rr.idr-v512-nofilter/", device=self.device)
+        encoder = TransformersEmbeddingEncoder(transformer_identifier="bert-base-uncased", device=self.device)
+        return encoder
+
+# Do not use it for now
+class FineTunedBertEmbeddingDataset(TransformersEmbeddingDataset):
+
+    def __init__(self, transformer_identifier, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        raise NotImplementedError("this module is not implemented completely.")
+        # `transformer_identifier` should be a path 
+        # ex: "data/embeddings/finetuned/finetuning-bert/psw.rr.idr-v512-nofilter/"
+        self.transformer_identifier = transformer_identifier
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "transformer/user-pretrained"
+        
+    def init_encoder(self, tokens_records):
+        logger.debug("Transformer Embedding Dataset being initialized")
+        encoder = TransformersEmbeddingEncoder(transformer_identifier=self.transformer_identifier, device=self.device)
         return encoder
 
 
