@@ -12,7 +12,8 @@ from settings.settings import OUTPUT_LAYER_NODES
 
 import torch
 from torch import nn
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader, Dataset, SubsetRandomSampler
+from transformers.modeling_utils import PreTrainedModel
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -40,14 +41,24 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
     def get_detailed_session_path(self, dataset, *args):
         details = str(dataset) + "-" + str(self)
         return self.get_session_path(details, *args)
-    
+
+    def get_dataloaders(self, dataset, train_ids, validation_ids, batch_size):
+        train_subsampler = SubsetRandomSampler(train_ids)
+        validation_subsampler = SubsetRandomSampler(validation_ids)
+        train_loader = DataLoader(dataset, batch_size=batch_size,
+                                                    sampler=train_subsampler)
+        validation_loader = DataLoader(dataset, batch_size=(256 if len(validation_ids) > 1024 else len(validation_ids)),
+                                       sampler=validation_subsampler)
+        
+        return train_loader, validation_loader
+
     def reset_modules(self, module, parents_modules_names=[]):
         for name, module in module.named_children():
             if name in settings.ALL_IGNORED_PARAM_RESET:
                 continue
             if isinstance(module, nn.ModuleList):
                 self.reset_modules(module, parents_modules_names=[*parents_modules_names, name])
-            elif isinstance(module, nn.Dropout):
+            elif isinstance(module, nn.Dropout) or isinstance(module, PreTrainedModel):
                 continue
             else:
                 logger.info(f"resetting module parameters {'.'.join([name, *parents_modules_names])}")
@@ -71,30 +82,34 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
             self.scheduler = ReduceLROnPlateau(self.optimizer, **scheduler_args)
             logger.debug(f"scheduler settings: {scheduler_args}")
             logger.info(f'fetching data for fold #{fold}')
-            train_subsampler = torch.utils.data.SubsetRandomSampler(train_ids)
-            validation_subsampler = torch.utils.data.SubsetRandomSampler(validation_ids)
-            train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size,
-                                                       sampler=train_subsampler)
-            validation_loader = torch.utils.data.DataLoader(train_dataset, batch_size=(256 if len(validation_ids) > 1024 else len(validation_ids)),
-                                                            sampler=validation_subsampler)
+            train_loader, validation_loader = self.get_dataloaders(train_dataset, train_ids, validation_ids, batch_size)
+            # train_subsampler = SubsetRandomSampler(train_ids)
+            # validation_subsampler = SubsetRandomSampler(validation_ids)
+            # train_loader = DataLoader(train_dataset, batch_size=batch_size,
+            #                                            sampler=train_subsampler)
+            # validation_loader = DataLoader(train_dataset, batch_size=(256 if len(validation_ids) > 1024 else len(validation_ids)),
+            #                                                 sampler=validation_subsampler)
             # Train phase
             total_loss = []
             total_validation_loss = []
             # resetting module parameters
             self.reset_modules(module=self)
             for i in range(epoch_num):
+                self.train()
                 loss = 0
                 epoch_loss = 0
-                for batch_index, (X, y) in enumerate(train_loader):
+                for (X, y) in (train_loader):
                     self.optimizer.zero_grad()
-                    X = X.to(self.device)
-                    y = y.to(self.device)
+                    if isinstance(X, tuple) or isinstance(X, list):
+                        X = [l.to(self.device) for l in X]
+                    else:
+                        X = X.to(self.device)
                     y = y.reshape(-1, 1).to(self.device)
                     y_hat = self.forward(X)
                     loss = self.loss_function(y_hat, y)
                     loss.backward()
                     self.optimizer.step()
-                    logger.debug(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
+                    # logger.debug(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
                     epoch_loss += loss.item()
                 epoch_loss /= len(train_ids)
                 total_loss.append(epoch_loss)
@@ -109,16 +124,18 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
                 self.eval()
                 with torch.no_grad():
                     for batch_index, (X, y) in enumerate(validation_loader):
-                        X = X.to(self.device)
-                        y = y.to(self.device)
-                        pred = self.forward(X).reshape(-1)
+                        if isinstance(X, tuple) or isinstance(X, list):
+                            X = [l.to(self.device) for l in X]
+                        else:
+                            X = X.to(self.device)
+                        y = y.reshape(-1, 1).to(self.device)
+                        pred = self.forward(X)
                         loss = self.loss_function(pred, y)
                         validation_loss += loss.item()
                         all_preds.extend(torch.sigmoid(pred) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else pred)
                         all_targets.extend(y)
                     validation_loss /= len(validation_ids)
                     total_validation_loss.append(validation_loss)
-                self.train()
                 all_preds = torch.stack(all_preds)
                 all_targets = torch.stack(all_targets)
                 

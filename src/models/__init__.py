@@ -2,6 +2,7 @@ from .rnn import BaseRnnModule, LSTMModule, GRUModule
 from .ann import ANNModule, AbstractFeedForward, SuperDynamicLossANN
 from .cnn import EbrahimiCNN
 from .baseline import Baseline
+from .transformer import BertBaseUncasedClassifier
 
 __all__ = [
     "ANNModule",
@@ -12,4 +13,5 @@ __all__ = [
     "LSTMModule",
     "GRUModule",
     "SuperDynamicLossANN",
+    "BertBaseUncasedClassifier",
 ]

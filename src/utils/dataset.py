@@ -117,7 +117,7 @@ class BaseDataset(Dataset, RegisterableObject):
         return vectors
 
     def __str__(self):
-        return self.short_name() +"/p" + ".".join([pp.short_name() for pp in self.preprocessings]) + "-v" + str(self.vector_size) +("-filtered" if self.apply_filter else "-nofilter")
+        return self.short_name() +"/p" + ".".join([pp.short_name() for pp in self.preprocessings]) + "-v" + str(self.get_vector_size()) +("-filtered" if self.apply_filter else "-nofilter")
     
     def filter_records(self, df):
         logger.info(f"no filter is applied to dataset: {self.short_name()}")
@@ -204,6 +204,15 @@ class BaseDataset(Dataset, RegisterableObject):
 
         return tokens
 
+    def get_vector_size(self, vectors=None):
+        if self.vector_size < 0:
+            raise ValueError("vector size is not defined or calculated yet")
+        return self.vector_size
+
+    def update_vector_size(self, vectors):
+        self.vector_size = vectors[0].shape[-1]
+        return self.vector_size
+    
     def prepare(self):
         if self.already_prepared:
             logger.debug("already called prepared")
@@ -218,7 +227,7 @@ class BaseDataset(Dataset, RegisterableObject):
 
         vectors = self.__vectorize__(tokens, self.encoder)
         vectors = self.normalize_vector(vectors)
-        self.vector_size = vectors[0].shape[-1]
+        self.update_vector_size(vectors)
         # Persisting changes
         if self.persist_data and self.__new_tokens__:
             tokens_path = self.get_session_path("tokens.pkl")
@@ -256,7 +265,7 @@ class BaseDataset(Dataset, RegisterableObject):
 
     @property
     def shape(self):
-        return (len(self.data), self.data[0].shape[-1])
+        return (len(self.data), self.get_vector_size())
 
 # It is only for handling fine-tuning
 class FineTuningBertDataset(BaseDataset):
@@ -316,7 +325,7 @@ class FineTuningBertDataset(BaseDataset):
         
         self.input_ids, self.attention_masks = self.preprocess()
 
-        self.vector_size = self.input_ids.shape[-1]
+        self.update_vector_size(None)
 
         if self.persist_data and self.__new_tokens__:
             input_ids_path = self.get_session_path("input_ids.pkl")
@@ -331,7 +340,13 @@ class FineTuningBertDataset(BaseDataset):
         self.already_prepared = True
         self.labels = self.get_labels()
         logger.info("data preparation finished")
-        
+    
+    def get_vector_size(self, vectors=None):
+        return 512 # it is the embedding size of bert-base; check BERT docs
+
+    def update_vector_size(self, vectors):
+        self.vector_size = 512
+        return self.vector_size
 
     def __getitem__(self, index):
         return self.attention_masks[index], self.input_ids[index], self.labels[index]
@@ -347,7 +362,7 @@ class FineTuningBertDataset(BaseDataset):
     
     @property
     def shape(self):
-        return self.input_ids.shape[0, -1]
+        return self.input_ids.shape[0], self.get_vector_size()
 
 
 class BagOfWordsDataset(BaseDataset):
@@ -368,7 +383,7 @@ class BagOfWordsDataset(BaseDataset):
         return nltk_tokenize(input)
 
     def init_encoder(self, tokens_records):
-        encoder = OneHotEncoder(vector_size=self.vector_size)
+        encoder = OneHotEncoder(vector_size=self.get_vector_size())
         logger.info("started generating bag of words vector encoder")
         data = set()
         data.update(*tokens_records)
@@ -411,7 +426,7 @@ class ConversationBagOfWords(BagOfWordsDataset):
         return func
 
     def init_encoder(self, tokens_records):
-        encoder = OneHotEncoder(vector_size=self.vector_size, buffer_cap=64)
+        encoder = OneHotEncoder(vector_size=self.get_vector_size(), buffer_cap=64)
         logger.info("started generating bag of words vector encoder")
         data = tokens_records
         pattern = lambda x: x
@@ -452,7 +467,7 @@ class CNNConversationBagOfWords(ConversationBagOfWords):
     
     def init_encoder(self, tokens_records):
         logger.info("started generating bag of words vector encoder")
-        encoder = OneHotEncoder(vector_size=self.vector_size, buffer_cap=64, vectors_dimensions=3)
+        encoder = OneHotEncoder(vector_size=self.get_vector_size(), buffer_cap=64, vectors_dimensions=3)
         data = tokens_records
         pattern = lambda x: x
         logger.debug("fitting conversation tokens into one hot encoder")
@@ -503,15 +518,46 @@ class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
         return vectors
 
 
+class UncasedBaseBertTokenizedDataset(BaseDataset, RegisterableObject):
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "bert-based-uncased"
+    
+    def init_encoder(self, tokens_records):
+        encoder = BertTokenizer.from_pretrained('bert-base-uncased')
+        logger.debug("uncased bert-base tokenizer is being used as encoder")
+        return encoder
+
+    def tokenize(self, input):
+        return nltk_tokenize(input)
+
+    def vectorize(self, tokens_records, encoder):
+        vectors = [None] * len(tokens_records)
+        for i, record in enumerate(tokens_records):
+            vectors[i] = encoder(" ".join(record), return_tensors="pt", padding='max_length', truncation=True)
+        self.__new_encoder__ = False
+        return vectors
+
+    def get_vector_size(self, vectors=None):
+        return 768 # it is the embedding size of bert-base; check BERT docs
+
+    def update_vector_size(self, vectors):
+        self.vector_size = 768
+        return self.vector_size
+
+    def __getitem__(self, index):
+        return (self.data[index]["input_ids"], self.data[index]["attention_mask"], self.data[index]["token_type_ids"]), self.labels[index]
+
 class TransformersEmbeddingDataset(BaseDataset, RegisterableObject):
 
     @classmethod
     def short_name(cls) -> str:
-        return "transformer/distillbert"
+        return "embedding/distillbert"
         
     def init_encoder(self, tokens_records):
         logger.debug("Transformer Embedding Dataset being initialized")
-        encoder = TransformersEmbeddingEncoder(device=self.device, special_token=(AuthorIDReplacerBert.AUTHOR_ID_TOKEN,))
+        encoder = TransformersEmbeddingEncoder(device=self.device)
         return encoder
 
     def tokenize(self, input):
@@ -529,7 +575,7 @@ class UncasedBaseBertEmbeddingDataset(TransformersEmbeddingDataset):
     
     @classmethod
     def short_name(cls) -> str:
-        return "transformer/bert-base-uncased"
+        return "embedding/bert-base-uncased"
         
     def init_encoder(self, tokens_records):
         logger.debug("Transformer Embedding Dataset being initialized")
@@ -548,7 +594,7 @@ class FineTunedBertEmbeddingDataset(TransformersEmbeddingDataset):
 
     @classmethod
     def short_name(cls) -> str:
-        return "transformer/user-pretrained"
+        return "embedding/user-pretrained"
         
     def init_encoder(self, tokens_records):
         logger.debug("Transformer Embedding Dataset being initialized")
@@ -560,7 +606,7 @@ class CaseSensitiveBertEmbeddingDataset(TransformersEmbeddingDataset):
     
     @classmethod
     def short_name(cls) -> str:
-        return "tranformer/bert-base-cased"
+        return "embedding/bert-base-cased"
     
     def init_encoder(self, tokens_records):
         encoder = TransformersEmbeddingEncoder(transformer_identifier="bert-base-cased", device=self.device)
@@ -647,7 +693,7 @@ class SequentialConversationDataset(BaseDataset):
         return nltk_tokenize(input)
 
     def init_encoder(self, tokens_records):
-        encoder = SequentialOneHotEncoder(vector_size=self.vector_size)
+        encoder = SequentialOneHotEncoder(vector_size=self.get_vector_size())
         logger.info("started generating bag of words vector encoder")
         pattern = lambda x: x
         logger.debug("fitting data into one hot encoder")
@@ -679,7 +725,7 @@ class SequentialConversationDataset(BaseDataset):
 
     @property
     def shape(self):
-        return (len(self.data), -1, self.data[0].shape[-1])
+        return (len(self.data), -1, self.data[0].shape[-1]) # Fix the last shape with get_vector_size
 
 class BaseContextualSequentialConversationOneHotDataset(SequentialConversationDataset):
     CONTEXT_LENGTH = 0
@@ -697,7 +743,7 @@ class BaseContextualSequentialConversationOneHotDataset(SequentialConversationDa
         return func
     
     def init_encoder(self, tokens_records):
-        encoder = SequentialOneHotEncoderWithContext(context_length=self.CONTEXT_LENGTH, vector_size=self.vector_size, )
+        encoder = SequentialOneHotEncoderWithContext(context_length=self.CONTEXT_LENGTH, vector_size=self.get_vector_size(), )
         logger.info("started generating sequential-conversation bag of words vector encoder")
         pattern = lambda x: x
         logger.debug("fitting data into one hot encoder")

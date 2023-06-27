@@ -3,14 +3,14 @@ import sys
 import logging
 
 from src.main import run
-from src.preprocessing import NLTKStopWordRemoving, PunctuationRemoving, RepetitionRemoving, AuthorIDReplacer
+from src.preprocessing import NLTKStopWordRemoving, PunctuationRemoving, RepetitionRemoving, AuthorIDReplacer, AuthorIDReplacerBert
 from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, TransformersEmbeddingDataset,
                                CaseSensitiveBertEmbeddingDataset, GloveEmbeddingDataset, ConversationBagOfWords,
                                CNNConversationBagOfWords, ConversationBagOfWordsCleaned, SequentialConversationDataset,
                                ConversationBagOfWordsWithTriple, TemporalSequentialConversationOneHotDataset, TemporalAuthorsSequentialConversationOneHotDataset,
-                               FineTuningBertDataset, UncasedBaseBertEmbeddingDataset)
+                               FineTuningBertDataset, UncasedBaseBertEmbeddingDataset, UncasedBaseBertTokenizedDataset)
 from src.utils.loss_functions import WeightedBinaryCrossEntropy, DynamicSuperLoss
-from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule, SuperDynamicLossANN
+from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule, SuperDynamicLossANN, BertBaseUncasedClassifier
 from settings.mappings import register_mappings, register_mappings_torch
 from settings import settings
 from src.scripts import (create_conversations, balance_datasets_for_version_two, create_conversation_toy_set, generate_stats,
@@ -56,6 +56,7 @@ if __name__ == "__main__":
     register_mappings(PunctuationRemoving)
     register_mappings(RepetitionRemoving)
     register_mappings(AuthorIDReplacer)
+    register_mappings(AuthorIDReplacerBert)
 
     register_mappings(BagOfWordsDataset)
     register_mappings(TimeBasedBagOfWordsDataset)
@@ -71,6 +72,7 @@ if __name__ == "__main__":
     register_mappings(TemporalSequentialConversationOneHotDataset)
     register_mappings(TemporalAuthorsSequentialConversationOneHotDataset)
     register_mappings(FineTuningBertDataset)
+    register_mappings(UncasedBaseBertTokenizedDataset)
 
     register_mappings(WeightedBinaryCrossEntropy)
 
@@ -80,6 +82,7 @@ if __name__ == "__main__":
     register_mappings(LSTMModule)
     register_mappings(GRUModule)
     register_mappings(SuperDynamicLossANN)
+    register_mappings(BertBaseUncasedClassifier)
 
     run()
     # balance_datasets_for_version_two()
