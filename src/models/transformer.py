@@ -5,7 +5,6 @@ from transformers import AutoConfig, AutoModelForSequenceClassification
 from src.models import AbstractFeedForward
 from settings import settings
 from settings.settings import OUTPUT_LAYER_NODES
-from src.utils.commons import collate_transformers_sequence_batch
 
 import logging
 
