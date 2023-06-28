@@ -83,12 +83,6 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
             logger.debug(f"scheduler settings: {scheduler_args}")
             logger.info(f'fetching data for fold #{fold}')
             train_loader, validation_loader = self.get_dataloaders(train_dataset, train_ids, validation_ids, batch_size)
-            # train_subsampler = SubsetRandomSampler(train_ids)
-            # validation_subsampler = SubsetRandomSampler(validation_ids)
-            # train_loader = DataLoader(train_dataset, batch_size=batch_size,
-            #                                            sampler=train_subsampler)
-            # validation_loader = DataLoader(train_dataset, batch_size=(256 if len(validation_ids) > 1024 else len(validation_ids)),
-            #                                                 sampler=validation_subsampler)
             # Train phase
             total_loss = []
             total_validation_loss = []

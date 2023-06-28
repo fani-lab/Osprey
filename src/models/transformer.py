@@ -23,7 +23,7 @@ class BertBaseUncasedClassifier(AbstractFeedForward):
         # self.out = torch.nn.Linear(768, OUTPUT_LAYER_NODES, device=self.device)
 
     def forward(self, x):
-        x = self.core(input_ids=x[0].squeeze(), attention_mask=x[1].squeeze(), token_type_ids=x[2].squeeze())
+        x = self.core(input_ids=x[0], attention_mask=x[1], token_type_ids=x[2])
 
         return x[0]
     
@@ -35,8 +35,8 @@ class BertBaseUncasedClassifier(AbstractFeedForward):
         train_subsampler = SubsetRandomSampler(train_ids)
         validation_subsampler = SubsetRandomSampler(validation_ids)
         train_loader = DataLoader(dataset, batch_size=batch_size,
-                                                    sampler=train_subsampler,)
+                                                    sampler=train_subsampler, num_workers=3)
         validation_loader = DataLoader(dataset, batch_size=(256 if len(validation_ids) > 1024 else len(validation_ids)),
-                                       sampler=validation_subsampler, )
+                                       sampler=validation_subsampler, num_workers=1)
         
         return train_loader, validation_loader

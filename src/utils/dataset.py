@@ -535,10 +535,18 @@ class UncasedBaseBertTokenizedDataset(BaseDataset, RegisterableObject):
     def vectorize(self, tokens_records, encoder):
         vectors = [None] * len(tokens_records)
         for i, record in enumerate(tokens_records):
-            vectors[i] = encoder(" ".join(record), return_tensors="pt", padding='max_length', truncation=True)
+            temp = encoder(" ".join(record), return_tensors="pt", padding='max_length', truncation=True)
+            vectors[i] = {k: temp[k].squeeze() for k in temp.keys()}
         self.__new_encoder__ = False
         return vectors
 
+    def to(self, device):
+        self.labels = self.labels.to(device)
+        keys = self.data[0].keys()
+        for i in range(len(self.data)):
+            for k in keys:
+                self.data[i][k].to(device)
+    
     def get_vector_size(self, vectors=None):
         return 768 # it is the embedding size of bert-base; check BERT docs
 
