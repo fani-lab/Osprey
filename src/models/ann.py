@@ -52,6 +52,16 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
         
         return train_loader, validation_loader
 
+    def get_new_optimizer(self, lr, *args, **kwargs):
+        # return torch.optim.SGD(self.parameters(), lr=lr, momentum=0.9)
+        return torch.optim.Adam(self.parameters(), lr=lr)
+    
+    def get_new_scheduler(self, optimizer, *args, **kwargs):
+        # scheduler_args = {"verbose":False, "min_lr":0, "threshold":1e-4, "patience":10, "factor":0.25}
+        scheduler_args = {"verbose":False, "min_lr":1e-9, "threshold": 20, "cooldown": 5, "patience": 20, "factor":0.25, "mode": "min"}
+        logger.debug(f"scheduler settings: {scheduler_args}")
+        return ReduceLROnPlateau(optimizer, **scheduler_args)
+
     def reset_modules(self, module, parents_modules_names=[]):
         for name, module in module.named_children():
             if name in settings.ALL_IGNORED_PARAM_RESET:
@@ -71,16 +81,15 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
 
         logger.info(f"saving epoch condition: f2score>{condition_save_threshold}")
         logger.info("training phase started")
-        scheduler_args = {"verbose":False, "min_lr":0, "threshold":1e-4, "patience":10, "factor":0.25}
+        
         folds_metrics = []
         logger.info(f"number of folds: {len(splits)}")
         for fold, (train_ids, validation_ids) in enumerate(splits):
             self.train()
             logger.info("Resetting Optimizer, Learning rate, and Scheduler")
-            self.optimizer = torch.optim.SGD(self.parameters(), lr=self.init_lr, momentum=0.9)
+            self.optimizer = self.get_new_optimizer(self.init_lr)
+            self.scheduler = self.get_new_scheduler(self.optimizer)
             last_lr = self.init_lr
-            self.scheduler = ReduceLROnPlateau(self.optimizer, **scheduler_args)
-            logger.debug(f"scheduler settings: {scheduler_args}")
             logger.info(f'fetching data for fold #{fold}')
             train_loader, validation_loader = self.get_dataloaders(train_dataset, train_ids, validation_ids, batch_size)
             # Train phase
