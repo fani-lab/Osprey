@@ -1,6 +1,8 @@
 import pickle
 import logging
 import shutil
+import re
+from glob import glob
 
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
@@ -51,6 +53,13 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
                                        sampler=validation_subsampler)
         
         return train_loader, validation_loader
+
+    def get_all_folds_checkpoints(self, dataset):
+        main_path = glob(self.get_detailed_session_path(dataset, "weights", "f*", "*.pth"))
+        paths = [ pp for pp in main_path if re.search(r"model_f\d{1,2}.pth$", pp)]
+        if len(paths) == 0:
+            raise RuntimeError("no checkpoint was found. probably the model has not been trained.")
+        return paths
 
     def get_new_optimizer(self, lr, *args, **kwargs):
         # return torch.optim.SGD(self.parameters(), lr=lr, momentum=0.9)
@@ -162,40 +171,48 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
             with force_open(self.get_detailed_session_path(train_dataset, "figures", f"loss_f{fold}.png"), "wb") as f:
                 plt.savefig(f, dpi=300)
 
-        MAHAK = 2
-        max_metric = (0, folds_metrics[0][MAHAK])
-        for i in range(1, len(folds_metrics)):
-            if folds_metrics[i][MAHAK] > max_metric[1]:
-                max_metric = (i, folds_metrics[i][MAHAK])
-        logger.info(f"best model of cross validation for current training phase: fold #{max_metric[0]} with metric value of '{max_metric[1]}'")
-        best_model_dest = self.get_detailed_session_path(train_dataset, "weights", f"best_model.pth")
-        best_model_src = self.get_detailed_session_path(train_dataset, "weights", f"f{max_metric[0]}", f"model_f{max_metric[0]}.pth")
-        shutil.copyfile(best_model_src, best_model_dest)
-        return best_model_dest
+        # MAHAK = 2
+        # max_metric = (0, folds_metrics[0][MAHAK])
+        # for i in range(1, len(folds_metrics)):
+        #     if folds_metrics[i][MAHAK] > max_metric[1]:
+        #         max_metric = (i, folds_metrics[i][MAHAK])
+        # logger.info(f"best model of cross validation for current training phase: fold #{max_metric[0]} with metric value of '{max_metric[1]}'")
+        # best_model_dest = self.get_detailed_session_path(train_dataset, "weights", f"best_model.pth")
+        # best_model_src = self.get_detailed_session_path(train_dataset, "weights", f"f{max_metric[0]}", f"model_f{max_metric[0]}.pth")
+        # shutil.copyfile(best_model_src, best_model_dest)
+        # return best_model_dest
 
-    def test(self, test_dataset, weights_checkpoint_path):
-        checkpoint = torch.load(weights_checkpoint_path)
-        self.load_state_dict(checkpoint.get("model", checkpoint))
+    def test(self, test_dataset, weights_checkpoint_paths):
+        for i, path in enumerate(weights_checkpoint_paths):
+            logger.info(f"testing checkpoint at: {path}")
+            checkpoint = torch.load(path)
+            self.load_state_dict(checkpoint.get("model", checkpoint))
 
-        all_preds = []
-        all_targets = []
-        test_dataset.to(self.device)
-        test_dataloader = DataLoader(test_dataset, batch_size=64)
-        self.eval()
-        with torch.no_grad():
-            for X, y in test_dataloader:
-                pred = self.forward(X)
-                all_preds.extend(torch.sigmoid(pred) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else pred)
-                all_targets.extend(y)
+            all_preds = []
+            all_targets = []
+            test_dataset.to(self.device)
+            test_dataloader = DataLoader(test_dataset, batch_size=64)
+            self.eval()
+            with torch.no_grad():
+                for X, y in test_dataloader:
+                    if isinstance(X, tuple) or isinstance(X, list):
+                        X = [l.to(self.device) for l in X]
+                    else:
+                        X = X.to(self.device)
+                    y = y.reshape(-1, 1).to(self.device)
+                    pred = self.forward(X)
+                    all_preds.extend(torch.sigmoid(pred) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else pred)
+                    all_targets.extend(y)
 
-        all_preds = torch.stack(all_preds)
-        all_targets = torch.stack(all_targets)
-        with force_open(self.get_detailed_session_path(test_dataset, 'preds.pkl'), 'wb') as file:
-            pickle.dump(all_preds, file)
-            logger.info(f'predictions are saved at {file.name}.')
-        with force_open(self.get_detailed_session_path(test_dataset, 'targets.pkl'), 'wb') as file:
-            pickle.dump(all_targets, file)
-            logger.info(f'targets are saved at {file.name}.')
+            all_preds = torch.stack(all_preds)
+            all_targets = torch.stack(all_targets)
+            base_path = "/".join(re.split("\\\|/", path)[:-1])
+            with force_open(base_path + '/preds.pkl', 'wb') as file:
+                pickle.dump(all_preds, file)
+                logger.info(f'predictions are saved at {file.name}.')
+            with force_open(base_path + '/targets.pkl', 'wb') as file:
+                pickle.dump(all_targets, file)
+                logger.info(f'targets are saved at {file.name}.')
 
     def save(self, path):
         with force_open(path, "wb") as f:

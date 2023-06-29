@@ -86,7 +86,10 @@ def run():
                 logger.info(f"dataset short-name: {str(dataset)}")
                 model = model_class(**model_configs, input_size=datasets[dataset_name][0].shape[-1])
                 model.to(device=device)
-                command_kwargs["weights_checkpoint_path"] = command_kwargs.get("weights_checkpoint_path", None) or model.get_detailed_session_path(datasets[dataset_name][0], "weights", f"best_model.pth")
+                if not command_kwargs.get("weights_checkpoint_paths", None):
+                    command_kwargs["weights_checkpoint_paths"] = model.get_all_folds_checkpoints(datasets[dataset_name][0])
+                if isinstance(command_kwargs["weights_checkpoint_paths"], str):
+                    command_kwargs["weights_checkpoint_paths"] = (command_kwargs["weights_checkpoint_paths"],)
                 model.test(**command_kwargs, test_dataset=dataset)
             if command == "eval":
                 path = command_kwargs.get("path", "")

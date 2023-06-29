@@ -1,5 +1,8 @@
 import pickle
 import logging
+import re
+from glob import glob
+
 import matplotlib.pyplot as plt
 from src.utils.commons import RegisterableObject, roc_auc, calculate_metrics_extended, roc, precision_recall_auc, precision_recall_curve
 
@@ -41,37 +44,62 @@ class Baseline(RegisterableObject):
     
     def get_new_scheduler(self, optimizer, *args, **kwargs):
         raise NotImplementedError()
-
+    
+    def get_all_folds_checkpoints(self, dataset):
+        raise NotImplementedError()
+    
     def evaluate(self, path, device):
+        folds = glob(path + "/weights/f*")
+        logger.info(f"found #{len(folds)} folds at path: {path}")
+        average_accuracy, average_recall, average_precision, average_f2score, average_f05score, average_auroc, average_pr_auc = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+        for fold_path in folds:
+            preds = None
+            targets = None
+            with open(fold_path+'/preds.pkl', 'rb') as file:
+                preds = pickle.load(file)
+            with open(fold_path+'/targets.pkl', 'rb') as file:
+                targets = pickle.load(file)
+                targets = targets.to(device)
+            if preds.ndim > targets.ndim:
+                preds = preds.reshape(-1)
+            preds = preds.to(device)
+            # targets = torch.argmax(targets, dim=1)
+            fpr, tpr, _ = roc(preds, targets, device=device)
+            auroc = roc_auc(preds, targets, device=device)
 
-        preds = None
-        targets = None
-        with open(path+'/preds.pkl', 'rb') as file:
-            preds = pickle.load(file)
-        with open(path+'/targets.pkl', 'rb') as file:
-            targets = pickle.load(file)
-            targets = targets.to(device)
-        if preds.ndim > targets.ndim:
-            preds = preds.reshape(-1)
-        preds = preds.to(device)
-        # targets = torch.argmax(targets, dim=1)
-        fpr, tpr, _ = roc(preds, targets, device=device)
-        auroc = roc_auc(preds, targets, device=device)
-
-        roc_path = path + "/ROC-curve.png"
-        precision_recall_path = path + "/precision-recall-curve.png"
-        plt.clf()
-        plt.plot(fpr.cpu(), tpr.cpu())
-        plt.title("ROC")
-        plt.savefig(roc_path)
-        logger.info(f"saving ROC curve at: {roc_path}")
-        precisions, recalls, _ = precision_recall_curve(preds, targets)
-        pr_auc = precision_recall_auc(preds, targets, device=device)
-        plt.clf()
-        plt.plot(recalls.cpu(), precisions.cpu())
-        plt.title("Recall-Precision Curve")
-        plt.savefig(precision_recall_path)
-        logger.info(f"saving precision-recall curve at: {precision_recall_path}")
-        # plt.show()
-        accuracy, recall, precision, f2score, f05score = calculate_metrics_extended(preds, targets, device=device)
-        logger.info(f"test set -> AUCROC: {(auroc):>0.7f} | AUCPR: {(pr_auc):>0.7f} | accuracy: {(accuracy):>0.7f} | precision: {(precision):>0.7f} | recall: {(recall):>0.7f} | f2score: {(f2score):>0.7f} | f0.5: {(100 * f05score):>0.6f}")
+            roc_path = fold_path + "/ROC-curve.png"
+            precision_recall_path = fold_path + "/precision-recall-curve.png"
+            plt.clf()
+            plt.plot(fpr.cpu(), tpr.cpu())
+            plt.title("ROC")
+            plt.savefig(roc_path)
+            logger.info(f"saving ROC curve at: {roc_path}")
+            precisions, recalls, _ = precision_recall_curve(preds, targets)
+            pr_auc = precision_recall_auc(preds, targets, device=device)
+            plt.clf()
+            plt.plot(recalls.cpu(), precisions.cpu())
+            plt.title("Recall-Precision Curve")
+            plt.savefig(precision_recall_path)
+            logger.info(f"saving precision-recall curve at: {precision_recall_path}")
+            # plt.show()
+            accuracy, recall, precision, f2score, f05score = calculate_metrics_extended(preds, targets, device=device)
+            average_accuracy += accuracy
+            average_recall += recall
+            average_precision += precision
+            average_f2score += f2score
+            average_f05score += f05score
+            average_auroc += auroc
+            average_pr_auc += pr_auc
+            logger.info(f"test set -> AUCROC: {(auroc):>0.7f} | AUCPR: {(pr_auc):>0.7f} | accuracy: {(accuracy):>0.7f} | precision: {(precision):>0.7f} | recall: {(recall):>0.7f} | f2score: {(f2score):>0.7f} | f0.5: {(100 * f05score):>0.6f}")
+        
+        number_of_folds = len(folds)
+        average_accuracy /= number_of_folds
+        average_recall /= number_of_folds
+        average_precision /= number_of_folds
+        average_f2score /= number_of_folds
+        average_f05score /= number_of_folds
+        average_auroc /= number_of_folds
+        average_pr_auc /= number_of_folds
+        
+        logger.info(f"avg test set -> AUCROC: {(average_auroc):>0.7f} | AUCPR: {(average_pr_auc):>0.7f} | accuracy: {(average_accuracy):>0.7f} | precision: {(average_precision):>0.7f} | recall: {(average_recall):>0.7f} | f2score: {(average_f2score):>0.7f} | f0.5: {(100 * average_f05score):>0.6f}")
+        
