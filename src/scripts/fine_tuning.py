@@ -6,7 +6,7 @@ from transformers import BertForSequenceClassification
 from transformers import get_linear_schedule_with_warmup
 
 from src.main import initiate_datasets
-from settings import settings
+import settings
 
 logger = logging.getLogger()
 
@@ -53,7 +53,7 @@ def finetune_tranformer_per_message(device="cpu", dataset_name="raw-v2-dataset-t
         model_output_path = model_output_path if model_output_path[-1] in ("\\", "/") else model_output_path + "/"
     else:
         model_output_path = train_set.get_session_path("")
-    logger.info(f"saving the transformer and tokenizer at: {model_to_save}")
+    logger.info(f"saving the transformer and tokenizer at: {model_output_path}")
     model_to_save = model.module if hasattr(model, 'module') else model
     model_to_save.save_pretrained(model_output_path)
     train_set.tokenizer.save_pretrained(model_output_path)

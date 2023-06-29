@@ -9,8 +9,8 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from src.models.baseline import Baseline
 from src.utils.commons import force_open, calculate_metrics_extended
 from src.utils.loss_functions import DynamicSuperLoss
-from settings import settings
-from settings.settings import OUTPUT_LAYER_NODES
+import settings
+from settings import OUTPUT_LAYER_NODES
 
 import torch
 from torch import nn

@@ -3,8 +3,8 @@ from torch.utils.data import DataLoader, SubsetRandomSampler
 from transformers import AutoConfig, AutoModelForSequenceClassification
 
 from src.models import AbstractFeedForward
-from settings import settings
-from settings.settings import OUTPUT_LAYER_NODES
+import settings
+from settings import OUTPUT_LAYER_NODES
 
 import logging
 

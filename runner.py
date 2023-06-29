@@ -11,8 +11,8 @@ from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, Tr
                                FineTuningBertDataset, UncasedBaseBertEmbeddingDataset, UncasedBaseBertTokenizedDataset)
 from src.utils.loss_functions import WeightedBinaryCrossEntropy, DynamicSuperLoss
 from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule, SuperDynamicLossANN, BertBaseUncasedClassifier
-from settings.mappings import register_mappings, register_mappings_torch
-from settings import settings
+from src.mappings import register_mappings, register_mappings_torch
+import settings
 from src.scripts import (create_conversations, balance_datasets_for_version_two, create_conversation_toy_set, generate_stats,
                          balance_sequential_datasets_for_version_two, finetune_tranformer_per_message)
 from src.utils.dataset import SequentialConversationDataset

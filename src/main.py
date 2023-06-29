@@ -2,7 +2,8 @@ import logging
 
 import torch
 
-from settings import settings, mappings
+import settings
+from src import mappings
 
 logger = logging.getLogger()
 

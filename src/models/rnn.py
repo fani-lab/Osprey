@@ -3,7 +3,7 @@ import logging
 import shutil
 
 from src.models.baseline import Baseline
-from settings import settings
+import settings
 
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
