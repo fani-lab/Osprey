@@ -1,8 +1,9 @@
 # This file is for sake of compatibility between different development environment
 import sys
 import logging
+import argparse
 
-from src.main import run
+from src.main import RunTrainPipeline
 from src.preprocessing import NLTKStopWordRemoving, PunctuationRemoving, RepetitionRemoving, AuthorIDReplacer, AuthorIDReplacerBert
 from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, TransformersEmbeddingDataset,
                                CaseSensitiveBertEmbeddingDataset, GloveEmbeddingDataset, ConversationBagOfWords,
@@ -11,10 +12,10 @@ from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, Tr
                                FineTuningBertDataset, UncasedBaseBertEmbeddingDataset, UncasedBaseBertTokenizedDataset)
 from src.utils.loss_functions import WeightedBinaryCrossEntropy, DynamicSuperLoss
 from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule, SuperDynamicLossANN, BertBaseUncasedClassifier
-from src.mappings import register_mappings, register_mappings_torch
+from src.mappings import register_mappings, register_mappings_torch, register_command, COMMANDS
 import settings
-from src.scripts import (create_conversations, balance_datasets_for_version_two, create_conversation_toy_set, generate_stats,
-                         balance_sequential_datasets_for_version_two, finetune_tranformer_per_message)
+from src.scripts import (CreateConversations, BalanceDatasetsForVersionTwo, CreateConversationToySet,
+                            BalanceSequentialDatasetsForVersionTwo, PrintMappings, finetune_tranformer_per_message)
 from src.utils.dataset import SequentialConversationDataset
 
 
@@ -45,9 +46,37 @@ def init_logger():
     return logger
 
 
+def init_parser():
+    main_parser = argparse.ArgumentParser(prog="osprey", description="running", add_help=False)
+    main_parser.add_argument('-h', '--help',
+        action='help', default=argparse.SUPPRESS,
+        help='show this help message and exit')
+
+    main_parser.add_argument("--log", "-l", action="store_true", default=False)
+    
+    subparsers = main_parser.add_subparsers(help="hello boy", description="it is description")
+    for cmd, cls in COMMANDS.items():
+        obj = cls()
+        callback, args = obj.get_actions_and_args()
+        parser = subparsers.add_parser(cmd, help=obj.help(), add_help=True)
+        for arg in args:
+            flags = arg.pop("flags", list())
+            flags = flags if isinstance(flags, list) or isinstance(flags, tuple) else (flags,)
+            parser.add_argument(*flags, **arg)
+        parser.set_defaults(func=callback)
+    
+
+    return main_parser
+
 if __name__ == "__main__":
-    logger = init_logger()
-    # create_conversations()
+
+    register_command(PrintMappings)
+    register_command(RunTrainPipeline)
+    register_command(CreateConversations)
+    register_command(BalanceDatasetsForVersionTwo)
+    register_command(CreateConversationToySet)
+    register_command(BalanceSequentialDatasetsForVersionTwo)
+
     register_mappings_torch()
 
     register_mappings(DynamicSuperLoss)
@@ -84,8 +113,16 @@ if __name__ == "__main__":
     register_mappings(SuperDynamicLossANN)
     register_mappings(BertBaseUncasedClassifier)
 
-    run()
-    # balance_datasets_for_version_two()
-    # create_conversation_toy_set()
-    # generate_stats()
+    parser = init_parser()
+
+    args = parser.parse_args()
+    
+    kwargs = vars(args)
+    do_logging = kwargs.pop("log")
+    func = kwargs.pop("func")
+    if do_logging:
+        logger = init_logger()
+
+    func(**kwargs)
+    
     # finetune_tranformer_per_message("cuda", dataset_name="finetuning-v2-dataset", model_output_path=None)

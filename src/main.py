@@ -4,6 +4,7 @@ import torch
 
 import settings
 from src import mappings
+from src.utils.commons import CommandObject
 
 logger = logging.getLogger()
 
@@ -46,60 +47,74 @@ def initiate_datasets(datasets_maps, device):
     
     return datasets
 
-def run():
-    device = 'cuda' if settings.USE_CUDA_IF_AVAILABLE and torch.cuda.is_available() else 'cpu'
-    torch.autograd.set_detect_anomaly(True)
-    logger.info(f'processing unit: {device}')
-    datasets = initiate_datasets(settings.datasets, device)
+class RunTrainPipeline(CommandObject):
 
-    for model_name, session in settings.sessions.items():
-        logger.info(f"started new session: {model_name}")
-        commands = session["commands"]
-
-        model_configs = create_model_configs(model_name, session=session, device=device)
+    def get_actions_and_args(self):
         
-        model_class = mappings.MODELS[session["model"]]
+        def run():
+            device = 'cuda' if settings.USE_CUDA_IF_AVAILABLE and torch.cuda.is_available() else 'cpu'
+            torch.autograd.set_detect_anomaly(True)
+            logger.info(f'processing unit: {device}')
+            datasets = initiate_datasets(settings.datasets, device)
 
-        for command, command_kwargs, dataset_configs, *_ in commands:
-            dataset_name = dataset_configs.get("dataset", None)
-            if dataset_name is None:
-                logger.warning("no dataset was specified.")
-            logger.info(f"started new command `{command}` of session `{model_name}`")
-            logger.debug(f"command `{command}`; dataset name: {dataset_name}; arguments: {command_kwargs}")
-            torch.cuda.empty_cache()
-            if command == "train":
-                dataset = datasets[dataset_name][0]
-                dataset.prepare()
-                logger.info(f"dataset short-name: {str(dataset)}")
-                split_again = dataset_configs.get("rerun_splitting", False)
-                n_splits = dataset_configs.get("n_splits")
-                persist_splits = dataset_configs.get("persist_splits", True)
-                persist_splits = dataset_configs.get("persist_splits", True)
-                load_splits_from = dataset_configs.get("load_splits_from", True)
-                splits = dataset.split_dataset_by_label(n_splits, split_again, persist_splits, True, load_splits_from)
+            for model_name, session in settings.sessions.items():
+                logger.info(f"started new session: {model_name}")
+                commands = session["commands"]
 
-                model = model_class(**model_configs, input_size=dataset.shape[-1])
-                model.to(device=device)
-                model.learn(**command_kwargs, train_dataset=dataset, splits=splits)
-            if command == "test":
-                dataset = datasets[dataset_name][1]
-                dataset.prepare()
-                logger.info(f"dataset short-name: {str(dataset)}")
-                model = model_class(**model_configs, input_size=datasets[dataset_name][0].shape[-1])
-                model.to(device=device)
-                if not command_kwargs.get("weights_checkpoint_paths", None):
-                    command_kwargs["weights_checkpoint_paths"] = model.get_all_folds_checkpoints(datasets[dataset_name][0])
-                if isinstance(command_kwargs["weights_checkpoint_paths"], str):
-                    command_kwargs["weights_checkpoint_paths"] = (command_kwargs["weights_checkpoint_paths"],)
-                model.test(**command_kwargs, test_dataset=dataset)
-            if command == "eval":
-                path = command_kwargs.get("path", "")
-                if command_kwargs.get("use_current_session", False):
-                    try:
-                        path = model.get_detailed_session_path(dataset)
-                    except UnboundLocalError as e:
-                        raise Exception("in order to use use_current_session, you should run the previous steps at the same time.") from e
-                if path == "":
-                    raise ValueError("the given path is empty. It should point to the directory of model objects.")
-                model = model_class(**model_configs, input_size=1)
-                model.evaluate(path, device=device)
+                model_configs = create_model_configs(model_name, session=session, device=device)
+                
+                model_class = mappings.MODELS[session["model"]]
+
+                for command, command_kwargs, dataset_configs, *_ in commands:
+                    dataset_name = dataset_configs.get("dataset", None)
+                    if dataset_name is None:
+                        logger.warning("no dataset was specified.")
+                    logger.info(f"started new command `{command}` of session `{model_name}`")
+                    logger.debug(f"command `{command}`; dataset name: {dataset_name}; arguments: {command_kwargs}")
+                    torch.cuda.empty_cache()
+                    if command == "train":
+                        dataset = datasets[dataset_name][0]
+                        dataset.prepare()
+                        logger.info(f"dataset short-name: {str(dataset)}")
+                        split_again = dataset_configs.get("rerun_splitting", False)
+                        n_splits = dataset_configs.get("n_splits")
+                        persist_splits = dataset_configs.get("persist_splits", True)
+                        persist_splits = dataset_configs.get("persist_splits", True)
+                        load_splits_from = dataset_configs.get("load_splits_from", True)
+                        splits = dataset.split_dataset_by_label(n_splits, split_again, persist_splits, True, load_splits_from)
+
+                        model = model_class(**model_configs, input_size=dataset.shape[-1])
+                        model.to(device=device)
+                        model.learn(**command_kwargs, train_dataset=dataset, splits=splits)
+                    if command == "test":
+                        dataset = datasets[dataset_name][1]
+                        dataset.prepare()
+                        logger.info(f"dataset short-name: {str(dataset)}")
+                        model = model_class(**model_configs, input_size=datasets[dataset_name][0].shape[-1])
+                        model.to(device=device)
+                        if not command_kwargs.get("weights_checkpoint_paths", None):
+                            command_kwargs["weights_checkpoint_paths"] = model.get_all_folds_checkpoints(datasets[dataset_name][0])
+                        if isinstance(command_kwargs["weights_checkpoint_paths"], str):
+                            command_kwargs["weights_checkpoint_paths"] = (command_kwargs["weights_checkpoint_paths"],)
+                        model.test(**command_kwargs, test_dataset=dataset)
+                    if command == "eval":
+                        path = command_kwargs.get("path", "")
+                        if command_kwargs.get("use_current_session", False):
+                            try:
+                                path = model.get_detailed_session_path(dataset)
+                            except UnboundLocalError as e:
+                                raise Exception("in order to use use_current_session, you should run the previous steps at the same time.") from e
+                        if path == "":
+                            raise ValueError("the given path is empty. It should point to the directory of model objects.")
+                        model = model_class(**model_configs, input_size=1)
+                        model.evaluate(path, device=device)
+
+        return (run, [])
+    
+    @classmethod
+    def command(cls) -> str:
+        return "train"
+    
+    def help(self) -> str:
+        return "runs the training pipline for models specified in the settings file"
+    

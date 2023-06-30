@@ -257,3 +257,20 @@ class RegisterableObject:
     def short_name(cls) -> str:
         raise NotImplementedError()
 
+
+class CommandObject:
+
+    @classmethod
+    def command(cls) -> str:
+        raise NotImplementedError()
+    
+    def get_actions_and_args(self):
+        
+        def action(*args, **kwargs):
+            raise NotImplementedError("this command is not implemented fully")
+
+        return (action, [dict()])
+    
+    def help(self) -> str:
+        return f"just running {self.command()}"
+    

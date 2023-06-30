@@ -1,7 +1,7 @@
 from src.preprocessing import BasePreprocessing
 from src.utils.dataset import BaseDataset
 from src.models.baseline import Baseline
-from src.utils.commons import RegisterableObject
+from src.utils.commons import RegisterableObject, CommandObject
 from src.utils.loss_functions import BaseLossCalculator
 
 from torch.nn import ReLU, CrossEntropyLoss, BCEWithLogitsLoss, BCELoss
@@ -16,6 +16,7 @@ ACTIVATIONS = dict()
 
 LOSS_FUNCTIONS = dict()
 
+COMMANDS = dict()
 
 def register_mappings(obj: RegisterableObject):
     
@@ -47,3 +48,13 @@ def register_mappings_torch():
     LOSS_FUNCTIONS["BCELoss"] = BCELoss
 
     pass
+
+def register_command(obj: CommandObject):
+    
+    if not issubclass(obj, CommandObject):
+        raise ValueError(f"the following class cannot be registered as a command.")
+    
+    if COMMANDS.get(obj.command(), None) is not None:
+        raise ValueError(f"the command `{obj.command()}` already exists.")
+    COMMANDS[obj.command()] = obj
+    
