@@ -1,5 +1,5 @@
 from .dataset_creation import (CreateConversations, BalanceDatasetsForVersionTwo, CreateConversationToySet,
-    BalanceSequentialDatasetsForVersionTwo)
+    BalanceSequentialDatasetsForVersionTwo, XML2CSV)
 from .data_stats import GenerateStats
 from .fine_tuning import finetune_tranformer_per_message
 from .core import PrintMappings
@@ -12,4 +12,5 @@ __all__ = [
     "BalanceSequentialDatasetsForVersionTwo",
     "finetune_tranformer_per_message",
     "PrintMappings",
+    "XML2CSV",
 ]

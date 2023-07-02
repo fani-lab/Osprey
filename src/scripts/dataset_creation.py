@@ -2,7 +2,33 @@ import re
 
 import pandas as pd
 
-from src.utils.commons import message_csv2conversation_csv, force_open, balance_dataset, create_toy_dataset, CommandObject
+from src.utils.commons import message_csv2conversation_csv, force_open, balance_dataset, create_toy_dataset, pan12_xml2csv, CommandObject
+
+
+class XML2CSV(CommandObject):
+    
+    def get_actions_and_args(self):
+        return pan12_xml2csv, [{
+                "flags": "--xml-file",
+                "dest": "xmlfile",
+                "type": str,
+                "help": "path to xml file of conversations",
+            },
+            {
+                "flags": "--predators-file",
+                "dest": "predatorsfile",
+                "type": str,
+                "help": "path to file of predators id",
+            },
+        ]
+    
+    @classmethod
+    def command(cls) -> str:
+        return "xml2csv"
+    
+    def help(self) -> str:
+        return "turns the pan12 xml file to csv which can be used by other scripts and commands."
+
 
 class CreateConversations(CommandObject):
 
