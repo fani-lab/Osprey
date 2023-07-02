@@ -648,7 +648,7 @@ class GloveEmbeddingDataset(BaseDataset, RegisterableObject):
         return vectors
 
 
-class SequentialConversationDataset(BaseDataset):
+class SequentialConversationDataset(BaseDataset): # TODO: checkout to(device) method
     """
     a dataset where each record is a sorted sequence of any size and each record has one label
     """

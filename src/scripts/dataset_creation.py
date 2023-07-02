@@ -8,7 +8,12 @@ from src.utils.commons import message_csv2conversation_csv, force_open, balance_
 class XML2CSV(CommandObject):
     
     def get_actions_and_args(self):
-        return pan12_xml2csv, [{
+
+        def callback(xmlfile, predatorsfile, output):
+            df = pan12_xml2csv(xmlfile, predatorsfile)
+            df.to_csv(output, sep=",")
+
+        return callback, [{
                 "flags": "--xml-file",
                 "dest": "xmlfile",
                 "type": str,
@@ -19,6 +24,12 @@ class XML2CSV(CommandObject):
                 "dest": "predatorsfile",
                 "type": str,
                 "help": "path to file of predators id",
+            },
+            {
+                "flags": "--output-file",
+                "dest": "output",
+                "type": str,
+                "help": "path where the generated csv will be saved",
             },
         ]
     
@@ -34,18 +45,32 @@ class CreateConversations(CommandObject):
 
     def get_actions_and_args(self):
         
-        def create_conversations():
-            df = pd.read_csv("data/dataset-v2/train.csv")
+        def create_conversations(datasets_path, output_path):
+            df = pd.read_csv(f"{datasets_path}train.csv")
             df = message_csv2conversation_csv(df)
-            with force_open("data/dataset-v2/conversation/train.csv", mode="wb") as f:
+            with force_open(f"{output_path}train.csv", mode="wb") as f:
                 df.to_csv(f)
                 del df
             
-            df = pd.read_csv("data/dataset-v2/test.csv")
+            df = pd.read_csv(f"{datasets_path}test.csv")
             df = message_csv2conversation_csv(df)
-            with force_open("data/dataset-v2/conversation/test.csv", mode="wb") as f:
+            with force_open(f"{output_path}test.csv", mode="wb") as f:
                 df.to_csv(f)
-        return (create_conversations, [])
+        
+        return (create_conversations, [{
+                "flags": "--datasets-path",
+                "dest": "datasets_path",
+                "type": str,
+                "default": "data/dataset-v2/",
+                "help": "path to message base records where there is a train.csv and test.csv file",
+            }, {
+                "flags": "--output-path",
+                "dest": "output_path",
+                "type": str,
+                "default": "data/dataset-v2/conversation/",
+                "help": "path to directory where the resulting conversation dataframe will be saved as CSV",
+            },
+        ])
     
     @classmethod
     def command(cls) -> str:
@@ -59,9 +84,9 @@ class BalanceDatasetsForVersionTwo(CommandObject):
 
     def get_actions_and_args(self):
 
-        def balance_datasets_for_version_two(ratio=0.3):
-            train = "data/dataset-v2/conversation/train-v2.csv" # TODO
-            test  = "data/dataset-v2/conversation/test-v2.csv"  # TODO
+        def balance_datasets_for_version_two(datasets_path, output_path, ratio=0.3):
+            train = f"{datasets_path}train-v2.csv" # TODO
+            test  = f"{datasets_path}test-v2.csv"  # TODO
             
             df = pd.read_csv(train)
             train = balance_dataset(df, ratio=ratio)
@@ -77,7 +102,19 @@ class BalanceDatasetsForVersionTwo(CommandObject):
                 "type": float,
                 "default": 0.3,
                 "help": "value of #predatory/(#predatory+#non-predatory)",
-            }
+            }, {
+                "flags": "--datasets-path",
+                "dest": "datasets_path",
+                "type": str,
+                "default": "data/dataset-v2/conversation/",
+                "help": "path to message base records where there is a train-v2.csv and test-v2.csv file",
+            }, {
+                "flags": "--output-path",
+                "dest": "output_path",
+                "type": str,
+                "default": "data/dataset-v2/conversation/",
+                "help": "path to directory where the resulting conversation dataframe will be saved as CSV with the name 'balanced-{test/test}-v2-{ratio}.csv'",
+            },
         ])
     
     @classmethod
@@ -92,31 +129,41 @@ class BalanceSequentialDatasetsForVersionTwo(CommandObject):
     
     def get_actions_and_args(self):
         
-        def balance_sequential_datasets_for_version_two(ratio=0.3, name_post_fix="-04"):
-            train = "data/dataset-v2/train"+name_post_fix+".csv"
-            test  = "data/dataset-v2/test"+name_post_fix+".csv"
-            
-            df = pd.read_csv(train)
-            train = balance_dataset(df, ratio=ratio)
-            train.to_csv(f"data/dataset-v2/train-{str(ratio).replace('.', '')}.csv")
+        def balance_sequential_datasets_for_version_two(trainset, testset, output_path, ratio=0.3):
 
-            df = pd.read_csv(test)
+            df = pd.read_csv(trainset)
+            train = balance_dataset(df, ratio=ratio)
+            train.to_csv(f"{output_path}train-{str(ratio).replace('.', '')}.csv")
+
+            df = pd.read_csv(testset)
             test = balance_dataset(df, ratio=ratio)
-            test.to_csv(f"data/dataset-v2/test-{str(ratio).replace('.', '')}.csv")
+            test.to_csv(f"{output_path}test-{str(ratio).replace('.', '')}.csv")
         
         return (balance_sequential_datasets_for_version_two, [{
-                "flags": "--postfix",
-                "dest": "name_post_fix",
-                "type": str,
-                "default": "-04",
-                "help": "postfix of input train and test sets. better read the code here.",
-            }, {
                 "flags": "--ratio",
                 "dest": "ratio",
                 "type": float,
                 "default": 0.3,
                 "help": "value of #predatory/(#predatory+#non-predatory)",
-            }
+            }, {
+                "flags": "--trainset-path",
+                "dest": "trainset",
+                "type": str,
+                "default": "data/dataset-v2/train-02.csv",
+                "help": "path to train dataset",
+            }, {
+                "flags": "--testset-path",
+                "dest": "testset",
+                "type": str,
+                "default": "data/dataset-v2/test-02.csv",
+                "help": "path to test dataset",
+            }, {
+                "flags": "--output-path",
+                "dest": "output_path",
+                "type": str,
+                "default": "data/dataset-v2/",
+                "help": "path to directory where the resulting dataframe will be saved as CSV with the name '{test/test}-{ratio}.csv'",
+            },
         ])
     
     @classmethod
@@ -170,5 +217,5 @@ class CreateConversationToySet(CommandObject):
         return "create-toy-conversation"
     
     def help(self) -> str:
-        return "create a toy set for conversations dataset"
+        return "create a toy set for conversations dataset. The output path will be the same as input just a 'toy-' prefix will be added to the file name at the end."
     

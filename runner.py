@@ -52,9 +52,9 @@ def init_parser():
         action='help', default=argparse.SUPPRESS,
         help='show this help message and exit')
 
-    main_parser.add_argument("--log", "-l", action="store_true", default=False)
+    main_parser.add_argument("--log", "-l", action="store_true", default=False, help="apply logging for most of commands")
     
-    subparsers = main_parser.add_subparsers(help="hello boy", description="it is description")
+    subparsers = main_parser.add_subparsers()
     for cmd, cls in COMMANDS.items():
         obj = cls()
         callback, args = obj.get_actions_and_args()

@@ -375,16 +375,16 @@ class SuperDynamicLossANN(ANNModule):
             with force_open(self.get_detailed_session_path(train_dataset, "figures", f"loss_f{fold}.png"), "wb") as f:
                 plt.savefig(f, dpi=300)
 
-        MAHAK = 2
-        max_metric = (0, folds_metrics[0][MAHAK])
-        for i in range(1, len(folds_metrics)):
-            if folds_metrics[i][MAHAK] > max_metric[1]:
-                max_metric = (i, folds_metrics[i][MAHAK])
-        logger.info(f"best model of cross validation for current training phase: fold #{max_metric[0]} with metric value of '{max_metric[1]}'")
-        best_model_dest = self.get_detailed_session_path(train_dataset, "weights", f"best_model.pth")
-        best_model_src = self.get_detailed_session_path(train_dataset, "weights", f"f{max_metric[0]}", f"model_f{max_metric[0]}.pth")
-        shutil.copyfile(best_model_src, best_model_dest)
-        return best_model_dest
+        # MAHAK = 2
+        # max_metric = (0, folds_metrics[0][MAHAK])
+        # for i in range(1, len(folds_metrics)):
+        #     if folds_metrics[i][MAHAK] > max_metric[1]:
+        #         max_metric = (i, folds_metrics[i][MAHAK])
+        # logger.info(f"best model of cross validation for current training phase: fold #{max_metric[0]} with metric value of '{max_metric[1]}'")
+        # best_model_dest = self.get_detailed_session_path(train_dataset, "weights", f"best_model.pth")
+        # best_model_src = self.get_detailed_session_path(train_dataset, "weights", f"f{max_metric[0]}", f"model_f{max_metric[0]}.pth")
+        # shutil.copyfile(best_model_src, best_model_dest)
+        # return best_model_dest
 
     @classmethod
     def short_name(cls) -> str:
