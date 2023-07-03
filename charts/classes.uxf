@@ -1,4 +1,4 @@
-<diagram program="umletino" version="15.1"><zoom_level>9</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>1413</x><y>720</y><w>270</w><h>252</h></coordinates><panel_attributes>/Baseline/
+<diagram program="umletino" version="15.1"><zoom_level>4</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>612</x><y>380</y><w>120</w><h>112</h></coordinates><panel_attributes>/Baseline/
 Package::models
 --
 +input_size: int
@@ -15,11 +15,11 @@ Package::models
 +get_session_path(): str
 --
 Responsibilities
--- Abstracting a single session available commands</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1449</x><y>567</y><w>189</w><h>63</h></coordinates><panel_attributes>/RegisterableObject/
+-- Abstracting a single session available commands</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>628</x><y>312</y><w>84</w><h>28</h></coordinates><panel_attributes>/RegisterableObject/
 Package::utils.commons
 --
 /_+AbstractOperation(): str_/
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1890</x><y>693</y><w>333</w><h>189</h></coordinates><panel_attributes>/AbstractFeedForward/
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>824</x><y>368</y><w>148</w><h>84</h></coordinates><panel_attributes>/AbstractFeedForward/
 Package::models
 --
 -id: Long
@@ -36,7 +36,7 @@ Package::models
 +get_dataloaders(dataset, train_ids, validation_ids, batch_size)
 --
 Responsibilities
--- Abstracting a generic FeedForward PyTorch Module</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2385</x><y>639</y><w>225</w><h>180</h></coordinates><panel_attributes>ANNModule
+-- Abstracting a generic FeedForward PyTorch Module</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1044</x><y>344</y><w>100</w><h>80</h></coordinates><panel_attributes>ANNModule
 Package::models
 --
 +dimension_list: List[int]
@@ -49,7 +49,7 @@ Package::models
 
 --
 Responsibilities
--- A complete generic Feedforward model</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2385</x><y>477</y><w>324</w><h>117</h></coordinates><panel_attributes>SuperDynamicLossANN
+-- A complete generic Feedforward model</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1044</x><y>272</y><w>144</w><h>52</h></coordinates><panel_attributes>SuperDynamicLossANN
 Package::models
 --
 +learn(epoch_num, batch_size, splits, train_dataset,
@@ -57,7 +57,7 @@ weights_checkpoint_path, condition_save_threshold)
 +short_name(): str
 --
 Responsibilities
--- A Feedforward that uses superdynamic loss proposed at ??</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2376</x><y>864</y><w>333</w><h>135</h></coordinates><panel_attributes>EbrahimiCNN	
+-- A Feedforward that uses superdynamic loss proposed at ??</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1040</x><y>444</y><w>148</w><h>60</h></coordinates><panel_attributes>EbrahimiCNN	
 Package::models
 --
 +out: torch.Module
@@ -67,7 +67,7 @@ Package::models
 +short_name(): str
 --
 Responsibilities
--- A simple implementation of Ebrahimi et al's paper CNN model.</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2376</x><y>1026</y><w>324</w><h>135</h></coordinates><panel_attributes>BertBaseUncasedClassifier	
+-- A simple implementation of Ebrahimi et al's paper CNN model.</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1040</x><y>516</y><w>144</w><h>60</h></coordinates><panel_attributes>BertBaseUncasedClassifier	
 Package::models
 --
 +core: torch.Module
@@ -77,7 +77,7 @@ Package::models
 +get_dataloaders(dataset, train_ids, validation_ids, batch_size)	
 --
 Responsibilities
--- Running Bert base uncased for training. it takes in </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1872</x><y>963</y><w>387</w><h>243</h></coordinates><panel_attributes>BaseRnnModule
+-- Running Bert base uncased for training. it takes in </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>816</x><y>488</y><w>172</w><h>108</h></coordinates><panel_attributes>BaseRnnModule
 Package::models
 --
 +hidden_size: int
@@ -101,7 +101,7 @@ Package::models
 
 --
 Responsibilities
--- A complete generic RNN model</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1890</x><y>1287</y><w>144</w><h>108</h></coordinates><panel_attributes>LSTMModule
+-- A complete generic RNN model</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>824</x><y>632</y><w>64</w><h>48</h></coordinates><panel_attributes>LSTMModule
 Package::models
 --
 +core: torch.Module
@@ -109,7 +109,7 @@ Package::models
 +short_name(): str
 --
 Responsibilities
--- Handles LSTM model</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2088</x><y>1287</y><w>144</w><h>108</h></coordinates><panel_attributes>GRUModule
+-- Handles LSTM model</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>912</x><y>632</y><w>64</w><h>48</h></coordinates><panel_attributes>GRUModule
 Package::models
 --
 +core: torch.Module
@@ -117,18 +117,18 @@ Package::models
 +short_name(): str
 --
 Responsibilities
--- Handles GRU model</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1440</x><y>1044</y><w>207</w><h>81</h></coordinates><panel_attributes>Module
+-- Handles GRU model</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>624</x><y>524</y><w>92</w><h>36</h></coordinates><panel_attributes>Module
 Package::torch
 --
 Responsibilities
--- Module is a base class in torch library</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2493</x><y>585</y><w>63</w><h>72</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;60;50;10</additional_attributes></element><element><id>Relation</id><coordinates><x>2214</x><y>729</y><w>189</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;80;190;10</additional_attributes></element><element><id>Relation</id><coordinates><x>2214</x><y>801</y><w>180</w><h>153</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;180;150</additional_attributes></element><element><id>Relation</id><coordinates><x>2214</x><y>819</y><w>180</w><h>288</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;180;300</additional_attributes></element><element><id>Relation</id><coordinates><x>1674</x><y>792</y><w>234</w><h>81</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;70;240;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1674</x><y>855</y><w>216</w><h>261</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;220;270</additional_attributes></element><element><id>Relation</id><coordinates><x>1953</x><y>1197</y><w>108</w><h>108</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>100;10;10;100</additional_attributes></element><element><id>Relation</id><coordinates><x>1638</x><y>792</y><w>270</w><h>315</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;330;280;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1638</x><y>1080</y><w>252</w><h>36</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;260;20</additional_attributes></element><element><id>Relation</id><coordinates><x>2052</x><y>1197</y><w>126</w><h>108</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;120;100</additional_attributes></element><element><id>Relation</id><coordinates><x>1530</x><y>621</y><w>27</w><h>117</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;110</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1440</x><y>414</y><w>189</w><h>108</h></coordinates><panel_attributes>_BasePreprocessing_
+-- Module is a base class in torch library</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1092</x><y>320</y><w>28</w><h>32</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;60;50;10</additional_attributes></element><element><id>Relation</id><coordinates><x>968</x><y>384</y><w>84</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;80;190;10</additional_attributes></element><element><id>Relation</id><coordinates><x>968</x><y>416</y><w>80</w><h>68</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;180;150</additional_attributes></element><element><id>Relation</id><coordinates><x>968</x><y>424</y><w>80</w><h>128</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;180;300</additional_attributes></element><element><id>Relation</id><coordinates><x>728</x><y>412</y><w>104</w><h>36</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;70;240;10</additional_attributes></element><element><id>Relation</id><coordinates><x>728</x><y>440</y><w>96</w><h>116</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;220;270</additional_attributes></element><element><id>Relation</id><coordinates><x>852</x><y>592</y><w>48</w><h>48</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>100;10;10;100</additional_attributes></element><element><id>Relation</id><coordinates><x>712</x><y>412</y><w>120</w><h>140</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;330;280;10</additional_attributes></element><element><id>Relation</id><coordinates><x>712</x><y>540</y><w>112</w><h>16</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;260;20</additional_attributes></element><element><id>Relation</id><coordinates><x>896</x><y>592</y><w>56</w><h>48</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;120;100</additional_attributes></element><element><id>Relation</id><coordinates><x>664</x><y>336</y><w>12</w><h>52</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;110</additional_attributes></element><element><id>UMLClass</id><coordinates><x>624</x><y>244</y><w>84</w><h>48</h></coordinates><panel_attributes>_BasePreprocessing_
 Package::utils.commons
 --
 /+opt(input): list/
 /+name(): str/
 --
 Responsibilities
--- Interface for preprcessing modules</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1440</x><y>225</y><w>189</w><h>117</h></coordinates><panel_attributes>BasePreprocessing
+-- Interface for preprcessing modules</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>624</x><y>160</y><w>84</w><h>52</h></coordinates><panel_attributes>BasePreprocessing
 Package::utils.commons
 --
 +opt(input): list
@@ -136,7 +136,7 @@ Package::utils.commons
 _+short_name(): str_
 --
 Responsibilities
--- Replace Author Id with a token</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1440</x><y>72</y><w>189</w><h>117</h></coordinates><panel_attributes>BasePreprocessing
+-- Replace Author Id with a token</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>624</x><y>92</y><w>84</w><h>52</h></coordinates><panel_attributes>BasePreprocessing
 Package::utils.commons
 --
 +opt(input): list
@@ -144,7 +144,7 @@ Package::utils.commons
 _+short_name(): str_
 --
 Responsibilities
--- Replace Author Id with a token</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1530</x><y>522</y><w>27</w><h>63</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1521</x><y>333</y><w>27</w><h>99</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;90;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1521</x><y>180</y><w>27</w><h>63</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1215</x><y>225</y><w>189</w><h>117</h></coordinates><panel_attributes>PunctuationRemoving
+-- Replace Author Id with a token</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>664</x><y>292</y><w>12</w><h>28</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>660</x><y>208</y><w>12</w><h>44</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;90;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>660</x><y>140</y><w>12</w><h>28</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>524</x><y>160</y><w>84</w><h>52</h></coordinates><panel_attributes>PunctuationRemoving
 Package::utils.commons
 --
 +opt(input): list
@@ -152,7 +152,7 @@ Package::utils.commons
 _+short_name(): str_
 --
 Responsibilities
--- removes punctuations</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1908</x><y>216</y><w>207</w><h>126</h></coordinates><panel_attributes>RepetitionRemoving
+-- removes punctuations</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>832</x><y>156</y><w>92</w><h>56</h></coordinates><panel_attributes>RepetitionRemoving
 Package::utils.commons
 --
 +opt(input): list
@@ -161,7 +161,7 @@ _+short_name(): str_
 --
 Responsibilities
 -- replaces repetition (3 and more)
-of consecutive characters to one char</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1656</x><y>225</y><w>225</w><h>117</h></coordinates><panel_attributes>NLTKStopWordRemoving
+of consecutive characters to one char</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>720</x><y>160</y><w>100</w><h>52</h></coordinates><panel_attributes>NLTKStopWordRemoving
 Package::utils.commons
 --
 +opt(input): list
@@ -169,7 +169,7 @@ Package::utils.commons
 _+short_name(): str_
 --
 Responsibilities
--- removes stopwords using NLTK dataset</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1530</x><y>333</y><w>261</w><h>99</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;90;270;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1296</x><y>333</y><w>234</w><h>99</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>240;90;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1620</x><y>333</y><w>405</w><h>153</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;150;430;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>855</x><y>747</y><w>270</w><h>567</h></coordinates><panel_attributes>/BaseDataset/
+-- removes stopwords using NLTK dataset</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>664</x><y>208</y><w>116</w><h>44</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;90;270;10</additional_attributes></element><element><id>Relation</id><coordinates><x>560</x><y>208</y><w>104</w><h>44</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>240;90;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>704</x><y>208</y><w>180</w><h>68</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;150;430;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>364</x><y>392</y><w>120</w><h>252</h></coordinates><panel_attributes>/BaseDataset/
 Package::dataset
 --
 +output_path: str
@@ -205,11 +205,11 @@ Package::dataset
 -__len__(): int
 --
 Responsibilities
--- Abstracting a single session available commands</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1206</x><y>1008</y><w>207</w><h>81</h></coordinates><panel_attributes>Dataset
+-- Abstracting a single session available commands</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>520</x><y>508</y><w>92</w><h>36</h></coordinates><panel_attributes>Dataset
 Package::torch.utils.data
 --
 Responsibilities
--- Module is a base class in torch library</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>720</x><y>477</y><w>270</w><h>144</h></coordinates><panel_attributes>/BagOfWordsDataset/
+-- Module is a base class in torch library</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>304</x><y>272</y><w>120</w><h>64</h></coordinates><panel_attributes>/BagOfWordsDataset/
 Package::dataset
 --
 +get_data_generator(data, pattern): generator
@@ -219,7 +219,7 @@ _+short_name(): str_
 +init_encoder(tokens_records): Encoder
 --
 Responsibilities
--- Bag of Words Dataset</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>711</x><y>216</y><w>270</w><h>171</h></coordinates><panel_attributes>/ConversationBagOfWords/
+-- Bag of Words Dataset</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>300</x><y>156</y><w>120</w><h>76</h></coordinates><panel_attributes>/ConversationBagOfWords/
 Package::dataset
 --
 +get_data_generator(data, pattern): generator
@@ -229,7 +229,7 @@ _+short_name(): str_
 +init_encoder(tokens_records): Encoder
 --
 Responsibilities
--- Bag of Words Dataset for Conversations</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>693</x><y>0</y><w>270</w><h>171</h></coordinates><panel_attributes>/ConversationBagOfWordsCleaned/
+-- Bag of Words Dataset for Conversations</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>292</x><y>60</y><w>120</w><h>76</h></coordinates><panel_attributes>/ConversationBagOfWordsCleaned/
 Package::dataset
 --
 +filter_records(df): df
@@ -237,7 +237,7 @@ _+short_name(): str_
 --
 Responsibilities
 -- Bag of Words Dataset for Conversations
-filtering low activity conversations</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>36</x><y>0</y><w>270</w><h>171</h></coordinates><panel_attributes>/TimeBasedBagOfWordsDataset/
+filtering low activity conversations</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>60</y><w>120</w><h>76</h></coordinates><panel_attributes>/TimeBasedBagOfWordsDataset/
 Package::dataset
 --
 _+short_name(): str_
@@ -245,14 +245,14 @@ _+short_name(): str_
 + vectorize(tokens_records, encoder): list
 --
 Responsibilities
--- BoW with Time in each message	</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>351</x><y>0</y><w>270</w><h>171</h></coordinates><panel_attributes>/CNNConversationBagOfWords/
+-- BoW with Time in each message	</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>140</x><y>60</y><w>120</w><h>76</h></coordinates><panel_attributes>/CNNConversationBagOfWords/
 Package::dataset
 --
 _+short_name(): str_
 +init_encoder(tokens_records): Encoder
 --
 Responsibilities
--- Bag of Words Dataset for Conversations for CNN models</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1035</x><y>468</y><w>270</w><h>189</h></coordinates><panel_attributes>/UncasedBaseBertTokenizedDataset/
+-- Bag of Words Dataset for Conversations for CNN models</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>444</x><y>268</y><w>120</w><h>84</h></coordinates><panel_attributes>/UncasedBaseBertTokenizedDataset/
 Package::dataset
 --
 _+short_name(): str_
@@ -265,7 +265,7 @@ _+short_name(): str_
 --
 Responsibilities
 -- returns a feature vector for finetuning
-Bert-base models</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>378</x><y>477</y><w>270</w><h>135</h></coordinates><panel_attributes>/TransformersEmbeddingDataset/
+Bert-base models</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>152</x><y>272</y><w>120</w><h>60</h></coordinates><panel_attributes>/TransformersEmbeddingDataset/
 Package::dataset
 --
 _+short_name(): str_
@@ -274,7 +274,7 @@ _+short_name(): str_
 --
 Responsibilities
 -- returns an embedding feature vector
-based on a transformer</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>189</x><y>693</y><w>270</w><h>216</h></coordinates><panel_attributes>SequentialConversationDataset
+based on a transformer</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>68</x><y>368</y><w>120</w><h>96</h></coordinates><panel_attributes>SequentialConversationDataset
 Package::dataset
 --
 +sequence: GroupBy
@@ -289,7 +289,7 @@ _+short_name(): str_
 +init_encoder(tokens_records): Encoder
 --
 Responsibilities
--- returns onehot feature vectors as a sequence of messages</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>180</x><y>990</y><w>288</w><h>216</h></coordinates><panel_attributes>/BaseContextualSequentialConversationOneHotDataset/
+-- returns onehot feature vectors as a sequence of messages</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>64</x><y>500</y><w>128</w><h>96</h></coordinates><panel_attributes>/BaseContextualSequentialConversationOneHotDataset/
 Package::dataset
 --
 +CONTEXT_LENGTH: int
@@ -303,7 +303,7 @@ _+short_name(): str_
 +init_encoder(tokens_records): Encoder
 --
 Responsibilities
--- Abstract sequential dataset with specific contexts as feature vector</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>54</x><y>1305</y><w>288</w><h>216</h></coordinates><panel_attributes>TemporalSequentialConversationOneHotDataset
+-- Abstract sequential dataset with specific contexts as feature vector</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>8</x><y>640</y><w>128</w><h>96</h></coordinates><panel_attributes>TemporalSequentialConversationOneHotDataset
 Package::dataset
 --
 +CONTEXT_LENGTH: int
@@ -312,7 +312,7 @@ _+short_name(): str_
 /+tokenize(input): list/
 --
 Responsibilities
--- Sequential Data with time as context of each message</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>396</x><y>1305</y><w>288</w><h>216</h></coordinates><panel_attributes>TemporalAuthorsSequentialConversationOneHotDataset
+-- Sequential Data with time as context of each message</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>160</x><y>640</y><w>128</w><h>96</h></coordinates><panel_attributes>TemporalAuthorsSequentialConversationOneHotDataset
 Package::dataset
 --
 +CONTEXT_LENGTH: int
@@ -321,7 +321,7 @@ _+short_name(): str_
 /+tokenize(input): list/
 --
 Responsibilities
--- Sequential Data with time as context of each message</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1116</x><y>1026</y><w>108</w><h>36</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>100;20;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1116</x><y>594</y><w>351</w><h>369</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>370;10;10;390</additional_attributes></element><element><id>Relation</id><coordinates><x>855</x><y>612</y><w>162</w><h>153</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>160;150;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>846</x><y>378</y><w>27</w><h>117</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;110;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>486</x><y>162</y><w>243</w><h>153</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>250;150;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>819</x><y>162</y><w>45</w><h>72</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>30;60;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>162</x><y>162</y><w>567</w><h>171</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>610;170;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>495</x><y>603</y><w>468</w><h>162</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>500;160;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1035</x><y>648</y><w>144</w><h>117</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;110;140;10</additional_attributes></element><element><id>Relation</id><coordinates><x>450</x><y>792</y><w>423</w><h>144</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>450;140;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>324</x><y>900</y><w>27</w><h>108</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;100</additional_attributes></element><element><id>Relation</id><coordinates><x>198</x><y>1197</y><w>144</w><h>126</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>140;10;10;120</additional_attributes></element><element><id>Relation</id><coordinates><x>387</x><y>1197</y><w>162</w><h>126</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;160;120</additional_attributes></element><element><id>UMLClass</id><coordinates><x>63</x><y>1314</y><w>288</w><h>216</h></coordinates><panel_attributes>TemporalSequentialConversationOneHotDataset
+-- Sequential Data with time as context of each message</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>480</x><y>516</y><w>48</w><h>16</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>100;20;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>480</x><y>324</y><w>156</w><h>164</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>370;10;10;390</additional_attributes></element><element><id>Relation</id><coordinates><x>364</x><y>332</y><w>72</w><h>68</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>160;150;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>360</x><y>228</y><w>12</w><h>52</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;110;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>200</x><y>132</y><w>108</w><h>68</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>250;150;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>348</x><y>132</y><w>20</w><h>32</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>30;60;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>56</x><y>132</y><w>252</w><h>76</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>610;170;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>204</x><y>328</y><w>208</w><h>72</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>500;160;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>444</x><y>348</y><w>64</w><h>52</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;110;140;10</additional_attributes></element><element><id>Relation</id><coordinates><x>184</x><y>412</y><w>188</w><h>64</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>450;140;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>128</x><y>460</y><w>12</w><h>48</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;100</additional_attributes></element><element><id>Relation</id><coordinates><x>72</x><y>592</y><w>64</w><h>56</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>140;10;10;120</additional_attributes></element><element><id>Relation</id><coordinates><x>156</x><y>592</y><w>72</w><h>56</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;160;120</additional_attributes></element><element><id>UMLClass</id><coordinates><x>12</x><y>644</y><w>128</w><h>96</h></coordinates><panel_attributes>TemporalSequentialConversationOneHotDataset
 Package::dataset
 --
 +CONTEXT_LENGTH: int
