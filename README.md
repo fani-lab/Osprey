@@ -11,34 +11,58 @@ Around 60%-80% of female high school students have to face online sexual groomin
 4. [Acknowledgement](#4-acknowledgement)
 
 ## 1. Setup
-
-You need to have ``Python >= 3.8`` and install the following main packages, among others listed in [``requirements.txt``](requirements.txt):
-```
-
-```
-By ``pip``, clone the codebase and install the required packages:
+You can setup the code in different ways. You can use package managers such as Mamba and Conda to install the packages. If you prefer using docker, clone this project and build the Dockerfile.
+First we need the project source code.
 ```sh
-git clone https://github.com/Fani-Lab/opcd
-cd opcd
-pip install -r requirements.txt
+git clone https://github.com/fani-lab/Osprey.git
+cd Osprey
 ```
-By [``conda``](https://www.anaconda.com/products/individual):
+### 1.1 Using mamba/micromamba/conda
+These package managers basically have similar interfaces. You can install which ever you think is appropriate for your environment and system. We prefer using mamba as it is faster than conda and has more features than micromamba.
 
 ```sh
-git clone https://github.com/Fani-Lab/opcd
-cd opcd
-conda env create -f environment.yml
-conda activate opcd
+mamba create -n osprey-cuda
+mamba activate osprey-cuda
+mamba env update -n osprey-cuda --file environment.yml
 ```
 
+### 1.2 Using Docker
+In case you need an image of this project to run it on a cloud server, you can simply clone the project and run:
+```sh
+docker build -t osprey-cuda-image .
+```
+Please pay attention to `.dockerignore` file. The docker engine currently ignores `data`, `logs`, and `output` directories. If you do not have the datasets, please add them to respective project directory and when ran the container, mount the directories to the container.
 ## 2. Quickstart
-
+You can use the commandline interface (cli) built in this project to run different scripts or train your models. You can use
 ```sh
-cd src
-python main.py 
+python runner.py command
+```
+and replace `command` with the desired value. You can also run the following command for more help
+```sh
+python runner.py --help
 ```
 
-The above run, loads and preprocesses ** followed by 5-fold train-evaluation on a training split and final test on test set for **.
+In order to turn the PAN-12 xml files to csv, use this command:
+```sh
+python runner.py xml2csv --xml-file /path/to/pan12.xml --predators-file /path/to/predtors-ids.txt
+```
+`xml2csv` creates the v2 dataset. The old code of creating dataset had some limitations and we reimplemented it and named it v2 dataset.
+For creating the conversation dataset, where each record is a whole conversation, run the following command. Remember to put both train.csv and test.csv file under the same directory and pass that directory as `--datasets-path` argument.
+
+```sh
+python runner.py create-conversations --datasets-path /path/to/dataset-v2/ --output-path /path/to/dataset-v2/conversation/
+```
+
+You can also create toy set for conversation dataset using the following command. The ratio value here specifies the ratio of number of original dataset records to that of toy dataset.
+```sh
+python runner.py create-toy-conversation --train-path /path/to/dataset-v2/conversation/train.csv --test-path /path/to/dataset-v2/conversation/test.csv --ratio 0.1
+```
+
+You can define your configurations for sessions and models under the path `settings/settings.py`. There are samples under the same file in `datasets` and `sessions` dicts.
+After specifying the sessions configurations according to your need, you can use the following command to run all of `sessions`.
+```sh
+python runner.py train --log
+```
 
 ## 3. Results
 
