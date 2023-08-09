@@ -1,9 +1,7 @@
-import torch
 from torch.utils.data import DataLoader, SubsetRandomSampler
 from transformers import AutoConfig, AutoModelForSequenceClassification
 
 from src.models import AbstractFeedForward
-import settings
 from settings import OUTPUT_LAYER_NODES
 
 import logging
@@ -17,7 +15,7 @@ class BertBaseUncasedClassifier(AbstractFeedForward):
         super(AbstractFeedForward, self).__init__(*args, dimension_list=[], dropout_list=[], **kwargs)
         config = AutoConfig.from_pretrained('bert-base-uncased')
         config.hidden_dropout_prob = dropout
-        config.num_labels = 1
+        config.num_labels = OUTPUT_LAYER_NODES
         self.core = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased", config=config)
         # self.core = AutoModel.from_pretrained("bert-base-uncased") #
         # self.out = torch.nn.Linear(768, OUTPUT_LAYER_NODES, device=self.device)

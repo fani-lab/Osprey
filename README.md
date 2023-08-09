@@ -71,3 +71,17 @@ We report the predictions, evaluation metrics on each test instance, and average
 TODO: Put result figures and explain them.
 
 ## 4. Acknowledgement
+
+
+## 5. NOTES:
+### Updating environment.yaml File
+
+In case you updated a python package and wanted to include it in the environment file, do the following steps. These steps will only include the pinned packages and the os-specific dependencies and libraries will be handled by the package manager (conda or mamba).
+
+1. Run the following command
+```sh
+mamba env export --from-history > new-environment.yaml
+```
+2. Add the channels from previous `environment.yaml` file to the channel section of `new-environment.yaml` file.
+3. In case you used new channels, add them to `new-environment.yaml` file too.
+4. Rename `environment.yaml` to `new-environment.yaml`

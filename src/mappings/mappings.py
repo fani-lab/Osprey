@@ -47,8 +47,6 @@ def register_mappings_torch():
     LOSS_FUNCTIONS["BCEW"] = BCEWithLogitsLoss
     LOSS_FUNCTIONS["BCELoss"] = BCELoss
 
-    pass
-
 def register_command(obj: CommandObject):
     
     if not issubclass(obj, CommandObject):

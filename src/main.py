@@ -51,13 +51,18 @@ class RunTrainPipeline(CommandObject):
 
     def get_actions_and_args(self):
         
-        def run():
+        def run(sessions):
             device = 'cuda' if settings.USE_CUDA_IF_AVAILABLE and torch.cuda.is_available() else 'cpu'
             torch.autograd.set_detect_anomaly(True)
             logger.info(f'processing unit: {device}')
             datasets = initiate_datasets(settings.datasets, device)
-
-            for model_name, session in settings.sessions.items():
+            
+            if isinstance(sessions, list) and len(sessions) > 0:
+                sessions = [(name, settings.sessions[name]) for name in sessions]
+            else:
+                sessions = settings.sessions.items()
+            
+            for model_name, session in sessions:
                 logger.info(f"started new session: {model_name}")
                 commands = session["commands"]
 
@@ -109,7 +114,14 @@ class RunTrainPipeline(CommandObject):
                         model = model_class(**model_configs, input_size=1)
                         model.evaluate(path, device=device)
 
-        return (run, [])
+        return (run, [{
+                "flags": ("-s", "--sessions"),
+                "dest": "sessions",
+                "nargs": "*",
+                "default": [],
+                "help": "the name of sessions to be run, as specified in settings file",
+            }
+        ])
     
     @classmethod
     def command(cls) -> str:
