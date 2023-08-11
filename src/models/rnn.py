@@ -1,6 +1,8 @@
 import pickle
 import logging
 import shutil
+import glob
+import re
 
 from src.models.baseline import Baseline
 import settings
@@ -62,6 +64,14 @@ class BaseRnnModule(Baseline, nn.Module):
             else:
                 logger.info(f"resetting module parameters: {'.'.join([name, *parents_modules_names])}")
                 module.reset_parameters()
+
+    def get_all_folds_checkpoints(self, dataset):
+        # main_path = glob(self.get_detailed_session_path(dataset, "weights", f"f{fold}", f"model_f{fold}.pth"))
+        main_path = glob(self.get_detailed_session_path(dataset, "weights", "f*", "model_f[0-9]+.pth"))
+        paths = [ pp for pp in main_path if re.search(r"model_f\d{1,2}.pth$", pp)]
+        if len(paths) == 0:
+            raise RuntimeError("no checkpoint was found. probably the model has not been trained.")
+        return paths
 
     def get_new_optimizer(self, lr, *args, **kwargs):
         return torch.optim.Adam(self.parameters(), lr=lr)
@@ -167,28 +177,32 @@ class BaseRnnModule(Baseline, nn.Module):
         shutil.copyfile(best_model_src, best_model_dest)
 
     def test(self, test_dataset, weights_checkpoint_path):
-        self.load_params(weights_checkpoint_path)
-        all_preds = []
-        all_targets = []
-        test_dataloader = DataLoader(test_dataset, batch_size=64, collate_fn=padding_collate_sequence_batch)
-        self.eval()
-        with torch.no_grad():
-            for X, y in test_dataloader:
-                X = X.to(self.device)
-                y = y.to(self.device)
-                last_hidden, y_hat = self.forward(X)
-                y_hat = y_hat.reshape(-1)
-                all_preds.extend(torch.sigmoid(y_hat) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else y_hat)
-                all_targets.extend(y)
+        for path in weights_checkpoint_path:
+            logger.info(f"testing checkpoint at: {path}")
 
-        all_preds = torch.tensor(all_preds)
-        all_targets = torch.tensor(all_targets)
-        with force_open(self.get_detailed_session_path(test_dataset, 'preds.pkl'), 'wb') as file:
-            pickle.dump(all_preds, file)
-            logger.info(f'predictions are saved at: {file.name}')
-        with force_open(self.get_detailed_session_path(test_dataset, 'targets.pkl'), 'wb') as file:
-            pickle.dump(all_targets, file)
-            logger.info(f'targets are saved at: {file.name}')
+            self.load_params(weights_checkpoint_path)
+            all_preds = []
+            all_targets = []
+            test_dataloader = DataLoader(test_dataset, batch_size=64, collate_fn=padding_collate_sequence_batch)
+            self.eval()
+            with torch.no_grad():
+                for X, y in test_dataloader:
+                    X = X.to(self.device)
+                    y = y.to(self.device)
+                    last_hidden, y_hat = self.forward(X)
+                    y_hat = y_hat.reshape(-1)
+                    all_preds.extend(torch.sigmoid(y_hat) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else y_hat)
+                    all_targets.extend(y)
+
+            all_preds = torch.tensor(all_preds)
+            all_targets = torch.tensor(all_targets)
+            base_path = "/".join(re.split("\\\|/", path)[:-1])
+            with force_open(base_path + '/preds.pkl', 'wb') as file:
+                pickle.dump(all_preds, file)
+                logger.info(f'predictions are saved at: {file.name}')
+            with force_open(base_path + '/targets.pkl', 'wb') as file:
+                pickle.dump(all_targets, file)
+                logger.info(f'targets are saved at: {file.name}')
 
     def save(self, path):
         with force_open(path, "wb") as f:
