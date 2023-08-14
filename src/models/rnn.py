@@ -180,7 +180,10 @@ class BaseRnnModule(Baseline, nn.Module):
         for path in weights_checkpoint_path:
             logger.info(f"testing checkpoint at: {path}")
 
-            self.load_params(weights_checkpoint_path)
+            # self.load_params(weights_checkpoint_path)
+            checkpoint = torch.load(path)
+            self.load_state_dict(checkpoint.get("model", checkpoint))
+
             all_preds = []
             all_targets = []
             test_dataloader = DataLoader(test_dataset, batch_size=64, collate_fn=padding_collate_sequence_batch)

@@ -118,10 +118,7 @@ class SequentialOneHotEncoderWithContext(OneHotEncoder):
             result = [None]*len(record[-1])
         except:
             result = []
-        get_context_properly_for_transformation = lambda x: x
 
-        if self.context_length == 1:
-            get_context_properly_for_transformation = lambda x: [x,]
         dimensions_of_context = ((0,) * self.context_length, tuple(range(0, self.context_length)))
         contexts = [context for context in zip(*record[0])]
         for i, (context, sequence_records) in enumerate(zip(contexts, record[1])):
@@ -129,7 +126,7 @@ class SequentialOneHotEncoderWithContext(OneHotEncoder):
                 result[i] = (self.get_zero_vector(),)
                 continue
             temp = super().transform(sequence_records) + \
-                [sparse_coo_tensor(dimensions_of_context, get_context_properly_for_transformation(context), size=self.vectors_dimension, dtype=float32)]
+                [sparse_coo_tensor(dimensions_of_context, context, size=self.vectors_dimension, dtype=float32)]
             result[i] = temp
         
         if len(result) == 0:

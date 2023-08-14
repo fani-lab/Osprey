@@ -97,16 +97,17 @@ class RunTrainPipeline(CommandObject):
                         logger.info(f"dataset short-name: {str(dataset)}")
                         model = model_class(**model_configs, input_size=datasets[dataset_name][0].shape[-1])
                         model.to(device=device)
-                        if not command_kwargs.get("weights_checkpoint_paths", None):
-                            command_kwargs["weights_checkpoint_paths"] = model.get_all_folds_checkpoints(datasets[dataset_name][0])
-                        if isinstance(command_kwargs["weights_checkpoint_paths"], str):
-                            command_kwargs["weights_checkpoint_paths"] = (command_kwargs["weights_checkpoint_paths"],)
+                        if not command_kwargs.get("weights_checkpoint_path", None):
+                            command_kwargs["weights_checkpoint_path"] = model.get_all_folds_checkpoints(datasets[dataset_name][0])
+                        if isinstance(command_kwargs["weights_checkpoint_path"], str):
+                            command_kwargs["weights_checkpoint_path"] = (command_kwargs["weights_checkpoint_path"],)
                         model.test(**command_kwargs, test_dataset=dataset)
                     if command == "eval":
                         path = command_kwargs.get("path", "")
                         if command_kwargs.get("use_current_session", False):
                             try:
-                                path = model.get_detailed_session_path(dataset)
+                                datasets[dataset_name][0].prepare()
+                                path = model.get_detailed_session_path(datasets[dataset_name][0])
                             except UnboundLocalError as e:
                                 raise Exception("in order to use use_current_session, you should run the previous steps at the same time.") from e
                         if path == "":
