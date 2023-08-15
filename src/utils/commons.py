@@ -11,7 +11,6 @@ from lxml import etree
 
 
 def nltk_tokenize(input) -> list[list[str]]:
-    nltk.download('punkt')
     tokens = [nltk.tokenize.word_tokenize(record.lower()) if pd.notna(record) else [] for record in input]
     return tokens
 
@@ -273,4 +272,20 @@ class CommandObject:
     
     def help(self) -> str:
         return f"just running {self.command()}"
-    
+
+
+class SingletonMeta(type):
+    """
+    You can make a class singleton using:
+    class SingletonClass(metaclass=SingletonMeta):
+        def do_something(self):
+            pass
+    """
+
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            instance = super().__call__(*args, **kwargs)
+            cls._instances[cls] = instance
+        return cls._instances[cls]

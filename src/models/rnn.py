@@ -1,7 +1,7 @@
 import pickle
 import logging
 import shutil
-import glob
+from glob import glob
 import re
 
 from src.models.baseline import Baseline

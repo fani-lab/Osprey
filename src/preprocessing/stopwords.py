@@ -10,7 +10,6 @@ class NLTKStopWordRemoving(BasePreprocessing):
     
     def __init__(self) -> None:
         super(NLTKStopWordRemoving).__init__()
-        nltk.download('stopwords')
         
     def opt(self, input: list[list[str]]) -> list[str]:
         sw_set = set(stopwords.words())
