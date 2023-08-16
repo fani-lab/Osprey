@@ -67,7 +67,7 @@ class BaseRnnModule(Baseline, nn.Module):
 
     def get_all_folds_checkpoints(self, dataset):
         # main_path = glob(self.get_detailed_session_path(dataset, "weights", f"f{fold}", f"model_f{fold}.pth"))
-        main_path = glob(self.get_detailed_session_path(dataset, "weights", "f*", "model_f[0-9]+.pth"))
+        main_path = glob(self.get_detailed_session_path(dataset, "weights", "f[0-9]", "model_f[0-9].pth")) # Supports upto 10 folds (from 0 to 9)
         paths = [ pp for pp in main_path if re.search(r"model_f\d{1,2}.pth$", pp)]
         if len(paths) == 0:
             raise RuntimeError("no checkpoint was found. probably the model has not been trained.")
