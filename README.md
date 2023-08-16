@@ -24,6 +24,7 @@ These package managers basically have similar interfaces. You can install which 
 mamba create -n osprey-cuda
 mamba activate osprey-cuda
 mamba env update -n osprey-cuda --file environment.yml
+python -m nltk.downloader punkt stopwords
 ```
 
 ### 1.2 Using Docker

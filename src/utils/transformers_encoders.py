@@ -59,3 +59,19 @@ class GloveEmbeddingEncoder:
 
     def fit(self, *args, **kwargs):
         pass
+
+class SequentialTransformersEmbeddingEncoder(TransformersEmbeddingEncoder):
+
+
+        # result = self.encoder.encode(" ".join(record), convert_to_tensor=True, show_progress_bar=False, normalize_embeddings=True)
+
+        # return (result,) # For the consistency of the transform return value
+
+    def transform(self, record):
+        result = []
+        for sequence_records in record:
+            result.append(super().transform(sequence_records))
+        
+        # if len(result) == 0:
+        #     return ((self.get_zero_vector(),),)
+        return result

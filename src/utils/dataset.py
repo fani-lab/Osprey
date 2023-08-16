@@ -10,7 +10,7 @@ from transformers import BertTokenizer
 
 from src.preprocessing.base import BasePreprocessing
 from src.utils.one_hot_encoder import OneHotEncoder, SequentialOneHotEncoder, SequentialOneHotEncoderWithContext
-from src.utils.transformers_encoders import TransformersEmbeddingEncoder, GloveEmbeddingEncoder
+from src.utils.transformers_encoders import TransformersEmbeddingEncoder, GloveEmbeddingEncoder, SequentialTransformersEmbeddingEncoder
 from src.utils.commons import nltk_tokenize, force_open, RegisterableObject
 from src.preprocessing.author_id_remover import AuthorIDReplacerBert
 
@@ -821,3 +821,127 @@ class TemporalAuthorsSequentialConversationOneHotDataset(BaseContextualSequentia
             temp = np.floor(g["time"].tolist())
             messages[i] = ((temp + (g["time"].tolist()- temp) / 0.6, g["nauthor"].tolist(),), nltk_tokenize(g["text"]))
         return messages
+
+
+class SequentialConversationEmbeddingDataset(SequentialConversationDataset):
+    
+    @classmethod
+    def short_name(cls) -> str:
+        return "sequential-embedding"
+
+    def vectorize(self, tokens_records: list[list[str]], encoder):
+        logger.info("vectorizing message records")
+        vectors = []
+        for record in tokens_records:
+            sequence = encoder.transform(record=record)
+            temp = torch.stack([torch.cat(t) for t in sequence])
+            vectors.append(temp)
+        logger.debug("vectorizing finished")
+        
+        return vectors
+    
+    def init_encoder(self, tokens_records):
+        logger.debug("Transformer Embedding Dataset being initialized")
+        encoder = SequentialTransformersEmbeddingEncoder(device=self.device)
+        return encoder
+
+    def get_vector_size(self, vectors=None):
+        raise NotImplementedError()
+
+class BaseContextualSequentialConversationEmbeddingDataset(SequentialConversationEmbeddingDataset):
+    CONTEXT_LENGTH = 0
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "contextual-ebedding-sequential"
+    
+    def preprocess(self):
+        try:
+            if not self.load_from_pkl:
+                raise FileNotFoundError()
+            with open(self.get_session_path("tokens.pkl"), "rb") as f:
+                logger.info("trying to load tokens from file")
+                messages = pickle.load(f)
+        except FileNotFoundError:
+            logger.info("generating tokens from scratch")
+            self.__new_tokens__ = True
+            messages = self.tokenize(self.sequence)
+            logger.info("applying preprocessing modules")
+            for preprocessor in self.preprocessings:
+                logger.info(f"applying {preprocessor.name()}")
+                messages = [[context, tuple(preprocessor.opt(sequence))] for context, sequence in messages]
+        return messages
+
+    def vectorize(self, tokens_records, encoder):
+        logger.debug("started transforming message records into sparse vectors")
+        vectors = []
+        
+        for i, record in enumerate(tokens_records):
+            sequence = encoder.transform(record=record)
+            onehots = torch.stack([torch.sparse.sum(torch.cat(t), dim=0) for t in sequence])
+
+            vectors.append(onehots)
+
+        logger.debug("transforming of records into vectors is finished")
+        return vectors
+
+
+class TemporalSequentialConversationEmbeddingDataset(BaseContextualSequentialConversationEmbeddingDataset):
+
+    CONTEXT_LENGTH = 1
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "temporal-sequential-embedding"
+    
+    def tokenize(self, sequence):
+        messages = [None] * len(sequence)
+        for i, (k, g) in enumerate(sequence):
+            temp = np.floor(g["time"].tolist())
+            messages[i] = ((temp + (g["time"].tolist()- temp) / 0.6,), nltk_tokenize(g["text"]))
+        return messages
+
+
+class TemporalAuthorsSequentialConversationEmbeddingDataset(BaseContextualSequentialConversationEmbeddingDataset):
+    
+    CONTEXT_LENGTH = 2
+    
+    @classmethod
+    def short_name(cls) -> str:
+        return "temporal-nauthor-sequential-embedding"
+
+    def tokenize(self, sequence):
+        messages = [None] * len(sequence)
+        for i, (k, g) in enumerate(sequence):
+            temp = np.floor(g["time"].tolist())
+            messages[i] = ((temp + (g["time"].tolist()- temp) / 0.6, g["nauthor"].tolist(),), nltk_tokenize(g["text"]))
+        return messages
+
+
+class SequentialConversationBertBaseDataset(SequentialConversationEmbeddingDataset):
+    @classmethod
+    def short_name(cls) -> str:
+        return "sequential-bert-base"
+    
+    def init_encoder(self, tokens_records):
+        logger.debug("Transformer Embedding Dataset being initialized")
+        encoder = SequentialTransformersEmbeddingEncoder(transformer_identifier="bert-base-uncased", device=self.device)
+        return encoder
+    
+    def get_vector_size(self, vectors=None):
+        return 768
+
+
+class TemporalSequentialConversationBertBaseDataset(TemporalSequentialConversationEmbeddingDataset):
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "temporal-nauthor-sequential-bert-base"
+
+    def init_encoder(self, tokens_records):
+        logger.debug("Transformer Embedding Dataset being initialized")
+        encoder = SequentialTransformersEmbeddingEncoder(transformer_identifier="bert-base-uncased", device=self.device)
+        return encoder
+
+    def get_vector_size(self, vectors=None):
+        return 768

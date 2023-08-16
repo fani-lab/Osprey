@@ -80,6 +80,15 @@ class BaseRnnModule(Baseline, nn.Module):
         scheduler_args = {"verbose":False, "min_lr":1e-9, "threshold": 20, "cooldown": 5, "patience": 20, "factor":0.25, "mode": "min"}
         logger.debug(f"scheduler settings: {scheduler_args}")
         return ReduceLROnPlateau(optimizer, **scheduler_args)
+    
+    def get_dataloaders(self, dataset, train_ids, validation_ids, batch_size):
+        train_subsampler = SubsetRandomSampler(train_ids)
+        validation_subsampler = SubsetRandomSampler(validation_ids)
+        train_loader = DataLoader(dataset, batch_size=batch_size, drop_last=False,
+                                                    sampler=train_subsampler, collate_fn=padding_collate_sequence_batch)
+        validation_loader = DataLoader(dataset, batch_size=batch_size, drop_last=False,
+                                                        sampler=validation_subsampler, collate_fn=padding_collate_sequence_batch)
+        return train_loader, validation_loader
 
     def learn(self, epoch_num:int , batch_size: int, splits: list, train_dataset: Dataset, weights_checkpoint_path: str=None, condition_save_threshold=0.9):
         if weights_checkpoint_path is not None and len(weights_checkpoint_path):
@@ -94,12 +103,8 @@ class BaseRnnModule(Baseline, nn.Module):
             logger.info(self.optimizer)
             logger.info(self.scheduler)
             logger.info(f'fetching data for fold #{fold}')
-            train_subsampler = SubsetRandomSampler(train_ids)
-            validation_subsampler = SubsetRandomSampler(validation_ids)
-            train_loader = DataLoader(train_dataset, batch_size=batch_size, drop_last=False,
-                                                       sampler=train_subsampler, collate_fn=padding_collate_sequence_batch)
-            validation_loader = DataLoader(train_dataset, batch_size=batch_size, drop_last=False,
-                                                            sampler=validation_subsampler, collate_fn=padding_collate_sequence_batch)
+            train_loader, validation_loader = self.get_dataloaders(train_dataset, train_ids, validation_ids, batch_size)
+            
             last_lr = self.init_lr
             total_loss = []
             total_validation_loss = []

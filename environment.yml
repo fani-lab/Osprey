@@ -7,10 +7,10 @@ channels:
 dependencies:
   - python=3.9
   - gensim=3.8.3
-  - torchaudio
-  - torchvision
-  - pytorch
-  - pytorch-cuda=11.7
+  - pytorch::torchaudio
+  - pytorch::torchvision
+  - pytorch::pytorch
+  - pytorch::pytorch-cuda=11.7
   - ipykernel
   - pandas
   - nltk
