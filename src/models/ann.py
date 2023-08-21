@@ -43,6 +43,9 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
         details = str(dataset) + "-" + str(self)
         return self.get_session_path(details, *args)
 
+    def check_stop_early(self, *args, **kwargs):
+        return kwargs.get("f2score", 0.0) >= 0.89 and self.early_stop
+    
     def get_dataloaders(self, dataset, train_ids, validation_ids, batch_size):
         train_subsampler = SubsetRandomSampler(train_ids)
         validation_subsampler = SubsetRandomSampler(validation_ids)
@@ -157,7 +160,10 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
                 if f2score >= condition_save_threshold:
                     logger.info(f"fold: {fold} | epoch: {i} | saving model at {epoch_snapshot_path}")
                     self.save(epoch_snapshot_path)
-
+                
+                if self.check_stop_early(f2score=f2score):
+                    logger.info(f"early stop condition satisfied: f2 score => {f2score}")
+                    break
             folds_metrics.append((accuracy_value, precision_value, recall_value))
             
             snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_f{fold}.pth")

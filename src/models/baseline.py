@@ -13,7 +13,7 @@ logger = logging.getLogger()
 class Baseline(RegisterableObject):
 
     def __init__(self, input_size: int, activation, loss_func, lr, module_session_path, validation_steps=-1,
-                 device='cpu', **kwargs):
+                 device='cpu', early_stop=False, **kwargs):
         super().__init__()
         self.input_size = input_size
         self.init_lr = lr
@@ -27,6 +27,7 @@ class Baseline(RegisterableObject):
 
         self.snapshot_steps = 2
         self.device = device
+        self.early_stop = early_stop
 
     def learn(self):
         raise NotImplementedError()
@@ -48,6 +49,9 @@ class Baseline(RegisterableObject):
     def get_all_folds_checkpoints(self, dataset):
         raise NotImplementedError()
     
+    def check_stop_early(self, *args, **kwargs):
+        return False
+
     def evaluate(self, path, device):
         folds = glob(path + "/weights/f*")
         logger.info(f"found #{len(folds)} folds at path: {path}")
