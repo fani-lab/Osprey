@@ -804,7 +804,7 @@ class TemporalSequentialConversationOneHotDataset(BaseContextualSequentialConver
         messages = [None] * len(sequence)
         for i, (k, g) in enumerate(sequence):
             temp = np.floor(g["time"].tolist())
-            messages[i] = ((temp + (g["time"].tolist()- temp) / 0.6,), nltk_tokenize(g["text"]))
+            messages[i] = (((temp*60 + (g["time"].tolist()- temp)*100)/1440,), nltk_tokenize(g["text"]))
         return messages
 
 class TemporalAuthorsSequentialConversationOneHotDataset(BaseContextualSequentialConversationOneHotDataset):
@@ -819,8 +819,19 @@ class TemporalAuthorsSequentialConversationOneHotDataset(BaseContextualSequentia
         messages = [None] * len(sequence)
         for i, (k, g) in enumerate(sequence):
             temp = np.floor(g["time"].tolist())
-            messages[i] = ((temp + (g["time"].tolist()- temp) / 0.6, g["nauthor"].tolist(),), nltk_tokenize(g["text"]))
+            messages[i] = (((temp*60 + (g["time"].tolist()- temp)*100)/1440, g["nauthor"].tolist(),), nltk_tokenize(g["text"]))
         return messages
+
+
+class TemporalAuthorsSequentialConversationOneHotDatasetFiltered(TemporalAuthorsSequentialConversationOneHotDataset):
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "time-nauthor-sequential-convsize"
+
+    def filter_records(self, df):
+        logger.info("applying record filtering by 'nauthor >= 2 & conv_size > 6'")
+        return df[(df["nauthor"] >= 2) & (df["conv_size"] > 6)]
 
 
 class SequentialConversationEmbeddingDataset(SequentialConversationDataset):

@@ -87,13 +87,13 @@ datasets = {
 
     ##################
 
-    "temporal-sequential-conversation-v2-dataset-onehot-allreal": (
-        "temporal-sequential",  # short name of the dataset
+    "sequential-conversation-v2-dataset-onehot-allreal": (
+        "basic-sequential",  # short name of the dataset
         {       # train configs
             "data_path": "data/dataset-v2/train.csv",
             "output_path": "data/preprocessed/sequential-v2/",
-            "load_from_pkl": True,
-            "preprocessings": ["sw", "rr", "idr"],
+            "load_from_pkl": False,
+            "preprocessings": ["pr", "sw", "rr", "idr"],
             "persist_data": True,
             "vector_size": 13000,
             "apply_record_filter": True,
@@ -101,11 +101,33 @@ datasets = {
         {      # test configs
             "data_path": "data/dataset-v2/test.csv",
             "output_path": "data/preprocessed/sequential-v2/test-",
-            "load_from_pkl": True,
-            "preprocessings": ["sw", "rr", "idr"],
+            "load_from_pkl": False,
+            "preprocessings": ["pr", "sw", "rr", "idr"],
             "persist_data": True,
             "vector_size": 13000,
-            "apply_record_filter": False,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "temporal-sequential-conversation-v2-dataset-onehot-allreal": (
+        "temporal-sequential",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/train.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": False,
+            "preprocessings": ["pr", "sw", "rr", "idr"],
+            "persist_data": True,
+            "vector_size": 13000,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": False,
+            "preprocessings": ["pr", "sw", "rr", "idr"],
+            "persist_data": True,
+            "vector_size": 13000,
+            "apply_record_filter": True,
         }
     ),
 
@@ -114,20 +136,42 @@ datasets = {
         {       # train configs
             "data_path": "data/dataset-v2/train.csv",
             "output_path": "data/preprocessed/sequential-v2/",
-            "load_from_pkl": True,
-            "preprocessings": ["sw", "rr", "idr"],
+            "load_from_pkl": False,
+            "preprocessings": ["pr", "sw", "rr", "idr"],
             "persist_data": True,
             "vector_size": 13000,
-            "apply_record_filter": False,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": False,
+            "preprocessings": ["pr", "sw", "rr", "idr"],
+            "persist_data": True,
+            "vector_size": 13000,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "temporal-nauthor-sequential-convsize-conversation-dataset-onehot-allreal": (
+        "time-nauthor-sequential-convsize",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/train.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": ["pr", "sw", "rr", "idr"],
+            "persist_data": True,
+            "vector_size": 13000,
+            "apply_record_filter": True,
         },
         {      # test configs
             "data_path": "data/dataset-v2/test.csv",
             "output_path": "data/preprocessed/sequential-v2/test-",
             "load_from_pkl": True,
-            "preprocessings": ["sw", "rr", "idr"],
+            "preprocessings": ["pr", "sw", "rr", "idr"],
             "persist_data": True,
             "vector_size": 13000,
-            "apply_record_filter": False,
+            "apply_record_filter": True,
         }
     ),
 
@@ -137,8 +181,8 @@ datasets = {
             "data_path": "data/dataset-v2/toy-train.csv",
             "output_path": "data/preprocessed/sequential-v2/toy-",
             "load_from_pkl": False,
-            "preprocessings": ["sw", "rr", "idr"],
-            "persist_data": True,
+            "preprocessings": ["pr", "sw", "rr", "idr"],
+            "persist_data": False,
             "vector_size": 13000,
             "apply_record_filter": True,
         },
@@ -146,13 +190,73 @@ datasets = {
             "data_path": "data/dataset-v2/toy-test.csv",
             "output_path": "data/preprocessed/sequential-v2/toy-test-",
             "load_from_pkl": False,
-            "preprocessings": ["sw", "rr", "idr"],
-            "persist_data": True,
+            "preprocessings": ["pr", "sw", "rr", "idr"],
+            "persist_data": False,
             "vector_size": 13000,
-            "apply_record_filter": False,
+            "apply_record_filter": True,
         }
     ),
 
+    ########## Contextual Sequential with Embeddings
+    "sequential-conversation-v2-dataset-embedding": (
+        "sequential-bert-base",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/train.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": ["pr", "sw", "rr", "idr"],
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": ["pr", "sw", "rr", "idr"],
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "temporal-sequential-conversation-v2-dataset-embedding": (
+        "temporal-nauthor-sequential-bert-base",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/train.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": ["pr", "sw", "rr", "idr"],
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": ["pr", "sw", "rr", "idr"],
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
+
+"sequential-conversation-v2-dataset-embedding": (
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/train.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": ["pr", "sw", "rr", "idr"],
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": ["pr", "sw", "rr", "idr"],
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
 
     ########## temporal sequentials
     "temporal-sequential-conversation-v2-dataset-onehot-04": (
@@ -355,106 +459,164 @@ datasets = {
 }
 
 
-
-
 sessions = {
-    # "lstm-balanced-v2-temporal": {
-    #     "model": "lstm",
-    #     "commands": [
-    #         ("train", {
-    #             "epoch_num": 20,
-    #             "batch_size": 8,
-    #             "weights_checkpoint_paths": "",
-    #             },
-    #             {
-    #                 "dataset": "temporal-sequential-conversation-v2-dataset-onehot-allreal",
-    #                 "rerun_splitting": False,
-    #                 "persist_splits": True,
-    #                 "load_splits_from": None,
-    #                 "n_splits": 5,
-    #             }
-    #         ),
-    #         ("test", {"weights_checkpoint_paths": ""}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-allreal"}),
-    #         # ("test", {"weights_checkpoint_paths": r"output/06-06-2023-16-17-29-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-nofilter-lr0.000500-h2056-l1/weights/f1/model_fold1.pth"}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-04-realtest"}),
-    #         ("eval", {"path": '', "use_current_session": True}, dict()),
-    #     ],
-    #     "model_configs": {
-    #         "activation": ("relu", dict()),
-    #         # "loss_func": ("weighted-binary-cross-entropy", {"pos_weight": 2}),
-    #         "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(30)}),
-    #         # "loss_func": ("BCEW", {"reduction": "sum"}),
-    #         "lr": 0.0005,
-    #         'hidden_size': 512,
-    #         'num_layers': 1,
-    #         "module_session_path": "output",
-    #         "session_path_include_time": False,
-    #     },
-    # },
-    # "lstm-balanced-v2-time-nauthor": {
-    #     "model": "lstm",
-    #     "commands": [
-    #         ("train", {
-    #             "epoch_num": 25,
-    #             "batch_size": 16,
-    #             "weights_checkpoint_paths": "",
-    #             },
-    #             {
-    #                 "dataset": "temporal-nauthor-sequential-conversation-v2-dataset-onehot-allreal",
-    #                 "rerun_splitting": False,
-    #                 "persist_splits": True,
-    #                 "load_splits_from": None,
-    #                 "n_splits": 5,
-    #             }
-    #         ),
-    #         ("test", {"weights_checkpoint_paths": ""}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-onehot-allreal"}),
-    #         # ("test", {"weights_checkpoint_paths": r"output/06-06-2023-16-17-29-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-nofilter-lr0.000500-h2056-l1/weights/f1/model_fold1.pth"}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-04-realtest"}),
-    #         ("eval", {"path": '', "use_current_session": True}, dict()),
-    #     ],
-    #     "model_configs": {
-    #         "activation": ("relu", dict()),
-    #         # "loss_func": ("weighted-binary-cross-entropy", {"pos_weight": 2}),
-    #         "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(30)}),
-    #         # "loss_func": ("BCEW", {"reduction": "sum"}),
-    #         "lr": 0.0005,
-    #         'hidden_size': 2048,
-    #         'num_layers': 1,
-    #         "module_session_path": "output",
-    #         "session_path_include_time": False,
-    #     },
-    # },
 
-    # "toy-lstm-balanced-v2-time-nauthor": {
-    #     "model": "lstm",
-    #     "commands": [
-    #         ("train", {
-    #             "epoch_num": 20,
-    #             "batch_size": 8,
-    #             "weights_checkpoint_paths": "",
-    #             },
-    #             {
-    #                 "dataset": "temporal-nauthor-sequential-conversation-v2-dataset-onehot-toy",
-    #                 "rerun_splitting": False,
-    #                 "persist_splits": True,
-    #                 "load_splits_from": None,
-    #                 "n_splits": 5,
-    #             }
-    #         ),
-    #         ("test", {"weights_checkpoint_paths": ""}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-onehot-toy"}),
-    #         # ("test", {"weights_checkpoint_paths": r"output/06-06-2023-16-17-29-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-nofilter-lr0.000500-h2056-l1/weights/f1/model_fold1.pth"}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-04-realtest"}),
-    #         ("eval", {"path": '', "use_current_session": True}, dict()),
-    #     ],
-    #     "model_configs": {
-    #         "activation": ("relu", dict()),
-    #         # "loss_func": ("weighted-binary-cross-entropy", {"pos_weight": 2}),
-    #         "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(30)}),
-    #         # "loss_func": ("BCEW", {"reduction": "sum"}),
-    #         "lr": 0.0005,
-    #         'hidden_size': 512,
-    #         'num_layers': 1,
-    #         "module_session_path": "output",
-    #         "session_path_include_time": False,
-    #     },
-    # },
+    "lstm-bow": {
+        "model": "lstm",
+        "commands": [
+            ("train", {
+                "epoch_num": 30,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "sequential-conversation-v2-dataset-onehot-allreal",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": None,
+                    "n_splits": 5,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "sequential-conversation-v2-dataset-onehot-allreal"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "sequential-conversation-v2-dataset-onehot-allreal"}),
+        ],
+        "model_configs": {
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(40)}),
+            "lr": 0.0005,
+            'hidden_size': 1024,
+            'num_layers': 1,
+            "module_session_path": "output-d1262c6",
+            "session_path_include_time": False,
+            "early_stop": True,
+        },
+    },
+
+    "lstm-temporal-bow": {
+        "model": "lstm",
+        "commands": [
+            ("train", {
+                "epoch_num": 30,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "temporal-sequential-conversation-v2-dataset-onehot-allreal",
+                    "rerun_splitting": True,
+                    "persist_splits": True,
+                    "load_splits_from": None,
+                    "n_splits": 5,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-allreal"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-allreal"}),
+        ],
+        "model_configs": {
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(40)}),
+            "lr": 0.0005,
+            'hidden_size': 1024,
+            'num_layers': 1,
+            "module_session_path": "output-d1262c6",
+            "session_path_include_time": False,
+            "early_stop": True,
+        },
+    },
+
+    "lstm-time-nauthor-bow": {
+        "model": "lstm",
+        "commands": [
+            ("train", {
+                "epoch_num": 30,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "temporal-nauthor-sequential-conversation-v2-dataset-onehot-allreal",
+                    "rerun_splitting": True,
+                    "persist_splits": True,
+                    "load_splits_from": None,
+                    "n_splits": 5,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-onehot-allreal"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-onehot-allreal"}),
+        ],
+        "model_configs": {
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(40)}),
+            "lr": 0.0005,
+            'hidden_size': 1024,
+            'num_layers': 1,
+            "module_session_path": "output-d1262c6",
+            "session_path_include_time": False,
+            "early_stop": True,
+        },
+    },
+
+    "lstm-time-nauthor-convsize-bow": {
+        "model": "lstm",
+        "commands": [
+            ("train", {
+                "epoch_num": 30,
+                "batch_size": 4,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "temporal-nauthor-sequential-convsize-conversation-dataset-onehot-allreal",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": None,
+                    "n_splits": 5,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-nauthor-sequential-convsize-conversation-dataset-onehot-allreal"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-nauthor-sequential-convsize-conversation-dataset-onehot-allreal"}),
+        ],
+        "model_configs": {
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(40)}),
+            "lr": 0.0005,
+            'hidden_size': 1024,
+            'num_layers': 1,
+            "module_session_path": "output-d1262c6",
+            "session_path_include_time": False,
+            "early_stop": True,
+        },
+    },
+
+    "toy-lstm-balanced-v2-time-nauthor": {
+        "model": "lstm",
+        "commands": [
+            ("train", {
+                "epoch_num": 20,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "temporal-nauthor-sequential-conversation-v2-dataset-onehot-toy",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": None,
+                    "n_splits": 5,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": ""}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-onehot-toy"}),
+            # ("test", {"weights_checkpoint_path": r"output/06-06-2023-16-17-29-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-nofilter-lr0.000500-h2056-l1/weights/f1/model_fold1.pth"}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-04-realtest"}),
+            ("eval", {"path": '', "use_current_session": True}, dict()),
+        ],
+        "model_configs": {
+            "activation": ("relu", dict()),
+            # "loss_func": ("weighted-binary-cross-entropy", {"pos_weight": 2}),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(30)}),
+            # "loss_func": ("BCEW", {"reduction": "sum"}),
+            "lr": 0.0005,
+            'hidden_size': 512,
+            'num_layers': 1,
+            "module_session_path": "output",
+            "session_path_include_time": False,
+        },
+    },
 ######################### original test sets with balanced train sets
     # "lstm-balanced-v2-04-temporal-realtest": {
     #     "model": "lstm",
@@ -462,7 +624,7 @@ sessions = {
     #         # ("train", {
     #         #     "epoch_num": 20,
     #         #     "batch_size": 16,
-    #         #     "weights_checkpoint_paths": "",
+    #         #     "weights_checkpoint_path": "",
     #         #     },
     #         #     {
     #         #         "dataset": "temporal-sequential-conversation-v2-dataset-onehot-04-realtest",
@@ -472,8 +634,8 @@ sessions = {
     #         #         "n_splits": 5,
     #         #     }
     #         # ),
-    #         # ("test", {"weights_checkpoint_paths": ""}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-04-realtest"}),
-    #         ("test", {"weights_checkpoint_paths": r"output/06-06-2023-16-17-29-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-nofilter-lr0.000500-h2056-l1/weights/f1/model_fold1.pth"}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-04-realtest"}),
+    #         # ("test", {"weights_checkpoint_path": ""}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-04-realtest"}),
+    #         ("test", {"weights_checkpoint_path": r"output/06-06-2023-16-17-29-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-nofilter-lr0.000500-h2056-l1/weights/f1/model_fold1.pth"}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-04-realtest"}),
     #         ("eval", {"path": '', "use_current_session": True}, dict()),
     #     ],
     #     "model_configs": {
@@ -495,7 +657,7 @@ sessions = {
     #         ("train", {
     #             "epoch_num": 20,
     #             "batch_size": 16,
-    #             "weights_checkpoint_paths": "",
+    #             "weights_checkpoint_path": "",
     #             },
     #             {
     #                 "dataset": "temporal-sequential-conversation-v2-dataset-onehot-02-realtest",
@@ -505,8 +667,8 @@ sessions = {
     #                 "n_splits": 5,
     #             }
     #         ),
-    #         ("test", {"weights_checkpoint_paths": ""}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-02-realtest"}),
-    #         # ("test", {"weights_checkpoint_paths": r"output/06-06-2023-16-17-29-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-nofilter-lr0.000500-h2056-l1/weights/f1/model_fold1.pth"}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-04-realtest"}),
+    #         ("test", {"weights_checkpoint_path": ""}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-02-realtest"}),
+    #         # ("test", {"weights_checkpoint_path": r"output/06-06-2023-16-17-29-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-nofilter-lr0.000500-h2056-l1/weights/f1/model_fold1.pth"}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-04-realtest"}),
     #         ("eval", {"path": '', "use_current_session": True}, dict()),
     #     ],
     #     "model_configs": {
@@ -528,7 +690,7 @@ sessions = {
     #         ("train", {
     #             "epoch_num": 10,
     #             "batch_size": 32,
-    #             "weights_checkpoint_paths": "",
+    #             "weights_checkpoint_path": "",
     #             "condition_save_threshold": 0.05,
     #             },
     #             {
@@ -539,8 +701,8 @@ sessions = {
     #                 "n_splits": 5,
     #             }
     #         ),
-    #         ("test", {"weights_checkpoint_paths": ""}, {"dataset": "bert-based-uncased-tokenized"}),
-    #         # ("test", {"weights_checkpoint_paths": r"output/06-06-2023-16-17-29-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-nofilter-lr0.000500-h2056-l1/weights/f1/model_fold1.pth"}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-04-realtest"}),
+    #         ("test", {"weights_checkpoint_path": ""}, {"dataset": "bert-based-uncased-tokenized"}),
+    #         # ("test", {"weights_checkpoint_path": r"output/06-06-2023-16-17-29-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-nofilter-lr0.000500-h2056-l1/weights/f1/model_fold1.pth"}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-04-realtest"}),
     #         ("eval", {"path": '', "use_current_session": True}, dict()),
     #     ],
     #     "model_configs": {
@@ -561,7 +723,7 @@ sessions = {
     #         ("train", {
     #             "epoch_num": 2,
     #             "batch_size": 8,
-    #             "weights_checkpoint_paths": "",
+    #             "weights_checkpoint_path": "",
     #             "condition_save_threshold": 0.05,
     #             },
     #             {
@@ -572,8 +734,8 @@ sessions = {
     #                 "n_splits": 5,
     #             }
     #         ),
-    #         ("test", {"weights_checkpoint_paths": ""}, {"dataset": "bert-based-uncased-tokenized-toy"}),
-    #         # ("test", {"weights_checkpoint_paths": r"output/06-06-2023-16-17-29-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-nofilter-lr0.000500-h2056-l1/weights/f1/model_fold1.pth"}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-04-realtest"}),
+    #         ("test", {"weights_checkpoint_path": ""}, {"dataset": "bert-based-uncased-tokenized-toy"}),
+    #         # ("test", {"weights_checkpoint_path": r"output/06-06-2023-16-17-29-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-nofilter-lr0.000500-h2056-l1/weights/f1/model_fold1.pth"}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-04-realtest"}),
     #         ("eval", {"path": '', "use_current_session": True}, dict()),
     #     ],
     #     "model_configs": {
@@ -595,7 +757,7 @@ sessions = {
     #         # ("train", {
     #         #     "epoch_num": 20,
     #         #     "batch_size": 16,
-    #         #     "weights_checkpoint_paths": "",
+    #         #     "weights_checkpoint_path": "",
     #         #     },
     #         #     {
     #         #         "dataset": "temporal-sequential-conversation-v2-dataset-onehot-04",
@@ -605,8 +767,8 @@ sessions = {
     #         #         "n_splits": 5,
     #         #     }
     #         # ),
-    #         # ("test", {"weights_checkpoint_paths": ""}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-04"}),
-    #         ("test", {"weights_checkpoint_paths": r"output/06-06-2023-16-17-29-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-nofilter-lr0.000500-h2056-l1/weights/f1/model_fold1.pth"}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-04"}),
+    #         # ("test", {"weights_checkpoint_path": ""}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-04"}),
+    #         ("test", {"weights_checkpoint_path": r"output/06-06-2023-16-17-29-lstm-balanced-v2-04-temporal/lstm/temporal-sequential/psw.rr.idr-v13000-nofilter-lr0.000500-h2056-l1/weights/f1/model_fold1.pth"}, {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-04"}),
     #         ("eval", {"path": '', "use_current_session": True}, dict()),
     #     ],
     #     "model_configs": {
@@ -629,7 +791,7 @@ sessions = {
     #         ("train", {
     #             "epoch_num": 40,
     #             "batch_size": 16,
-    #             "weights_checkpoint_paths": "",
+    #             "weights_checkpoint_path": "",
     #             },
     #             {
     #                 "dataset": "temporal-sequential-conversation-v2-dataset-onehot-02-realtest",
@@ -639,7 +801,7 @@ sessions = {
     #                 "n_splits": 5,
     #             }
     #         ),
-    #         ("test", {"weights_checkpoint_paths": ""},
+    #         ("test", {"weights_checkpoint_path": ""},
     #             {"dataset": "temporal-sequential-conversation-v2-dataset-onehot-02-realtest"}),
     #         ("eval", {"path": '', "use_current_session": True}, dict()),
     #     ],
