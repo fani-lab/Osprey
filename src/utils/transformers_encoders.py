@@ -11,6 +11,7 @@ class TransformersEmbeddingEncoder:
 
     def __init__(self, device="cpu", transformer_identifier="sentence-transformers/all-distilroberta-v1", special_token=[], *args, **kwargs):
         self.device = device
+        logger.info(f"transformer embedding encoder identifier: {transformer_identifier}")
         self.encoder = SentenceTransformer(transformer_identifier, device=device)
 
         # we should call add_special_tokens for [unusedX] tokens, because the tokenizer consider them unkown.

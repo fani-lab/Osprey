@@ -818,9 +818,20 @@ class TemporalAuthorsSequentialConversationOneHotDataset(BaseContextualSequentia
     def tokenize(self, sequence):
         messages = [None] * len(sequence)
         for i, (k, g) in enumerate(sequence):
-            temp = np.floor(g["time"].tolist())
-            messages[i] = (((temp*60 + (g["time"].tolist()- temp)*100)/1440, g["nauthor"].tolist(),), nltk_tokenize(g["text"]))
+            temp = np.floor(g["time"])
+            messages[i] = ((((temp*60 + (g["time"]- temp)*100)/1440).tolist(), g["nauthor"].tolist(),), nltk_tokenize(g["text"]))
         return messages
+
+
+class TemporalSequentialConversationOneHotDatasetFiltered(TemporalSequentialConversationOneHotDataset):
+    
+    @classmethod
+    def short_name(cls) -> str:
+        return "time-sequential-convsize"
+
+    def filter_records(self, df):
+        logger.info("applying record filtering by 'nauthor >= 2 & conv_size > 6'")
+        return df[(df["nauthor"] >= 2) & (df["conv_size"] > 6)]
 
 
 class TemporalAuthorsSequentialConversationOneHotDatasetFiltered(TemporalAuthorsSequentialConversationOneHotDataset):
@@ -834,8 +845,23 @@ class TemporalAuthorsSequentialConversationOneHotDatasetFiltered(TemporalAuthors
         return df[(df["nauthor"] >= 2) & (df["conv_size"] > 6)]
 
 
+class SequentialConversationDatasetFiltered(SequentialConversationDataset):
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "basic-sequential-convsize"
+
+    def filter_records(self, df):
+        logger.info("applying record filtering by 'nauthor >= 2 & conv_size > 6'")
+        return df[(df["nauthor"] >= 2) & (df["conv_size"] > 6)]
+
+
 class SequentialConversationEmbeddingDataset(SequentialConversationDataset):
     
+    def filter_records(self, df):
+        logger.info("applying record filtering by 'nauthor >= 2 & conv_size > 6'")
+        return df[(df["nauthor"] >= 2) & (df["conv_size"] > 6)]
+
     @classmethod
     def short_name(cls) -> str:
         return "sequential-embedding"
@@ -853,11 +879,11 @@ class SequentialConversationEmbeddingDataset(SequentialConversationDataset):
     
     def init_encoder(self, tokens_records):
         logger.debug("Transformer Embedding Dataset being initialized")
-        encoder = SequentialTransformersEmbeddingEncoder(device=self.device)
+        encoder = SequentialTransformersEmbeddingEncoder(transformer_identifier="all-distilroberta-v1", device=self.device)
         return encoder
 
     def get_vector_size(self, vectors=None):
-        raise NotImplementedError()
+        return 768
 
 class BaseContextualSequentialConversationEmbeddingDataset(SequentialConversationEmbeddingDataset):
     CONTEXT_LENGTH = 0
