@@ -190,7 +190,7 @@ class BaseRnnModule(Baseline, nn.Module):
     def test(self, test_dataset, weights_checkpoint_path):
         for path in weights_checkpoint_path:
             logger.info(f"testing checkpoint at: {path}")
-
+            torch.cuda.empty_cache()
             # self.load_params(weights_checkpoint_path)
             checkpoint = torch.load(path)
             self.load_state_dict(checkpoint.get("model", checkpoint))

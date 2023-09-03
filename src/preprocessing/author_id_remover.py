@@ -2,7 +2,7 @@ from src.preprocessing.base import BasePreprocessing
 
 
 class AuthorIDReplacer(BasePreprocessing):
-    AUTHOR_ID_TOKEN = "author_id_token"
+    AUTHOR_ID_TOKEN = "userID"
 
     def opt(self, input: list[list[str]]) -> list[str]:
         for record in input:
