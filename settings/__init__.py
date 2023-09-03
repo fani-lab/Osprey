@@ -1,4 +1,4 @@
-from .defaults import ALL_FILTERED_CONFIGS, ALL_IGNORED_PARAM_RESET, USE_CUDA_IF_AVAILABLE, OUTPUT_LAYER_NODES, get_start_time
+from .defaults import ALL_FILTERED_CONFIGS, ALL_IGNORED_PARAM_RESET, USE_CUDA_IF_AVAILABLE, OUTPUT_LAYER_NODES, get_start_time, AGGERAGETD_METRICS_PATH
 from .settings import sessions, datasets
 
 __all__ = [
@@ -9,4 +9,5 @@ __all__ = [
     "USE_CUDA_IF_AVAILABLE",
     "OUTPUT_LAYER_NODES",
     "get_start_time",
+    "AGGERAGETD_METRICS_PATH",
 ]

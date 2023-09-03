@@ -16,7 +16,8 @@ def create_model_configs(session_name: str, session: dict, device: str):
     configs = {**session["model_configs"], "activation": activation(**activation_kwargs),
                          "loss_func": loss(**loss_kwargs), "device": device,
                          "module_session_path": session["model_configs"]["module_session_path"] + "/" + f"{settings.get_start_time()}-{session_name}"
-                            if session["model_configs"]["session_path_include_time"] else session["model_configs"]["module_session_path"] + "/" + session_name
+                            if session["model_configs"]["session_path_include_time"] else session["model_configs"]["module_session_path"] + "/" + session_name,
+                        "session_name": session_name,
                         }
     configs = {k: v for k, v in configs.items() if k not in settings.ALL_FILTERED_CONFIGS}
     return configs
@@ -62,11 +63,11 @@ class RunTrainPipeline(CommandObject):
             else:
                 sessions = settings.sessions.items()
             
-            for model_name, session in sessions:
-                logger.info(f"started new session: {model_name}")
+            for session_name, session in sessions:
+                logger.info(f"started new session: {session_name}")
                 commands = session["commands"]
 
-                model_configs = create_model_configs(model_name, session=session, device=device)
+                model_configs = create_model_configs(session_name, session=session, device=device)
                 
                 model_class = mappings.MODELS[session["model"]]
 
@@ -74,7 +75,7 @@ class RunTrainPipeline(CommandObject):
                     dataset_name = dataset_configs.get("dataset", None)
                     if dataset_name is None:
                         logger.warning("no dataset was specified.")
-                    logger.info(f"started new command `{command}` of session `{model_name}`")
+                    logger.info(f"started new command `{command}` of session `{session_name}`")
                     logger.debug(f"command `{command}`; dataset name: {dataset_name}; arguments: {command_kwargs}")
                     torch.cuda.empty_cache()
                     if command == "train":

@@ -1,11 +1,13 @@
 import pickle
 import logging
-import re
 from glob import glob
+from csv import DictWriter
 
+import numpy as np
 import matplotlib.pyplot as plt
-from src.utils.commons import RegisterableObject, roc_auc, calculate_metrics_extended, roc, precision_recall_auc, precision_recall_curve
 
+from src.utils.commons import RegisterableObject, roc_auc, calculate_metrics_extended, roc, precision_recall_auc, precision_recall_curve
+import settings
 
 logger = logging.getLogger()
 
@@ -13,12 +15,14 @@ logger = logging.getLogger()
 class Baseline(RegisterableObject):
 
     def __init__(self, input_size: int, activation, loss_func, lr, module_session_path, validation_steps=-1,
-                 device='cpu', early_stop=False, **kwargs):
+                 device='cpu', early_stop=False, session_name="", do_aggeragate_metrics=True, **kwargs):
         super().__init__()
         self.input_size = input_size
         self.init_lr = lr
         self.validation_steps = validation_steps
         self.activation = activation
+        self.session_name = session_name
+        self.do_aggeragate_metrics = do_aggeragate_metrics
 
         self.loss_function = loss_func
 
@@ -51,12 +55,32 @@ class Baseline(RegisterableObject):
     
     def check_stop_early(self, *args, **kwargs):
         return False
+    
+    def aggeregate(self, session_path, accuracies, recalls, precisions, f2scores, f05scores, aurocs, pr_aucs):
+        fieldnames = ["session-name", "sessions-start-time", "model", "path", "notes", 'aucroc-avg', 'aucroc-std', 'aucroc-var', 'aucpr-avg', 'aucpr-std', 'aucpr-var', 'accurcay-avg', 'accurcay-std', 'accurcay-var', 'precision-avg', 'precision-std', 'precision-var', 'recall-avg', 'recall-std', 'recall-var', 'f2-avg', 'f2-std', 'f2-var', 'f05-avg', 'f05-std', 'f05-var', "logger_path"]
+        
+        with open("agg.csv", "a") as f:
+            writer = DictWriter(f, fieldnames=fieldnames, delimiter=',', lineterminator='\n')
+            if f.tell() == 0:
+                writer.writeheader()
+            row = {"session-name": self.session_name, "sessions-start-time": settings.get_start_time(), "model": self.short_name(), "path": session_path, "notes": "",
+                   'aucroc-avg': np.average(aurocs), 'aucroc-std': np.std(aurocs), 'aucroc-var': np.var(aurocs),
+                   'aucpr-avg': np.average(pr_aucs), 'aucpr-std': np.std(pr_aucs), 'aucpr-var': np.var(pr_aucs),
+                   'accurcay-avg': np.average(accuracies), 'accurcay-std': np.std(accuracies), 'accurcay-var': np.var(accuracies),
+                   'precision-avg': np.average(precisions), 'precision-std': np.std(precisions), 'precision-var': np.var(precisions),
+                   'recall-avg': np.average(recalls), 'recall-std': np.std(recalls), 'recall-var': np.var(recalls),
+                   'f2-avg': np.average(f2scores), 'f2-std': np.std(f2scores), 'f2-var': np.var(f2scores),
+                   'f05-avg': np.average(f05scores), 'f05-std': np.std(f05scores), 'f05-var': np.var(f05scores),
+                   }
+            log_filehandlers_path = [i.baseFilename for i in logger.handlers if hasattr(i, 'baseFilename')]
+            row["logger_path"] = log_filehandlers_path[0]
+            writer.writerow(row)
 
     def evaluate(self, path, device):
         folds = glob(path + "/weights/f*")
         logger.info(f"found #{len(folds)} folds at path: {path}")
-        average_accuracy, average_recall, average_precision, average_f2score, average_f05score, average_auroc, average_pr_auc = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
-        for fold_path in folds:
+        folds_accuracy, folds_recall, folds_precision, folds_f2score, folds_f05score, folds_auroc, folds_pr_auc = [0.0]*len(folds), [0.0]*len(folds), [0.0]*len(folds), [0.0]*len(folds), [0.0]*len(folds), [0.0]*len(folds), [0.0]*len(folds)
+        for fold_num, fold_path in enumerate(folds):
             preds = None
             targets = None
             with open(fold_path+'/preds.pkl', 'rb') as file:
@@ -87,23 +111,17 @@ class Baseline(RegisterableObject):
             logger.info(f"saving precision-recall curve at: {precision_recall_path}")
             # plt.show()
             accuracy, recall, precision, f2score, f05score = calculate_metrics_extended(preds, targets, device=device)
-            average_accuracy += accuracy
-            average_recall += recall
-            average_precision += precision
-            average_f2score += f2score
-            average_f05score += f05score
-            average_auroc += auroc
-            average_pr_auc += pr_auc
+            folds_accuracy[fold_num] = float(accuracy)
+            folds_recall[fold_num] = float(recall)
+            folds_precision[fold_num] = float(precision)
+            folds_f2score[fold_num] = float(f2score)
+            folds_f05score[fold_num] = float(f05score)
+            folds_auroc[fold_num] = float(auroc)
+            folds_pr_auc[fold_num] = float(pr_auc)
             logger.info(f"test set -> AUCROC: {(auroc):>0.7f} | AUCPR: {(pr_auc):>0.7f} | accuracy: {(accuracy):>0.7f} | precision: {(precision):>0.7f} | recall: {(recall):>0.7f} | f2score: {(f2score):>0.7f} | f0.5: {(100 * f05score):>0.6f}")
         
-        number_of_folds = len(folds)
-        average_accuracy /= number_of_folds
-        average_recall /= number_of_folds
-        average_precision /= number_of_folds
-        average_f2score /= number_of_folds
-        average_f05score /= number_of_folds
-        average_auroc /= number_of_folds
-        average_pr_auc /= number_of_folds
-        
-        logger.info(f"avg test set -> AUCROC: {(average_auroc):>0.7f} | AUCPR: {(average_pr_auc):>0.7f} | accuracy: {(average_accuracy):>0.7f} | precision: {(average_precision):>0.7f} | recall: {(average_recall):>0.7f} | f2score: {(average_f2score):>0.7f} | f0.5: {(100 * average_f05score):>0.6f}")
+        logger.info(f"avg test set -> AUCROC: {(np.average(folds_auroc)):>0.7f} | AUCPR: {(np.average(folds_pr_auc)):>0.7f} | accuracy: {(np.average(folds_accuracy)):>0.7f} | precision: {(np.average(folds_precision)):>0.7f} | recall: {(np.average(folds_recall)):>0.7f} | f2score: {(100 * np.average(folds_f2score)):>0.7f} | f0.5: {(100 * np.average(folds_f05score)):>0.6f}")
+
+        if self.do_aggeragate_metrics:
+            self.aggeregate(session_path=path, accuracies=folds_accuracy, recalls=folds_recall, precisions=folds_precision, f2scores=folds_f2score, f05scores=folds_f05score, aurocs=folds_auroc, pr_aucs=folds_pr_auc)
         

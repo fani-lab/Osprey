@@ -972,11 +972,11 @@ sessions = {
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": None,
-                    "n_splits": 5,
+                    "n_splits": 2,
                 }
             ),
             ("test", dict(), {"dataset": "toy-conversation-v2-dataset-onehot"}),
-            ("eval", {"path": '', "use_current_session": True}, dict()),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "toy-conversation-v2-dataset-onehot"}),
         ],
         "model_configs": {
             "dimension_list": list([8]),

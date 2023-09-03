@@ -36,3 +36,5 @@ def get_start_time():
         __start_time__ = time.strftime("%m-%d-%Y-%H-%M-%S", time.localtime())
         del time
     return __start_time__
+
+AGGERAGETD_METRICS_PATH = "all-metrics.csv"
