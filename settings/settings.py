@@ -281,7 +281,7 @@ datasets = {
         }
     ),
 
-"sequential-conversation-v2-dataset-embedding": (
+    "sequential-conversation-v2-dataset-embedding": (
         "temporal-nauthor-sequential-embedding",  # short name of the dataset
         {       # train configs
             "data_path": "data/dataset-v2/train.csv",
@@ -480,6 +480,28 @@ datasets = {
 ############################### 
     "toy-conversation-v2-dataset-onehot": (
         "conversation-bow",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/conversation/toy-train.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/toy-",
+            "load_from_pkl": True,
+            "preprocessings": ["pr", "sw", "rr"],
+            "persist_data": True,
+            "vector_size": 13000,
+            "apply_record_filter": False,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/conversation/toy-test.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/toy-test-",
+            "load_from_pkl": True,
+            "preprocessings": ["pr", "sw", "rr"],
+            "persist_data": True,
+            "vector_size": 13000,
+            "apply_record_filter": False,
+        }
+    ),
+
+    "toy-v2-dataset-onehot": (
+        "bow",  # short name of the dataset
         {       # train configs
             "data_path": "data/dataset-v2/conversation/toy-train.csv",
             "output_path": "data/preprocessed/conversation-dataset-v2/toy-",
@@ -956,7 +978,33 @@ sessions = {
     # },
 
 
-
+    "svm-toy": {
+        "model": "base-svm",
+        "commands": [
+            ("train", {
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "toy-conversation-v2-dataset-onehot",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": None,
+                    "n_splits": 2,
+                }
+            ),
+            ("test", dict(), {"dataset": "toy-conversation-v2-dataset-onehot"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "toy-conversation-v2-dataset-onehot"}),
+        ],
+        "model_configs": {
+            "dimension_list": list([8]),
+            "dropout_list": [0.0],
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(30)}),
+            "lr": 0.005,
+            "module_session_path": "output",
+            "session_path_include_time": False,
+        },
+    },
 
 
     "feedforward-toy": {
