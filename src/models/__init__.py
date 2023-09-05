@@ -3,6 +3,7 @@ from .ann import ANNModule, AbstractFeedForward, SuperDynamicLossANN
 from .cnn import EbrahimiCNN
 from .baseline import Baseline
 from .transformer import BertBaseUncasedClassifier
+from .svm import BaseSingleVectorMachine
 
 __all__ = [
     "ANNModule",
@@ -14,4 +15,5 @@ __all__ = [
     "GRUModule",
     "SuperDynamicLossANN",
     "BertBaseUncasedClassifier",
+    "BaseSingleVectorMachine",
 ]

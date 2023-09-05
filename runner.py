@@ -15,7 +15,7 @@ from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, Tr
                                TemporalAuthorsSequentialConversationOneHotDatasetFiltered, SequentialConversationDatasetFiltered,
                                TemporalSequentialConversationOneHotDatasetFiltered)
 from src.utils.loss_functions import WeightedBinaryCrossEntropy, DynamicSuperLoss
-from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule, SuperDynamicLossANN, BertBaseUncasedClassifier
+from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule, SuperDynamicLossANN, BertBaseUncasedClassifier, BaseSingleVectorMachine
 from src.mappings import register_mappings, register_mappings_torch, register_command, COMMANDS
 import settings
 from src.scripts import (CreateConversations, BalanceDatasetsForVersionTwo, CreateConversationToySet,
@@ -124,6 +124,7 @@ if __name__ == "__main__":
     register_mappings(GRUModule)
     register_mappings(SuperDynamicLossANN)
     register_mappings(BertBaseUncasedClassifier)
+    register_mappings(BaseSingleVectorMachine)
 
     parser = init_parser()
 
