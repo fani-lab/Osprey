@@ -973,6 +973,21 @@ class TemporalSequentialConversationBertBaseDataset(TemporalSequentialConversati
 
     @classmethod
     def short_name(cls) -> str:
+        return "temporal-sequential-bert-base"
+
+    def init_encoder(self, tokens_records):
+        logger.debug("Transformer Embedding Dataset being initialized")
+        encoder = SequentialTransformersEmbeddingEncoder(transformer_identifier="bert-base-uncased", device=self.device)
+        return encoder
+
+    def get_vector_size(self, vectors=None):
+        return 768
+
+
+class TemporalAuthorsSequentialConversationBertBaseDataset(TemporalAuthorsSequentialConversationEmbeddingDataset):
+
+    @classmethod
+    def short_name(cls) -> str:
         return "temporal-nauthor-sequential-bert-base"
 
     def init_encoder(self, tokens_records):
