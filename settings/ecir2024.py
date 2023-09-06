@@ -207,7 +207,7 @@ sessions = {
                     "dataset": "sequential-conversation-v2-dataset-distilroberta",
                     "rerun_splitting": False,
                     "persist_splits": True,
-                    "load_splits_from": None,
+                    "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
@@ -238,7 +238,7 @@ sessions = {
                     "dataset": "sequential-conversation-v2-dataset-distilroberta",
                     "rerun_splitting": False,
                     "persist_splits": True,
-                    "load_splits_from": None,
+                    "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
@@ -258,7 +258,7 @@ sessions = {
     },
 
     "rnn-distilroberta": {
-        "model": "rnn",
+        "model": "base-rnn",
         "commands": [
             ("train", {
                 "epoch_num": 30,
@@ -269,7 +269,7 @@ sessions = {
                     "dataset": "sequential-conversation-v2-dataset-distilroberta",
                     "rerun_splitting": False,
                     "persist_splits": True,
-                    "load_splits_from": None,
+                    "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
@@ -290,7 +290,7 @@ sessions = {
 
     ####################### sequential berts
     "rnn-bert": {
-        "model": "rnn",
+        "model": "base-rnn",
         "commands": [
             ("train", {
                 "epoch_num": 30,
@@ -301,7 +301,7 @@ sessions = {
                     "dataset": "sequential-conversation-v2-dataset-bert",
                     "rerun_splitting": False,
                     "persist_splits": True,
-                    "load_splits_from": None,
+                    "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
@@ -332,7 +332,7 @@ sessions = {
                     "dataset": "sequential-conversation-v2-dataset-bert",
                     "rerun_splitting": False,
                     "persist_splits": True,
-                    "load_splits_from": None,
+                    "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
@@ -363,7 +363,7 @@ sessions = {
                     "dataset": "sequential-conversation-v2-dataset-bert",
                     "rerun_splitting": False,
                     "persist_splits": True,
-                    "load_splits_from": None,
+                    "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
@@ -395,7 +395,7 @@ sessions = {
                     "dataset": "sequential-conversation-dataset-bow",
                     "rerun_splitting": False,
                     "persist_splits": True,
-                    "load_splits_from": None,
+                    "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
@@ -426,7 +426,7 @@ sessions = {
                     "dataset": "sequential-conversation-dataset-bow",
                     "rerun_splitting": False,
                     "persist_splits": True,
-                    "load_splits_from": None,
+                    "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
@@ -446,7 +446,7 @@ sessions = {
     },
 
     "rnn-bow": {
-        "model": "rnn",
+        "model": "base-rnn",
         "commands": [
             ("train", {
                 "epoch_num": 30,
@@ -457,7 +457,7 @@ sessions = {
                     "dataset": "sequential-conversation-dataset-bow",
                     "rerun_splitting": False,
                     "persist_splits": True,
-                    "load_splits_from": None,
+                    "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
