@@ -819,7 +819,7 @@ class TemporalAuthorsSequentialConversationOneHotDataset(BaseContextualSequentia
         messages = [None] * len(sequence)
         for i, (k, g) in enumerate(sequence):
             temp = np.floor(g["time"])
-            messages[i] = ((((temp*60 + (g["time"]- temp)*100)/1440).tolist(), g["nauthor"].tolist(),), nltk_tokenize(g["text"]))
+            messages[i] = ((((temp*60 + (g["time"]- temp)*100)/1440).tolist(), (g["nauthor"]/4.0).tolist(),), nltk_tokenize(g["text"]))
         return messages
 
 
@@ -827,7 +827,7 @@ class TemporalSequentialConversationOneHotDatasetFiltered(TemporalSequentialConv
     
     @classmethod
     def short_name(cls) -> str:
-        return "time-sequential-convsize"
+        return "time-sequential-bow-convsize"
 
     def filter_records(self, df):
         logger.info("applying record filtering by 'nauthor >= 2 & conv_size > 6'")
@@ -838,7 +838,7 @@ class TemporalAuthorsSequentialConversationOneHotDatasetFiltered(TemporalAuthors
 
     @classmethod
     def short_name(cls) -> str:
-        return "time-nauthor-sequential-convsize"
+        return "time-nauthor-sequential-bow-convsize"
 
     def filter_records(self, df):
         logger.info("applying record filtering by 'nauthor >= 2 & conv_size > 6'")
@@ -849,7 +849,7 @@ class SequentialConversationDatasetFiltered(SequentialConversationDataset):
 
     @classmethod
     def short_name(cls) -> str:
-        return "basic-sequential-convsize"
+        return "sequential-bow-convsize"
 
     def filter_records(self, df):
         logger.info("applying record filtering by 'nauthor >= 2 & conv_size > 6'")
@@ -951,7 +951,7 @@ class TemporalAuthorsSequentialConversationEmbeddingDataset(BaseContextualSequen
         messages = [None] * len(sequence)
         for i, (k, g) in enumerate(sequence):
             temp = np.floor(g["time"].tolist())
-            messages[i] = ((temp + (g["time"].tolist()- temp) / 0.6, g["nauthor"].tolist(),), nltk_tokenize(g["text"]))
+            messages[i] = ((((temp*60 + (g["time"]- temp)*100)/1440).tolist(), (g["nauthor"]/4.0).tolist(),), nltk_tokenize(g["text"]))
         return messages
 
 

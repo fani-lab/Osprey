@@ -116,3 +116,4 @@ class BaseSingleVectorMachine(Baseline):
     
     def __str__(self) -> str:
         return 'svc-rbf'
+    

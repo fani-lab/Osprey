@@ -54,7 +54,7 @@ class BaseRnnModule(Baseline, nn.Module):
         return self.get_session_path(details, *args)
     
     def check_stop_early(self, *args, **kwargs):
-        return kwargs.get("f2score", 0.0) >= 0.89 and self.early_stop
+        return kwargs.get("f2score", 0.0) >= 0.93 and self.early_stop
     
     def reset_modules(self, module, parents_modules_names=[]):
         for name, module in module.named_children():
