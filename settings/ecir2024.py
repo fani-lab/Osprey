@@ -132,6 +132,46 @@ datasets = {
     ),
 
      ############## Sequential Embedding bert-base-uncased
+     "toy-sequential-conversation-v2-dataset-bert": (
+        "sequential-bert-base",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/toy-train.csv",
+            "output_path": "data/preprocessed/sequential-v2/toy-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/toy-test.csv",
+            "output_path": "data/preprocessed/sequential-v2/toy-test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "toy-temporal-sequential-conversation-v2-dataset-distilroberta": (
+        "temporal-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/toy-train.csv",
+            "output_path": "data/preprocessed/sequential-v2/toy-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/toy-test.csv",
+            "output_path": "data/preprocessed/sequential-v2/toy-test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
+
     "sequential-conversation-v2-dataset-bert": (
         "sequential-bert-base",  # short name of the dataset
         {       # train configs
@@ -195,7 +235,7 @@ datasets = {
 
 sessions = {
     ############### sequential distilroberta
-    "lstm-distilroberta": {
+    "lstm-distilroberta-temporal": {
         "model": "lstm",
         "commands": [
             ("train", {
@@ -204,15 +244,15 @@ sessions = {
                 "weights_checkpoint_path": "",
                 },
                 {
-                    "dataset": "sequential-conversation-v2-dataset-distilroberta",
+                    "dataset": "temporal-sequential-conversation-v2-dataset-distilroberta",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "sequential-conversation-v2-dataset-distilroberta"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "sequential-conversation-v2-dataset-distilroberta"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-sequential-conversation-v2-dataset-distilroberta"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-sequential-conversation-v2-dataset-distilroberta"}),
         ],
         "model_configs": {
             "activation": ("relu", dict()),
@@ -226,7 +266,7 @@ sessions = {
         },
     },
 
-    "gru-distilroberta": {
+    "gru-distilroberta-temporal": {
         "model": "gru",
         "commands": [
             ("train", {
@@ -235,15 +275,15 @@ sessions = {
                 "weights_checkpoint_path": "",
                 },
                 {
-                    "dataset": "sequential-conversation-v2-dataset-distilroberta",
+                    "dataset": "temporal-sequential-conversation-v2-dataset-distilroberta",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "sequential-conversation-v2-dataset-distilroberta"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "sequential-conversation-v2-dataset-distilroberta"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-sequential-conversation-v2-dataset-distilroberta"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-sequential-conversation-v2-dataset-distilroberta"}),
         ],
         "model_configs": {
             "activation": ("relu", dict()),
@@ -257,7 +297,7 @@ sessions = {
         },
     },
 
-    "rnn-distilroberta": {
+    "rnn-distilroberta-temporal": {
         "model": "base-rnn",
         "commands": [
             ("train", {
@@ -266,15 +306,15 @@ sessions = {
                 "weights_checkpoint_path": "",
                 },
                 {
-                    "dataset": "sequential-conversation-v2-dataset-distilroberta",
+                    "dataset": "temporal-sequential-conversation-v2-dataset-distilroberta",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "sequential-conversation-v2-dataset-distilroberta"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "sequential-conversation-v2-dataset-distilroberta"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-sequential-conversation-v2-dataset-distilroberta"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-sequential-conversation-v2-dataset-distilroberta"}),
         ],
         "model_configs": {
             "activation": ("relu", dict()),
@@ -288,8 +328,8 @@ sessions = {
         },
     },
 
-    ####################### sequential berts
-    "rnn-bert": {
+    ####################### sequential berts 
+    "rnn-distilroberta-temporal-toy": {
         "model": "base-rnn",
         "commands": [
             ("train", {
@@ -298,15 +338,75 @@ sessions = {
                 "weights_checkpoint_path": "",
                 },
                 {
-                    "dataset": "sequential-conversation-v2-dataset-bert",
+                    "dataset": "toy-temporal-sequential-conversation-v2-dataset-distilroberta",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "sequential-conversation-v2-dataset-bert"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "sequential-conversation-v2-dataset-bert"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "toy-temporal-sequential-conversation-v2-dataset-distilroberta"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "toy-temporal-sequential-conversation-v2-dataset-distilroberta"}),
+        ],
+        "model_configs": {
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
+            "lr": 0.0005,
+            'hidden_size': 1024,
+            'num_layers': 1,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
+            "early_stop": True,
+        },
+    },
+    "rnn-bert-toy": {
+        "model": "base-rnn",
+        "commands": [
+            ("train", {
+                "epoch_num": 30,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "toy-sequential-conversation-v2-dataset-bert",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "toy-sequential-conversation-v2-dataset-bert"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "toy-sequential-conversation-v2-dataset-bert"}),
+        ],
+        "model_configs": {
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
+            "lr": 0.0005,
+            'hidden_size': 1024,
+            'num_layers': 1,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
+            "early_stop": True,
+        },
+    },
+    "rnn-bert-temporal": {
+        "model": "base-rnn",
+        "commands": [
+            ("train", {
+                "epoch_num": 30,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "temporal-sequential-conversation-v2-dataset-bert",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-sequential-conversation-v2-dataset-bert"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-sequential-conversation-v2-dataset-bert"}),
         ],
         "model_configs": {
             "activation": ("relu", dict()),
@@ -320,7 +420,7 @@ sessions = {
         },
     },
 
-    "gru-bert": {
+    "gru-bert-temporal": {
         "model": "gru",
         "commands": [
             ("train", {
@@ -329,15 +429,15 @@ sessions = {
                 "weights_checkpoint_path": "",
                 },
                 {
-                    "dataset": "sequential-conversation-v2-dataset-bert",
+                    "dataset": "temporal-sequential-conversation-v2-dataset-bert",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "sequential-conversation-v2-dataset-bert"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "sequential-conversation-v2-dataset-bert"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-sequential-conversation-v2-dataset-bert"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-sequential-conversation-v2-dataset-bert"}),
         ],
         "model_configs": {
             "activation": ("relu", dict()),
@@ -351,7 +451,7 @@ sessions = {
         },
     },
 
-    "lstm-bert": {
+    "lstm-bert-temporal": {
         "model": "lstm",
         "commands": [
             ("train", {
@@ -360,15 +460,15 @@ sessions = {
                 "weights_checkpoint_path": "",
                 },
                 {
-                    "dataset": "sequential-conversation-v2-dataset-bert",
+                    "dataset": "temporal-sequential-conversation-v2-dataset-bert",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "sequential-conversation-v2-dataset-bert"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "sequential-conversation-v2-dataset-bert"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-sequential-conversation-v2-dataset-bert"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-sequential-conversation-v2-dataset-bert"}),
         ],
         "model_configs": {
             "activation": ("relu", dict()),
@@ -383,7 +483,7 @@ sessions = {
     },
 
     ##################### sequential bag-of-words
-    "lstm-bow": {
+    "lstm-bow-temporal": {
         "model": "lstm",
         "commands": [
             ("train", {
@@ -392,15 +492,15 @@ sessions = {
                 "weights_checkpoint_path": "",
                 },
                 {
-                    "dataset": "sequential-conversation-dataset-bow",
+                    "dataset": "temporal-sequential-conversation-dataset-bow",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "sequential-conversation-dataset-bow"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "sequential-conversation-dataset-bow"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-sequential-conversation-dataset-bow"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-sequential-conversation-dataset-bow"}),
         ],
         "model_configs": {
             "activation": ("relu", dict()),
@@ -414,7 +514,7 @@ sessions = {
         },
     },
 
-    "gru-bow": {
+    "gru-bow-temporal": {
         "model": "gru",
         "commands": [
             ("train", {
@@ -423,15 +523,15 @@ sessions = {
                 "weights_checkpoint_path": "",
                 },
                 {
-                    "dataset": "sequential-conversation-dataset-bow",
+                    "dataset": "temporal-sequential-conversation-dataset-bow",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "sequential-conversation-dataset-bow"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "sequential-conversation-dataset-bow"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-sequential-conversation-dataset-bow"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-sequential-conversation-dataset-bow"}),
         ],
         "model_configs": {
             "activation": ("relu", dict()),
@@ -445,7 +545,7 @@ sessions = {
         },
     },
 
-    "rnn-bow": {
+    "rnn-bow-temporal": {
         "model": "base-rnn",
         "commands": [
             ("train", {
@@ -454,15 +554,15 @@ sessions = {
                 "weights_checkpoint_path": "",
                 },
                 {
-                    "dataset": "sequential-conversation-dataset-bow",
+                    "dataset": "temporal-sequential-conversation-dataset-bow",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "sequential-conversation-dataset-bow"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "sequential-conversation-dataset-bow"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-sequential-conversation-dataset-bow"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-sequential-conversation-dataset-bow"}),
         ],
         "model_configs": {
             "activation": ("relu", dict()),
