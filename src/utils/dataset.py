@@ -939,7 +939,7 @@ class TemporalSequentialConversationEmbeddingDataset(BaseContextualSequentialCon
         messages = [None] * len(sequence)
         for i, (k, g) in enumerate(sequence):
             temp = np.floor(g["time"].tolist())
-            messages[i] = ((temp + (g["time"].tolist()- temp) / 0.6,), nltk_tokenize(g["text"]))
+            messages[i] = (((temp*60 + (g["time"].tolist()- temp)*100)/1440,), nltk_tokenize(g["text"]))
         return messages
 
 
@@ -954,8 +954,8 @@ class TemporalAuthorsSequentialConversationEmbeddingDataset(BaseContextualSequen
     def tokenize(self, sequence):
         messages = [None] * len(sequence)
         for i, (k, g) in enumerate(sequence):
-            temp = np.floor(g["time"].tolist())
-            messages[i] = ((((temp*60 + (g["time"]- temp)*100)/1440).tolist(), (g["nauthor"]/4.0).tolist(),), nltk_tokenize(g["text"]))
+            temp = np.floor(g["time"])
+            messages[i] = ((((temp*60 + (g["time"] - temp)*100)/1440).tolist(), (g["nauthor"]/4.0).tolist(),), nltk_tokenize(g["text"]))
         return messages
 
 
