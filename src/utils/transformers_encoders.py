@@ -76,3 +76,27 @@ class SequentialTransformersEmbeddingEncoder(TransformersEmbeddingEncoder):
         # if len(result) == 0:
         #     return ((self.get_zero_vector(),),)
         return result
+
+
+class SequentialTransformersEmbeddingEncoderWithContext(TransformersEmbeddingEncoder):
+    
+    def __init__(self, context_length, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.context_length = context_length
+    
+    def transform(self, record):
+        try:
+            result = [None]*len(record[-1])
+        except:
+            result = []
+
+        dimensions_of_context = ((0,) * self.context_length, tuple(range(0, self.context_length)))
+        contexts = [context for context in zip(*record[0])]
+        for i, (context, sequence_records) in enumerate(zip(contexts, record[1])):
+            temp = torch.cat((torch.tensor(context), super().transform(sequence_records)[0]))
+                # [sparse_coo_tensor(dimensions_of_context, context, size=self.vectors_dimension, dtype=float32)]
+            result[i] = temp
+        
+        if len(result) == 0:
+            return ((self.get_zero_vector(),),)
+        return result

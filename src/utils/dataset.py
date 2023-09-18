@@ -10,7 +10,7 @@ from transformers import BertTokenizer
 
 from src.preprocessing.base import BasePreprocessing
 from src.utils.one_hot_encoder import OneHotEncoder, SequentialOneHotEncoder, SequentialOneHotEncoderWithContext
-from src.utils.transformers_encoders import TransformersEmbeddingEncoder, GloveEmbeddingEncoder, SequentialTransformersEmbeddingEncoder
+from src.utils.transformers_encoders import TransformersEmbeddingEncoder, GloveEmbeddingEncoder, SequentialTransformersEmbeddingEncoder, SequentialTransformersEmbeddingEncoderWithContext
 from src.utils.commons import nltk_tokenize, force_open, RegisterableObject
 from src.preprocessing.author_id_remover import AuthorIDReplacerBert
 
@@ -892,6 +892,11 @@ class BaseContextualSequentialConversationEmbeddingDataset(SequentialConversatio
     def short_name(cls) -> str:
         return "contextual-ebedding-sequential"
     
+    def init_encoder(self, tokens_records):
+        logger.debug("initializing sequential transformer embedding encoder with context: all-distilroberta-v1")
+        encoder = SequentialTransformersEmbeddingEncoderWithContext(context_length=self.CONTEXT_LENGTH, transformer_identifier="all-distilroberta-v1", device=self.device)
+        return encoder
+    
     def preprocess(self):
         try:
             if not self.load_from_pkl:
@@ -915,9 +920,8 @@ class BaseContextualSequentialConversationEmbeddingDataset(SequentialConversatio
         
         for i, record in enumerate(tokens_records):
             sequence = encoder.transform(record=record)
-            onehots = torch.stack([torch.sparse.sum(torch.cat(t), dim=0) for t in sequence])
-
-            vectors.append(onehots)
+            embeddings = torch.stack(sequence).float()
+            vectors.append(embeddings)
 
         logger.debug("transforming of records into vectors is finished")
         return vectors
@@ -977,7 +981,7 @@ class TemporalSequentialConversationBertBaseDataset(TemporalSequentialConversati
 
     def init_encoder(self, tokens_records):
         logger.debug("Transformer Embedding Dataset being initialized")
-        encoder = SequentialTransformersEmbeddingEncoder(transformer_identifier="bert-base-uncased", device=self.device)
+        encoder = SequentialTransformersEmbeddingEncoderWithContext(context_length=self.CONTEXT_LENGTH, transformer_identifier="bert-base-uncased", device=self.device)
         return encoder
 
     def get_vector_size(self, vectors=None):
@@ -992,7 +996,7 @@ class TemporalAuthorsSequentialConversationBertBaseDataset(TemporalAuthorsSequen
 
     def init_encoder(self, tokens_records):
         logger.debug("Transformer Embedding Dataset being initialized")
-        encoder = SequentialTransformersEmbeddingEncoder(transformer_identifier="bert-base-uncased", device=self.device)
+        encoder = SequentialTransformersEmbeddingEncoderWithContext(context_length=self.CONTEXT_LENGTH, transformer_identifier="bert-base-uncased", device=self.device)
         return encoder
 
     def get_vector_size(self, vectors=None):
