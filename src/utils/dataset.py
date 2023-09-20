@@ -885,6 +885,23 @@ class SequentialConversationEmbeddingDataset(SequentialConversationDataset):
     def get_vector_size(self, vectors=None):
         return 768
 
+
+class SequentialConversationUniversalSentenceEncoderDataset(SequentialConversationEmbeddingDataset):
+    # https://huggingface.co/sentence-transformers/use-cmlm-multilingual
+    
+    @classmethod
+    def short_name(cls) -> str:
+        return "use-embedding"
+
+    def init_encoder(self, tokens_records):
+        logger.debug("Transformer Embedding Dataset being initialized")
+        encoder = SequentialTransformersEmbeddingEncoder(transformer_identifier="sentence-transformers/use-cmlm-multilingual", device=self.device)
+        return encoder
+
+    def get_vector_size(self, vectors=None):
+        return 768 # it is the same as 
+
+
 class BaseContextualSequentialConversationEmbeddingDataset(SequentialConversationEmbeddingDataset):
     CONTEXT_LENGTH = 0
 
