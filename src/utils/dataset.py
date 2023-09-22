@@ -411,6 +411,10 @@ class ConversationBagOfWords(BagOfWordsDataset):
     def short_name(cls) -> str:
         return "conversation-bow"
     
+    def filter_records(self, df):
+        logger.info("applying record filtering by 'number_of_authors == 2' & 'number_of_messages > 3'")
+        return df[((df["number_of_authors"] == 2) & (df["number_of_messages"] > 3))]
+    
     def get_labels(self):
         labels = torch.zeros((self.df.shape[0]), dtype=torch.float)
         for i in range(len(self.df)):
@@ -656,9 +660,13 @@ class SequentialConversationDataset(BaseDataset): # TODO: checkout to(device) me
         super().__init__(data_path, output_path, load_from_pkl, apply_record_filter, preprocessings, persist_data, parent_dataset, device, *args, **kwargs)
         self.__sequence__ = None
 
+    # def filter_records(self, df):
+    #     logger.info("applying record filtering by 'nauthor == 2'")
+    #     return df[(df["nauthor"] == 2)]
+
     def filter_records(self, df):
-        logger.info("applying record filtering by 'nauthor == 2'")
-        return df[(df["nauthor"] == 2)]
+        logger.info("applying record filtering by 'nauthor >= 2 & conv_size > 6'")
+        return df[(df["nauthor"] >= 2) & (df["conv_size"] > 6)]
 
     @property
     def sequence(self):
@@ -734,6 +742,7 @@ class SequentialConversationDataset(BaseDataset): # TODO: checkout to(device) me
     @property
     def shape(self):
         return (len(self.data), -1, self.data[0].shape[-1]) # Fix the last shape with get_vector_size
+
 
 class BaseContextualSequentialConversationOneHotDataset(SequentialConversationDataset):
     CONTEXT_LENGTH = 0
@@ -899,7 +908,7 @@ class SequentialConversationUniversalSentenceEncoderDataset(SequentialConversati
         return encoder
 
     def get_vector_size(self, vectors=None):
-        return 768 # it is the same as 
+        return 768 # it is the same as some other baselines. visit the huggingface of the transformer for more info
 
 
 class BaseContextualSequentialConversationEmbeddingDataset(SequentialConversationEmbeddingDataset):
