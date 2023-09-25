@@ -59,7 +59,7 @@ class Baseline(RegisterableObject):
     def aggeregate(self, session_path, accuracies, recalls, precisions, f2scores, f05scores, aurocs, pr_aucs):
         fieldnames = ["session-name", "sessions-start-time", "model", "path", "notes", 'aucroc-avg', 'aucroc-std', 'aucroc-var', 'aucpr-avg', 'aucpr-std', 'aucpr-var', 'accurcay-avg', 'accurcay-std', 'accurcay-var', 'precision-avg', 'precision-std', 'precision-var', 'recall-avg', 'recall-std', 'recall-var', 'f2-avg', 'f2-std', 'f2-var', 'f05-avg', 'f05-std', 'f05-var', "logger_path"]
         
-        with open("agg.csv", "a") as f:
+        with open(settings.AGGERAGETD_METRICS_PATH, "a") as f:
             writer = DictWriter(f, fieldnames=fieldnames, delimiter=',', lineterminator='\n')
             if f.tell() == 0:
                 writer.writeheader()

@@ -137,7 +137,7 @@ class BaseDataset(Dataset, RegisterableObject):
             return self.__labels__
         labels = torch.zeros((self.df.shape[0], 1), dtype=torch.float)
         for i in range(len(self.df)):
-            labels[i] = self.df.iloc[i]["tagged_predator"]
+            labels[i] = self.df.iloc[i]["predatory_conv"]
         self.__labels__ = labels
         return labels
 
@@ -412,8 +412,8 @@ class ConversationBagOfWords(BagOfWordsDataset):
         return "conversation-bow"
     
     def filter_records(self, df):
-        logger.info("applying record filtering by 'number_of_authors == 2' & 'number_of_messages > 3'")
-        return df[((df["number_of_authors"] == 2) & (df["number_of_messages"] > 3))]
+        logger.info("applying record filtering by 'number_of_authors >= 2' & 'number_of_messages > 6'")
+        return df[((df["number_of_authors"] >= 2) & (df["number_of_messages"] > 6))]
     
     def get_labels(self):
         labels = torch.zeros((self.df.shape[0]), dtype=torch.float)
@@ -565,11 +565,11 @@ class TransformersEmbeddingDataset(BaseDataset, RegisterableObject):
 
     @classmethod
     def short_name(cls) -> str:
-        return "embedding/distillbert"
+        return "conversation-distilroberta-v1"
         
     def init_encoder(self, tokens_records):
         logger.debug("Transformer Embedding Dataset being initialized")
-        encoder = TransformersEmbeddingEncoder(device=self.device)
+        encoder = TransformersEmbeddingEncoder(transformer_identifier="sentence-transformers/all-distilroberta-v1", device=self.device)
         return encoder
 
     def tokenize(self, input):
@@ -582,12 +582,19 @@ class TransformersEmbeddingDataset(BaseDataset, RegisterableObject):
             vectors[i] = torch.cat(encoder.transform(record))
         return vectors
 
+    def get_vector_size(self, vectors=None):
+        return 768
+
+    def filter_records(self, df):
+        logger.info("applying record filtering by 'nauthor >= 2 & conv_size > 6'")
+        return df[(df["number_of_authors"] >= 2) & (df["number_of_messages"] > 6)]
+
 
 class UncasedBaseBertEmbeddingDataset(TransformersEmbeddingDataset):
     
     @classmethod
     def short_name(cls) -> str:
-        return "embedding/bert-base-uncased"
+        return "conversation-bert-base-uncased"
         
     def init_encoder(self, tokens_records):
         logger.debug("Transformer Embedding Dataset being initialized")
@@ -784,7 +791,7 @@ class BaseContextualSequentialConversationOneHotDataset(SequentialConversationDa
             logger.info("applying preprocessing modules")
             for preprocessor in self.preprocessings:
                 logger.info(f"applying {preprocessor.name()}")
-                messages = [[context, tuple(preprocessor.opt(sequence))] for context, sequence in messages]
+                messages = [(context, tuple(preprocessor.opt(sequence))) for context, sequence in messages]
         return messages
     
     def vectorize(self, tokens_records, encoder):

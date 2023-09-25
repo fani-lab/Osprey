@@ -9,8 +9,16 @@ from src.utils.commons import CommandObject
 logger = logging.getLogger()
 
 def create_model_configs(session_name: str, session: dict, device: str):
-    activation, activation_kwargs = mappings.ACTIVATIONS[session["model_configs"]["activation"][0]], session["model_configs"]["activation"][1]
-    loss, loss_kwargs = mappings.LOSS_FUNCTIONS[session["model_configs"]["loss_func"][0]], session["model_configs"]["loss_func"][1]
+    if session["model_configs"].get("activation", None):
+        activation, activation_kwargs = mappings.ACTIVATIONS[session["model_configs"]["activation"][0]], session["model_configs"]["activation"][1]
+    else:
+        logger.warning("no activation function was defined")
+        activation, activation_kwargs = lambda:None, dict()
+    if session["model_configs"].get("loss_func", None):
+        loss, loss_kwargs = mappings.LOSS_FUNCTIONS[session["model_configs"]["loss_func"][0]], session["model_configs"]["loss_func"][1]
+    else:
+        logger.warning("no loss function was defined")
+        loss, loss_kwargs = lambda:None, dict()
     logger.info(f"activation module kwargs: {activation_kwargs}")
     logger.info(f"loss module kwargs: {loss_kwargs}")
     configs = {**session["model_configs"], "activation": activation(**activation_kwargs),

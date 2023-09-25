@@ -44,7 +44,7 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
         return self.get_session_path(details, *args)
 
     def check_stop_early(self, *args, **kwargs):
-        return kwargs.get("f2score", 0.0) >= 0.89 and self.early_stop
+        return kwargs.get("f2score", 0.0) >= 0.95 and self.early_stop
     
     def get_dataloaders(self, dataset, train_ids, validation_ids, batch_size):
         train_subsampler = SubsetRandomSampler(train_ids)

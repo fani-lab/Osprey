@@ -19,10 +19,11 @@ class BaseSingleVectorMachine(Baseline):
 
     def __init__(self, *args, **kwargs):
         Baseline.__init__(self, *args, **kwargs)
+        self.device = "cpu"
         self.svm = SVC(kernel="rbf", )
 
     def to(self, *args, **kwargs):
-        logger.info("this model only runs on CPU")
+        logger.warning("this model only runs on CPU")
 
     @classmethod
     def short_name(cls) -> str:
@@ -38,11 +39,13 @@ class BaseSingleVectorMachine(Baseline):
 
             logger.info("fitting svm model")
             X, y = next(iter(train_loader))
-            X = X.to_dense()
+            X = X.to_dense().cpu()
+            y = y.cpu().squeeze() # if number of classes in y goes over one, remove squeeze()
             self.svm.fit(X, y)
             logger.info("validating svm model")
             X, y = next(iter(validation_loader))
-            X = X.to_dense()
+            X = X.to_dense().cpu()
+            y = y.cpu().squeeze()
             preds = self.svm.predict(X)
             preds = torch.tensor(preds)
             accuracy_value, recall_value, precision_value, f2score, f05score = calculate_metrics_extended(preds, y, device=self.device)
@@ -59,7 +62,8 @@ class BaseSingleVectorMachine(Baseline):
             all_targets = []
             
             for X, y in test_dataloader:
-                X = X.to_dense()
+                X = X.to_dense().cpu()
+                y = y.cpu().squeeze()
                 y_hat = self.svm.predict(X)
                 y_hat = torch.tensor(y_hat)
                 all_preds.extend(y_hat)
