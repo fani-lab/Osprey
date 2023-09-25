@@ -1,6 +1,6 @@
 import torch
 
-__preprocessings__ = [] ## Just to make it easier to change configurations
+__preprocessings__ = ["pr", "sw", "rr", "idr"] ## Just to make it easier to change configurations
 
 datasets = {
     ############## Sequential bag-of-words
@@ -34,7 +34,7 @@ datasets = {
             "load_from_pkl": True,
             "preprocessings": __preprocessings__,
             "persist_data": True,
-            "vector_size": 13000,
+            "vector_size": 5000,
             "apply_record_filter": True,
         },
         {      # test configs
@@ -43,13 +43,13 @@ datasets = {
             "load_from_pkl": True,
             "preprocessings": __preprocessings__,
             "persist_data": True,
-            "vector_size": 13000,
+            "vector_size": 5000,
             "apply_record_filter": True,
         }
     ),
 
     "temporal-nauthor-sequential-conversation-dataset-bow": (
-        "time-nauthor-sequential-bow-convsize",  # short name of the dataset
+        "time-nauthor-sequential",  # short name of the dataset
         {       # train configs
             "data_path": "data/dataset-v2/train.csv",
             "output_path": "data/preprocessed/sequential-v2/",
@@ -232,7 +232,7 @@ datasets = {
         }
     ),
 
-    ######################### All the messages as block of text
+    ######################### All the messages as block of text, Embedding and bag-of-words
     "conversation-dataset-onehot": (
         "conversation-bow",  # short name of the dataset
         {       # train configs
@@ -254,11 +254,191 @@ datasets = {
             "apply_record_filter": True,
         }
     ),
+
+    "conversation-dataset-distilroberta": (
+        "conversation-distilroberta-v1",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/conversation/train.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/conversation/test.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
+    
+    "conversation-dataset-bert": (
+        "conversation-bert-base-uncased",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/conversation/train.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/conversation/test.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
 }
 
 sessions = {
     ############### Non recurrent models
-    "feedforward-256-bow": {
+    "svm-rbf-bow": {
+        "model": "base-svm",
+        "commands": [
+            ("train", {
+                # "epoch_num": 30,
+                # "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "conversation-dataset-onehot",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "conversation-dataset-onehot"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "conversation-dataset-onehot"}),
+        ],
+        "model_configs": {
+            "lr": 0,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
+        },
+    },
+
+    "svm-rbf-bert": {
+        "model": "base-svm",
+        "commands": [
+            ("train", {
+                # "epoch_num": 30,
+                # "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "conversation-dataset-bert",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "conversation-dataset-bert"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "conversation-dataset-bert"}),
+        ],
+        "model_configs": {
+            "lr": 0,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
+        },
+    },
+
+    "svm-rbf-distilroberta": {
+        "model": "base-svm",
+        "commands": [
+            ("train", {
+                # "epoch_num": 30,
+                # "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "conversation-dataset-distilroberta",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "conversation-dataset-distilroberta"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "conversation-dataset-distilroberta"}),
+        ],
+        "model_configs": {
+            "lr": 0,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
+        },
+    },
+
+    "feedforward-bert": {
+        "model": "ann",
+        "commands": [
+            ("train", {
+                "epoch_num": 30,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "conversation-dataset-bert",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "conversation-dataset-bert"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "conversation-dataset-bert"}),
+        ],
+        "model_configs": {
+            "dimension_list": list([256]),
+            "dropout_list": [0.0],
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
+            "lr": 0.0005,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
+            "early_stop": True,
+        },
+    },
+
+    "feedforward-distilroberta": {
+        "model": "ann",
+        "commands": [
+            ("train", {
+                "epoch_num": 30,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "conversation-dataset-distilroberta",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "conversation-dataset-distilroberta"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "conversation-dataset-distilroberta"}),
+        ],
+        "model_configs": {
+            "dimension_list": list([256]),
+            "dropout_list": [0.0],
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
+            "lr": 0.0005,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
+            "early_stop": True,
+        },
+    },
+
+    "feedforward-bow": {
         "model": "ann",
         "commands": [
             ("train", {
@@ -270,7 +450,7 @@ sessions = {
                     "dataset": "conversation-dataset-onehot",
                     "rerun_splitting": False,
                     "persist_splits": True,
-                    "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
+                    "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
@@ -299,9 +479,9 @@ sessions = {
                 },
                 {
                     "dataset": "conversation-dataset-onehot",
-                    "rerun_splitting": True,
+                    "rerun_splitting": False,
                     "persist_splits": True,
-                    "load_splits_from": "",
+                    "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
@@ -321,7 +501,7 @@ sessions = {
     },
 
     ############### sequential distilroberta
-    "lstm-distilroberta-temporal": {
+    "lstm-distilroberta-temporal-nauthor": {
         "model": "lstm",
         "commands": [
             ("train", {
@@ -330,21 +510,21 @@ sessions = {
                 "weights_checkpoint_path": "",
                 },
                 {
-                    "dataset": "temporal-sequential-conversation-v2-dataset-distilroberta",
+                    "dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-sequential-conversation-v2-dataset-distilroberta"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-sequential-conversation-v2-dataset-distilroberta"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta"}),
         ],
         "model_configs": {
             "activation": ("relu", dict()),
             "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
             "lr": 0.0005,
-            'hidden_size': 1024,
+            'hidden_size': 514,
             'num_layers': 1,
             "module_session_path": "output-ecir2024",
             "session_path_include_time": False,
@@ -352,7 +532,7 @@ sessions = {
         },
     },
 
-    "gru-distilroberta-temporal": {
+    "gru-distilroberta-temporal-nauthor": {
         "model": "gru",
         "commands": [
             ("train", {
@@ -361,21 +541,21 @@ sessions = {
                 "weights_checkpoint_path": "",
                 },
                 {
-                    "dataset": "temporal-sequential-conversation-v2-dataset-distilroberta",
+                    "dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-sequential-conversation-v2-dataset-distilroberta"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-sequential-conversation-v2-dataset-distilroberta"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta"}),
         ],
         "model_configs": {
             "activation": ("relu", dict()),
             "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
             "lr": 0.0005,
-            'hidden_size': 1024,
+            'hidden_size': 514,
             'num_layers': 1,
             "module_session_path": "output-ecir2024",
             "session_path_include_time": False,
@@ -383,7 +563,7 @@ sessions = {
         },
     },
 
-    "rnn-distilroberta-temporal": {
+    "rnn-distilroberta-temporal-nauthor": {
         "model": "base-rnn",
         "commands": [
             ("train", {
@@ -392,21 +572,21 @@ sessions = {
                 "weights_checkpoint_path": "",
                 },
                 {
-                    "dataset": "temporal-sequential-conversation-v2-dataset-distilroberta",
+                    "dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-sequential-conversation-v2-dataset-distilroberta"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-sequential-conversation-v2-dataset-distilroberta"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta"}),
         ],
         "model_configs": {
             "activation": ("relu", dict()),
             "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
             "lr": 0.0005,
-            'hidden_size': 1024,
+            'hidden_size': 514,
             'num_layers': 1,
             "module_session_path": "output-ecir2024",
             "session_path_include_time": False,
@@ -569,6 +749,37 @@ sessions = {
     },
 
     ##################### sequential bag-of-words
+    "lstm-bow-temporal-nauthor": {
+        "model": "lstm",
+        "commands": [
+            ("train", {
+                "epoch_num": 30,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "temporal-nauthor-sequential-conversation-dataset-bow",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-nauthor-sequential-conversation-dataset-bow"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-nauthor-sequential-conversation-dataset-bow"}),
+        ],
+        "model_configs": {
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
+            "lr": 0.0005,
+            'hidden_size': 1024,
+            'num_layers': 1,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
+            "early_stop": True,
+        },
+    },
+    
     "lstm-bow-temporal": {
         "model": "lstm",
         "commands": [
