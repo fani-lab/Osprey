@@ -24,7 +24,7 @@ class OneHotEncoder:
             ones = [[] for i in range(len(self.vectors_dimension))]
         else:
             ones = [(0,) if i!=1 else (index,) for i in range(len(self.vectors_dimension))]
-        return sparse_coo_tensor(ones, (1.0,)*(index != None), size=self.vectors_dimension, dtype=float32)
+        return sparse_coo_tensor(ones, (1.0,)*(index != None), size=self.vectors_dimension, dtype=float32, device=self.device)
 
     def generate_sparse_vectors(self):
         for i, (k, _) in enumerate(self.records.items()):
@@ -84,6 +84,30 @@ class OneHotEncoder:
         self.vectors_dimension[1] = len(self.records) + self.get_number_of_predefined_vectors()
 
     get_zero_vector = __get_zero_vector
+
+
+class OneHotEncoderWithContext(OneHotEncoder):
+
+    def __init__(self, context_length, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.context_length = context_length
+    
+    def get_number_of_predefined_vectors(self):
+        return super().get_number_of_predefined_vectors() + self.context_length
+    
+    def generate_sparse_vectors(self):
+        for i, (k, _) in enumerate(self.records.items(), start=self.context_length): # we force the context features to be at the first of the feature vector
+            self.vectors[k] = self.create_sparse_vector(i)
+        
+        del self.records
+    
+    def transform(self, record):
+        if len(record[1][0]) == 0:
+            return (self.get_zero_vector(), )
+        dimensions_of_context = ((0,) * self.context_length, tuple(range(0, self.context_length)))
+        result = super().transform(record[1][0]) + \
+            [sparse_coo_tensor(dimensions_of_context, record[0], size=self.vectors_dimension, dtype=float32, device=self.device)]
+        return result
 
 
 class SequentialOneHotEncoder(OneHotEncoder):

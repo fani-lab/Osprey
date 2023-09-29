@@ -9,8 +9,9 @@ from sklearn.model_selection import KFold, StratifiedKFold
 from transformers import BertTokenizer
 
 from src.preprocessing.base import BasePreprocessing
-from src.utils.one_hot_encoder import OneHotEncoder, SequentialOneHotEncoder, SequentialOneHotEncoderWithContext
-from src.utils.transformers_encoders import TransformersEmbeddingEncoder, GloveEmbeddingEncoder, SequentialTransformersEmbeddingEncoder, SequentialTransformersEmbeddingEncoderWithContext
+from src.utils.one_hot_encoder import OneHotEncoder, SequentialOneHotEncoder, SequentialOneHotEncoderWithContext, OneHotEncoderWithContext
+from src.utils.transformers_encoders import TransformersEmbeddingEncoder, GloveEmbeddingEncoder, SequentialTransformersEmbeddingEncoder, \
+        SequentialTransformersEmbeddingEncoderWithContext, TransformersEmbeddingEncoderWithContext
 from src.utils.commons import nltk_tokenize, force_open, RegisterableObject
 from src.preprocessing.author_id_remover import AuthorIDReplacerBert
 
@@ -442,6 +443,72 @@ class ConversationBagOfWords(BagOfWordsDataset):
         return [vector/torch.sparse.sum(vector) for vector in vectors]
 
 
+class NAuthorsConversationBagOfWords(ConversationBagOfWords):
+    CONTEXT_LENGTH = 1
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "nauthor-bag-of-words-conversation"
+    
+    def get_data_generator(self, data, pattern):
+        def func():
+            for conversation in data:
+                # for record in sequence:
+                for tokens in conversation[1]:
+                    for token in tokens:
+                        yield pattern(token)
+
+        return func
+
+    def init_encoder(self, tokens_records):
+        encoder = OneHotEncoderWithContext(context_length=self.CONTEXT_LENGTH, vector_size=self.get_vector_size(), device=self.device)
+        logger.info("started generating conversation bag of words vector encoder")
+        pattern = lambda x: x
+        logger.debug("fitting data into one hot encoder")
+        encoder.fit(self.get_data_generator(data=tokens_records, pattern=pattern))
+        return encoder
+
+    def tokenize(self, df) -> list[list[str]]:
+        conversations = [None] * len(df)
+        for i, (_, row) in enumerate(df.iterrows()):
+            conversations[i] = ((row["number_of_authors"]/4.0,), nltk_tokenize((row["text"],)))
+        return conversations
+
+    def preprocess(self):
+        try:
+            if not self.load_from_pkl:
+                raise FileNotFoundError()
+            with open(self.get_session_path("tokens.pkl"), "rb") as f:
+                logger.info("trying to load tokens from file")
+                conversations = pickle.load(f)
+        except FileNotFoundError:
+            logger.info("generating tokens from scratch")
+            self.__new_tokens__ = True
+            conversations = self.tokenize(self.df)
+            logger.info("applying preprocessing modules")
+            for preprocessor in self.preprocessings:
+                logger.info(f"applying {preprocessor.name()}")
+                conversations = [[context, tuple(preprocessor.opt(text))] for context, text in conversations]
+
+        return conversations
+
+    def normalize_vector(self, vectors):
+        logger.info("applying normalization, considering the context/metadata as well")
+        if vectors[0].is_sparse:
+            size = vectors[0].shape
+            for i in range(len(vectors)):
+                vector = vectors[i]
+                sum_all = torch.sum(vector)
+                if sum_all != 0:
+                    contexts = torch.stack([vector[idx] for idx in vector.indices()[0, :self.CONTEXT_LENGTH]])
+                    sum_all -= contexts.sum()
+                    vectors[i] = torch.sparse_coo_tensor(vector.indices(), torch.cat((contexts, vector.values()[self.CONTEXT_LENGTH:]/sum_all)),
+                                                        size, device=self.device)
+            return vectors
+        else:
+            raise NotImplementedError("it is yet to be implemented")
+
+
 class ConversationBagOfWordsWithTriple(ConversationBagOfWords):
     
     @classmethod
@@ -600,6 +667,51 @@ class UncasedBaseBertEmbeddingDataset(TransformersEmbeddingDataset):
         logger.debug("Transformer Embedding Dataset being initialized")
         encoder = TransformersEmbeddingEncoder(transformer_identifier="bert-base-uncased", device=self.device)
         return encoder
+
+
+class NAuthorTransformersEmbeddingDataset(NAuthorsConversationBagOfWords):
+    CONTEXT_LENGTH = 1
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "nauthor-conversation-distilroberta-v1"
+    
+    def init_encoder(self, tokens_records):
+        logger.debug("Transformer Embedding Dataset being initialized")
+        encoder = TransformersEmbeddingEncoderWithContext(context_length=self.CONTEXT_LENGTH, transformer_identifier="sentence-transformers/all-distilroberta-v1", device=self.device)
+        return encoder
+
+    def get_vector_size(self, vectors=None):
+        return 768 + self.CONTEXT_LENGTH
+
+    def tokenize(self, df) -> list[list[str]]:
+        conversations = [None] * len(df)
+        for i, (_, row) in enumerate(df.iterrows()):
+            conversations[i] = ((row["number_of_authors"]/4.0,), nltk_tokenize((row["text"],)))
+        return conversations
+
+    def vectorize(self, tokens_records, encoder):
+        vectors = [None] * len(tokens_records)
+        for i, record in enumerate(tokens_records):
+            vectors[i] = encoder.transform(record)
+        return vectors
+
+    def normalize_vector(self, vectors):
+        logger.info("no additional normalization will be applied")
+        return vectors
+
+
+class NAuthorTransformersBertDataset(NAuthorTransformersEmbeddingDataset):
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "nauthor-conversation-bert"
+    
+    def init_encoder(self, tokens_records):
+        logger.debug("Transformer Embedding Dataset being initialized")
+        encoder = TransformersEmbeddingEncoderWithContext(context_length=self.CONTEXT_LENGTH, transformer_identifier="bert-base-cased", device=self.device)
+        return encoder
+
 
 # Do not use it for now
 class FineTunedBertEmbeddingDataset(TransformersEmbeddingDataset):

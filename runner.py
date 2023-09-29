@@ -14,7 +14,8 @@ from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, Tr
                                TemporalAuthorsSequentialConversationEmbeddingDataset, TemporalSequentialConversationBertBaseDataset,
                                TemporalAuthorsSequentialConversationOneHotDatasetFiltered, SequentialConversationDatasetFiltered,
                                TemporalSequentialConversationOneHotDatasetFiltered, TemporalAuthorsSequentialConversationBertBaseDataset,
-                               TemporalSequentialConversationEmbeddingDataset)
+                               TemporalSequentialConversationEmbeddingDataset, NAuthorsConversationBagOfWords, NAuthorTransformersEmbeddingDataset,
+                               NAuthorTransformersBertDataset)
 from src.utils.loss_functions import WeightedBinaryCrossEntropy, DynamicSuperLoss
 from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule, SuperDynamicLossANN, BertBaseUncasedClassifier, BaseSingleVectorMachine
 from src.mappings import register_mappings, register_mappings_torch, register_command, COMMANDS
@@ -117,6 +118,9 @@ if __name__ == "__main__":
     register_mappings(UncasedBaseBertTokenizedDataset)
     register_mappings(SequentialConversationBertBaseDataset)
     register_mappings(SequentialConversationEmbeddingDataset)
+    register_mappings(NAuthorsConversationBagOfWords)
+    register_mappings(NAuthorTransformersEmbeddingDataset)
+    register_mappings(NAuthorTransformersBertDataset)
 
     register_mappings(WeightedBinaryCrossEntropy)
 

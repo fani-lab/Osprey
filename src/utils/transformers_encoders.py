@@ -7,6 +7,7 @@ import logging
 
 logger = logging.getLogger()
 
+
 class TransformersEmbeddingEncoder:
 
     def __init__(self, device="cpu", transformer_identifier="sentence-transformers/all-distilroberta-v1", special_token=[], *args, **kwargs):
@@ -61,6 +62,7 @@ class GloveEmbeddingEncoder:
     def fit(self, *args, **kwargs):
         pass
 
+
 class SequentialTransformersEmbeddingEncoder(TransformersEmbeddingEncoder):
 
 
@@ -75,6 +77,23 @@ class SequentialTransformersEmbeddingEncoder(TransformersEmbeddingEncoder):
         
         # if len(result) == 0:
         #     return ((self.get_zero_vector(),),)
+        return result
+
+
+class TransformersEmbeddingEncoderWithContext(TransformersEmbeddingEncoder):
+    
+    def get_zero_vector(self):
+        return torch.zeros(768+self.context_length, device=self.device)
+    
+    def __init__(self, context_length, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.context_length = context_length
+    
+    def transform(self, record):
+        if len(record[1][0]) == 0:
+            return self.get_zero_vector()
+        
+        result = torch.cat((torch.tensor(record[0], device=self.device), super().transform(record[1][0])[0]))
         return result
 
 
