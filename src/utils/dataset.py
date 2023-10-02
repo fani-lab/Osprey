@@ -227,7 +227,8 @@ class BaseDataset(Dataset, RegisterableObject):
         self.encoder = self.__init_encoder__(tokens_records=tokens)
 
         vectors = self.__vectorize__(tokens, self.encoder)
-        vectors = self.normalize_vector(vectors)
+        if self.__new_vectors__:
+            vectors = self.normalize_vector(vectors)
         self.update_vector_size(vectors)
         # Persisting changes
         if self.persist_data and self.__new_tokens__:
@@ -500,6 +501,7 @@ class NAuthorsConversationBagOfWords(ConversationBagOfWords):
                 vector = vectors[i]
                 sum_all = torch.sum(vector)
                 if sum_all != 0:
+                    vector = vector.coalesce()
                     contexts = torch.stack([vector[idx] for idx in vector.indices()[0, :self.CONTEXT_LENGTH]])
                     sum_all -= contexts.sum()
                     vectors[i] = torch.sparse_coo_tensor(vector.indices(), torch.cat((contexts, vector.values()[self.CONTEXT_LENGTH:]/sum_all)),
@@ -522,8 +524,8 @@ class ConversationBagOfWordsWithTriple(ConversationBagOfWords):
 class ConversationBagOfWordsCleaned(ConversationBagOfWords):
     
     def filter_records(self, df):
-        logger.info("applying record filtering by 'number_of_authors == 2' & 'number_of_messages > 3'")
-        return df[((df["number_of_authors"] == 2) & (df["number_of_messages"] > 3))]
+        logger.info("applying record filtering by 'number_of_authors >= 2' & 'number_of_messages > 6'")
+        return df[((df["number_of_authors"] >= 2) & (df["number_of_messages"] > 6))]
 
     @classmethod
     def short_name(cls) -> str:
