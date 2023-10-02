@@ -233,6 +233,68 @@ datasets = {
     ),
 
     ######################### All the messages as block of text, Embedding and bag-of-words
+    "nauthor-conversation-dataset-bag-of-words": (
+        "nauthor-bag-of-words-conversation",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/conversation/train.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/",
+            "vector_size": 13000,
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/conversation/test.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "vector_size": 13000,
+            "apply_record_filter": True,
+        }
+    ), 
+
+    "nauthor-conversation-dataset-distilroberta-v1": (
+        "nauthor-conversation-distilroberta-v1",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/conversation/train.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/conversation/test.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "nauthor-conversation-dataset-bert": (
+        "nauthor-conversation-bert",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/conversation/train.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/conversation/test.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
+
     "conversation-dataset-onehot": (
         "conversation-bow",  # short name of the dataset
         {       # train configs
@@ -497,6 +559,61 @@ sessions = {
             "module_session_path": "output-ecir2024",
             "session_path_include_time": False,
             "early_stop": True,
+        },
+    },
+
+    "feedforward-block-of-text-nauthor": {
+        "model": "ann",
+        "commands": [
+            ("train", {
+                "epoch_num": 30,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                }, # nauthor-conversation-dataset-bag-of-words, nauthor-conversation-dataset-distilroberta-v1, nauthor-conversation-dataset-bert
+                {
+                    "dataset": "nauthor-conversation-dataset-distilroberta-v1",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "nauthor-conversation-dataset-distilroberta-v1"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "nauthor-conversation-dataset-distilroberta-v1"}),
+        ],
+        "model_configs": {
+            "dimension_list": list([32]),
+            "dropout_list": [0.0],
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
+            "lr": 0.0005,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
+            "early_stop": True,
+        },
+    },
+
+    "svm-block-of-text-nauthor": {
+        "model": "base-svm",
+        "commands": [
+            ("train", {
+                "weights_checkpoint_path": "",
+                }, # nauthor-conversation-dataset-bag-of-words, nauthor-conversation-dataset-distilroberta-v1, nauthor-conversation-dataset-bert
+                {
+                    "dataset": "nauthor-conversation-dataset-distilroberta-v1",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "nauthor-conversation-dataset-distilroberta-v1"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "nauthor-conversation-dataset-distilroberta-v1"}),
+        ],
+        "model_configs": {
+            "lr": 0,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
         },
     },
 
