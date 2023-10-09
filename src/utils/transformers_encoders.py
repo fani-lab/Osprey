@@ -1,6 +1,8 @@
 from sentence_transformers import SentenceTransformer
 
 import torch
+import numpy as np
+from gensim.models import KeyedVectors
 
 import logging
 
@@ -61,6 +63,44 @@ class GloveEmbeddingEncoder:
 
     def fit(self, *args, **kwargs):
         pass
+
+
+class Word2VecEmbeddingEncoder:
+
+    def __init__(self, embedding_path, device="cpu") -> None:
+        self.device = device
+        self.embedding_path = embedding_path
+        self.__word2vec__ = KeyedVectors.load_word2vec_format(self.embedding_path, binary=True)
+        self.__default_vector__ = torch.zeros(size=(1, 300), device=self.device) # In case you use a different encoder or embedding, change it accordingly
+        self.__zero_vector__ = self.__default_vector__
+
+    def get_vectors(self, tokens):
+        if len(tokens) == 0:
+            return self.__default_vector__
+        vectors = [None]*len(tokens)
+        for i, t in enumerate(tokens):
+            try:
+                vectors[i] = self.__word2vec__.get_vector(t)
+            except KeyError:
+                vectors[i] = np.zeros((1, 300), dtype=np.float32)
+        return torch.tensor(np.vstack(vectors), device=self.device)
+
+    def transform(self, record):
+        
+        results = self.get_vectors(record)
+        if len(results) == 0:
+            return (self.__zero_vector__(),)
+        results = results.sum(dim=0).div(len(results))        
+        return (results,)
+
+
+class SequentialWord2VecEmbeddingEncoder(Word2VecEmbeddingEncoder):
+    def transform(self, record):
+        result = [None]*len(record)
+        for i, sequence_records in enumerate(record):
+            result[i] = super().transform(sequence_records)
+
+        return result
 
 
 class SequentialTransformersEmbeddingEncoder(TransformersEmbeddingEncoder):

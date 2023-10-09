@@ -11,7 +11,8 @@ from transformers import BertTokenizer
 from src.preprocessing.base import BasePreprocessing
 from src.utils.one_hot_encoder import OneHotEncoder, SequentialOneHotEncoder, SequentialOneHotEncoderWithContext, OneHotEncoderWithContext
 from src.utils.transformers_encoders import TransformersEmbeddingEncoder, GloveEmbeddingEncoder, SequentialTransformersEmbeddingEncoder, \
-        SequentialTransformersEmbeddingEncoderWithContext, TransformersEmbeddingEncoderWithContext
+        SequentialTransformersEmbeddingEncoderWithContext, TransformersEmbeddingEncoderWithContext, Word2VecEmbeddingEncoder, \
+        SequentialWord2VecEmbeddingEncoder
 from src.utils.commons import nltk_tokenize, force_open, RegisterableObject
 from src.preprocessing.author_id_remover import AuthorIDReplacerBert
 
@@ -671,6 +672,37 @@ class UncasedBaseBertEmbeddingDataset(TransformersEmbeddingDataset):
         return encoder
 
 
+
+class Word2VecEmbeddingDataset(TransformersEmbeddingDataset):
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "conversation-word2vec"
+    
+    def init_encoder(self, tokens_records):
+        logger.debug("word2vec encoder is being initialized")
+        encoder = Word2VecEmbeddingEncoder(
+            "data/embeddings/GoogleNews-vectors-negative300.bin/GoogleNews-vectors-negative300.bin", self.device)
+
+        return encoder
+
+    def get_vector_size(self, vectors=None):
+        return 300
+
+
+class Word2VecFineTunedEmbeddingDataset(Word2VecEmbeddingDataset):
+    @classmethod
+    def short_name(cls) -> str:
+        return "conversation-word2vec-finetuned"
+    
+    def init_encoder(self, tokens_records):
+        logger.debug("finetuned word2vec encoder is being initialized")
+        encoder = Word2VecEmbeddingEncoder(
+            "data/embeddings/GoogleNews-vectors-negative300.bin/GoogleNews-vectors-negative300-fine-tuned-all.bin", self.device)
+
+        return encoder
+
+
 class NAuthorTransformersEmbeddingDataset(NAuthorsConversationBagOfWords):
     CONTEXT_LENGTH = 1
 
@@ -1014,6 +1046,23 @@ class SequentialConversationEmbeddingDataset(SequentialConversationDataset):
 
     def get_vector_size(self, vectors=None):
         return 768
+
+
+class SequentialWord2VecEmbeddingDataset(SequentialConversationEmbeddingDataset):
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "sequential-word2vec"
+    
+    def init_encoder(self, tokens_records):
+        logger.debug("word2vec encoder is being initialized")
+        encoder = SequentialWord2VecEmbeddingEncoder(
+            "data/embeddings/GoogleNews-vectors-negative300.bin/GoogleNews-vectors-negative300.bin", self.device)
+
+        return encoder
+
+    def get_vector_size(self, vectors=None):
+        return 300
 
 
 class SequentialConversationUniversalSentenceEncoderDataset(SequentialConversationEmbeddingDataset):

@@ -1,6 +1,6 @@
 import torch
 
-__preprocessings__ = ["pr", "sw", "rr", "idr"] ## Just to make it easier to change configurations
+__preprocessings__ = [] ## Just to make it easier to change configurations
 
 datasets = {
     ############## Sequential bag-of-words
@@ -66,6 +66,26 @@ datasets = {
             "preprocessings": __preprocessings__,
             "persist_data": True,
             "vector_size": 13000,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "sequential-conversation-dataset-word2vec": (
+        "sequential-word2vec",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/train.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
             "apply_record_filter": True,
         }
     ),
@@ -239,7 +259,7 @@ datasets = {
             "data_path": "data/dataset-v2/conversation/train.csv",
             "output_path": "data/preprocessed/conversation-dataset-v2/",
             "vector_size": 13000,
-            "load_from_pkl": True,
+            "load_from_pkl": False,
             "preprocessings": __preprocessings__,
             "persist_data": True,
             "apply_record_filter": True,
@@ -247,7 +267,7 @@ datasets = {
         {      # test configs
             "data_path": "data/dataset-v2/conversation/test.csv",
             "output_path": "data/preprocessed/conversation-dataset-v2/test-",
-            "load_from_pkl": True,
+            "load_from_pkl": False,
             "preprocessings": __preprocessings__,
             "persist_data": True,
             "vector_size": 13000,
@@ -356,6 +376,45 @@ datasets = {
             "apply_record_filter": True,
         }
     ),
+    "conversation-dataset-word2vec": (
+        "conversation-word2vec",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/conversation/train.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/conversation/test.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "conversation-dataset-word2vec-finetuned": (
+        "conversation-word2vec-finetuned",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/conversation/train.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/conversation/test.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
 }
 
 sessions = {
@@ -378,6 +437,54 @@ sessions = {
             ),
             ("test", {"weights_checkpoint_path": []}, {"dataset": "conversation-dataset-onehot"}),
             ("eval", {"path": '', "use_current_session": True}, {"dataset": "conversation-dataset-onehot"}),
+        ],
+        "model_configs": {
+            "lr": 0,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
+        },
+    },
+
+    "svm-word2vec": {
+        "model": "base-svm",
+        "commands": [
+            ("train", {
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "conversation-dataset-word2vec",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "conversation-dataset-word2vec"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "conversation-dataset-word2vec"}),
+        ],
+        "model_configs": {
+            "lr": 0,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
+        },
+    },
+
+    "svm-word2vec-finetuned": {
+        "model": "base-svm",
+        "commands": [
+            ("train", {
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "conversation-dataset-word2vec-finetuned",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "conversation-dataset-word2vec-finetuned"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "conversation-dataset-word2vec-finetuned"}),
         ],
         "model_configs": {
             "lr": 0,
@@ -438,6 +545,68 @@ sessions = {
         },
     },
 
+    "feedforward-word2vec": {
+        "model": "ann",
+        "commands": [
+            ("train", {
+                "epoch_num": 30,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "conversation-dataset-word2vec",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "conversation-dataset-word2vec"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "conversation-dataset-word2vec"}),
+        ],
+        "model_configs": {
+            "dimension_list": list([256]),
+            "dropout_list": [0.0],
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
+            "lr": 0.0005,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
+            "early_stop": True,
+        },
+    },
+
+    "feedforward-word2vec-finetuned": {
+        "model": "ann",
+        "commands": [
+            ("train", {
+                "epoch_num": 30,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "conversation-dataset-word2vec-finetuned",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "conversation-dataset-word2vec-finetuned"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "conversation-dataset-word2vec-finetuned"}),
+        ],
+        "model_configs": {
+            "dimension_list": list([256]),
+            "dropout_list": [0.0],
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
+            "lr": 0.0005,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
+            "early_stop": True,
+        },
+    },
+    
     "feedforward-bert": {
         "model": "ann",
         "commands": [
@@ -600,20 +769,113 @@ sessions = {
                 "weights_checkpoint_path": "",
                 }, # nauthor-conversation-dataset-bag-of-words, nauthor-conversation-dataset-distilroberta-v1, nauthor-conversation-dataset-bert
                 {
-                    "dataset": "nauthor-conversation-dataset-distilroberta-v1",
+                    "dataset": "nauthor-conversation-dataset-bag-of-words",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "nauthor-conversation-dataset-distilroberta-v1"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "nauthor-conversation-dataset-distilroberta-v1"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "nauthor-conversation-dataset-bag-of-words"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "nauthor-conversation-dataset-bag-of-words"}),
         ],
         "model_configs": {
             "lr": 0,
             "module_session_path": "output-ecir2024",
             "session_path_include_time": False,
+        },
+    },
+    ############### sequential word2vec
+    "lstm-word2vec": {
+        "model": "lstm",
+        "commands": [
+            ("train", {
+                "epoch_num": 30,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "sequential-conversation-dataset-word2vec",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "sequential-conversation-dataset-word2vec"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "sequential-conversation-dataset-word2vec"}),
+        ],
+        "model_configs": {
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
+            "lr": 0.0005,
+            'hidden_size': 514,
+            'num_layers': 1,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
+            "early_stop": True,
+        },
+    },
+
+    "gru-word2vec": {
+        "model": "gru",
+        "commands": [
+            ("train", {
+                "epoch_num": 30,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "sequential-conversation-dataset-word2vec",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "sequential-conversation-dataset-word2vec"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "sequential-conversation-dataset-word2vec"}),
+        ],
+        "model_configs": {
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
+            "lr": 0.0005,
+            'hidden_size': 514,
+            'num_layers': 1,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
+            "early_stop": True,
+        },
+    },
+
+    "rnn-word2vec": {
+        "model": "base-rnn",
+        "commands": [
+            ("train", {
+                "epoch_num": 30,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "sequential-conversation-dataset-word2vec",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "sequential-conversation-dataset-word2vec"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "sequential-conversation-dataset-word2vec"}),
+        ],
+        "model_configs": {
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
+            "lr": 0.0005,
+            'hidden_size': 514,
+            'num_layers': 1,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
+            "early_stop": True,
         },
     },
 
