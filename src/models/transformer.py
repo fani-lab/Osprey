@@ -9,25 +9,23 @@ import logging
 logger = logging.getLogger()
 
 
-class BertBaseUncasedClassifier(AbstractFeedForward):
+class DistilrobertaFinetuningClassifier(AbstractFeedForward):
 
     def __init__(self, dropout=0.0, *args, **kwargs):
         super(AbstractFeedForward, self).__init__(*args, dimension_list=[], dropout_list=[], **kwargs)
-        config = AutoConfig.from_pretrained('bert-base-uncased')
+        config = AutoConfig.from_pretrained('distilroberta-base')
         config.hidden_dropout_prob = dropout
         config.num_labels = OUTPUT_LAYER_NODES
-        self.core = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased", config=config)
-        # self.core = AutoModel.from_pretrained("bert-base-uncased") #
-        # self.out = torch.nn.Linear(768, OUTPUT_LAYER_NODES, device=self.device)
+        self.core = AutoModelForSequenceClassification.from_pretrained("distilroberta-base", config=config)
 
     def forward(self, x):
-        x = self.core(input_ids=x[0], attention_mask=x[1], token_type_ids=x[2])
+        x = self.core(input_ids=x[0], attention_mask=x[1])
 
         return x[0]
     
     @classmethod
     def short_name(cls) -> str:
-        return "bert-classifier"
+        return "distilroberta-classifier"
     
     def get_dataloaders(self, dataset, train_ids, validation_ids, batch_size):
         train_subsampler = SubsetRandomSampler(train_ids)

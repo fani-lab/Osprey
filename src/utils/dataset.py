@@ -1,12 +1,14 @@
 import logging
 import pickle
 
+from tqdm import tqdm
 import pandas as pd
 import numpy as np
 import torch
 from torch.utils.data import Dataset
 from sklearn.model_selection import KFold, StratifiedKFold
-from transformers import BertTokenizer
+from transformers import BertTokenizer, AutoTokenizer
+from nltk.tokenize.treebank import TreebankWordDetokenizer
 
 from src.preprocessing.base import BasePreprocessing
 from src.utils.one_hot_encoder import OneHotEncoder, SequentialOneHotEncoder, SequentialOneHotEncoderWithContext, OneHotEncoderWithContext
@@ -270,13 +272,13 @@ class BaseDataset(Dataset, RegisterableObject):
     def shape(self):
         return (len(self.data), self.get_vector_size())
 
-# It is only for handling fine-tuning
-class FineTuningBertDataset(BaseDataset):
 
-    def __init__(self, tokenizer_path="bert-base-uncased", *args, **kwargs):
+# It is only for handling fine-tuning
+class FineTuningDistilrobertaDataset(BaseDataset):
+
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.tokenizer_path = tokenizer_path
-        self.tokenizer = None
+        self.transformer_model = "distilroberta-base"
 
         self.vector_size = 512
     
@@ -304,27 +306,28 @@ class FineTuningBertDataset(BaseDataset):
 
     @classmethod
     def short_name(cls) -> str:
-        return "finetuning-bert"
+        return "finetuning-distilroberta"
     
     def tokenize(self, input) -> tuple[list]:
-        logger.info("using BertTokenizer.`bert-base-uncased`")
-        self.tokenizer = BertTokenizer.from_pretrained(self.tokenizer_path, do_lower_case=True)
+        logger.info(f"using tokenizer with id: .`{self.transformer_model}`")
+        tokenizer = AutoTokenizer.from_pretrained(self.transformer_model)
+        treebank = TreebankWordDetokenizer()
 
         input_ids = [None] * len(input)
         attention_masks = [None] * len(input)
-        for i, tokens in enumerate(input):
-            encoded = self.tokenizer.encode_plus(" ".join(tokens), add_special_tokens=True, max_length=512, pad_to_max_length=True, return_attention_mask=True, return_tensors='pt')
+        for i, tokens in enumerate(tqdm(input, leave=False)):
+            encoded = tokenizer(treebank.detokenize(tokens), padding="max_length", truncation=True, pad_to_max_length=True, return_attention_mask=True, return_tensors='pt')
             attention_masks[i] = encoded["attention_mask"]
             input_ids[i]       = encoded["input_ids"]
         input_ids       = torch.cat(input_ids, dim=0)
         attention_masks = torch.cat(attention_masks, dim=0)
+        del tokenizer
         return input_ids, attention_masks
     
     def prepare(self):
         if self.already_prepared:
             logger.debug("already called prepared")
             return
-        
         
         self.input_ids, self.attention_masks = self.preprocess()
 
@@ -341,18 +344,19 @@ class FineTuningBertDataset(BaseDataset):
                 pickle.dump(self.attention_masks, f)
 
         self.already_prepared = True
+        self.data = self.input_ids
         self.labels = self.get_labels()
         logger.info("data preparation finished")
     
     def get_vector_size(self, vectors=None):
-        return 512 # it is the embedding size of bert-base; check BERT docs
+        return self.vector_size # it is the embedding size of bert-base; check BERT docs
 
     def update_vector_size(self, vectors):
         self.vector_size = 512
         return self.vector_size
 
     def __getitem__(self, index):
-        return self.attention_masks[index], self.input_ids[index], self.labels[index]
+        return (self.input_ids[index], self.attention_masks[index]), self.labels[index]
 
     def to(self, device):
         self.labels = self.labels.to(device)

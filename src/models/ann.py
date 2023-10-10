@@ -18,6 +18,7 @@ from transformers.modeling_utils import PreTrainedModel
 
 import matplotlib.pyplot as plt
 import numpy as np
+from tqdm import tqdm
 
 
 logger = logging.getLogger()
@@ -112,7 +113,7 @@ class AbstractFeedForward(Baseline, torch.nn.Module):
                 self.train()
                 loss = 0
                 epoch_loss = 0
-                for (X, y) in (train_loader):
+                for (X, y) in tqdm(train_loader, leave=False):
                     self.optimizer.zero_grad()
                     if isinstance(X, tuple) or isinstance(X, list):
                         X = [l.to(self.device) for l in X]

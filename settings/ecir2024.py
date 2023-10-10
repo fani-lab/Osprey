@@ -415,9 +415,59 @@ datasets = {
             "apply_record_filter": True,
         }
     ),
+
+    ########### Fine tuned model
+    "conversation-finetuning-distilroberta": (
+        "finetuning-distilroberta",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/conversation/train.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/conversation/test.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
 }
 
 sessions = {
+    ############### Fine tuning model
+    "finetuning-distilroberta": {
+        "model": "distilroberta-classifier",
+        "commands": [
+            ("train", {
+                "epoch_num": 4,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": "conversation-finetuning-distilroberta",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "conversation-finetuning-distilroberta"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "conversation-finetuning-distilroberta"}),
+        ],
+        "model_configs": {
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
+            "lr": 5e-5,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
+        },
+    },
+
     ############### Non recurrent models
     "svm-rbf-bow": {
         "model": "base-svm",

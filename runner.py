@@ -9,7 +9,7 @@ from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, Tr
                                CaseSensitiveBertEmbeddingDataset, GloveEmbeddingDataset, ConversationBagOfWords,
                                CNNConversationBagOfWords, ConversationBagOfWordsCleaned, SequentialConversationDataset,
                                ConversationBagOfWordsWithTriple, TemporalSequentialConversationOneHotDataset, TemporalAuthorsSequentialConversationOneHotDataset,
-                               FineTuningBertDataset, UncasedBaseBertEmbeddingDataset, UncasedBaseBertTokenizedDataset,
+                               FineTuningDistilrobertaDataset, UncasedBaseBertEmbeddingDataset, UncasedBaseBertTokenizedDataset,
                                SequentialConversationBertBaseDataset, SequentialConversationEmbeddingDataset,
                                TemporalAuthorsSequentialConversationEmbeddingDataset, TemporalSequentialConversationBertBaseDataset,
                                TemporalAuthorsSequentialConversationOneHotDatasetFiltered, SequentialConversationDatasetFiltered,
@@ -18,7 +18,7 @@ from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, Tr
                                NAuthorTransformersBertDataset, Word2VecEmbeddingDataset, Word2VecFineTunedEmbeddingDataset,
                                SequentialWord2VecEmbeddingDataset)
 from src.utils.loss_functions import WeightedBinaryCrossEntropy, DynamicSuperLoss
-from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule, SuperDynamicLossANN, BertBaseUncasedClassifier, BaseSingleVectorMachine
+from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule, SuperDynamicLossANN, DistilrobertaFinetuningClassifier, BaseSingleVectorMachine
 from src.mappings import register_mappings, register_mappings_torch, register_command, COMMANDS
 import settings
 from src.scripts import (CreateConversations, BalanceDatasetsForVersionTwo, CreateConversationToySet,
@@ -115,7 +115,7 @@ if __name__ == "__main__":
     register_mappings(TemporalAuthorsSequentialConversationOneHotDatasetFiltered)
     register_mappings(SequentialConversationDatasetFiltered)
     register_mappings(TemporalSequentialConversationOneHotDatasetFiltered)
-    register_mappings(FineTuningBertDataset)
+    register_mappings(FineTuningDistilrobertaDataset)
     register_mappings(UncasedBaseBertTokenizedDataset)
     register_mappings(SequentialConversationBertBaseDataset)
     register_mappings(SequentialConversationEmbeddingDataset)
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     register_mappings(LSTMModule)
     register_mappings(GRUModule)
     register_mappings(SuperDynamicLossANN)
-    register_mappings(BertBaseUncasedClassifier)
+    register_mappings(DistilrobertaFinetuningClassifier)
     register_mappings(BaseSingleVectorMachine)
 
     parser = init_parser()
