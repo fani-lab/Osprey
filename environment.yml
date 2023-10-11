@@ -26,3 +26,4 @@ dependencies:
   - certifi
   - openssl
   - pillow==8.3.2
+  - accelerate
