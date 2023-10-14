@@ -70,6 +70,8 @@ datasets = {
         }
     ),
 
+    ############### Word2vec sequential
+
     "sequential-conversation-dataset-word2vec": (
         "sequential-word2vec",  # short name of the dataset
         {       # train configs
@@ -89,6 +91,47 @@ datasets = {
             "apply_record_filter": True,
         }
     ),
+
+    "temporal-nauthor-sequential-conversation-dataset-word2vec": (
+        "temporal-nauthor-sequential-word2vec",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/train.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "temporal-nauthor-sequential-conversation-dataset-word2vec-finetuned": (
+        "temporal-nauthor-sequential-word2vec-finetuned",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/train.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
+
 
     ############## Sequential Embedding distilroberta
     "sequential-conversation-v2-dataset-distilroberta": (
@@ -133,6 +176,26 @@ datasets = {
 
     "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta": (
         "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/train.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "temporal-nauthor-sequential-conversation-dataset-distilroberta-pretrained": (
+        "temporal-nauthor-sequential-distilroberta-more-trained",  # short name of the dataset
         {       # train configs
             "data_path": "data/dataset-v2/train.csv",
             "output_path": "data/preprocessed/sequential-v2/",
@@ -315,6 +378,46 @@ datasets = {
         }
     ),
 
+    "nauthor-conversation-dataset-word2vec": (
+        "nauthor-conversation-word2vec",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/conversation/train.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/conversation/test.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "nauthor-conversation-dataset-word2vec-finetuned": (
+        "nauthor-conversation-word2vec-finetuned",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/conversation/train.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/conversation/test.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
+
     "conversation-dataset-onehot": (
         "conversation-bow",  # short name of the dataset
         {       # train configs
@@ -440,11 +543,11 @@ datasets = {
 
 sessions = {
     ############### Fine tuning model
-    "finetuning-distilroberta": {
+    "finetuning-distilroberta-10": {
         "model": "distilroberta-classifier",
         "commands": [
             ("train", {
-                "epoch_num": 4,
+                "epoch_num": 10,
                 "batch_size": 8,
                 "weights_checkpoint_path": "",
                 },
@@ -452,7 +555,7 @@ sessions = {
                     "dataset": "conversation-finetuning-distilroberta",
                     "rerun_splitting": False,
                     "persist_splits": True,
-                    "load_splits_from": "",
+                    "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
@@ -788,17 +891,19 @@ sessions = {
                 "epoch_num": 30,
                 "batch_size": 8,
                 "weights_checkpoint_path": "",
-                }, # nauthor-conversation-dataset-bag-of-words, nauthor-conversation-dataset-distilroberta-v1, nauthor-conversation-dataset-bert
+                },  # nauthor-conversation-dataset-bag-of-words, nauthor-conversation-dataset-distilroberta-v1, nauthor-conversation-dataset-bert
+                    # nauthor-conversation-dataset-word2vec, nauthor-conversation-dataset-word2vec-finetuned
                 {
-                    "dataset": "nauthor-conversation-dataset-distilroberta-v1",
+                    "dataset": "nauthor-conversation-dataset-word2vec-finetuned",
                     "rerun_splitting": False,
-                    "persist_splits": True,
-                    "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
+                    "persist_splits": False,
+                    "load_splits_from": "",
+                    # "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "nauthor-conversation-dataset-distilroberta-v1"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "nauthor-conversation-dataset-distilroberta-v1"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "nauthor-conversation-dataset-word2vec-finetuned"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "nauthor-conversation-dataset-word2vec-finetuned"}),
         ],
         "model_configs": {
             "dimension_list": list([32]),
@@ -817,17 +922,17 @@ sessions = {
         "commands": [
             ("train", {
                 "weights_checkpoint_path": "",
-                }, # nauthor-conversation-dataset-bag-of-words, nauthor-conversation-dataset-distilroberta-v1, nauthor-conversation-dataset-bert
+                }, # nauthor-conversation-dataset-bag-of-words, nauthor-conversation-dataset-distilroberta-v1, nauthor-conversation-dataset-bert, nauthor-conversation-dataset-word2vec
                 {
-                    "dataset": "nauthor-conversation-dataset-bag-of-words",
+                    "dataset": "nauthor-conversation-dataset-word2vec-finetuned",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "nauthor-conversation-dataset-bag-of-words"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "nauthor-conversation-dataset-bag-of-words"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "nauthor-conversation-dataset-word2vec-finetuned"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "nauthor-conversation-dataset-word2vec-finetuned"}),
         ],
         "model_configs": {
             "lr": 0,
@@ -844,16 +949,16 @@ sessions = {
                 "batch_size": 8,
                 "weights_checkpoint_path": "",
                 },
-                {
-                    "dataset": "sequential-conversation-dataset-word2vec",
+                { # sequential-conversation-dataset-word2vec, temporal-nauthor-sequential-conversation-dataset-word2vec, temporal-nauthor-sequential-conversation-dataset-word2vec-finetuned
+                    "dataset": "temporal-nauthor-sequential-conversation-dataset-word2vec-finetuned",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "sequential-conversation-dataset-word2vec"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "sequential-conversation-dataset-word2vec"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-nauthor-sequential-conversation-dataset-word2vec-finetuned"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-nauthor-sequential-conversation-dataset-word2vec-finetuned"}),
         ],
         "model_configs": {
             "activation": ("relu", dict()),
@@ -876,15 +981,15 @@ sessions = {
                 "weights_checkpoint_path": "",
                 },
                 {
-                    "dataset": "sequential-conversation-dataset-word2vec",
+                    "dataset": "temporal-nauthor-sequential-conversation-dataset-word2vec-finetuned",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "sequential-conversation-dataset-word2vec"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "sequential-conversation-dataset-word2vec"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-nauthor-sequential-conversation-dataset-word2vec-finetuned"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-nauthor-sequential-conversation-dataset-word2vec-finetuned"}),
         ],
         "model_configs": {
             "activation": ("relu", dict()),
@@ -907,15 +1012,15 @@ sessions = {
                 "weights_checkpoint_path": "",
                 },
                 {
-                    "dataset": "sequential-conversation-dataset-word2vec",
+                    "dataset": "temporal-nauthor-sequential-conversation-dataset-word2vec-finetuned",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "sequential-conversation-dataset-word2vec"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "sequential-conversation-dataset-word2vec"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-nauthor-sequential-conversation-dataset-word2vec-finetuned"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-nauthor-sequential-conversation-dataset-word2vec-finetuned"}),
         ],
         "model_configs": {
             "activation": ("relu", dict()),
@@ -938,16 +1043,16 @@ sessions = {
                 "batch_size": 8,
                 "weights_checkpoint_path": "",
                 },
-                {
-                    "dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta",
+                { # temporal-nauthor-sequential-conversation-v2-dataset-distilroberta, temporal-nauthor-sequential-conversation-dataset-distilroberta-pretrained
+                    "dataset": "temporal-nauthor-sequential-conversation-dataset-distilroberta-pretrained",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-nauthor-sequential-conversation-dataset-distilroberta-pretrained"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-nauthor-sequential-conversation-dataset-distilroberta-pretrained"}),
         ],
         "model_configs": {
             "activation": ("relu", dict()),
@@ -970,15 +1075,15 @@ sessions = {
                 "weights_checkpoint_path": "",
                 },
                 {
-                    "dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta",
+                    "dataset": "temporal-nauthor-sequential-conversation-dataset-distilroberta-pretrained",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-nauthor-sequential-conversation-dataset-distilroberta-pretrained"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-nauthor-sequential-conversation-dataset-distilroberta-pretrained"}),
         ],
         "model_configs": {
             "activation": ("relu", dict()),
@@ -1001,15 +1106,15 @@ sessions = {
                 "weights_checkpoint_path": "",
                 },
                 {
-                    "dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta",
+                    "dataset": "temporal-nauthor-sequential-conversation-dataset-distilroberta-pretrained",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-nauthor-sequential-conversation-dataset-distilroberta-pretrained"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-nauthor-sequential-conversation-dataset-distilroberta-pretrained"}),
         ],
         "model_configs": {
             "activation": ("relu", dict()),

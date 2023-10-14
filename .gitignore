@@ -12,3 +12,4 @@ output*/
 *.jpg
 *.jpeg
 *.fig
+models/*

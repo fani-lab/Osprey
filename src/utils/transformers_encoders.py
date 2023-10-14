@@ -93,6 +93,26 @@ class Word2VecEmbeddingEncoder:
         results = results.sum(dim=0).div(len(results))        
         return (results,)
 
+    def fit(self, *args, **kwargs):
+        pass
+
+
+class Word2VecEmbeddingEncoderWithContext(Word2VecEmbeddingEncoder):
+    
+    def get_zero_vector(self):
+        return torch.zeros(300+self.context_length, device=self.device)
+    
+    def __init__(self, context_length, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.context_length = context_length
+    
+    def transform(self, record):
+        if len(record[1][0]) == 0:
+            return self.get_zero_vector()
+        
+        result = torch.cat((torch.tensor(record[0], device=self.device), super().transform(record[1][0])[0]))
+        return result
+
 
 class SequentialWord2VecEmbeddingEncoder(Word2VecEmbeddingEncoder):
     def transform(self, record):
@@ -100,6 +120,28 @@ class SequentialWord2VecEmbeddingEncoder(Word2VecEmbeddingEncoder):
         for i, sequence_records in enumerate(record):
             result[i] = super().transform(sequence_records)
 
+        return result
+
+
+class SequentialTransformersWord2VecEncoderWithContext(Word2VecEmbeddingEncoder):
+    
+    def __init__(self, context_length, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.context_length = context_length
+    
+    def transform(self, record):
+        try:
+            result = [None]*len(record[-1])
+        except:
+            result = []
+
+        contexts = [context for context in zip(*record[0])]
+        for i, (context, sequence_records) in enumerate(zip(contexts, record[1])):
+            temp = torch.cat((torch.tensor(context, device=self.device), super().transform(sequence_records)[0]))
+            result[i] = temp
+        
+        if len(result) == 0:
+            return ((self.get_zero_vector(),),)
         return result
 
 

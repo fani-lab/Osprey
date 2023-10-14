@@ -14,7 +14,7 @@ from src.preprocessing.base import BasePreprocessing
 from src.utils.one_hot_encoder import OneHotEncoder, SequentialOneHotEncoder, SequentialOneHotEncoderWithContext, OneHotEncoderWithContext
 from src.utils.transformers_encoders import TransformersEmbeddingEncoder, GloveEmbeddingEncoder, SequentialTransformersEmbeddingEncoder, \
         SequentialTransformersEmbeddingEncoderWithContext, TransformersEmbeddingEncoderWithContext, Word2VecEmbeddingEncoder, \
-        SequentialWord2VecEmbeddingEncoder
+        SequentialWord2VecEmbeddingEncoder, Word2VecEmbeddingEncoderWithContext, SequentialTransformersWord2VecEncoderWithContext
 from src.utils.commons import nltk_tokenize, force_open, RegisterableObject
 from src.preprocessing.author_id_remover import AuthorIDReplacerBert
 
@@ -676,7 +676,6 @@ class UncasedBaseBertEmbeddingDataset(TransformersEmbeddingDataset):
         return encoder
 
 
-
 class Word2VecEmbeddingDataset(TransformersEmbeddingDataset):
 
     @classmethod
@@ -737,6 +736,37 @@ class NAuthorTransformersEmbeddingDataset(NAuthorsConversationBagOfWords):
     def normalize_vector(self, vectors):
         logger.info("no additional normalization will be applied")
         return vectors
+
+
+class NAuthorWord2VecEmbeddingDataset(NAuthorTransformersEmbeddingDataset):
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "nauthor-conversation-word2vec"
+    
+    def init_encoder(self, tokens_records):
+        logger.debug("word2vec encoder is being initialized")
+        encoder = Word2VecEmbeddingEncoderWithContext(context_length=self.CONTEXT_LENGTH, device=self.device,
+            embedding_path="data/embeddings/GoogleNews-vectors-negative300.bin/GoogleNews-vectors-negative300.bin")
+
+        return encoder
+
+    def get_vector_size(self, vectors=None):
+        return 300 + self.CONTEXT_LENGTH
+
+
+class NAuthorFinetunedWord2VecEmbeddingDataset(NAuthorWord2VecEmbeddingDataset):
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "nauthor-conversation-word2vec-finetuned"
+    
+    def init_encoder(self, tokens_records):
+        logger.debug("word2vec encoder is being initialized")
+        encoder = Word2VecEmbeddingEncoderWithContext(context_length=self.CONTEXT_LENGTH, device=self.device,
+            embedding_path="data/embeddings/GoogleNews-vectors-negative300.bin/GoogleNews-vectors-negative300-fine-tuned-all.bin")
+
+        return encoder
 
 
 class NAuthorTransformersBertDataset(NAuthorTransformersEmbeddingDataset):
@@ -1159,6 +1189,18 @@ class TemporalAuthorsSequentialConversationEmbeddingDataset(BaseContextualSequen
         return messages
 
 
+class TemporalAuthorsSequentialConversationDistilrobertaPretainedDataset(TemporalAuthorsSequentialConversationEmbeddingDataset):
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "temporal-nauthor-sequential-distilroberta-more-trained"
+
+    def init_encoder(self, tokens_records):
+        logger.debug("initializing sequential transformer embedding encoder with context: distilroberta-base pretraiend")
+        encoder = SequentialTransformersEmbeddingEncoderWithContext(context_length=self.CONTEXT_LENGTH, transformer_identifier="models/distilroberta-base-more-trained/", device=self.device)
+        return encoder
+
+
 class SequentialConversationBertBaseDataset(SequentialConversationEmbeddingDataset):
     @classmethod
     def short_name(cls) -> str:
@@ -1201,3 +1243,36 @@ class TemporalAuthorsSequentialConversationBertBaseDataset(TemporalAuthorsSequen
 
     def get_vector_size(self, vectors=None):
         return 768
+
+
+class TemporalAuthorsSequentialConversationWord2VecDataset(TemporalAuthorsSequentialConversationEmbeddingDataset):
+    @classmethod
+    def short_name(cls) -> str:
+        return "temporal-nauthor-sequential-word2vec"
+    
+    def init_encoder(self, tokens_records):
+        logger.debug("word2vec encoder is being initialized")
+        encoder = SequentialTransformersWord2VecEncoderWithContext(self.CONTEXT_LENGTH,
+            "data/embeddings/GoogleNews-vectors-negative300.bin/GoogleNews-vectors-negative300.bin", self.device)
+
+        return encoder
+
+    def get_vector_size(self, vectors=None):
+        return 300+self.CONTEXT_LENGTH
+
+
+class TemporalAuthorsSequentialConversationFinetunedWord2VecDataset(TemporalAuthorsSequentialConversationWord2VecDataset):
+    @classmethod
+    def short_name(cls) -> str:
+        return "temporal-nauthor-sequential-word2vec-finetuned"
+    
+    def init_encoder(self, tokens_records):
+        logger.debug("word2vec encoder is being initialized")
+        encoder = SequentialTransformersWord2VecEncoderWithContext(self.CONTEXT_LENGTH,
+            "data/embeddings/GoogleNews-vectors-negative300.bin/GoogleNews-vectors-negative300-fine-tuned-all.bin", self.device)
+
+        return encoder
+
+    def get_vector_size(self, vectors=None):
+        return 300+self.CONTEXT_LENGTH
+

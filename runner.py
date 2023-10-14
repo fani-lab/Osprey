@@ -16,7 +16,9 @@ from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, Tr
                                TemporalSequentialConversationOneHotDatasetFiltered, TemporalAuthorsSequentialConversationBertBaseDataset,
                                TemporalSequentialConversationEmbeddingDataset, NAuthorsConversationBagOfWords, NAuthorTransformersEmbeddingDataset,
                                NAuthorTransformersBertDataset, Word2VecEmbeddingDataset, Word2VecFineTunedEmbeddingDataset,
-                               SequentialWord2VecEmbeddingDataset)
+                               SequentialWord2VecEmbeddingDataset, NAuthorWord2VecEmbeddingDataset, NAuthorFinetunedWord2VecEmbeddingDataset,
+                               TemporalAuthorsSequentialConversationWord2VecDataset, TemporalAuthorsSequentialConversationFinetunedWord2VecDataset,
+                               TemporalAuthorsSequentialConversationDistilrobertaPretainedDataset)
 from src.utils.loss_functions import WeightedBinaryCrossEntropy, DynamicSuperLoss
 from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule, SuperDynamicLossANN, DistilrobertaFinetuningClassifier, BaseSingleVectorMachine
 from src.mappings import register_mappings, register_mappings_torch, register_command, COMMANDS
@@ -119,10 +121,15 @@ if __name__ == "__main__":
     register_mappings(UncasedBaseBertTokenizedDataset)
     register_mappings(SequentialConversationBertBaseDataset)
     register_mappings(SequentialConversationEmbeddingDataset)
+    register_mappings(TemporalAuthorsSequentialConversationDistilrobertaPretainedDataset)
     register_mappings(SequentialWord2VecEmbeddingDataset)
+    register_mappings(TemporalAuthorsSequentialConversationWord2VecDataset)
+    register_mappings(TemporalAuthorsSequentialConversationFinetunedWord2VecDataset)
     register_mappings(NAuthorsConversationBagOfWords)
     register_mappings(NAuthorTransformersEmbeddingDataset)
     register_mappings(NAuthorTransformersBertDataset)
+    register_mappings(NAuthorWord2VecEmbeddingDataset)
+    register_mappings(NAuthorFinetunedWord2VecEmbeddingDataset)
     register_mappings(Word2VecEmbeddingDataset)
     register_mappings(Word2VecFineTunedEmbeddingDataset)
 
