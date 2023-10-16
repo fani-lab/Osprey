@@ -18,7 +18,8 @@ from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, Tr
                                NAuthorTransformersBertDataset, Word2VecEmbeddingDataset, Word2VecFineTunedEmbeddingDataset,
                                SequentialWord2VecEmbeddingDataset, NAuthorWord2VecEmbeddingDataset, NAuthorFinetunedWord2VecEmbeddingDataset,
                                TemporalAuthorsSequentialConversationWord2VecDataset, TemporalAuthorsSequentialConversationFinetunedWord2VecDataset,
-                               TemporalAuthorsSequentialConversationDistilrobertaPretainedDataset)
+                               TemporalAuthorsSequentialConversationDistilrobertaPretainedDataset, SequentialWord2VecFinetunedDataset,
+                               TransformersDistilrobertaFinedtunedDataset, SequentialConversationDistilrobertaFinetunedDataset)
 from src.utils.loss_functions import WeightedBinaryCrossEntropy, DynamicSuperLoss
 from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule, SuperDynamicLossANN, DistilrobertaFinetuningClassifier, BaseSingleVectorMachine
 from src.mappings import register_mappings, register_mappings_torch, register_command, COMMANDS
@@ -100,6 +101,7 @@ if __name__ == "__main__":
     register_mappings(BagOfWordsDataset)
     register_mappings(TimeBasedBagOfWordsDataset)
     register_mappings(TransformersEmbeddingDataset)
+    register_mappings(TransformersDistilrobertaFinedtunedDataset)
     register_mappings(UncasedBaseBertEmbeddingDataset)
     register_mappings(CaseSensitiveBertEmbeddingDataset)
     register_mappings(GloveEmbeddingDataset)
@@ -123,6 +125,8 @@ if __name__ == "__main__":
     register_mappings(SequentialConversationEmbeddingDataset)
     register_mappings(TemporalAuthorsSequentialConversationDistilrobertaPretainedDataset)
     register_mappings(SequentialWord2VecEmbeddingDataset)
+    register_mappings(SequentialWord2VecFinetunedDataset)
+    register_mappings(SequentialConversationDistilrobertaFinetunedDataset)
     register_mappings(TemporalAuthorsSequentialConversationWord2VecDataset)
     register_mappings(TemporalAuthorsSequentialConversationFinetunedWord2VecDataset)
     register_mappings(NAuthorsConversationBagOfWords)

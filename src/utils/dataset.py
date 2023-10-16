@@ -664,6 +664,18 @@ class TransformersEmbeddingDataset(BaseDataset, RegisterableObject):
         return df[(df["number_of_authors"] >= 2) & (df["number_of_messages"] > 6)]
 
 
+class TransformersDistilrobertaFinedtunedDataset(TransformersEmbeddingDataset):
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "conversation-distilroberta-more-trained"
+        
+    def init_encoder(self, tokens_records):
+        logger.debug("Transformer distilroberta more trained is being initialized")
+        encoder = TransformersEmbeddingEncoder(transformer_identifier="models/distilroberta-base-more-trained/", device=self.device)
+        return encoder
+
+
 class UncasedBaseBertEmbeddingDataset(TransformersEmbeddingDataset):
     
     @classmethod
@@ -1082,6 +1094,22 @@ class SequentialConversationEmbeddingDataset(SequentialConversationDataset):
         return 768
 
 
+class SequentialConversationDistilrobertaFinetunedDataset(SequentialConversationEmbeddingDataset):
+    
+    @classmethod
+    def short_name(cls) -> str:
+        return "sequential-distilroberta-more-trained"
+
+    def init_encoder(self, tokens_records):
+        logger.debug("initializing sequential transformer embedding encoder: distilroberta-base pretraiend")
+        encoder = SequentialTransformersEmbeddingEncoder(context_length=self.CONTEXT_LENGTH, transformer_identifier="models/distilroberta-base-more-trained/", device=self.device)
+        return encoder
+    
+    def get_vector_size(self, vectors=None):
+        return 768
+
+
+
 class SequentialWord2VecEmbeddingDataset(SequentialConversationEmbeddingDataset):
 
     @classmethod
@@ -1092,6 +1120,23 @@ class SequentialWord2VecEmbeddingDataset(SequentialConversationEmbeddingDataset)
         logger.debug("word2vec encoder is being initialized")
         encoder = SequentialWord2VecEmbeddingEncoder(
             "data/embeddings/GoogleNews-vectors-negative300.bin/GoogleNews-vectors-negative300.bin", self.device)
+
+        return encoder
+
+    def get_vector_size(self, vectors=None):
+        return 300
+
+
+class SequentialWord2VecFinetunedDataset(SequentialConversationEmbeddingDataset):
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "sequential-word2vec-finetuned"
+    
+    def init_encoder(self, tokens_records):
+        logger.debug("word2vec encoder is being initialized")
+        encoder = SequentialWord2VecEmbeddingEncoder(
+            "data/embeddings/GoogleNews-vectors-negative300.bin/GoogleNews-vectors-negative300-fine-tuned-all.bin", self.device)
 
         return encoder
 
