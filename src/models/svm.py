@@ -20,7 +20,7 @@ class BaseSingleVectorMachine(Baseline):
     def __init__(self, *args, **kwargs):
         Baseline.__init__(self, *args, **kwargs)
         self.device = "cpu"
-        self.svm = SVC(kernel="rbf", )
+        self.svm = SVC(kernel="rbf", max_iter=20, probability=True)
 
     def to(self, *args, **kwargs):
         logger.warning("this model only runs on CPU")
@@ -64,7 +64,7 @@ class BaseSingleVectorMachine(Baseline):
             for X, y in test_dataloader:
                 X = X.to_dense().cpu()
                 y = y.cpu().squeeze()
-                y_hat = self.svm.predict(X)
+                y_hat = torch.tensor(self.svm.predict_proba(X)[:, 1])
                 y_hat = torch.tensor(y_hat)
                 all_preds.extend(y_hat)
                 all_targets.extend(y)

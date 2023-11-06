@@ -79,12 +79,16 @@ def get_stats_v2(data):
     chatters_count  = len(set(data["author_id"]))
     conversations = data.groupby("conv_id")
     predatory_conversations = data[data["predatory_conv"] > 0.0].groupby("conv_id")
+    non_predatory_conversations = data[data["predatory_conv"] == 0.0].groupby("conv_id")
 
     conversations_authors_count = conversations.apply(lambda x: len(set(x["author_id"])))
     conversations_messages_count = conversations.apply(lambda x: x.shape[0])
 
     predatory_conversations_authors_count = predatory_conversations.apply(lambda x: len(set(x["author_id"])))
+    non_predatory_conversations_authors_count = non_predatory_conversations.apply(lambda x: len(set(x["author_id"])))
     predatory_conversations_messages_count = predatory_conversations.apply(lambda x: x.shape[0])
+    non_predatory_conversations_messages_count = non_predatory_conversations.apply(lambda x: x.shape[0])
+
     
     stats = {
         "number_of_chatters": chatters_count,
@@ -114,6 +118,7 @@ def get_stats_v2(data):
             "n==1": (conversations_messages_count[conversations_authors_count == 1].mean()),
             "n==2": (conversations_messages_count[conversations_authors_count == 2].mean()),
             "n>2": (conversations_messages_count[conversations_authors_count > 2].mean()),
+            'all': conversations_messages_count.mean(),
         },
         
         "number_of_predatory_conversations": len(predatory_conversations),
@@ -126,6 +131,14 @@ def get_stats_v2(data):
             "n==1": (predatory_conversations_messages_count[predatory_conversations_authors_count == 1].mean()),
             "n==2": (predatory_conversations_messages_count[predatory_conversations_authors_count == 2].mean()),
             "n>2": (predatory_conversations_messages_count[predatory_conversations_authors_count > 2].mean()),
+            'all': predatory_conversations_messages_count.mean()
+        },
+
+        "average_number_of_non_predatory_conversations_messages_per_n_author": {
+            "n==1": (non_predatory_conversations_messages_count[non_predatory_conversations_authors_count == 1].mean()),
+            "n==2": (non_predatory_conversations_messages_count[non_predatory_conversations_authors_count == 2].mean()),
+            "n>2": (non_predatory_conversations_messages_count[non_predatory_conversations_authors_count > 2].mean()),
+            'all': non_predatory_conversations_messages_count.mean()
         },
 
         "average_conversations_per_predator": len(predatory_conversations) / predators_count,

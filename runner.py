@@ -19,7 +19,8 @@ from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, Tr
                                SequentialWord2VecEmbeddingDataset, NAuthorWord2VecEmbeddingDataset, NAuthorFinetunedWord2VecEmbeddingDataset,
                                TemporalAuthorsSequentialConversationWord2VecDataset, TemporalAuthorsSequentialConversationFinetunedWord2VecDataset,
                                TemporalAuthorsSequentialConversationDistilrobertaPretainedDataset, SequentialWord2VecFinetunedDataset,
-                               TransformersDistilrobertaFinedtunedDataset, SequentialConversationDistilrobertaFinetunedDataset)
+                               TransformersDistilrobertaFinedtunedDataset, SequentialConversationDistilrobertaFinetunedDataset,
+                               NAuthorTransformersDistilrobertaMoreTrainedDataset)
 from src.utils.loss_functions import WeightedBinaryCrossEntropy, DynamicSuperLoss
 from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule, SuperDynamicLossANN, DistilrobertaFinetuningClassifier, BaseSingleVectorMachine
 from src.mappings import register_mappings, register_mappings_torch, register_command, COMMANDS
@@ -130,6 +131,7 @@ if __name__ == "__main__":
     register_mappings(TemporalAuthorsSequentialConversationWord2VecDataset)
     register_mappings(TemporalAuthorsSequentialConversationFinetunedWord2VecDataset)
     register_mappings(NAuthorsConversationBagOfWords)
+    register_mappings(NAuthorTransformersDistilrobertaMoreTrainedDataset)
     register_mappings(NAuthorTransformersEmbeddingDataset)
     register_mappings(NAuthorTransformersBertDataset)
     register_mappings(NAuthorWord2VecEmbeddingDataset)

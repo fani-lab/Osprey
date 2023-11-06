@@ -398,6 +398,26 @@ datasets = {
         }
     ),
 
+    "nauthor-conversation-dataset-distilroberta-moretrained": (
+        "nauthor-conversation-distilroberta-moretrained",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/conversation/train.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/conversation/test.csv",
+            "output_path": "data/preprocessed/conversation-dataset-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
+
     "nauthor-conversation-dataset-bert": (
         "nauthor-conversation-bert",  # short name of the dataset
         {       # train configs
@@ -735,21 +755,21 @@ sessions = {
     "svm-rbf-distilroberta": {
         "model": "base-svm",
         "commands": [
-            ("train", {
-                # "epoch_num": 30,
-                # "batch_size": 8,
-                "weights_checkpoint_path": "",
-                },
-                {
-                    "dataset": "conversation-dataset-distilroberta-more-trained",
-                    "rerun_splitting": False,
-                    "persist_splits": True,
-                    "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
-                    "n_splits": 3,
-                }
-            ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "conversation-dataset-distilroberta-more-trained"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "conversation-dataset-distilroberta-more-trained"}),
+            # ("train", {
+            #     # "epoch_num": 30,
+            #     # "batch_size": 8,
+            #     "weights_checkpoint_path": "",
+            #     },
+            #     {
+            #         "dataset": "conversation-dataset-distilroberta",
+            #         "rerun_splitting": False,
+            #         "persist_splits": True,
+            #         "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
+            #         "n_splits": 3,
+            #     }
+            # ),
+            # ("test", {"weights_checkpoint_path": []}, {"dataset": "conversation-dataset-distilroberta"}),
+            ("eval", {"path": 'output-ecir2024/svm-rbf-distilroberta/base-svm/conversation-distilroberta-v1/p-v768-filtered-svc-rbf', "use_current_session": False}, {"dataset": "conversation-dataset-distilroberta"}),
         ],
         "model_configs": {
             "lr": 0,
@@ -952,9 +972,9 @@ sessions = {
                 "batch_size": 8,
                 "weights_checkpoint_path": "",
                 },  # nauthor-conversation-dataset-bag-of-words, nauthor-conversation-dataset-distilroberta-v1, nauthor-conversation-dataset-bert
-                    # nauthor-conversation-dataset-word2vec, nauthor-conversation-dataset-word2vec-finetuned
+                    # nauthor-conversation-dataset-word2vec, nauthor-conversation-dataset-word2vec-finetuned, nauthor-conversation-dataset-distilroberta-moretrained
                 {
-                    "dataset": "nauthor-conversation-dataset-word2vec-finetuned",
+                    "dataset": "nauthor-conversation-dataset-distilroberta-moretrained",
                     "rerun_splitting": False,
                     "persist_splits": False,
                     "load_splits_from": "",
@@ -962,8 +982,8 @@ sessions = {
                     "n_splits": 3,
                 }
             ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "nauthor-conversation-dataset-word2vec-finetuned"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "nauthor-conversation-dataset-word2vec-finetuned"}),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "nauthor-conversation-dataset-distilroberta-moretrained"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "nauthor-conversation-dataset-distilroberta-moretrained"}),
         ],
         "model_configs": {
             "dimension_list": list([32]),
@@ -980,19 +1000,19 @@ sessions = {
     "svm-block-of-text-nauthor": {
         "model": "base-svm",
         "commands": [
-            ("train", {
-                "weights_checkpoint_path": "",
-                }, # nauthor-conversation-dataset-bag-of-words, nauthor-conversation-dataset-distilroberta-v1, nauthor-conversation-dataset-bert, nauthor-conversation-dataset-word2vec
-                {
-                    "dataset": "nauthor-conversation-dataset-word2vec-finetuned",
-                    "rerun_splitting": False,
-                    "persist_splits": True,
-                    "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
-                    "n_splits": 3,
-                }
-            ),
-            ("test", {"weights_checkpoint_path": []}, {"dataset": "nauthor-conversation-dataset-word2vec-finetuned"}),
-            ("eval", {"path": '', "use_current_session": True}, {"dataset": "nauthor-conversation-dataset-word2vec-finetuned"}),
+            # ("train", {
+            #     "weights_checkpoint_path": "",
+            #     }, # nauthor-conversation-dataset-bag-of-words, nauthor-conversation-dataset-distilroberta-v1, nauthor-conversation-dataset-bert, nauthor-conversation-dataset-word2vec
+            #     {
+            #         "dataset": "nauthor-conversation-dataset-distilroberta-v1",
+            #         "rerun_splitting": False,
+            #         "persist_splits": True,
+            #         "load_splits_from": "data/preprocessed/conversation-dataset-v2/conversation-distilroberta-v1/ppr.sw.rr.idr-v768-filtered/splits-n3stratified.pkl",
+            #         "n_splits": 3,
+            #     }
+            # ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "nauthor-conversation-dataset-distilroberta-v1"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "nauthor-conversation-dataset-distilroberta-v1"}),
         ],
         "model_configs": {
             "lr": 0,
@@ -1470,4 +1490,4 @@ sessions = {
     },
 }
 
-USE_CUDA_IF_AVAILABLE = True
+USE_CUDA_IF_AVAILABLE = False

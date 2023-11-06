@@ -750,6 +750,18 @@ class NAuthorTransformersEmbeddingDataset(NAuthorsConversationBagOfWords):
         return vectors
 
 
+class NAuthorTransformersDistilrobertaMoreTrainedDataset(NAuthorTransformersEmbeddingDataset):
+    
+    @classmethod
+    def short_name(cls) -> str:
+        return "nauthor-conversation-distilroberta-moretrained"
+    
+    def init_encoder(self, tokens_records):
+        logger.debug("Transformer distilroberta more trained is being initialized")
+        encoder = TransformersEmbeddingEncoderWithContext(context_length=self.CONTEXT_LENGTH, transformer_identifier="models/distilroberta-base-more-trained/", device=self.device)
+        return encoder
+
+
 class NAuthorWord2VecEmbeddingDataset(NAuthorTransformersEmbeddingDataset):
 
     @classmethod
@@ -1102,7 +1114,7 @@ class SequentialConversationDistilrobertaFinetunedDataset(SequentialConversation
 
     def init_encoder(self, tokens_records):
         logger.debug("initializing sequential transformer embedding encoder: distilroberta-base pretraiend")
-        encoder = SequentialTransformersEmbeddingEncoder(context_length=self.CONTEXT_LENGTH, transformer_identifier="models/distilroberta-base-more-trained/", device=self.device)
+        encoder = SequentialTransformersEmbeddingEncoder(transformer_identifier="models/distilroberta-base-more-trained/", device=self.device)
         return encoder
     
     def get_vector_size(self, vectors=None):
