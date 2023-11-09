@@ -67,14 +67,22 @@ python runner.py train --log
 
 ## 3. Results
 
-We report the predictions, evaluation metrics on each test instance, and average on all test instances in **. 
+We report the predictions, evaluation metrics on each test instance, and average on all test instances in the following table.
+<img alt="table of metrics of experiments" src="figures/chiir2024-table.jpg" width=1000>
 
-TODO: Put result figures and explain them.
+The following figures show the roc and precision-recall line charts where a figure with highest area under curve is desirable for roc and a a figure that has a tendency to the right handside of the chart is desirable for precision-recall.
 
-## 4. Acknowledgement
+<img src="figures/roc-prc-both.JPG" width=500>
+<!-- <div>
+<img src="aggergated-figures/roberta-roc-prc.JPG" width=500>
+</br>
+<img src="aggergated-figures/w2v-roc-prc.JPG" width=500>
+</div> -->
+<!-- ![the roc and precision-recall figures](aggergated-figures/w2v-roc-prc.JPG =200x100) -->
 
+<!-- ## 4. Acknowledgement -->
 
-## 5. NOTES:
+## 4. NOTES:
 ### Updating environment.yaml File
 
 In case you updated a python package and wanted to include it in the environment file, do the following steps. These steps will only include the pinned packages and the os-specific dependencies and libraries will be handled by the package manager (conda or mamba).
