@@ -72,13 +72,7 @@ We report the predictions, evaluation metrics on each test instance, and average
 
 The following figures show the roc and precision-recall line charts where a figure with highest area under curve is desirable for roc and a a figure that has a tendency to the right handside of the chart is desirable for precision-recall.
 
-<img src="figures/roc-prc-both.JPG" width=500>
-<!-- <div>
-<img src="aggergated-figures/roberta-roc-prc.JPG" width=500>
-</br>
-<img src="aggergated-figures/w2v-roc-prc.JPG" width=500>
-</div> -->
-<!-- ![the roc and precision-recall figures](aggergated-figures/w2v-roc-prc.JPG =200x100) -->
+<img src="figures/roc-prc-both.jpg" width=500>
 
 <!-- ## 4. Acknowledgement -->
 
