@@ -1,4 +1,3 @@
-# This file is for sake of compatibility between different development environment
 import sys
 import logging
 import argparse
@@ -161,5 +160,3 @@ if __name__ == "__main__":
         logger = init_logger()
 
     func(**kwargs)
-    
-    # finetune_tranformer_per_message("cuda", dataset_name="finetuning-v2-dataset", model_output_path=None)

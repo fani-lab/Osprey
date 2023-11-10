@@ -1,9 +1,7 @@
 from torch import sparse_coo_tensor, float32
-import numpy as np
 
 from heapq import nlargest
 
-NUMBER_OF_PREDEFINED_VECTORS = 1 # Should be handled dynamically later. needs to synced with the context vector
 
 class OneHotEncoder:
 

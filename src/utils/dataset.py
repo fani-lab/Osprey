@@ -16,9 +16,7 @@ from src.utils.transformers_encoders import TransformersEmbeddingEncoder, GloveE
         SequentialTransformersEmbeddingEncoderWithContext, TransformersEmbeddingEncoderWithContext, Word2VecEmbeddingEncoder, \
         SequentialWord2VecEmbeddingEncoder, Word2VecEmbeddingEncoderWithContext, SequentialTransformersWord2VecEncoderWithContext
 from src.utils.commons import nltk_tokenize, force_open, RegisterableObject
-from src.preprocessing.author_id_remover import AuthorIDReplacerBert
 
-# from imblearn.over_sampling import SMOTE
 
 logger = logging.getLogger()
 
@@ -384,9 +382,6 @@ class BagOfWordsDataset(BaseDataset):
         logger.debug("transforming of records into vectors is finished")
         return vectors
 
-    # def oversample_by_smote(self):
-    #     smote = SMOTE(random_state=42)
-    #     self.data, self.labels = smote.fit_resample(self.data.to_dense(), self.labels)
 
 class ConversationBagOfWords(BagOfWordsDataset):
     
@@ -435,7 +430,6 @@ class NAuthorsConversationBagOfWords(ConversationBagOfWords):
     def get_data_generator(self, data, pattern):
         def func():
             for conversation in data:
-                # for record in sequence:
                 for tokens in conversation[1]:
                     for token in tokens:
                         yield pattern(token)
@@ -781,26 +775,6 @@ class NAuthorTransformersBertDataset(NAuthorTransformersEmbeddingDataset):
         return encoder
 
 
-# Do not use it for now
-class FineTunedBertEmbeddingDataset(TransformersEmbeddingDataset):
-
-    def __init__(self, transformer_identifier, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        raise NotImplementedError("this module is not implemented completely.")
-        # `transformer_identifier` should be a path 
-        # ex: "data/embeddings/finetuned/finetuning-bert/psw.rr.idr-v512-nofilter/"
-        self.transformer_identifier = transformer_identifier
-
-    @classmethod
-    def short_name(cls) -> str:
-        return "embedding/user-pretrained"
-        
-    def init_encoder(self, tokens_records):
-        logger.debug("Transformer Embedding Dataset being initialized")
-        encoder = TransformersEmbeddingEncoder(transformer_identifier=self.transformer_identifier, device=self.device)
-        return encoder
-
-
 class CaseSensitiveBertEmbeddingDataset(TransformersEmbeddingDataset):
     
     @classmethod
@@ -839,17 +813,13 @@ class GloveEmbeddingDataset(BaseDataset, RegisterableObject):
         return vectors
 
 
-class SequentialConversationDataset(BaseDataset): # TODO: checkout to(device) method
+class SequentialConversationDataset(BaseDataset):
     """
     a dataset where each record is a sorted sequence of any size and each record has one label
     """
     def __init__(self, data_path: str, output_path: str, load_from_pkl: bool, apply_record_filter: bool = True, preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, device="cpu", *args, **kwargs):
         super().__init__(data_path, output_path, load_from_pkl, apply_record_filter, preprocessings, persist_data, parent_dataset, device, *args, **kwargs)
         self.__sequence__ = None
-
-    # def filter_records(self, df):
-    #     logger.info("applying record filtering by 'nauthor == 2'")
-    #     return df[(df["nauthor"] == 2)]
 
     def filter_records(self, df):
         logger.info("applying record filtering by 'nauthor >= 2 & conv_size > 6'")
