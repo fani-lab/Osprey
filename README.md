@@ -7,8 +7,9 @@ Around 60%-80% of female high school students have to face online sexual groomin
 
 1. [Setup](#1-setup)
 2. [Quickstart](#2-quickstart)
-3. [Results](#3-results)
-4. [Acknowledgement](#4-acknowledgement)
+3. [Code Structure](#3-code-structure)
+4. [Results](#4-results)
+5. [Notes](#5-notes)
 
 ## 1. Setup
 You can setup the code in different ways. You can use package managers such as Mamba and Conda to install the packages. If you prefer using docker, clone this project and build the Dockerfile.
@@ -145,7 +146,7 @@ F<sub>2</sub> is of great importance as it increases the chance of capturing a p
 
 <!-- ## 4. Acknowledgement -->
 
-## 4. NOTES:
+## 5. NOTES:
 ### Updating environment.yaml File
 
 In case you updated a python package and wanted to include it in the environment file, do the following steps. These steps will only include the pinned packages and the os-specific dependencies and libraries will be handled by the package manager (conda or mamba).
