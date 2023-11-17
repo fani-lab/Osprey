@@ -1,0 +1,55 @@
+<diagram program="umletino" version="15.1"><zoom_level>9</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>132</x><y>72</y><w>621</w><h>351</h></coordinates><panel_attributes>/BaseDataset/
+Package::utils
+--
++shape: tuple
++device: str
++df_path: str
++load_from_pkl: bool
++output_path: str
++parent_dataset: BaseDataset
+--
+/+tokenize(input): list[list[str]]/
+/+vectorize(tokens_records, encoder)/
++prepare()
++preprocess()
++get_labels()
++get_data()
++normalize_vector(vectors: tensor[tensor]): tensor[tensor]
++filter_records(df: DataFrame): DataFrame
++split_dataset_by_label(n_splits: int, split_again: bool, persist_splits: bool, stratified: bool, load_splits_from: str): list[list[int]]
++get_session_path(filename: str): str
+__+short_name(): str__
+--
+Responsibilities
+-- Loading and applying preprocessings
+-- vectorizing according to a model's need
+-- Saving necessary steps of data processing
+group=group-0</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>132</x><y>504</y><w>621</w><h>315</h></coordinates><panel_attributes>/Baseline/
+Package::models
+--
++validation_steps: int
++activation: callback|torch.Module
++session_name: str
++do_aggeragate_metrics: bool
++loss_function: callback|torch.Module
++device: str
++early_stop: bool
+--
+/+learn(epoch_num: int, batch_size: int, splits: list, train_dataset: Dataset, weights_checkpoint_path: str, condition_save_threshold)/
+/+test(test_dataset: BaseDataset, weights_checkpoint_path: list[str])/
++evaluate(path)
+/+get_session_path(list[str]) str/
+/+get_new_optimizer(lr: float): torch.Optimizer/
+/+get_new_scheduler(optimizer: torch.Optimizer): Object/
+/+get_all_folds_checkpoints(dataset: BaseDataset): list[str]/
++check_stop_early(args: list): bool
++aggeregate(session_path, accuracies, recalls, precisions, f2scores, f05scores, aurocs, pr_aucs)
+__+short_name(): str__
+--
+Responsibilities
+-- Training, testing and evaulation
+-- Saving checkpoints and artifacts using a standard approach
+-- Abstracting model creation and representation
+
+group=group-0</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>429</x><y>414</y><w>27</w><h>108</h></coordinates><panel_attributes>lt=&lt;-
+group=group-0</panel_attributes><additional_attributes>10;100;10;10</additional_attributes></element></diagram>
