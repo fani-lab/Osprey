@@ -154,6 +154,26 @@ datasets = {
 
 
     ############## Sequential Embedding distilroberta
+    "sequential-conversation-dataset-distilroberta-04": ( # DELETE
+        "sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/train-04.csv",
+            "output_path": "data/preprocessed/sequential-v2/04-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test-04.csv",
+            "output_path": "data/preprocessed/sequential-v2/test-04-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        }
+    ),
+
     "sequential-conversation-v2-dataset-distilroberta": (
         "sequential-embedding",  # short name of the dataset
         {       # train configs
@@ -1116,6 +1136,38 @@ sessions = {
     },
 
     ############### sequential distilroberta
+    "blstm-distilroberta": {
+        "model": "baysian-lstm",
+        "commands": [
+            ("train", {
+                "epoch_num": 30,
+                "batch_size": 16,
+                "weights_checkpoint_path": "",
+                },
+                { # temporal-nauthor-sequential-conversation-v2-dataset-distilroberta, temporal-nauthor-sequential-conversation-dataset-distilroberta-pretrained
+                  # sequential-conversation-dataset-distilroberta-pretrained, sequential-conversation-dataset-distilroberta-04
+                    "dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta",
+                    "rerun_splitting": True,
+                    "persist_splits": False,
+                    # "load_splits_from": "",
+                    "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta"}),
+        ],
+        "model_configs": {
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
+            "lr": 0.05,
+            'hidden_size': 514,
+            "module_session_path": "output-ecir2024",
+            "session_path_include_time": False,
+            "early_stop": True,
+        },
+    },
+
     "lstm-distilroberta": {
         "model": "lstm",
         "commands": [

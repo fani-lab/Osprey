@@ -1,7 +1,9 @@
+from cProfile import Profile
+from pstats import SortKey, Stats
 import logging
 
 import torch
-
+from torch.fx.traceback import format_stack
 import settings
 from src import mappings
 from src.utils.commons import CommandObject
@@ -62,7 +64,7 @@ class RunTrainPipeline(CommandObject):
         
         def run(sessions):
             device = 'cuda' if settings.USE_CUDA_IF_AVAILABLE and torch.cuda.is_available() else 'cpu'
-            torch.autograd.set_detect_anomaly(True)
+            # torch.autograd.set_detect_anomaly(True)
             logger.info(f'processing unit: {device}')
             datasets = initiate_datasets(settings.datasets, device)
             
@@ -100,6 +102,10 @@ class RunTrainPipeline(CommandObject):
                         model = model_class(**model_configs, input_size=dataset.shape[-1])
                         model.to(device=device)
                         model.learn(**command_kwargs, train_dataset=dataset, splits=splits)
+                        # with Profile() as profile:
+                        #     print(f"{model.learn(**command_kwargs, train_dataset=dataset, splits=splits) = }")
+                        #     Stats(profile).sort_stats(SortKey.CALLS).print_stats()
+                        #     profile.dump_stats("stats2.txt")
                     if command == "test":
                         dataset = datasets[dataset_name][1]
                         dataset.prepare()

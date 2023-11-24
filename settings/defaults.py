@@ -26,7 +26,7 @@ ALL_FILTERED_CONFIGS = {
     "splitting_configs",
 } or FILTERED_CONFIGS
 
-ALL_IGNORED_PARAM_RESET = {"activation", "loss_function"} or IGNORED_PARAM_RESET
+ALL_IGNORED_PARAM_RESET = {"activation", "loss_function", "BayesianLSTM"} or IGNORED_PARAM_RESET
 OUTPUT_LAYER_NODES = 1
 
 def get_start_time():

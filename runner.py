@@ -21,7 +21,8 @@ from src.utils.dataset import (BagOfWordsDataset, TimeBasedBagOfWordsDataset, Tr
                                TransformersDistilrobertaFinedtunedDataset, SequentialConversationDistilrobertaFinetunedDataset,
                                NAuthorTransformersDistilrobertaMoreTrainedDataset)
 from src.utils.loss_functions import WeightedBinaryCrossEntropy, DynamicSuperLoss
-from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule, SuperDynamicLossANN, DistilrobertaFinetuningClassifier, BaseSingleVectorMachine
+from src.models import (ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUModule, SuperDynamicLossANN,
+                        DistilrobertaFinetuningClassifier, BaseSingleVectorMachine, BLSTM)
 from src.mappings import register_mappings, register_mappings_torch, register_command, COMMANDS
 import settings
 from src.scripts import (CreateConversations, BalanceDatasetsForVersionTwo, CreateConversationToySet,
@@ -148,6 +149,7 @@ if __name__ == "__main__":
     register_mappings(SuperDynamicLossANN)
     register_mappings(DistilrobertaFinetuningClassifier)
     register_mappings(BaseSingleVectorMachine)
+    register_mappings(BLSTM)
 
     parser = init_parser()
 

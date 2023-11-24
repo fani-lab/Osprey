@@ -1,4 +1,4 @@
-from .rnn import BaseRnnModule, LSTMModule, GRUModule
+from .rnn import BaseRnnModule, LSTMModule, GRUModule, BLSTM
 from .ann import ANNModule, AbstractFeedForward, SuperDynamicLossANN
 from .cnn import EbrahimiCNN
 from .baseline import Baseline

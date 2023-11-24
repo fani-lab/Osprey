@@ -4,17 +4,20 @@ import shutil
 from glob import glob
 import re
 
-from src.models.baseline import Baseline
-import settings
-
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 import torch
 from torch import nn
 from torch.utils.data import DataLoader, Dataset, SubsetRandomSampler
+from blitz.modules.lstm_bayesian_layer import BayesianLSTM
+from blitz.utils.variational_estimator import variational_estimator
 import matplotlib.pyplot as plt
 import numpy as np
 
+from tqdm import tqdm
+
+from src.models.baseline import Baseline
+import settings
 from src.utils.commons import force_open, calculate_metrics_extended, padding_collate_sequence_batch
 
 logger = logging.getLogger()
@@ -29,10 +32,13 @@ class BaseRnnModule(Baseline, nn.Module):
         self.hidden_size = hidden_size
         self.num_layers = num_layers
         self.snapshot_steps = 2
-        self.core = nn.RNN(input_size=self.input_size, hidden_size=self.hidden_size, num_layers=self.num_layers, nonlinearity='tanh',
-                          batch_first=True)
-        self.hidden2out = nn.Linear(in_features=self.hidden_size, out_features=settings.OUTPUT_LAYER_NODES)
 
+        self.init_model()
+        
+    def init_model(self):
+        self.core = nn.RNN(input_size=self.input_size, hidden_size=self.hidden_size,
+                           num_layers=self.num_layers, nonlinearity='tanh', batch_first=True)
+        self.hidden2out = nn.Linear(in_features=self.hidden_size, out_features=settings.OUTPUT_LAYER_NODES)
     
     @classmethod
     def short_name(cls) -> str:
@@ -62,7 +68,7 @@ class BaseRnnModule(Baseline, nn.Module):
                 continue
             if isinstance(module, nn.ModuleList):
                 self.reset_modules(module, parents_modules_names=[*parents_modules_names, name])
-            elif isinstance(module, nn.Dropout):
+            elif isinstance(module, nn.Dropout) | isinstance(module, BayesianLSTM):
                 continue
             else:
                 logger.info(f"resetting module parameters: {'.'.join([name, *parents_modules_names])}")
@@ -129,8 +135,8 @@ class BaseRnnModule(Baseline, nn.Module):
                     y_hat = y_hat.reshape(-1)
                     self.optimizer.zero_grad()
                     loss = self.loss_function(y_hat, y)
-                    if loss.isnan():
-                        print(end="")
+                    # if loss.isnan():
+                    #     print(end="")
                     loss.backward()
                     epoch_loss += loss.item()
                     self.optimizer.step()
@@ -185,7 +191,7 @@ class BaseRnnModule(Baseline, nn.Module):
         logger.info(f"best model of cross validation for current training phase: fold #{max_metric[0]} with metric value of '{max_metric[1]}'")
         best_model_dest = self.get_detailed_session_path(train_dataset, "weights", f"best_model.pth")
         best_model_src = self.get_detailed_session_path(train_dataset, "weights", f"f{max_metric[0]}", f"model_f{max_metric[0]}.pth")
-        shutil.copyfile(best_model_src, best_model_dest)
+        # shutil.copyfile(best_model_src, best_model_dest)
 
     def test(self, test_dataset, weights_checkpoint_path):
         for path in weights_checkpoint_path:
@@ -252,3 +258,160 @@ class GRUModule(BaseRnnModule):
         super().__init__(hidden_size, num_layers, *args, **kwargs)
         self.core = nn.GRU(input_size=self.input_size, hidden_size=self.hidden_size, num_layers=self.num_layers, batch_first=True)
 
+
+@variational_estimator
+class BLSTM(BaseRnnModule):
+    """
+    prior_sigma 1 and 2 are related to Scale Mixture Prior
+    """
+    def __init__(self, hidden_size, *args, **kwargs):
+        kwargs["num_layers"] = 1
+        super().__init__(hidden_size, *args, **kwargs)
+
+    def init_model(self):
+        self.core = BayesianLSTM(in_features=self.input_size, out_features=self.hidden_size).to(self.device)
+        self.hidden2out = nn.Linear(in_features=self.hidden_size, out_features=settings.OUTPUT_LAYER_NODES).to(self.device)
+    
+    
+    def reset_modules(self, module, parents_modules_names=[]):
+        logger.warning("this implementation of `reset_modules` is temporary. If you see this warning on end product please let the developers know.")
+        self.init_model()
+        super().reset_modules(module)
+    
+    def forward(self, x):
+        out, _ = self.core(x)
+        y_hat = self.hidden2out(out[:, -1])
+        # y_hat = torch.sigmoid(y_hat)
+        if y_hat.isnan().sum() > 0:
+            print(end="")
+        return y_hat.reshape(-1)
+
+    def learn(self, epoch_num:int , batch_size: int, splits: list, train_dataset: Dataset, weights_checkpoint_path: str=None, condition_save_threshold=0.9):
+        if weights_checkpoint_path is not None and len(weights_checkpoint_path):
+            self.load_params(weights_checkpoint_path)
+        
+        logger.info(f"saving epoch condition: f2score>{condition_save_threshold}")
+        logger.info("training phase started")
+        folds_metrics = []
+        for fold, (train_ids, validation_ids) in enumerate(splits):
+            self.optimizer = self.get_new_optimizer(self.init_lr)
+            self.scheduler = self.get_new_scheduler(self.optimizer)
+            logger.info(self.optimizer)
+            logger.info(self.scheduler)
+            logger.info(f'fetching data for fold #{fold}')
+            train_loader, validation_loader = self.get_dataloaders(train_dataset, train_ids, validation_ids, batch_size)
+            
+            last_lr = self.init_lr
+            total_loss = []
+            total_validation_loss = []
+            # resetting module parameters
+            self.reset_modules(module=self)
+
+            # Train phase
+            for i in range(1, epoch_num + 1):
+                loss = 0
+                epoch_loss = 0
+                self.train()
+                if self.optimizer.param_groups[0]["lr"] != last_lr:
+                    logger.info(f"fold: {fold} | epoch: {i} | Learning rate changed from: {last_lr} -> {self.optimizer.param_groups[0]['lr']}")
+                    last_lr = self.optimizer.param_groups[0]["lr"]
+                for batch_index, (X, y) in enumerate(tqdm(train_loader, leave=False)):
+                    X = X.to(self.device)
+                    y = y.to(self.device)
+                    # _, y_hat = self.forward(X)
+                    _, loss, likelihood_loss, _ = self.sample_elbo_detailed_loss(X, y, self.loss_function, 3)
+                    # y_hat = torch.tensor(y_hat)
+                    self.optimizer.zero_grad()
+                    # loss = self.loss_function(y_hat, y)
+                    if loss.isnan():
+                        print(end="")
+                    loss.backward()
+                    epoch_loss += likelihood_loss.item()
+                    self.optimizer.step()
+                    logger.debug(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss/X.shape[0]} | likelihood_loss: {likelihood_loss/X.shape[0]}")
+                epoch_loss /= len(train_ids)
+                total_loss.append(epoch_loss)
+                # Validation phase
+                all_preds = []
+                all_targets = []
+                validation_loss = 0
+                self.eval()
+                with torch.no_grad():
+                    for X, y in tqdm(validation_loader, leave=False):
+                        X = X.to(self.device)
+                        y = y.to(self.device)
+                        y_hat = self.forward(X)
+                        # y_hat = y_hat.reshape(-1)
+                        likelihood_loss = self.loss_function(y_hat, y)
+                        validation_loss += likelihood_loss.item()
+                        all_preds.extend(torch.sigmoid(y_hat) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else y_hat)
+                        all_targets.extend(y)
+                    validation_loss /= len(validation_ids)
+                    total_validation_loss.append(validation_loss)
+                all_preds = torch.tensor(all_preds)
+                all_targets = torch.tensor(all_targets)
+                accuracy_value, recall_value, precision_value, f2score, f05score = calculate_metrics_extended(all_preds, all_targets, device=self.device)
+                logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f} | f2: {(100 * f2score):>0.6f} | f0.5: {(100 * f05score):>0.6f}")
+                self.scheduler.step(validation_loss)
+                epoch_snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_f{fold}_e{i}.pth")
+                if f2score >= condition_save_threshold:
+                    logger.info(f"fold: {fold} | epoch: {i} | saving model at {epoch_snapshot_path}")
+                    self.save(epoch_snapshot_path)
+                if self.check_stop_early(f2score=f2score):
+                    logger.info(f"early stop condition satisfied: f2 score => {f2score}")
+                    break
+                self.train()
+            folds_metrics.append((accuracy_value, precision_value, recall_value, f2score))
+            snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_f{fold}.pth")
+            self.save(snapshot_path)
+            plt.clf()
+            plt.plot(np.arange(1, 1 + len(total_loss)), np.array(total_loss), "-r", label="training")
+            plt.plot(np.arange(1, 1 + len(total_loss)), np.array(total_validation_loss), "-b", label="validation")
+            plt.legend()
+            plt.title(f"fold #{fold}")
+            with force_open(self.get_detailed_session_path(train_dataset, "figures", f"loss_f{fold}.png"), "wb") as f:
+                plt.savefig(f, dpi=300)
+        MAHAK = 3
+        max_metric = (0, folds_metrics[0][MAHAK])
+        for i in range(1, len(folds_metrics)):
+            if folds_metrics[i][MAHAK] > max_metric[1]:
+                max_metric = (i, folds_metrics[i][MAHAK])
+        logger.info(f"best model of cross validation for current training phase: fold #{max_metric[0]} with metric value of '{max_metric[1]}'")
+        best_model_dest = self.get_detailed_session_path(train_dataset, "weights", f"best_model.pth")
+        best_model_src = self.get_detailed_session_path(train_dataset, "weights", f"f{max_metric[0]}", f"model_f{max_metric[0]}.pth")
+    
+    def test(self, test_dataset, weights_checkpoint_path):
+        for path in weights_checkpoint_path:
+            logger.info(f"testing checkpoint at: {path}")
+            torch.cuda.empty_cache()
+            # self.load_params(weights_checkpoint_path)
+            checkpoint = torch.load(path)
+            self.load_state_dict(checkpoint.get("model", checkpoint))
+
+            all_preds = []
+            all_targets = []
+            test_dataloader = DataLoader(test_dataset, batch_size=64, collate_fn=padding_collate_sequence_batch)
+            self.eval()
+            with torch.no_grad():
+                for X, y in test_dataloader:
+                    X = X.to(self.device)
+                    y = y.to(self.device)
+                    y_hat = self.forward(X)
+                    # y_hat = y_hat.reshape(-1)
+                    all_preds.extend(torch.sigmoid(y_hat) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else y_hat)
+                    all_targets.extend(y)
+
+            all_preds = torch.tensor(all_preds)
+            all_targets = torch.tensor(all_targets)
+            base_path = "/".join(re.split("\\\|/", path)[:-1])
+            with force_open(base_path + '/preds.pkl', 'wb') as file:
+                pickle.dump(all_preds, file)
+                logger.info(f'predictions are saved at: {file.name}')
+            with force_open(base_path + '/targets.pkl', 'wb') as file:
+                pickle.dump(all_targets, file)
+                logger.info(f'targets are saved at: {file.name}')
+
+    @classmethod
+    def short_name(cls) -> str:
+        return "baysian-lstm"
+    
