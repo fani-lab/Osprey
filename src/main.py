@@ -48,8 +48,9 @@ def initiate_datasets(datasets_maps, device):
             except Exception as e:
                 raise Exception(f"preprocessing `{pp}` either not implemented or not registered") from e
         
-        train_dataset = dataset_class(**{**train_configs, "preprocessings": [pp() for pp in preprocessings], "device": device})
-        test_dataset = dataset_class(**{**test_configs, "parent_dataset": train_dataset, "preprocessings": [pp() for pp in preprocessings], "device": device, "apply_record_filter": False})
+        train_dataset = dataset_class(**{**train_configs, "preprocessings": [pp() for pp in preprocessings], "device": device, "dataset_name": dataset_name})
+        test_dataset = dataset_class(**{**test_configs, "parent_dataset": train_dataset, "preprocessings": [pp() for pp in preprocessings], "device": device,
+                                        "apply_record_filter": False, "dataset_name": dataset_name})
         logger.info(f"train dataset `{dataset_name}`, shortname: `{short_name}` kwargs -> {train_configs}")
         logger.info(f"test dataset `{dataset_name}`, shortname: `{short_name}` kwargs -> {test_configs}")
         datasets[dataset_name] = (train_dataset, test_dataset)
