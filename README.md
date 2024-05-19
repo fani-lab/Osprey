@@ -62,7 +62,7 @@ python runner.py create-toy-conversation --train-path /path/to/dataset-v2/conver
 You can define your configurations for sessions and models under the path `settings/settings.py`. There are samples under the same file in `datasets` and `sessions` dicts.
 After specifying the sessions configurations according to your need, you can use the following command to run all of `sessions`.
 ```sh
-python runner.py train --log
+python runner.py --log train
 ```
 
 
