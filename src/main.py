@@ -99,7 +99,7 @@ class RunTrainPipeline(CommandObject):
                         splits = []
                         test_dataset = None
                         if dataset_configs.get("validate-on-test", False):
-                            logger.info("initializing teset dataset in place of train validation set.")
+                            logger.info("initializing test dataset in place of train validation set.")
                             n_splits = 1
                             test_dataset = datasets[dataset_name][1]
                             test_dataset.prepare()

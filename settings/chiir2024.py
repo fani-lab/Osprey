@@ -246,11 +246,13 @@ datasets = {
         },
         {      # test configs
             "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
             "output_path": "data/preprocessed/sequential-v2/test-",
             "load_from_pkl": True,
             "preprocessings": __preprocessings__,
-            "persist_data": True,
+            "persist_data": False,
             "apply_record_filter": True,
+            
         }
     ),
 
@@ -266,10 +268,11 @@ datasets = {
         },
         {      # test configs
             "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
             "output_path": "data/preprocessed/sequential-v2/test-",
             "load_from_pkl": True,
             "preprocessings": __preprocessings__,
-            "persist_data": True,
+            "persist_data": False,
             "apply_record_filter": True,
         }
     ),

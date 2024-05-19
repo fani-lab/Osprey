@@ -25,7 +25,7 @@ class BaseDataset(Dataset, RegisterableObject):
 
     
     def __init__(self, data_path: str, output_path: str, load_from_pkl: bool, apply_record_filter: bool=True,
-                 preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, device="cpu", vector_size=-1, dataset_name: str=None, *args, **kwargs):
+                 preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, device="cpu", vector_size=-1, dataset_name: str=None, forced_output_path=None, *args, **kwargs):
         self.output_path = output_path
         self.parent_dataset = parent_dataset
         self.load_from_pkl = load_from_pkl
@@ -34,6 +34,7 @@ class BaseDataset(Dataset, RegisterableObject):
         self.df_path = data_path
         self.device = device
         self.apply_filter = apply_record_filter
+        self.forced_output_path = forced_output_path
         if not dataset_name:
             raise ValueError(f"dataset name is not defined")
         self.dataset_name = dataset_name
@@ -105,6 +106,8 @@ class BaseDataset(Dataset, RegisterableObject):
         return df
 
     def get_session_path(self, filename) -> str:
+        if self.forced_output_path is not None:
+            return self.forced_output_path + "/" + filename
         return self.output_path + self.__str__() + "/" + filename
     
     def tokenize(self, input) -> list[list[str]]:
