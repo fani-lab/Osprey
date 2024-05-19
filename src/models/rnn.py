@@ -82,16 +82,23 @@ class BaseRnnModule(Baseline, nn.Module):
         logger.debug(f"scheduler settings: {scheduler_args}")
         return ReduceLROnPlateau(optimizer, **scheduler_args)
     
-    def get_dataloaders(self, dataset, train_ids, validation_ids, batch_size):
+    def get_dataloaders(self, dataset, test_dataset, train_ids, validation_ids, batch_size):
         train_subsampler = SubsetRandomSampler(train_ids)
-        validation_subsampler = SubsetRandomSampler(validation_ids)
         train_loader = DataLoader(dataset, batch_size=batch_size, drop_last=False,
                                                     sampler=train_subsampler, collate_fn=padding_collate_sequence_batch)
-        validation_loader = DataLoader(dataset, batch_size=batch_size, drop_last=False,
-                                                        sampler=validation_subsampler, collate_fn=padding_collate_sequence_batch)
+        if len(validation_ids) > 0:
+            validation_subsampler = SubsetRandomSampler(validation_ids)
+            validation_loader = DataLoader(dataset, batch_size=batch_size, drop_last=False,
+                                                            sampler=validation_subsampler, collate_fn=padding_collate_sequence_batch)
+        elif test_dataset is not None: # initializing test dataset as of validation set
+            validation_loader = DataLoader(test_dataset, batch_size=batch_size, drop_last=False, collate_fn=padding_collate_sequence_batch)
+        else:
+            validation_loader = None
+            logger.warning("no validation id nor test dataset is provided")
+            # raise ValueError("no validation id nor test dataset is provided")
         return train_loader, validation_loader
 
-    def learn(self, epoch_num:int , batch_size: int, splits: list, train_dataset: Dataset, weights_checkpoint_path: str=None, condition_save_threshold=0.9):
+    def learn(self, epoch_num:int , batch_size: int, splits: list, train_dataset: Dataset, test_dataset: Dataset=None, weights_checkpoint_path: str=None, condition_save_threshold=0.9):
         if weights_checkpoint_path is not None and len(weights_checkpoint_path):
             checkpoint = torch.load(weights_checkpoint_path)
             self.load_state_dict(checkpoint.get("model", checkpoint))
@@ -108,7 +115,7 @@ class BaseRnnModule(Baseline, nn.Module):
             self.scheduler = self.get_new_scheduler(self.optimizer)
             last_lr = self.init_lr
             logger.info(f'fetching data for fold #{fold}')
-            train_loader, validation_loader = self.get_dataloaders(train_dataset, train_ids, validation_ids, batch_size)
+            train_loader, validation_loader = self.get_dataloaders(train_dataset, test_dataset, train_ids, validation_ids, batch_size)
             # Train phase
             total_loss = []
             total_validation_loss = []
@@ -142,6 +149,9 @@ class BaseRnnModule(Baseline, nn.Module):
                 all_targets = []
                 validation_loss = 0
                 self.eval()
+                if validation_loader is None:
+                    logger.warning("no validation applied as validation loader is not initialized")
+                    continue
                 with torch.no_grad():
                     for X, y in tqdm(validation_loader, leave=False):
                         if isinstance(X, tuple) or isinstance(X, list):
@@ -154,7 +164,7 @@ class BaseRnnModule(Baseline, nn.Module):
                         validation_loss += loss.item()
                         all_preds.extend(torch.sigmoid(pred) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else pred)
                         all_targets.extend(y)
-                    validation_loss /= len(validation_ids)
+                    validation_loss /= len(validation_loader.sampler)
                     total_validation_loss.append(validation_loss)
                 all_preds = torch.stack(all_preds)
                 all_targets = torch.stack(all_targets)

@@ -96,11 +96,17 @@ class RunTrainPipeline(CommandObject):
                         persist_splits = dataset_configs.get("persist_splits", True)
                         persist_splits = dataset_configs.get("persist_splits", True)
                         load_splits_from = dataset_configs.get("load_splits_from", True)
+                        splits = []
+                        test_dataset = None
+                        if dataset_configs.get("validate-on-test", False):
+                            logger.info("initializing teset dataset in place of train validation set.")
+                            n_splits = 1
+                            test_dataset = datasets[dataset_name][1]
+                            test_dataset.prepare()
                         splits = dataset.split_dataset_by_label(n_splits, split_again, persist_splits, True, load_splits_from)
-
                         model = model_class(**model_configs, input_size=dataset.shape[-1])
                         model.to(device=device)
-                        model.learn(**command_kwargs, train_dataset=dataset, splits=splits)
+                        model.learn(**command_kwargs, train_dataset=dataset, test_dataset=test_dataset, splits=splits)
                     if command == "test":
                         dataset = datasets[dataset_name][1]
                         dataset.prepare()
