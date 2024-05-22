@@ -319,6 +319,48 @@ datasets = {
         }
     ),
 
+    "temporal-nauthor-sequential-conversation-distilroberta-nllb-zho-predators": ( # the translations are only predatory messages
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/translated/predatory_nllb-zho_Hans.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "temporal-nauthor-sequential-conversation-distilroberta-nllb-mya-predators": ( # the translations are only predatory messages
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/translated/predatory_nllb-mya_Mymr.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+        }
+    ),
+
     "temporal-nauthor-sequential-conversation-dataset-distilroberta-pretrained": (
         "temporal-nauthor-sequential-distilroberta-more-trained",  # short name of the dataset
         {       # train configs
@@ -1212,7 +1254,7 @@ sessions = {
                 { # temporal-nauthor-sequential-conversation-v2-dataset-distilroberta, temporal-nauthor-sequential-conversation-dataset-distilroberta-pretrained
                   # sequential-conversation-dataset-distilroberta-pretrained, temporal-nauthor-sequential-conversation-distilroberta-en-fr, sequential-conversation-distilroberta-en-fr
                   # temporal-nauthor-sequential-conversation-distilroberta-en-fr-predators
-                    "dataset": "temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators",
+                    "dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta",
                     "single-split": True,
                     "rerun_splitting": False,
                     "persist_splits": True,
@@ -1244,7 +1286,7 @@ sessions = {
                 },
                 {
                     # "dataset": "temporal-nauthor-sequential-conversation-distilroberta-en-fr",
-                    "dataset": "temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators",
+                    "dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta",
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/preprocessed/sequential-v2/temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-en-fr/p-v768-filtered/splits-n3stratified.pkl",
@@ -1313,14 +1355,14 @@ sessions = {
                 { # temporal-nauthor-sequential-conversation-v2-dataset-distilroberta, temporal-nauthor-sequential-conversation-dataset-distilroberta-pretrained
                   # sequential-conversation-dataset-distilroberta-pretrained, temporal-nauthor-sequential-conversation-distilroberta-en-fr, sequential-conversation-distilroberta-en-fr
                   # temporal-nauthor-sequential-conversation-distilroberta-en-fr-predators, toy-temporal-sequential-conversation-v2-dataset-distilroberta
-                    "dataset": "temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators",
+                    "dataset": "temporal-nauthor-sequential-conversation-distilroberta-nllb-zho-predators",
                     "validate-on-test": True,                
                 },
             ),
         ],
         "model_configs": {
             "activation": ("relu", dict()),
-            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(8.1)}),
             "lr": 0.0005,
             'hidden_size': 514,
             'num_layers': 1,
@@ -1340,7 +1382,7 @@ sessions = {
                 "condition_save_threshold": 10000,
                 },
                 {
-                    "dataset": "temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators",
+                    "dataset": "temporal-nauthor-sequential-conversation-distilroberta-nllb-mya-predators",
                     # "dataset": "temporal-nauthor-sequential-conversation-distilroberta-en-fr-predators",
                     "validate-on-test": True,                
                 },
@@ -1348,7 +1390,7 @@ sessions = {
         ],
         "model_configs": {
             "activation": ("relu", dict()),
-            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(8.1)}),
             "lr": 0.0005,
             'hidden_size': 514,
             'num_layers': 1,
