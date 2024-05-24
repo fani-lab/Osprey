@@ -361,6 +361,53 @@ datasets = {
         }
     ),
 
+
+    "temporal-nauthor-sequential-conversation-distilroberta-nllb-pes-fra-zho-predators": ( # the translations are only predatory messages
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/translated/predatory_nllb-pes_Arab-fra_Latn-zho_Hans.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+        }
+    ),
+
+    #################### No backtranslations, all training at once
+    "temporal-nauthor-sequential-conversation-distilroberta": (
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/training.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+        }
+    ),
+
+
+    ###################################### End of backtranslation
+
     "temporal-nauthor-sequential-conversation-dataset-distilroberta-pretrained": (
         "temporal-nauthor-sequential-distilroberta-more-trained",  # short name of the dataset
         {       # train configs
