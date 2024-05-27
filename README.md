@@ -14,6 +14,8 @@ Table of content:
 You can setup the code in different ways. You can use package managers such as Mamba and Conda to install the packages. If you prefer using docker, clone this project and build the Dockerfile.
 First we need the project source code.
 ```sh
+# If you are visiting this page using Github Anonymizer, please download the repository
+#    directly from the download button at the top right corner.
 git clone https://github.com/fani-lab/Osprey.git
 cd Osprey
 ```
