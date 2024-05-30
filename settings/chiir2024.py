@@ -383,6 +383,177 @@ datasets = {
         }
     ),
 
+
+    ################## Backtranslation - m2m100-1.2B-f16
+    "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-fr-predators": ( # the translations are only predatory messages
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/translated/predatory-m2m100-1.2B-f16-fr_noformat.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-fa-predators": ( # the translations are only predatory messages
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/translated/predatory-m2m100-1.2B-f16-fa_noformat.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-zh-predators": ( # the translations are only predatory messages
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/translated/predatory-m2m100-1.2B-f16-zh_noformat.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-ca-predators": ( # the translations are only predatory messages
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/translated/predatory-m2m100-1.2B-f16-ca_noformat.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-hi-predators": ( # the translations are only predatory messages
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/translated/predatory-m2m100-1.2B-f16-hi_noformat.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-is-predators": ( # the translations are only predatory messages
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/translated/predatory-m2m100-1.2B-f16-is_noformat.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-my-predators": ( # the translations are only predatory messages
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/translated/predatory-m2m100-1.2B-f16-my_noformat.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-fr-fa-zh-predators": ( # the translations are only predatory messages
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/translated/predatory-m2m100-1.2B-f16-fr-fa-zh_noformat.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+        }
+    ),
+
+
     #################### No backtranslations, all training at once
     "temporal-nauthor-sequential-conversation-distilroberta": (
         "temporal-nauthor-sequential-embedding",  # short name of the dataset
@@ -1302,11 +1473,10 @@ sessions = {
                   # sequential-conversation-dataset-distilroberta-pretrained, temporal-nauthor-sequential-conversation-distilroberta-en-fr, sequential-conversation-distilroberta-en-fr
                   # temporal-nauthor-sequential-conversation-distilroberta-en-fr-predators
                     "dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta",
-                    "single-split": True,
                     "rerun_splitting": False,
                     "persist_splits": True,
                     "load_splits_from": "data/splits-sequential-filtered-convsize-author2/splits-n3stratified.pkl",
-                    "n_splits": 1,
+                    "n_splits": 3,
                 }
             ),
             ("test", {"weights_checkpoint_path": []}, {"dataset": "temporal-nauthor-sequential-conversation-v2-dataset-distilroberta"}),
@@ -1317,7 +1487,7 @@ sessions = {
             "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(16.5)}),
             "lr": 0.0005,
             'hidden_size': 512,
-            'num_layers': 3,
+            'num_layers': 1,
             "module_session_path": "output-ecir2024",
             "session_path_include_time": False,
             "early_stop": False,
@@ -1331,6 +1501,7 @@ sessions = {
                 "epoch_num": 30,
                 "batch_size": 8,
                 "weights_checkpoint_path": "",
+                "condition_save_threshold": 10000,
                 },
                 {
                     # "dataset": "temporal-nauthor-sequential-conversation-distilroberta-en-fr",
@@ -1365,6 +1536,7 @@ sessions = {
                 "epoch_num": 30,
                 "batch_size": 8,
                 "weights_checkpoint_path": "",
+                "condition_save_threshold": 10000,
                 },
                 {
                     "dataset": "sequential-conversation-dataset-distilroberta-pretrained",
@@ -1403,7 +1575,7 @@ sessions = {
                 { # temporal-nauthor-sequential-conversation-v2-dataset-distilroberta, temporal-nauthor-sequential-conversation-dataset-distilroberta-pretrained
                   # sequential-conversation-dataset-distilroberta-pretrained, temporal-nauthor-sequential-conversation-distilroberta-en-fr, sequential-conversation-distilroberta-en-fr
                   # temporal-nauthor-sequential-conversation-distilroberta-en-fr-predators, toy-temporal-sequential-conversation-v2-dataset-distilroberta
-                    "dataset": "temporal-nauthor-sequential-conversation-distilroberta-nllb-zho-predators",
+                    "dataset": "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-fr-predators",
                     "validate-on-test": True,                
                 },
             ),
@@ -1430,7 +1602,7 @@ sessions = {
                 "condition_save_threshold": 10000,
                 },
                 {
-                    "dataset": "temporal-nauthor-sequential-conversation-distilroberta-nllb-mya-predators",
+                    "dataset": "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-fa-predators",
                     # "dataset": "temporal-nauthor-sequential-conversation-distilroberta-en-fr-predators",
                     "validate-on-test": True,                
                 },

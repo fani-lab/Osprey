@@ -16,7 +16,7 @@ dependencies:
   - pandas
   - nltk
   - lxml
-  - sentence-transformers
+  - sentence-transformers=2.3.1
   - torchmetrics
   - matplotlib
   - scikit-learn
