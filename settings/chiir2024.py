@@ -256,6 +256,50 @@ datasets = {
         }
     ),
 
+    "temporal-nauthor-sequential-conversation-distilroberta-nllb-de-predators": ( # the translations are only predatory messages
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/translated/predatory_nllb-deu_Latn.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+            
+        }
+    ),
+
+    "temporal-nauthor-sequential-conversation-distilroberta-nllb-is-predators": ( # the translations are only predatory messages
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/translated/predatory_nllb-isl_Latn.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+            
+        }
+    ),
+
     "temporal-nauthor-sequential-conversation-distilroberta-nllb-cat-predators": ( # the translations are only predatory messages
         "temporal-nauthor-sequential-embedding",  # short name of the dataset
         {       # train configs
@@ -448,6 +492,27 @@ datasets = {
         }
     ),
 
+    "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-de-predators": ( # the translations are only predatory messages
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/translated/predatory-m2m100-1.2B-f16-zh_noformat.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+        }
+    ),
+
     "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-ca-predators": ( # the translations are only predatory messages
         "temporal-nauthor-sequential-embedding",  # short name of the dataset
         {       # train configs
@@ -532,10 +597,11 @@ datasets = {
         }
     ),
 
-    "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-fr-fa-zh-predators": ( # the translations are only predatory messages
+    # bcewithlogits --> 3.25
+    "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-fr-fa-zh-de-predators": ( # the translations are only predatory messages
         "temporal-nauthor-sequential-embedding",  # short name of the dataset
         {       # train configs
-            "data_path": "data/dataset-v2/translated/predatory-m2m100-1.2B-f16-fr-fa-zh_noformat.csv",
+            "data_path": "data/dataset-v2/translated/predatory-m2m100-1.2B-f16-fr-fa-zh-de.csv",
             "output_path": "data/preprocessed/sequential-v2/",
             "load_from_pkl": True,
             "preprocessings": __preprocessings__,
@@ -1575,7 +1641,7 @@ sessions = {
                 { # temporal-nauthor-sequential-conversation-v2-dataset-distilroberta, temporal-nauthor-sequential-conversation-dataset-distilroberta-pretrained
                   # sequential-conversation-dataset-distilroberta-pretrained, temporal-nauthor-sequential-conversation-distilroberta-en-fr, sequential-conversation-distilroberta-en-fr
                   # temporal-nauthor-sequential-conversation-distilroberta-en-fr-predators, toy-temporal-sequential-conversation-v2-dataset-distilroberta
-                    "dataset": "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-fr-predators",
+                    "dataset": "temporal-nauthor-sequential-conversation-distilroberta-nllb-de-predators",
                     "validate-on-test": True,                
                 },
             ),
@@ -1602,7 +1668,7 @@ sessions = {
                 "condition_save_threshold": 10000,
                 },
                 {
-                    "dataset": "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-fa-predators",
+                    "dataset": "temporal-nauthor-sequential-conversation-distilroberta-nllb-is-predators",
                     # "dataset": "temporal-nauthor-sequential-conversation-distilroberta-en-fr-predators",
                     "validate-on-test": True,                
                 },
