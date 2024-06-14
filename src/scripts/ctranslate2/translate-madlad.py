@@ -60,16 +60,6 @@ logger.info(f"after: {df.shape[0]}")
 def decode(translation_results, tokenizer):
     return tokenizer.batch_decode([tokenizer.convert_tokens_to_ids(t.hypotheses[0]) for t in translation_results])
 
-# def fw_bw_translate(texts, translator, tokenizer, target_langs, langs, batch_size=256):
-#     texts = [tokenizer.convert_ids_to_tokens(t) for t in tokenizer.batch_encode_plus(texts).input_ids]
-#     results = {}
-#     for lang in target_langs:
-#         fw_translations_subworded = translator.translate_batch([[langs[lang]] + t for t in texts], max_batch_size=batch_size)
-#         bw_translations_subworded = translator.translate_batch([[langs['en']]+ tr.hypotheses[0] for tr in fw_translations_subworded], max_batch_size=batch_size)
-#         results[lang] = (decode(fw_translations_subworded), decode(bw_translations_subworded))
-#     return results
-
-
 ################
 def fw_bw_translate(data, translator, tokenizer, target_langs, window_size=128):
     src_lang = "eng_Latn"
