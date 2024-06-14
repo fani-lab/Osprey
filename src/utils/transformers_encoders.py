@@ -3,7 +3,6 @@ from sentence_transformers import SentenceTransformer
 import torch
 import numpy as np
 from gensim.models import KeyedVectors
-from tqdm import tqdm
 
 import logging
 
@@ -186,7 +185,7 @@ class SequentialTransformersEmbeddingEncoderWithContext(TransformersEmbeddingEnc
             result = []
 
         contexts = [context for context in zip(*record[0])]
-        for i, (context, sequence_records) in enumerate(tqdm(zip(contexts, record[1]))):
+        for i, (context, sequence_records) in enumerate(zip(contexts, record[1])):
             temp = torch.cat((torch.tensor(context, device=self.device), super().transform(sequence_records)[0]))
             result[i] = temp
         
