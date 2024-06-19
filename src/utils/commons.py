@@ -4,11 +4,13 @@ import pandas as pd
 import numpy as np
 import torch
 from torch.nn.utils.rnn import pad_sequence
+from torch.nn import CosineSimilarity
+from sentence_transformers import SentenceTransformer
 import torchmetrics
 from sklearn.metrics import auc
 import nltk
+from tqdm import tqdm
 from lxml import etree
-
 
 def nltk_tokenize(input) -> list[list[str]]:
     tokens = [nltk.tokenize.word_tokenize(record.lower()) if pd.notna(record) else [] for record in input]
@@ -261,6 +263,26 @@ def padding_collate_sequence_batch(batch):
         data_list.append(data.to_dense() if data.is_sparse else data)
     
     return pad_sequence(data_list, batch_first=True, padding_value=1.0/data_list[0].shape[-1]), torch.tensor(label_list)
+
+def calculate_embedding_similarity(references, hypotheses, embedder="johngiorgi/declutr-base"):
+    if len(references) != len(hypotheses):
+        raise ValueError("reference and hypotheses should be of the same length")
+    window_size = 512
+
+    cosine = CosineSimilarity(dim=1)
+    model = SentenceTransformer(embedder, device='cuda')
+    l = len(references)
+    results = [0.0]*l
+    i = 0
+    for s in tqdm(range(0, l, window_size)):
+        e = min(s+window_size, l)
+        _ref = model.encode(references[s:e], batch_size=window_size, convert_to_tensor=True, show_progress_bar=False)
+        _hyp = model.encode(hypotheses[s:e], batch_size=window_size, convert_to_tensor=True, show_progress_bar=False)
+        results[s:e] = cosine(_ref, _hyp).cpu().tolist()
+        i += 1
+        if i%5 == 0:
+            torch.cuda.empty_cache()
+    return results
 
 
 class RegisterableObject:
