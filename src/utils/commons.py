@@ -284,6 +284,10 @@ def calculate_embedding_similarity(references, hypotheses, embedder="johngiorgi/
             torch.cuda.empty_cache()
     return results
 
+def get_token_count_diff(references, hypotheses):
+    org = [(len(nltk.tokenize.word_tokenize(phrase)) if pd.notna(phrase) else 0) for phrase in references]
+    secondary = [(len(nltk.tokenize.word_tokenize(phrase)) if pd.notna(phrase) else 0) for phrase in hypotheses]
+    return [secondary[i] - org[i] for i in range(len(org))]
 
 class RegisterableObject:
 

@@ -11,6 +11,8 @@ import evaluate
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 from tqdm import tqdm
 
+from src.utils.commons import calculate_embedding_similarity, get_token_count_diff
+
 FORMATTER = logging.Formatter("%(asctime)s | %(name)s | %(levelname)s : %(message)s")
 FORMATTER_VERBOSE = logging.Formatter(
     "%(asctime)s | %(name)s | %(levelname)s | %(filename)s %(funcName)s @ %(lineno)s : %(message)s")
@@ -60,23 +62,6 @@ df = df[df['conv_size'] >= 6]
 df.reset_index(inplace=True, drop=True)
 df.sort_values("msg_word_count", inplace=True, ascending=False)
 logger.info(f"after: {df.shape[0]}")
-
-
-def semsim(references, hypotheses):
-    if len(references) != len(hypotheses):
-        raise ValueError("reference and hypotheses should be of the same length")
-    window_size = 256
-    from torch.nn import CosineSimilarity
-    cosine = CosineSimilarity(dim=1)
-    model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2", device='cuda')
-    l = len(references)
-    results = [0.0]*l
-    for s in tqdm(range(0, l, window_size)):
-        e = min(s+window_size, l)
-        _ref = model.encode(references.iloc[s:e].tolist(), batch_size=window_size, convert_to_tensor=True, show_progress_bar=False)
-        _hyp = model.encode(hypotheses.iloc[s:e].tolist(), batch_size=window_size, convert_to_tensor=True, show_progress_bar=False)
-        results[s:e] = (1 - cosine(_ref, _hyp)).tolist()
-    return results
 
 
 def decode(translation_results, tokenizer):
@@ -159,19 +144,20 @@ try:
     for p in saved_paths:
         logger.info(f"loading: {p}")
         bw_df = pd.read_csv(p, encoding="utf-32", index_col=0)
-        hypotheses = bw_df["backward"].fillna("")
-        references = df["text"].fillna("")
+        hypotheses = bw_df["backward"].fillna("").tolist()
+        references = df["text"].fillna("").tolist()
         rs = rouge.compute(predictions=hypotheses, references=references, use_aggregator=False)
         bleus = [0]*hypotheses.shape[0]
         for i in range(hypotheses.shape[0]):
-            bleus[i] = sentence_bleu(references=[references.iloc[i].lower().split()], hypothesis=hypotheses.iloc[i].lower().split(), smoothing_function=smoothing_function)
+            bleus[i] = sentence_bleu(references=[references[i].lower().split()], hypothesis=hypotheses[i].lower().split(), smoothing_function=smoothing_function)
         
         bw_df["bleus"] = pd.DataFrame(bleus)
         for r in rs.keys():
             bw_df[r] = pd.DataFrame(rs[r])
         # semsim
-        cosine_similarity = semsim(references, hypotheses)
-        bw_df['semsim'] = pd.DataFrame(cosine_similarity)
+        bw_df['semsim-declutr'] = pd.DataFrame(calculate_embedding_similarity(references, hypotheses, "johngiorgi/declutr-base"))
+        bw_df['semsim-minilm'] = pd.DataFrame(calculate_embedding_similarity(references, hypotheses, "sentence-transformers/all-MiniLM-L6-v2"))
+        bw_df['token_count_dif'] = get_token_count_diff(references, hypotheses)
         
         logger.info(f"saving dataframe at: {p}")
         bw_df.to_csv(p, encoding="utf-32")
