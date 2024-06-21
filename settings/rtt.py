@@ -2,7 +2,7 @@ import torch
 
 USE_CUDA_IF_AVAILABLE = True
 __preprocessings__ = [] ## Just to make it easier to change configurations
-
+AGGERAGETD_METRICS_PATH = "agg-rtt.py"
 
 datasets = {
 
@@ -783,6 +783,26 @@ datasets = {
 
 }
 
+language_gru_0  = "m2m100-1.2B-f16-fr"
+language_lstm_0 = "m2m100-1.2B-f16-fr"
+
+# language_gru_0  = "nllb-fr"
+# language_lstm_0 = "nllb-fr"
+
+# language_gru_0  = "gcpt-fr"
+# language_lstm_0 = "gcpt-fr"
+
+
+language_gru_1  = "m2m100-1.2B-f16-is-hi-ca-my"
+language_lstm_1 = "m2m100-1.2B-f16-fr-fa-zh-de"
+
+# language_gru_1  = "nllb-is-hi-ca-my"
+# language_lstm_1 = "nllb-pes-fra-zho-deu"
+
+# language_gru_1  = "gcpt-fr-fa-de-zh"
+# language_lstm_1 = "gcpt-is-hi-ca-my"
+
+
 
 sessions = {
 ############## Distilroberta single validation
@@ -841,5 +861,135 @@ sessions = {
             "early_stop": False,
         },
     },
+
+######## With splits and everything
+    "lstm-distilroberta-0": {
+        "model": "lstm",
+        "commands": [
+            ("train", {
+                "epoch_num": 20,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": f"temporal-nauthor-sequential-conversation-distilroberta-{language_lstm_0}-predators",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/preprocessed/sequential-v2/temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-fr-predators/p-v768-filtered/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                    "validate-on-test": False, 
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": f"temporal-nauthor-sequential-conversation-distilroberta-{language_lstm_0}-predators"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": f"temporal-nauthor-sequential-conversation-distilroberta-{language_lstm_0}-predators"}),
+        ],
+        "model_configs": {
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(8.1)}),
+            "lr": 0.0005,
+            'hidden_size': 512,
+            'num_layers': 1,
+            "module_session_path": "output-2024",
+            "session_path_include_time": False,
+            "early_stop": False,
+        },
+    },
+
+    "gru-distilroberta-0": {
+        "model": "gru",
+        "commands": [
+            ("train", {
+                "epoch_num": 20,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": f"temporal-nauthor-sequential-conversation-distilroberta-{language_gru_0}-predators",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/preprocessed/sequential-v2/temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-fr-predators/p-v768-filtered/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                    "validate-on-test": False, 
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": f"temporal-nauthor-sequential-conversation-distilroberta-{language_gru_0}-predators"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": f"temporal-nauthor-sequential-conversation-distilroberta-{language_gru_0}-predators"}),
+        ],
+        "model_configs": {
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(8.1)}),
+            "lr": 0.0005,
+            'hidden_size': 512,
+            'num_layers': 1,
+            "module_session_path": "output-2024",
+            "session_path_include_time": False,
+            "early_stop": False,
+        },
+    },
+
+    "lstm-distilroberta-1": {
+        "model": "lstm",
+        "commands": [
+            ("train", {
+                "epoch_num": 20,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": f"temporal-nauthor-sequential-conversation-distilroberta-{language_lstm_1}-predators",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/preprocessed/sequential-v2/temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-fr-fa-zh-de-predators/p-v768-filtered/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                    "validate-on-test": False, 
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": f"temporal-nauthor-sequential-conversation-distilroberta-{language_lstm_1}-predators"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": f"temporal-nauthor-sequential-conversation-distilroberta-{language_lstm_1}-predators"}),
+        ],
+        "model_configs": {
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(3.25)}),
+            "lr": 0.0005,
+            'hidden_size': 512,
+            'num_layers': 1,
+            "module_session_path": "output-2024",
+            "session_path_include_time": False,
+            "early_stop": False,
+        },
+    },
+
+    "gru-distilroberta-1": {
+        "model": "gru",
+        "commands": [
+            ("train", {
+                "epoch_num": 20,
+                "batch_size": 8,
+                "weights_checkpoint_path": "",
+                },
+                {
+                    "dataset": f"temporal-nauthor-sequential-conversation-distilroberta-{language_gru_1}-predators",
+                    "rerun_splitting": False,
+                    "persist_splits": True,
+                    "load_splits_from": "data/preprocessed/sequential-v2/temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-fr-fa-zh-de-predators/p-v768-filtered/splits-n3stratified.pkl",
+                    "n_splits": 3,
+                    "validate-on-test": False, 
+                }
+            ),
+            ("test", {"weights_checkpoint_path": []}, {"dataset": f"temporal-nauthor-sequential-conversation-distilroberta-{language_gru_1}-predators"}),
+            ("eval", {"path": '', "use_current_session": True}, {"dataset": f"temporal-nauthor-sequential-conversation-distilroberta-{language_gru_1}-predators"}),
+        ],
+        "model_configs": {
+            "activation": ("relu", dict()),
+            "loss_func": ("BCEW", {"reduction": "sum", "pos_weight": torch.tensor(3.25)}),
+            "lr": 0.0005,
+            'hidden_size': 512,
+            'num_layers': 1,
+            "module_session_path": "output-2024",
+            "session_path_include_time": False,
+            "early_stop": False,
+        },
+    },
+
 }
 

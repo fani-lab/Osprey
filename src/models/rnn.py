@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
 
-from src.utils.commons import force_open, calculate_metrics_extended, padding_collate_sequence_batch
+from src.utils.commons import force_open, calculate_metrics_extended, roc_auc, padding_collate_sequence_batch
 
 logger = logging.getLogger()
 
@@ -170,7 +170,8 @@ class BaseRnnModule(Baseline, nn.Module):
                 all_targets = torch.stack(all_targets)
                 
                 accuracy_value, recall_value, precision_value, f2score, f05score = calculate_metrics_extended(all_preds, all_targets, device=self.device)
-                logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f} | f2: {(100 * f2score):>0.6f} | f0.5: {(100 * f05score):>0.6f}")
+                aucroc = roc_auc(all_preds, all_targets, device=self.device)
+                logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f} | f2: {(100 * f2score):>0.6f} | f0.5: {(100 * f05score):>0.6f} | aucroc: {(aucroc):>0.5f}")
                 
                 epoch_snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_f{fold}_e{i}.pth")
                 if f2score >= condition_save_threshold:
