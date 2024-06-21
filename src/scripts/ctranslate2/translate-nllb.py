@@ -126,7 +126,7 @@ try:
         
         new_df['forward'] = pd.DataFrame(forward)
         new_df['backward'] = pd.DataFrame(backward)
-        p = f"{ct_model_path}translation_fw_bw_{l}.csv"
+        p = f"{ct_model_path}nllb_200_3.3B-{l}.csv"
         logger.info(f"saving at: {p}")
         new_df.to_csv(p, encoding="utf-32")
     saved_paths.append(p)
@@ -136,30 +136,26 @@ try:
     rs = None
     bw_df = None
     smoothing_function = SmoothingFunction().method2
-    
+
     for p in saved_paths:
         logger.info(f"loading: {p}")
-
         bw_df = pd.read_csv(p, encoding="utf-32", index_col=0)
         hypotheses = bw_df["backward"].fillna("").tolist()
         references = df["text"].fillna('').tolist()
         rs = rouge.compute(predictions=hypotheses, references=references, use_aggregator=False)
-        bleus = [0]*hypotheses.shape[0]
-        for i in range(hypotheses.shape[0]):
+        bleus = [0]*len(hypotheses)
+        for i in range(len(hypotheses)):
             bleus[i] = sentence_bleu(references=[references[i].lower().split()], hypothesis=hypotheses[i].lower().split(), smoothing_function=smoothing_function)
-
         bw_df["bleus"] = pd.DataFrame(bleus)
         for r in rs.keys():
             bw_df[r] = pd.DataFrame(rs[r])
-
         # semsim
         bw_df['semsim-declutr'] = pd.DataFrame(calculate_embedding_similarity(references, hypotheses, "johngiorgi/declutr-base"))
         bw_df['semsim-minilm'] = pd.DataFrame(calculate_embedding_similarity(references, hypotheses, "sentence-transformers/all-MiniLM-L6-v2"))
         bw_df['token_count_dif'] = get_token_count_diff(references, hypotheses)
-
         logger.info(f"saving dataframe at: {p}")
-        pd.merge(df, bw_df, on=["conv_id", "msg_line"])
-        bw_df.to_csv(p, encoding="utf-32")
+        bw_df = pd.merge(df, bw_df, on=["conv_id", "msg_line"])
+        bw_df.to_csv(p, encoding="utf-8")
 
 except Exception as e:
     logger.exception(e)
