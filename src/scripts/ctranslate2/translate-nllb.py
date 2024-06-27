@@ -12,8 +12,8 @@ from sentence_transformers import SentenceTransformer
 
 from src.utils.commons import calculate_embedding_similarity, get_token_count_diff
 
-# ct_model_path = "temp/facebook/nllb-200-distilled-600M/"
-ct_model_path = "temp/facebook/nllb-200-3.3B/"
+# ct_model_path = "temp/nllb-200-distilled-600M/"
+ct_model_path = "temp/nllb-200-3.3B/"
 sp_model_path = "flores200sacrebleuspm"
 start_time_str = strftime("%m-%d-%Y-%H-%M-%S", localtime())
 
@@ -53,15 +53,15 @@ logger.info("loading model")
 translator = ctranslate2.Translator(ct_model_path, device)
 logger.info("model is loaded")
 logger.info("reading the dataframes")
-df = pd.read_csv("data/dataset-v2/train.csv", index_col=0)
+original_df = pd.read_csv("data/dataset-v2/train.csv", index_col=0)
+logger.info(f"before: {original_df.shape[0]}")
 logger.info("filtering the dataframe")
-df["text"] = df["text"].fillna("")
+original_df["text"] = original_df["text"].fillna("")
 logger.info("no partitioning")
-df = df[df["predatory_conv"] == 1.0]
+df = original_df[original_df["predatory_conv"] == 1.0]
 df = df[df['conv_size'] >= 6]
 df.reset_index(inplace=True, drop=True)
 
-logger.info(f"before: {df.shape[0]}")
 # df = df[(df["text"] != '')]
 logger.info(f"after: {df.shape[0]}")
 
@@ -128,7 +128,7 @@ try:
         new_df['backward'] = pd.DataFrame(backward)
         p = f"{ct_model_path}nllb_200_3.3B-{l}.csv"
         logger.info(f"saving at: {p}")
-        new_df.to_csv(p, encoding="utf-32")
+        new_df.to_csv(p, encoding="utf-8")
     saved_paths.append(p)
 
     logger.info("evaluating")
@@ -139,7 +139,7 @@ try:
 
     for p in saved_paths:
         logger.info(f"loading: {p}")
-        bw_df = pd.read_csv(p, encoding="utf-32", index_col=0)
+        bw_df = pd.read_csv(p, encoding="utf-8", index_col=0)
         hypotheses = bw_df["backward"].fillna("").tolist()
         references = df["text"].fillna('').tolist()
         rs = rouge.compute(predictions=hypotheses, references=references, use_aggregator=False)
@@ -154,7 +154,7 @@ try:
         bw_df['semsim-minilm'] = pd.DataFrame(calculate_embedding_similarity(references, hypotheses, "sentence-transformers/all-MiniLM-L6-v2"))
         bw_df['token_count_dif'] = get_token_count_diff(references, hypotheses)
         logger.info(f"saving dataframe at: {p}")
-        bw_df = pd.merge(df, bw_df, on=["conv_id", "msg_line"])
+        bw_df = pd.merge(original_df, bw_df, on=["conv_id", "msg_line"])
         bw_df.to_csv(p, encoding="utf-8")
 
 except Exception as e:

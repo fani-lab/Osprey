@@ -53,11 +53,11 @@ tokenizer.src_lang = "en"
 logger.info("the tokenizer is loaded")
 
 logger.info("reading the dataframes")
-df = pd.read_csv("data/dataset-v2/train.csv", index_col=0)
+original_df = pd.read_csv("data/dataset-v2/train.csv", index_col=0)
 logger.info("filtering the dataframe")
-logger.info(f"before: {df.shape[0]}")
-df["text"] = df["text"].fillna("")
-df = df[df["predatory_conv"] == 1.0]
+logger.info(f"before: {original_df.shape[0]}")
+original_df["text"] = original_df["text"].fillna("")
+df = original_df[original_df["predatory_conv"] == 1.0]
 df = df[df['conv_size'] >= 6]
 df.reset_index(inplace=True, drop=True)
 df.sort_values("msg_word_count", inplace=True, ascending=False)
@@ -132,7 +132,7 @@ try:
         new_df['backward'] = pd.DataFrame(backward)
         p = f"{ct_model_path}m2m100_1.2B_f16{l}_noformat.csv"
         logger.info(f"saving at: {p}")
-        new_df.to_csv(p, encoding="utf-32")
+        new_df.to_csv(p, encoding="utf-8")
         saved_paths.append(p)
 
     logger.info("evaluating")
@@ -140,10 +140,10 @@ try:
     rs = None
     bw_df = None
     smoothing_function = SmoothingFunction().method2
-    # just adding the metrics of backtranslation quality
+        # just adding the metrics of backtranslation quality
     for p in saved_paths:
         logger.info(f"loading: {p}")
-        bw_df = pd.read_csv(p, encoding="utf-32", index_col=0)
+        bw_df = pd.read_csv(p, encoding="utf-8", index_col=0)
         hypotheses = bw_df["backward"].fillna("").tolist()
         references = df["text"].fillna("").tolist()
         rs = rouge.compute(predictions=hypotheses, references=references, use_aggregator=False)
@@ -158,7 +158,7 @@ try:
         bw_df['semsim-minilm'] = pd.DataFrame(calculate_embedding_similarity(references, hypotheses, "sentence-transformers/all-MiniLM-L6-v2"))
         bw_df['token_count_dif'] = get_token_count_diff(references, hypotheses)
         logger.info(f"saving dataframe at: {p}")
-        bw_df = pd.merge(df, bw_df, on=["conv_id", "msg_line"])
+        bw_df = pd.merge(original_df, bw_df, on=["conv_id", "msg_line"])
         bw_df.to_csv(p, encoding="utf-8")
 
 except Exception as e:
