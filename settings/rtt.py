@@ -2,7 +2,7 @@ import torch
 
 USE_CUDA_IF_AVAILABLE = True
 __preprocessings__ = [] ## Just to make it easier to change configurations
-AGGERAGETD_METRICS_PATH = "agg-rtt.py"
+AGGERAGETD_METRICS_PATH = "agg-rtt.csv"
 
 datasets = {
 
@@ -199,6 +199,27 @@ datasets = {
         }
     ),
 
+    "temporal-nauthor-sequential-conversation-distilroberta-nllb-ps-predators": ( # the translations are only predatory messages
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/translated/predatory_nllb-pbt_Arab.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+        }
+    ),
+
     # bcewithlogits --> 3.25
     "temporal-nauthor-sequential-conversation-distilroberta-nllb-pes-fra-zho-deu-predators": ( # the translations are only predatory messages
         "temporal-nauthor-sequential-embedding",  # short name of the dataset
@@ -226,6 +247,27 @@ datasets = {
         "temporal-nauthor-sequential-embedding",  # short name of the dataset
         {       # train configs
             "data_path": "data/dataset-v2/translated/predatory_nllb-isl_Latn-hin_Deva-cat_Latn-mya_Mymr.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+        }
+    ),
+
+    "temporal-nauthor-sequential-conversation-distilroberta-nllb-ca-ps-is-my-predators": ( # the translations are only predatory messages
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/translated/predatory_nllb-cat_Latn-pbt_Arab-isl_Latn-mya_Mymr.csv",
             "output_path": "data/preprocessed/sequential-v2/",
             "load_from_pkl": True,
             "preprocessings": __preprocessings__,
@@ -456,6 +498,27 @@ datasets = {
         }
     ),
 
+    "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-ps-predators": ( # the translations are only predatory messages
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/translated/predatory-m2m100-1.2B-f16-ps_noformat.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+        }
+    ),
+
     # bcewithlogits --> 3.25
     "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-fr-fa-zh-de-predators": ( # the translations are only predatory messages
         "temporal-nauthor-sequential-embedding",  # short name of the dataset
@@ -483,6 +546,28 @@ datasets = {
         "temporal-nauthor-sequential-embedding",  # short name of the dataset
         {       # train configs
             "data_path": "data/dataset-v2/translated/predatory-m2m100-1.2B-f16-is-hi-ca-my.csv",
+            "output_path": "data/preprocessed/sequential-v2/",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": True,
+            "apply_record_filter": True,
+        },
+        {      # test configs
+            "data_path": "data/dataset-v2/test.csv",
+            "forced_output_path": "data/preprocessed/sequential-v2/test-temporal-nauthor-sequential-embedding/temporal-nauthor-sequential-conversation-distilroberta-nllb-fr-predators/p-v768-filtered",
+            "output_path": "data/preprocessed/sequential-v2/test-",
+            "load_from_pkl": True,
+            "preprocessings": __preprocessings__,
+            "persist_data": False,
+            "apply_record_filter": True,
+        }
+    ),
+
+    # bcewithlogits --> 3.25
+    "temporal-nauthor-sequential-conversation-distilroberta-m2m100-1.2B-f16-ca-ps-is-my-predators": ( # the translations are only predatory messages
+        "temporal-nauthor-sequential-embedding",  # short name of the dataset
+        {       # train configs
+            "data_path": "data/dataset-v2/translated/predatory-m2m100-1.2B-f16-ca-ps-is-my.csv",
             "output_path": "data/preprocessed/sequential-v2/",
             "load_from_pkl": True,
             "preprocessings": __preprocessings__,
@@ -778,29 +863,34 @@ datasets = {
         }
     ),
 
-
     ###################################### End of backtranslation
 
 }
 
-language_gru_0  = "m2m100-1.2B-f16-fr"
-language_lstm_0 = "m2m100-1.2B-f16-fr"
+# language_gru_0  = "m2m100-1.2B-f16-ps"
+language_lstm_0 = "m2m100-1.2B-f16-ps"
 
-# language_gru_0  = "nllb-fr"
-# language_lstm_0 = "nllb-fr"
+language_gru_0  = "nllb-ps"
+# language_lstm_0 = "nllb-ps"
 
 # language_gru_0  = "gcpt-fr"
 # language_lstm_0 = "gcpt-fr"
 
 
-language_gru_1  = "m2m100-1.2B-f16-is-hi-ca-my"
-language_lstm_1 = "m2m100-1.2B-f16-fr-fa-zh-de"
+# language_gru_1  = "m2m100-1.2B-f16-fr-fa-de-zh-is-hi-ca-my"
+# language_lstm_1 = "m2m100-1.2B-f16-fr-fa-de-zh-is-hi-ca-my"
 
-# language_gru_1  = "nllb-is-hi-ca-my"
-# language_lstm_1 = "nllb-pes-fra-zho-deu"
+# language_gru_1  = "nllb-fr-fa-de-zh-is-hi-ca-my"
+# language_lstm_1 = "nllb-fr-fa-de-zh-is-hi-ca-my"
 
-# language_gru_1  = "gcpt-fr-fa-de-zh"
-# language_lstm_1 = "gcpt-is-hi-ca-my"
+# language_gru_1  = "gcpt-fr-fa-de-zh-ca-hi-is-my"
+# language_lstm_1 = "gcpt-fr-fa-de-zh-ca-hi-is-my"
+
+# language_gru_1  = "m2m100-1.2B-f16-ca-ps-is-my"
+language_lstm_1 = "m2m100-1.2B-f16-ca-ps-is-my"
+
+language_gru_1  = "nllb-ca-ps-is-my"
+# language_lstm_1 = "nllb-ca-ps-is-my"
 
 
 
@@ -870,6 +960,7 @@ sessions = {
                 "epoch_num": 20,
                 "batch_size": 8,
                 "weights_checkpoint_path": "",
+                "condition_save_threshold": 1000,
                 },
                 {
                     "dataset": f"temporal-nauthor-sequential-conversation-distilroberta-{language_lstm_0}-predators",
@@ -902,6 +993,7 @@ sessions = {
                 "epoch_num": 20,
                 "batch_size": 8,
                 "weights_checkpoint_path": "",
+                "condition_save_threshold": 1000,
                 },
                 {
                     "dataset": f"temporal-nauthor-sequential-conversation-distilroberta-{language_gru_0}-predators",
