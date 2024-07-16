@@ -146,9 +146,11 @@ try:
         bleus = [0]*len(hypotheses)
         for i in range(len(hypotheses)):
             bleus[i] = sentence_bleu(references=[references[i].lower().split()], hypothesis=hypotheses[i].lower().split(), smoothing_function=smoothing_function)
+        
         bw_df["bleus"] = pd.DataFrame(bleus)
         for r in rs.keys():
             bw_df[r] = pd.DataFrame(rs[r])
+        
         # semsim
         bw_df['semsim-declutr'] = pd.DataFrame(calculate_embedding_similarity(references, hypotheses, "johngiorgi/declutr-base"))
         bw_df['semsim-minilm'] = pd.DataFrame(calculate_embedding_similarity(references, hypotheses, "sentence-transformers/all-MiniLM-L6-v2"))

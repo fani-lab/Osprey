@@ -57,7 +57,7 @@ original_df = pd.read_csv("data/dataset-v2/train.csv", index_col=0)
 logger.info("filtering the dataframe")
 logger.info(f"before: {original_df.shape[0]}")
 original_df["text"] = original_df["text"].fillna("")
-df = original_df[original_df["predatory_conv"] == 1.0]
+df = original_df[original_df["predatory_conv"] == 0.0]
 df = df[df['conv_size'] >= 6]
 df.reset_index(inplace=True, drop=True)
 df.sort_values("msg_word_count", inplace=True, ascending=False)
