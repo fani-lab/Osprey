@@ -6,11 +6,13 @@ RUN yum install -y curl bzip2
 RUN curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba && micromamba shell init --shell=bash --prefix=~/micromamba
 
 COPY ./environment.yml /opt/environment.yml
+ENV PATH=$CONDA_DIR/bin:$PATH
 
 RUN micromamba create -n osprey --file /opt/environment.yml && eval "$(micromamba shell hook --shell=bash)"
 RUN micromamba shell init --shell=bash --prefix=~/micromamba
 
 ENV PATH=/root/micromamba/envs/osprey/bin:$PATH
 RUN python -m nltk.downloader stopwords punkt
+WORKDIR /usr/Osprey/
 
 CMD ["bash"]
