@@ -13,4 +13,6 @@ output*/
 *.jpeg
 *.fig
 models/*
-figures/
+figures/*
+aggergated-figures/*
+temp/*
