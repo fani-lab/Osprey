@@ -48,8 +48,9 @@ def initiate_datasets(datasets_maps, device):
             except Exception as e:
                 raise Exception(f"preprocessing `{pp}` either not implemented or not registered") from e
         
-        train_dataset = dataset_class(**{**train_configs, "preprocessings": [pp() for pp in preprocessings], "device": device})
-        test_dataset = dataset_class(**{**test_configs, "parent_dataset": train_dataset, "preprocessings": [pp() for pp in preprocessings], "device": device, "apply_record_filter": False})
+        train_dataset = dataset_class(**{**train_configs, "preprocessings": [pp() for pp in preprocessings], "device": device, "dataset_name": dataset_name})
+        test_dataset = dataset_class(**{**test_configs, "parent_dataset": train_dataset, "preprocessings": [pp() for pp in preprocessings], "device": device,
+                                        "apply_record_filter": False, "dataset_name": dataset_name})
         logger.info(f"train dataset `{dataset_name}`, shortname: `{short_name}` kwargs -> {train_configs}")
         logger.info(f"test dataset `{dataset_name}`, shortname: `{short_name}` kwargs -> {test_configs}")
         datasets[dataset_name] = (train_dataset, test_dataset)
@@ -95,11 +96,17 @@ class RunTrainPipeline(CommandObject):
                         persist_splits = dataset_configs.get("persist_splits", True)
                         persist_splits = dataset_configs.get("persist_splits", True)
                         load_splits_from = dataset_configs.get("load_splits_from", True)
+                        splits = []
+                        test_dataset = None
+                        if dataset_configs.get("validate-on-test", False):
+                            logger.info("initializing test dataset in place of train validation set.")
+                            n_splits = 1
+                            test_dataset = datasets[dataset_name][1]
+                            test_dataset.prepare()
                         splits = dataset.split_dataset_by_label(n_splits, split_again, persist_splits, True, load_splits_from)
-
                         model = model_class(**model_configs, input_size=dataset.shape[-1])
                         model.to(device=device)
-                        model.learn(**command_kwargs, train_dataset=dataset, splits=splits)
+                        model.learn(**command_kwargs, train_dataset=dataset, test_dataset=test_dataset, splits=splits)
                     if command == "test":
                         dataset = datasets[dataset_name][1]
                         dataset.prepare()

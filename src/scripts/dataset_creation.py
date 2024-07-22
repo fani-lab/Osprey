@@ -218,4 +218,39 @@ class CreateConversationToySet(CommandObject):
     
     def help(self) -> str:
         return "create a toy set for conversations dataset. The output path will be the same as input just a 'toy-' prefix will be added to the file name at the end."
+
+
+class MergeTranslationWithOriginal(CommandObject):
+    def get_actions_and_args(self):
     
+        def merge_translations_with_original(original_df, translations_paths, output): # multiple translation in the same dataset
+            new_df = original_df.copy()
+
+            for i, path in enumerate(translations_paths):
+                dft = pd.read_csv(path, encoding="utf-32", index_col=0)
+                new_df = pd.concat((
+                    new_df,
+                ))
+                new_df = pd.concat((original_df[['conv_id', 'msg_line', 'author_id', 'time', 'conv_size', 'nauthor', 'text', 'tagged_predator', 'predatory_conv']],
+                    dft[['conv_id', 'msg_line', 'author_id', 'time', 'conv_size', 'nauthor', 'text', 'tagged_predator', 'predatory_conv']]) ,ignore_index=True)
+                new_df.to_csv(output)
+        
+        return (merge_translations_with_original, [{
+            "flags": "--original-df",
+            "dest": "original_df",
+            "type": str,
+            "default": "data/dataset-v2/train.csv",
+            "help": "path to the base dataset",
+        }, {
+            "flags": "--translation-paths",
+            "dest": "translations_paths",
+            "nargs": "+",
+            "default": ['data/dataset-v2/predatory_single_langs/fra_Latn.csv'],
+            "help": "list of paths to translation datasets",
+        }, {
+            "flags": "--output-path",
+            "dest": "output",
+            "type": str,
+            "default": "data/dataset-v2/translated/default.csv",
+            "help": "output path",
+        }])
