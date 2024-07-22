@@ -9,6 +9,7 @@ Table of content:
 3. [Code Structure](#3-code-structure)
 4. [Results](#4-results)
 5. [Notes](#5-notes)
+6. [Citation](#6-citation)
 
 ## 1. Setup
 You can setup the code in different ways. You can use package managers such as Mamba and Conda to install the packages. If you prefer using docker, clone this project and build the Dockerfile.
@@ -150,7 +151,7 @@ F<sub>2</sub> is of great importance as it increases the chance of capturing a p
 
 <!-- ## 4. Acknowledgement -->
 
-## 5. NOTES:
+## 5. Notes:
 ### Updating environment.yaml File
 
 In case you updated a python package and wanted to include it in the environment file, do the following steps. These steps will only include the pinned packages and the os-specific dependencies and libraries will be handled by the package manager (conda or mamba).
@@ -162,3 +163,23 @@ mamba env export --from-history > new-environment.yaml
 2. Add the channels from previous `environment.yaml` file to the channel section of `new-environment.yaml` file.
 3. In case you used new channels, add them to `new-environment.yaml` file too.
 4. Rename `environment.yaml` to `new-environment.yaml`
+
+## 6. Citation:
+```
+@inproceedings{DBLP:conf/cikm/WaeziBF24,
+  author       = {Hamed Waezi and
+                  Reza Barzegar and
+                  Hossein Fani},
+  title        = {Osprey🪶: A Reference Framework for Online Grooming Detection via Neural Models and Conversation Features},
+  booktitle    = {Proceedings of the 33rd ACM International Conference on Information and Knowledge Management (CIKM '24), October 21--25, 2024, Boise, ID, USA},
+  series       = {},
+  volume       = {},
+  pages        = {},
+  publisher    = {Springer},
+  year         = {2024},
+  url          = {https://doi.org/10.1145/3627673.3679974},
+  doi          = {10.1145/3627673.3679974},
+  biburl       = {https://dblp.org/rec/conf/cikm/WaeziBF24.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
+}
+```
