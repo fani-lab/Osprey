@@ -1,9 +1,3 @@
 logs/
 data/
 output/
-temp/
-models/
-*.pkl
-pretraining-output/
-output-pretraining/
-output-ecir2024/

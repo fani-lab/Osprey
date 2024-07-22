@@ -1,5 +1,6 @@
 import pickle
 import logging
+import shutil
 from glob import glob
 import re
 
@@ -13,9 +14,8 @@ from torch import nn
 from torch.utils.data import DataLoader, Dataset, SubsetRandomSampler
 import matplotlib.pyplot as plt
 import numpy as np
-from tqdm import tqdm
 
-from src.utils.commons import force_open, calculate_metrics_extended, roc_auc, padding_collate_sequence_batch
+from src.utils.commons import force_open, calculate_metrics_extended, padding_collate_sequence_batch
 
 logger = logging.getLogger()
 
@@ -42,7 +42,9 @@ class BaseRnnModule(Baseline, nn.Module):
         out, hn = self.core(x)
         y_hat = self.hidden2out(out[:, -1])
         # y_hat = torch.sigmoid(y_hat)
-        return y_hat
+        if y_hat.isnan().sum() > 0:
+            print(end="")
+        return hn, y_hat
 
     def get_session_path(self, *args):
         return f"{self.session_path}" + self.__class__.short_name() + "/" + "/".join([str(a) for a in args])
@@ -52,7 +54,7 @@ class BaseRnnModule(Baseline, nn.Module):
         return self.get_session_path(details, *args)
     
     def check_stop_early(self, *args, **kwargs):
-        return kwargs.get("f2score", 0.0) >= 0.98 and self.early_stop
+        return kwargs.get("f2score", 0.0) >= 0.95 and self.early_stop
     
     def reset_modules(self, module, parents_modules_names=[]):
         for name, module in module.named_children():
@@ -82,107 +84,90 @@ class BaseRnnModule(Baseline, nn.Module):
         logger.debug(f"scheduler settings: {scheduler_args}")
         return ReduceLROnPlateau(optimizer, **scheduler_args)
     
-    def get_dataloaders(self, dataset, test_dataset, train_ids, validation_ids, batch_size):
+    def get_dataloaders(self, dataset, train_ids, validation_ids, batch_size):
         train_subsampler = SubsetRandomSampler(train_ids)
+        validation_subsampler = SubsetRandomSampler(validation_ids)
         train_loader = DataLoader(dataset, batch_size=batch_size, drop_last=False,
                                                     sampler=train_subsampler, collate_fn=padding_collate_sequence_batch)
-        if len(validation_ids) > 0:
-            validation_subsampler = SubsetRandomSampler(validation_ids)
-            validation_loader = DataLoader(dataset, batch_size=batch_size, drop_last=False,
-                                                            sampler=validation_subsampler, collate_fn=padding_collate_sequence_batch)
-        elif test_dataset is not None: # initializing test dataset as of validation set
-            validation_loader = DataLoader(test_dataset, batch_size=batch_size, drop_last=False, collate_fn=padding_collate_sequence_batch)
-        else:
-            validation_loader = None
-            logger.warning("no validation id nor test dataset is provided")
-            # raise ValueError("no validation id nor test dataset is provided")
+        validation_loader = DataLoader(dataset, batch_size=batch_size, drop_last=False,
+                                                        sampler=validation_subsampler, collate_fn=padding_collate_sequence_batch)
         return train_loader, validation_loader
 
-    def learn(self, epoch_num:int , batch_size: int, splits: list, train_dataset: Dataset, test_dataset: Dataset=None, weights_checkpoint_path: str=None, condition_save_threshold=0.9):
+    def learn(self, epoch_num:int , batch_size: int, splits: list, train_dataset: Dataset, weights_checkpoint_path: str=None, condition_save_threshold=0.9):
         if weights_checkpoint_path is not None and len(weights_checkpoint_path):
-            checkpoint = torch.load(weights_checkpoint_path)
-            self.load_state_dict(checkpoint.get("model", checkpoint))
-
+            self.load_params(weights_checkpoint_path)
+        
         logger.info(f"saving epoch condition: f2score>{condition_save_threshold}")
         logger.info("training phase started")
-        
         folds_metrics = []
-        logger.info(f"number of folds: {len(splits)}")
         for fold, (train_ids, validation_ids) in enumerate(splits):
-            self.train()
-            logger.info("Resetting Optimizer, Learning rate, and Scheduler")
             self.optimizer = self.get_new_optimizer(self.init_lr)
             self.scheduler = self.get_new_scheduler(self.optimizer)
-            last_lr = self.init_lr
+            logger.info(self.optimizer)
+            logger.info(self.scheduler)
             logger.info(f'fetching data for fold #{fold}')
-            train_loader, validation_loader = self.get_dataloaders(train_dataset, test_dataset, train_ids, validation_ids, batch_size)
-            # Train phase
+            train_loader, validation_loader = self.get_dataloaders(train_dataset, train_ids, validation_ids, batch_size)
+            
+            last_lr = self.init_lr
             total_loss = []
             total_validation_loss = []
             # resetting module parameters
             self.reset_modules(module=self)
-            for i in range(epoch_num):
-                self.train()
+
+            # Train phase
+            for i in range(1, epoch_num + 1):
                 loss = 0
                 epoch_loss = 0
-                for (X, y) in tqdm(train_loader, leave=False):
-                    self.optimizer.zero_grad()
-                    if isinstance(X, tuple) or isinstance(X, list):
-                        X = [l.to(self.device) for l in X]
-                    else:
-                        X = X.to(self.device)
-                    y = y.reshape(-1, 1).to(self.device)
-                    y_hat = self.forward(X)
-                    loss = self.loss_function(y_hat, y)
-                    loss.backward()
-                    self.optimizer.step()
-                    # logger.debug(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss}")
-                    epoch_loss += loss.item()
-                epoch_loss /= len(train_ids)
-                total_loss.append(epoch_loss)
-                self.scheduler.step(loss)
+                self.train()
                 if self.optimizer.param_groups[0]["lr"] != last_lr:
                     logger.info(f"fold: {fold} | epoch: {i} | Learning rate changed from: {last_lr} -> {self.optimizer.param_groups[0]['lr']}")
                     last_lr = self.optimizer.param_groups[0]["lr"]
-
+                for batch_index, (X, y) in enumerate(train_loader):
+                    X = X.to(self.device)
+                    y = y.to(self.device)
+                    _, y_hat = self.forward(X)
+                    y_hat = y_hat.reshape(-1)
+                    self.optimizer.zero_grad()
+                    loss = self.loss_function(y_hat, y)
+                    if loss.isnan():
+                        print(end="")
+                    loss.backward()
+                    epoch_loss += loss.item()
+                    self.optimizer.step()
+                    logger.debug(f"fold: {fold} | epoch: {i} | batch: {batch_index} | loss: {loss/X.shape[0]}")
+                epoch_loss /= len(train_ids)
+                total_loss.append(epoch_loss)
+                # Validation phase
                 all_preds = []
                 all_targets = []
                 validation_loss = 0
                 self.eval()
-                if validation_loader is None:
-                    logger.warning("no validation applied as validation loader is not initialized")
-                    continue
                 with torch.no_grad():
-                    for X, y in tqdm(validation_loader, leave=False):
-                        if isinstance(X, tuple) or isinstance(X, list):
-                            X = [l.to(self.device) for l in X]
-                        else:
-                            X = X.to(self.device)
-                        y = y.reshape(-1, 1).to(self.device)
-                        pred = self.forward(X)
-                        loss = self.loss_function(pred, y)
+                    for batch_index, (X, y) in enumerate(validation_loader):
+                        X = X.to(self.device)
+                        y = y.to(self.device)
+                        _, y_hat = self.forward(X)
+                        y_hat = y_hat.reshape(-1)
+                        loss = self.loss_function(y_hat, y)
                         validation_loss += loss.item()
-                        all_preds.extend(torch.sigmoid(pred) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else pred)
+                        all_preds.extend(torch.sigmoid(y_hat) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else y_hat)
                         all_targets.extend(y)
-                    validation_loss /= len(validation_loader.sampler)
+                    validation_loss /= len(validation_ids)
                     total_validation_loss.append(validation_loss)
-                all_preds = torch.stack(all_preds)
-                all_targets = torch.stack(all_targets)
-                
+                all_preds = torch.tensor(all_preds)
+                all_targets = torch.tensor(all_targets)
                 accuracy_value, recall_value, precision_value, f2score, f05score = calculate_metrics_extended(all_preds, all_targets, device=self.device)
-                aucroc = roc_auc(all_preds, all_targets, device=self.device)
-                logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f} | f2: {(100 * f2score):>0.6f} | f0.5: {(100 * f05score):>0.6f} | aucroc: {(aucroc):>0.5f}")
-                
+                logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f} | f2: {(100 * f2score):>0.6f} | f0.5: {(100 * f05score):>0.6f}")
+                self.scheduler.step(validation_loss)
                 epoch_snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_f{fold}_e{i}.pth")
                 if f2score >= condition_save_threshold:
                     logger.info(f"fold: {fold} | epoch: {i} | saving model at {epoch_snapshot_path}")
                     self.save(epoch_snapshot_path)
-                
                 if self.check_stop_early(f2score=f2score):
                     logger.info(f"early stop condition satisfied: f2 score => {f2score}")
                     break
-            folds_metrics.append((accuracy_value, precision_value, recall_value))
-            
+                self.train()
+            folds_metrics.append((accuracy_value, precision_value, recall_value, f2score))
             snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_f{fold}.pth")
             self.save(snapshot_path)
             plt.clf()
@@ -192,6 +177,15 @@ class BaseRnnModule(Baseline, nn.Module):
             plt.title(f"fold #{fold}")
             with force_open(self.get_detailed_session_path(train_dataset, "figures", f"loss_f{fold}.png"), "wb") as f:
                 plt.savefig(f, dpi=300)
+        MAHAK = 3
+        max_metric = (0, folds_metrics[0][MAHAK])
+        for i in range(1, len(folds_metrics)):
+            if folds_metrics[i][MAHAK] > max_metric[1]:
+                max_metric = (i, folds_metrics[i][MAHAK])
+        logger.info(f"best model of cross validation for current training phase: fold #{max_metric[0]} with metric value of '{max_metric[1]}'")
+        best_model_dest = self.get_detailed_session_path(train_dataset, "weights", f"best_model.pth")
+        best_model_src = self.get_detailed_session_path(train_dataset, "weights", f"f{max_metric[0]}", f"model_f{max_metric[0]}.pth")
+        shutil.copyfile(best_model_src, best_model_dest)
 
     def test(self, test_dataset, weights_checkpoint_path):
         for path in weights_checkpoint_path:
@@ -209,7 +203,7 @@ class BaseRnnModule(Baseline, nn.Module):
                 for X, y in test_dataloader:
                     X = X.to(self.device)
                     y = y.to(self.device)
-                    y_hat = self.forward(X)
+                    last_hidden, y_hat = self.forward(X)
                     y_hat = y_hat.reshape(-1)
                     all_preds.extend(torch.sigmoid(y_hat) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else y_hat)
                     all_targets.extend(y)
