@@ -25,7 +25,7 @@ class BaseDataset(Dataset, RegisterableObject):
 
     
     def __init__(self, data_path: str, output_path: str, load_from_pkl: bool, apply_record_filter: bool=True,
-                 preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, device="cpu", vector_size=-1, dataset_name: str=None, forced_output_path=None, *args, **kwargs):
+                 preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, device="cpu", vector_size=-1, *args, **kwargs):
         self.output_path = output_path
         self.parent_dataset = parent_dataset
         self.load_from_pkl = load_from_pkl
@@ -34,10 +34,6 @@ class BaseDataset(Dataset, RegisterableObject):
         self.df_path = data_path
         self.device = device
         self.apply_filter = apply_record_filter
-        self.forced_output_path = forced_output_path
-        if not dataset_name:
-            raise ValueError(f"dataset name is not defined")
-        self.dataset_name = dataset_name
 
         self.__df__ = None
         self.__labels__ = None
@@ -99,15 +95,13 @@ class BaseDataset(Dataset, RegisterableObject):
         return vectors
 
     def __str__(self):
-        return self.short_name() + "/" + self.dataset_name +"/p" + ".".join([pp.short_name() for pp in self.preprocessings]) + "-v" + str(self.get_vector_size()) +("-filtered" if self.apply_filter else "-nofilter")
+        return self.short_name() +"/p" + ".".join([pp.short_name() for pp in self.preprocessings]) + "-v" + str(self.get_vector_size()) +("-filtered" if self.apply_filter else "-nofilter")
     
     def filter_records(self, df):
         logger.info(f"no filter is applied to dataset: {self.short_name()}")
         return df
 
     def get_session_path(self, filename) -> str:
-        if self.forced_output_path is not None:
-            return self.forced_output_path + "/" + filename
         return self.output_path + self.__str__() + "/" + filename
     
     def tokenize(self, input) -> list[list[str]]:
@@ -131,10 +125,6 @@ class BaseDataset(Dataset, RegisterableObject):
         return self.data
     
     def split_dataset_by_label(self, n_splits, split_again, persist_splits=True, stratified=True, load_splits_from=""):
-        if n_splits == 1: # No validation set required
-            logger.info("no kfold splitting is run as n_splits==1")
-            return [[list(range(len(self))), []]]
-        
         if load_splits_from is not None and len(load_splits_from) > 0:
             if split_again:
                 logger.warning("split again flag is `True`, but it won't be effective because splits are being loaded from a file.")
@@ -386,7 +376,7 @@ class BagOfWordsDataset(BaseDataset):
     def vectorize(self, tokens_records, encoder):
         logger.debug("started transforming message records into sparse vectors")
         vectors = []
-        for record in tqdm(tokens_records):
+        for record in tokens_records:
             temp = encoder.transform(record=record)
             vectors.append(torch.sparse.sum(torch.cat(temp), dim=0))
         logger.debug("transforming of records into vectors is finished")
@@ -565,7 +555,7 @@ class TimeBasedBagOfWordsDataset(BagOfWordsDataset):
             self.df[f"normalized_{c}"] = (self.df[c] - normalization_params[c][0]) / normalization_params[c][1]
         context_indices = [list(range(len(context_columns)))]
 
-        for i, record in enumerate(tqdm(tokens_records)):
+        for i, record in enumerate(tokens_records):
             onehots = torch.sparse.sum(torch.cat(encoder.transform(record=record)), dim=0)
             context = torch.sparse_coo_tensor(context_indices,
                                               [self.df.iloc[i][f"normalized_{c}"] for c in context_columns],
@@ -592,7 +582,7 @@ class UncasedBaseBertTokenizedDataset(BaseDataset, RegisterableObject):
 
     def vectorize(self, tokens_records, encoder):
         vectors = [None] * len(tokens_records)
-        for i, record in enumerate(tqdm(tokens_records)):
+        for i, record in enumerate(tokens_records):
             temp = encoder(" ".join(record), return_tensors="pt", padding='max_length', truncation=True)
             vectors[i] = {k: temp[k].squeeze() for k in temp.keys()}
         self.__new_encoder__ = False
@@ -632,7 +622,7 @@ class TransformersEmbeddingDataset(BaseDataset, RegisterableObject):
 
     def vectorize(self, tokens_records, encoder):
         vectors = [None] * len(tokens_records)
-        for i, record in enumerate(tqdm(tokens_records)):
+        for i, record in enumerate(tokens_records):
             vectors[i] = torch.cat(encoder.transform(record))
         return vectors
 
@@ -721,7 +711,7 @@ class NAuthorTransformersEmbeddingDataset(NAuthorsConversationBagOfWords):
 
     def vectorize(self, tokens_records, encoder):
         vectors = [None] * len(tokens_records)
-        for i, record in enumerate(tqdm(tokens_records)):
+        for i, record in enumerate(tokens_records):
             vectors[i] = encoder.transform(record)
         return vectors
 
@@ -818,7 +808,7 @@ class GloveEmbeddingDataset(BaseDataset, RegisterableObject):
 
     def vectorize(self, tokens_records, encoder):
         vectors = [None] * len(tokens_records)
-        for i, record in enumerate(tqdm(tokens_records)):
+        for i, record in enumerate(tokens_records):
             vectors[i] = torch.cat(encoder.transform(record))
         return vectors
 
@@ -886,7 +876,7 @@ class SequentialConversationDataset(BaseDataset):
     def vectorize(self, tokens_records: list[list[str]], encoder):
         logger.info("vectorizing message records")
         vectors = []
-        for record in tqdm(tokens_records):
+        for record in tokens_records:
             sequence = encoder.transform(record=record)
             temp = torch.stack([torch.sparse.sum(torch.cat(t), dim=0) for t in sequence])
             vectors.append(temp)
@@ -958,7 +948,7 @@ class BaseContextualSequentialConversationOneHotDataset(SequentialConversationDa
         logger.debug("started transforming message records into sparse vectors")
         vectors = []
         
-        for i, record in enumerate(tqdm(tokens_records)):
+        for i, record in enumerate(tokens_records):
             sequence = encoder.transform(record=record)
             onehots = torch.stack([torch.sparse.sum(torch.cat(t), dim=0) for t in sequence])
 
@@ -1045,7 +1035,7 @@ class SequentialConversationEmbeddingDataset(SequentialConversationDataset):
     def vectorize(self, tokens_records: list[list[str]], encoder):
         logger.info("vectorizing message records")
         vectors = []
-        for record in tqdm(tokens_records):
+        for record in tokens_records:
             sequence = encoder.transform(record=record)
             temp = torch.stack([torch.cat(t) for t in sequence])
             vectors.append(temp)
@@ -1161,7 +1151,7 @@ class BaseContextualSequentialConversationEmbeddingDataset(SequentialConversatio
         logger.debug("started transforming message records into sparse vectors")
         vectors = []
         
-        for i, record in enumerate(tqdm(tokens_records)):
+        for i, record in enumerate(tokens_records):
             sequence = encoder.transform(record=record)
             embeddings = torch.stack(sequence).float()
             vectors.append(embeddings)
