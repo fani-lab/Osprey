@@ -6,6 +6,7 @@ channels:
   - nvidia
 dependencies:
   - python=3.9
+  - mkl<=2023.1.0
   - gensim=3.8.3
   - pytorch::torchaudio
   - pytorch::torchvision
@@ -15,15 +16,16 @@ dependencies:
   - pandas
   - nltk
   - lxml
-  - sentence-transformers
+  - sentence-transformers=2.3.1
   - torchmetrics
   - matplotlib
   - scikit-learn
+  - scipy=1.10.1
   - datasets
   - transformers
   - tokenizers
   - ca-certificates
   - certifi
   - openssl
-  - pillow==8.3.2
+  - pillow=8.3.2
   - accelerate
