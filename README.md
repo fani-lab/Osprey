@@ -79,7 +79,7 @@ In modeling, we followed the same pattern and defined an abstract base class ([B
 
 The idea is to decouple stages in a way that we do not need further adjustments to train or test the model. For example if we want to add new preprocessing steps, we are not forced to modify the model's specifications. Although there are always some dependencies, we try to minimize their effect.
 
-In order to create a session of different stages, we can add its configuration under settings directory and setup the runner to use it. Currently we have setup the code to use [chiir2024.py](https://github.com/fani-lab/Osprey/blob/master/settings/chiir2024.py) file. In this file there are two important dictionaries (maps), `datasets` and `sessions`. We define the datasets' specifications under datasets and using their key values, we define our sessions. The following is an example that uses `conversation-bow` dataset implementation and defines the `toy-conversation-dataset-onehot`.
+In order to create a session of different stages, we can add its configuration under settings directory and setup the runner to use it. Currently we have setup the code to use [cikm2024.py](https://github.com/fani-lab/Osprey/blob/master/settings/cikm2024.py) file. In this file there are two important dictionaries (maps), `datasets` and `sessions`. We define the datasets' specifications under datasets and using their key values, we define our sessions. The following is an example that uses `conversation-bow` dataset implementation and defines the `toy-conversation-dataset-onehot`.
 
 ```python
 "toy-conversation-dataset-onehot": (
@@ -111,7 +111,7 @@ Using `toy-conversation-dataset-onehot` we define `toy-feedforward` to train, te
         ("train", {
                 "epoch_num": 100,
                 "batch_size": 8,
-                "weights_checkpoint_path": "",
+                "weights_checkpoint_path": "", # initialize model weights from here, and not random
             },
             {
                 "dataset": "toy-conversation-dataset-onehot", "rerun_splitting": False,
@@ -143,7 +143,7 @@ Our models include feedforward, svm, vanilla rnn, lstm, gru, using three classes
 
 We also tried different preprocessings, such as stopword removal, repetition removal, punctuation removal, and authors' ids removal, but it was clear that, in general, training without preprocessing would result in superior performance across our current metrics.
 
-<img alt="table of metrics of experiments" src="figures/chiir2024-table.jpg" width=1000>
+<img alt="table of metrics of experiments" src="figures/table-1.jpg" width=1000>
 
 F<sub>2</sub> is of great importance as it increases the chance of capturing a predator. If we see a drop in F<sub>2</sub>, it means we have missed a predator and put a child in danger. We can see the synergistic effect of gated recurrent models with embedding texts, accompanied by contextual features have reported highest F<sub>2</sub> values. The following figures show the roc and precision-recall line charts where a figure with highest area under curve is desirable for roc and a figure that has a tendency to the right handside of the chart is desirable for precision-recall. These figures would give us further insights in the performance of our models from the perpective of determinance in prediction.
 
