@@ -49,7 +49,7 @@ class BaseDataset(Dataset, RegisterableObject):
     @property
     def df(self):
         if self.__df__ is None:
-            self.__df__ = pd.read_csv(self.df_path)
+            self.__df__ = pd.read_csv(self.df_path, index_col=0)
             if self.apply_filter:
                 self.__df__ = self.filter_records(self.__df__)
 
@@ -820,6 +820,7 @@ class SequentialConversationDataset(BaseDataset):
     def __init__(self, data_path: str, output_path: str, load_from_pkl: bool, apply_record_filter: bool = True, preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, device="cpu", *args, **kwargs):
         super().__init__(data_path, output_path, load_from_pkl, apply_record_filter, preprocessings, persist_data, parent_dataset, device, *args, **kwargs)
         self.__sequence__ = None
+        self.load_labels = kwargs.get('load_labels', False)
 
     def filter_records(self, df):
         logger.info("applying record filtering by 'nauthor >= 2 & conv_size > 6'")
@@ -885,6 +886,11 @@ class SequentialConversationDataset(BaseDataset):
         return vectors
     
     def get_labels(self):
+        if self.load_labels: # if it isn't there, it WILL raise exception; no bypass
+            with open(self.get_session_path("labels.pkl"), "rb") as f:
+                logger.info("trying to load labels from file")
+                self.__labels__ = pickle.load(f)
+            
         if not self.already_prepared:
             raise ValueError("the dataset is not prepared. Firt run `prepapre` method.")
         if self.__labels__ is not None:
@@ -1151,7 +1157,7 @@ class BaseContextualSequentialConversationEmbeddingDataset(SequentialConversatio
         logger.debug("started transforming message records into sparse vectors")
         vectors = []
         
-        for i, record in enumerate(tokens_records):
+        for i, record in enumerate(tqdm(tokens_records)):
             sequence = encoder.transform(record=record)
             embeddings = torch.stack(sequence).float()
             vectors.append(embeddings)
@@ -1186,7 +1192,7 @@ class TemporalAuthorsSequentialConversationEmbeddingDataset(BaseContextualSequen
 
     def tokenize(self, sequence):
         messages = [None] * len(sequence)
-        for i, (k, g) in enumerate(sequence):
+        for i, (k, g) in enumerate(tqdm(sequence)):
             temp = np.floor(g["time"])
             messages[i] = ((((temp*60 + (g["time"] - temp)*100)/1440).tolist(), (g["nauthor"]/4.0).tolist(),), nltk_tokenize(g["text"]))
         return messages
