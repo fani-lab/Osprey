@@ -25,7 +25,8 @@ from src.models import ANNModule, EbrahimiCNN, BaseRnnModule, LSTMModule, GRUMod
 from src.mappings import register_mappings, register_mappings_torch, register_command, COMMANDS
 import settings
 from src.scripts import (CreateConversations, BalanceDatasetsForVersionTwo, CreateConversationToySet,
-                            BalanceSequentialDatasetsForVersionTwo, PrintMappings, XML2CSV, finetune_tranformer_per_message)
+                            BalanceSequentialDatasetsForVersionTwo, PrintMappings, XML2CSV, finetune_tranformer_per_message,
+                            MergeTranslationWithOriginal, StandardizeBacktranslation)
 from src.utils.dataset import SequentialConversationDataset
 
 
@@ -87,6 +88,8 @@ if __name__ == "__main__":
     register_command(CreateConversationToySet)
     register_command(BalanceSequentialDatasetsForVersionTwo)
     register_command(XML2CSV)
+    register_command(StandardizeBacktranslation)
+    register_command(MergeTranslationWithOriginal)
 
     register_mappings_torch()
 

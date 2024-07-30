@@ -220,6 +220,48 @@ class CreateConversationToySet(CommandObject):
         return "create a toy set for conversations dataset. The output path will be the same as input just a 'toy-' prefix will be added to the file name at the end."
 
 
+class StandardizeBacktranslation(CommandObject):
+    def get_actions_and_args(self):
+        
+        def standardize_rtt_set(path, conv_id_postfix=""):
+            rttdf = pd.read_csv(path, index_col=0)
+            if "backward" in rttdf.columns:
+                if "text" in rttdf.columns:
+                    rttdf = rttdf.drop('text', axis=1)
+                rttdf = rttdf.rename(columns={'backward': 'text'})
+            rttdf['msg_char_count'] = rttdf.apply(lambda x: len(x['text']), axis=1)
+            rttdf['msg_word_count'] = rttdf.apply(lambda x: len(x['text'].split(' ')), axis=1)
+            rttdf['conv_id'] = rttdf.apply(lambda x: x['conv_id'] + "_" + conv_id_postfix, axis=1)
+
+            rttdf = rttdf[['conv_id', 'msg_line', 'author_id', 'time', 'msg_char_count','msg_word_count', 'conv_size', 'nauthor', 'text', 'tagged_predator', 'predatory_conv']]
+            filename = path.replace('\\', '/').split('/')[-1]
+            newpath = f"data/dataset-v2/predatory_single_langs/{filename}"
+            print(f"saving at: {newpath}")
+            rttdf.to_csv(newpath)
+            return rttdf
+    
+        return (standardize_rtt_set, [{
+                "flags": "--bt-path",
+                "dest": "path",
+                "type": str,
+                "help": "path to backtranslation file consisting metrics, forward and backtranslation texts",
+            },
+            {
+                "flags": "--conv-id-postfix",
+                "dest": "conv_id_postfix",
+                "type": str,
+                "help": "a prefix that is appended to the end of a conversation so it is distinct from the original conversation and message.",
+            }])
+    
+    @classmethod
+    def command(cls) -> str:
+        return "standardize-backtranslation"
+    
+    def help(self) -> str:
+        return "transform backtranslations generated to a format that can be used by our dataset implementations."
+
+
+
 class MergeTranslationWithOriginal(CommandObject):
     def get_actions_and_args(self):
     
@@ -254,3 +296,10 @@ class MergeTranslationWithOriginal(CommandObject):
             "default": "data/dataset-v2/translated/default.csv",
             "help": "output path",
         }])
+    
+    @classmethod
+    def command(cls) -> str:
+        return "merge-backtranslations"
+    
+    def help(self) -> str:
+        return "merges backtranslations of multiple languages to a given dataset and save somewhere you desire."
