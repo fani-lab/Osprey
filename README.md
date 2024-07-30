@@ -1,4 +1,4 @@
-# Osprey 🪶
+# Osprey <img alt="table of metrics of experiments" src="figures/osprey-feather.png" width=35 hight=35>
 With the prevalence of more technology, children access it way before they are of legal age and with little cognitive development. An alarming problem in this regard is children engaging with predators in online grooming conversations. Besides deep web that used to be a hub forillegal activities including child pornography, main stream digital platforms such as online videogames and chat rooms are currently the more common places where children are present and are easy prey for online sexual predators such as those who are diagnosed with paedophilia; an act of an adult having sexual involvement with a minor, through grooming where the sexual predator tries to form emotion relationship with a minor in order to get her trust and make her engage in sexual activities afterwards. 
 
 Around 60%-80% of female high school students have to face online sexual grooming incidents in their life. In many of these instances, the predators try to mix explicit remarks in the conversation to get a sense of how they are going to proceed with the victim, which can be extracted by ``natural language processing`` (NLP) techniques and employed by ``machine learning`` methods to catch such predators. 
@@ -7,8 +7,9 @@ Table of content:
 1. [Setup](#1-setup)
 2. [Quickstart](#2-quickstart)
 3. [Code Structure](#3-code-structure)
-4. [Results](#4-results)
-5. [Notes](#5-notes)
+4. [Backtranslation](4-backtranslation)
+5. [Results](#5-results)
+6. [Notes](#6-notes)
 
 ## 1. Setup
 You can setup the code in different ways. You can use package managers such as Mamba and Conda to install the packages. If you prefer using docker, clone this project and build the Dockerfile.
@@ -132,7 +133,11 @@ Using `toy-conversation-dataset-onehot` we define `toy-feedforward` to train, te
 
 To dive deeper into the code above, each stage is a <ins>triple</ins> of `(stage_name, runtime_arguemnts, datasets_specifications)`. We can omit different stages for our purposes, but we need to be careful with the paths and values that are passed. For example if we need to test or evaluate a new dataset, we can omit the train stage while passing path to models to `runtime_arguemnts` of test stage.
 
-## 4. Results
+## 4. Backtranslation
+
+To generate translations there are different scripts based on the translator. Other than Google Translator which one should use the Google API to access it, the other two use models loaded from HuggingFace. However as the number of translations we do are quite a lot, a simple backtranslation could take over a week for only one language, therefore, we use CTranslate2 library to transform the models and increase the inference speed. you can find the script for NLLB at [src\scripts\ctranslate2\translate-nllb.py](src\scripts\ctranslate2\translate-nllb.py), and the script for M2M100 at [src\scripts\ctranslate2\translate-m2m100.py](src\scripts\ctranslate2\translate-m2m100.py). We transformed these models using the commands from the documents of CTranslate2 [webpage](https://opennmt.net/CTranslate2/conversion.html). There is a third script that uses madlad, however, the speed of translation after conversion was still so slow that it was practically impossible for us to use it. In all the CTranslate2 scripts you can change the language using target_langs variables according to specifications/documentations of the respecitve translator. The output of the scripts are translation files that contain the conversation id, message line, original text, forward translation, backtranslation, difference of token counts, variations of BLEU and ROUGE score, and semantic similarity of original text and the backtranslation text.
+
+## 5. Results
 
 We performed experiments across multiple models in the presence and absence of contextual features of conversation. Another aspect of our experiment was comparing conversation-level and message-level embeddings. For the former we concatenate all messsage to create a single text that its representation will be a single vector, and for the latter, we embed each message individually, and represented as a sequence of embeddings for a single conversation.
 
@@ -148,7 +153,7 @@ F<sub>2</sub> is of great importance as it increases the chance of capturing a p
 
 <!-- ## 4. Acknowledgement -->
 
-## 5. NOTES:
+## 6. NOTES:
 ### Updating environment.yaml File
 
 In case you updated a python package and wanted to include it in the environment file, do the following steps. These steps will only include the pinned packages and the os-specific dependencies and libraries will be handled by the package manager (conda or mamba).
