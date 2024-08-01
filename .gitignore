@@ -13,5 +13,5 @@ output*/
 *.jpeg
 *.fig
 models/*
-figures/
+figures/*
 temp/
