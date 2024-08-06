@@ -1,10 +1,12 @@
 import logging
+from glob import glob
 
 import torch
 
 import settings
 from src import mappings
 from src.utils.commons import CommandObject
+from src.models.baseline import Baseline
 
 logger = logging.getLogger()
 
@@ -49,7 +51,7 @@ def initiate_datasets(datasets_maps, device):
                 raise Exception(f"preprocessing `{pp}` either not implemented or not registered") from e
         
         train_dataset = dataset_class(**{**train_configs, "preprocessings": [pp() for pp in preprocessings], "device": device})
-        test_dataset = dataset_class(**{**test_configs, "parent_dataset": train_dataset, "preprocessings": [pp() for pp in preprocessings], "device": device, "apply_record_filter": False})
+        test_dataset = dataset_class(**{**test_configs, "parent_dataset": train_dataset, "preprocessings": [pp() for pp in preprocessings], "device": device})
         logger.info(f"train dataset `{dataset_name}`, shortname: `{short_name}` kwargs -> {train_configs}")
         logger.info(f"test dataset `{dataset_name}`, shortname: `{short_name}` kwargs -> {test_configs}")
         datasets[dataset_name] = (train_dataset, test_dataset)
@@ -77,7 +79,7 @@ class RunTrainPipeline(CommandObject):
 
                 model_configs = create_model_configs(session_name, session=session, device=device)
                 
-                model_class = mappings.MODELS[session["model"]]
+                model_class: Baseline = mappings.MODELS[session["model"]]
 
                 for command, command_kwargs, dataset_configs, *_ in commands:
                     dataset_name = dataset_configs.get("dataset", None)
@@ -97,31 +99,33 @@ class RunTrainPipeline(CommandObject):
                         load_splits_from = dataset_configs.get("load_splits_from", True)
                         splits = dataset.split_dataset_by_label(n_splits, split_again, persist_splits, True, load_splits_from)
 
-                        model = model_class(**model_configs, input_size=dataset.shape[-1])
-                        model.to(device=device)
-                        model.learn(**command_kwargs, train_dataset=dataset, splits=splits)
+                        train_model = model_class(**model_configs, input_size=dataset.shape[-1])
+                        train_model.to(device=device)
+                        train_model.learn(**command_kwargs, train_dataset=dataset, splits=splits)
                     if command == "test":
                         dataset = datasets[dataset_name][1]
                         dataset.prepare()
                         logger.info(f"dataset short-name: {str(dataset)}")
-                        model = model_class(**model_configs, input_size=datasets[dataset_name][0].shape[-1])
-                        model.to(device=device)
-                        if not command_kwargs.get("weights_checkpoint_path", None):
-                            command_kwargs["weights_checkpoint_path"] = model.get_all_folds_checkpoints(datasets[dataset_name][0])
-                        if isinstance(command_kwargs["weights_checkpoint_path"], str):
-                            command_kwargs["weights_checkpoint_path"] = (command_kwargs["weights_checkpoint_path"],)
-                        model.test(**command_kwargs, test_dataset=dataset)
+                        test_model = model_class(**model_configs, input_size=datasets[dataset_name][0].shape[-1])
+                        test_model.to(device=device)
+
+                        all_weights = []
+                        regex_weights = command_kwargs.get("regex_weights_checkpoint_path", None)
+                        
+                        if isinstance(regex_weights, list):
+                            for regex in regex_weights:
+                                all_weights.extend(glob(regex, recursive=True))
+
+                        if len(all_weights) == 0 and not command_kwargs.get("weights_checkpoint_path", None):
+                            all_weights = train_model.get_all_folds_checkpoints(datasets[dataset_name][0])
+                        # if isinstance(command_kwargs["weights_checkpoint_path"], str):
+                        #     command_kwargs["weights_checkpoint_path"] = (command_kwargs["weights_checkpoint_path"],)
+                        test_model.test(**command_kwargs, test_dataset=dataset, paths_to_test=all_weights)
                     if command == "eval":
                         path = command_kwargs.get("path", "")
-                        if command_kwargs.get("use_current_session", False):
-                            try:
-                                datasets[dataset_name][0].prepare()
-                                path = model.get_detailed_session_path(datasets[dataset_name][0])
-                            except UnboundLocalError as e:
-                                raise Exception("in order to use use_current_session, you should run the previous steps at the same time.") from e
-                        if path == "":
-                            raise ValueError("the given path is empty. It should point to the directory of model objects.")
                         model = model_class(**model_configs, input_size=1)
+                        if path == "":
+                            path = model.get_detailed_session_path(datasets[dataset_name][0])
                         model.evaluate(path, device=device)
 
         return (run, [{

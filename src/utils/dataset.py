@@ -198,7 +198,7 @@ class BaseDataset(Dataset, RegisterableObject):
         
         if self.parent_dataset is not None:
            self.parent_dataset.prepare()
-
+        logger.info(f"loading the dataset `{self.get_session_path('')}`")
         tokens = self.preprocess()
 
         self.encoder = self.__init_encoder__(tokens_records=tokens)

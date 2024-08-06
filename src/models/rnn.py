@@ -37,9 +37,13 @@ class BaseRnnModule(Baseline, nn.Module):
     @classmethod
     def short_name(cls) -> str:
         return "base-rnn"
-
-    def forward(self, x):
-        out, hn = self.core(x)
+    
+    @property
+    def is_sequential(self):
+        return True
+    
+    def forward(self, x, max_passed_messages):
+        out, hn = self.core(x[:, :max_passed_messages, :])
         y_hat = self.hidden2out(out[:, -1])
         # y_hat = torch.sigmoid(y_hat)
         if y_hat.isnan().sum() > 0:
@@ -93,7 +97,7 @@ class BaseRnnModule(Baseline, nn.Module):
                                                         sampler=validation_subsampler, collate_fn=padding_collate_sequence_batch)
         return train_loader, validation_loader
 
-    def learn(self, epoch_num:int , batch_size: int, splits: list, train_dataset: Dataset, weights_checkpoint_path: str=None, condition_save_threshold=0.9):
+    def learn(self, epoch_num:int , batch_size: int, splits: list, train_dataset: Dataset, weights_checkpoint_path: str=None, condition_save_threshold=0.9, max_passed_messages=-1):
         if weights_checkpoint_path is not None and len(weights_checkpoint_path):
             self.load_params(weights_checkpoint_path)
         
@@ -125,7 +129,7 @@ class BaseRnnModule(Baseline, nn.Module):
                 for batch_index, (X, y) in enumerate(train_loader):
                     X = X.to(self.device)
                     y = y.to(self.device)
-                    _, y_hat = self.forward(X)
+                    _, y_hat = self.forward(X, max_passed_messages=max_passed_messages)
                     y_hat = y_hat.reshape(-1)
                     self.optimizer.zero_grad()
                     loss = self.loss_function(y_hat, y)
@@ -146,7 +150,7 @@ class BaseRnnModule(Baseline, nn.Module):
                     for batch_index, (X, y) in enumerate(validation_loader):
                         X = X.to(self.device)
                         y = y.to(self.device)
-                        _, y_hat = self.forward(X)
+                        _, y_hat = self.forward(X, max_passed_messages=max_passed_messages)
                         y_hat = y_hat.reshape(-1)
                         loss = self.loss_function(y_hat, y)
                         validation_loss += loss.item()
@@ -159,7 +163,7 @@ class BaseRnnModule(Baseline, nn.Module):
                 accuracy_value, recall_value, precision_value, f2score, f05score = calculate_metrics_extended(all_preds, all_targets, device=self.device)
                 logger.info(f"fold: {fold} | epoch: {i} | train -> loss: {(epoch_loss):>0.5f} | validation -> loss: {(validation_loss):>0.5f} | accuracy: {(100 * accuracy_value):>0.6f} | precision: {(100 * precision_value):>0.6f} | recall: {(100 * recall_value):>0.6f} | f2: {(100 * f2score):>0.6f} | f0.5: {(100 * f05score):>0.6f}")
                 self.scheduler.step(validation_loss)
-                epoch_snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_f{fold}_e{i}.pth")
+                epoch_snapshot_path = self.get_detailed_session_path(train_dataset, f"n{max_passed_messages if max_passed_messages != -1 else 'full'}", "weights", f"f{fold}", f"model_f{fold}_e{i}.pth")
                 if f2score >= condition_save_threshold:
                     logger.info(f"fold: {fold} | epoch: {i} | saving model at {epoch_snapshot_path}")
                     self.save(epoch_snapshot_path)
@@ -168,14 +172,14 @@ class BaseRnnModule(Baseline, nn.Module):
                     break
                 self.train()
             folds_metrics.append((accuracy_value, precision_value, recall_value, f2score))
-            snapshot_path = self.get_detailed_session_path(train_dataset, "weights", f"f{fold}", f"model_f{fold}.pth")
+            snapshot_path = self.get_detailed_session_path(train_dataset, f"n{max_passed_messages if max_passed_messages != -1 else 'full'}", "weights", f"f{fold}", f"model_f{fold}.pth")
             self.save(snapshot_path)
             plt.clf()
             plt.plot(np.arange(1, 1 + len(total_loss)), np.array(total_loss), "-r", label="training")
             plt.plot(np.arange(1, 1 + len(total_loss)), np.array(total_validation_loss), "-b", label="validation")
             plt.legend()
             plt.title(f"fold #{fold}")
-            with force_open(self.get_detailed_session_path(train_dataset, "figures", f"loss_f{fold}.png"), "wb") as f:
+            with force_open(self.get_detailed_session_path(train_dataset, f"n{max_passed_messages if max_passed_messages != -1 else 'full'}", "figures", f"loss_f{fold}.png"), "wb") as f:
                 plt.savefig(f, dpi=300)
         MAHAK = 3
         max_metric = (0, folds_metrics[0][MAHAK])
@@ -183,15 +187,14 @@ class BaseRnnModule(Baseline, nn.Module):
             if folds_metrics[i][MAHAK] > max_metric[1]:
                 max_metric = (i, folds_metrics[i][MAHAK])
         logger.info(f"best model of cross validation for current training phase: fold #{max_metric[0]} with metric value of '{max_metric[1]}'")
-        best_model_dest = self.get_detailed_session_path(train_dataset, "weights", f"best_model.pth")
-        best_model_src = self.get_detailed_session_path(train_dataset, "weights", f"f{max_metric[0]}", f"model_f{max_metric[0]}.pth")
+        best_model_dest = self.get_detailed_session_path(train_dataset, f"n{max_passed_messages if max_passed_messages != -1 else 'full'}", "weights", f"best_model.pth")
+        best_model_src = self.get_detailed_session_path(train_dataset, f"n{max_passed_messages if max_passed_messages != -1 else 'full'}", "weights", f"f{max_metric[0]}", f"model_f{max_metric[0]}.pth")
         shutil.copyfile(best_model_src, best_model_dest)
-
-    def test(self, test_dataset, weights_checkpoint_path):
-        for path in weights_checkpoint_path:
+    
+    def test(self, test_dataset, paths_to_test, max_passed_messages=-1, **kwargs):
+        for path in paths_to_test:
             logger.info(f"testing checkpoint at: {path}")
             torch.cuda.empty_cache()
-            # self.load_params(weights_checkpoint_path)
             checkpoint = torch.load(path)
             self.load_state_dict(checkpoint.get("model", checkpoint))
 
@@ -201,9 +204,10 @@ class BaseRnnModule(Baseline, nn.Module):
             self.eval()
             with torch.no_grad():
                 for X, y in test_dataloader:
+                    # don't handle the shape exception for max_passed_messages. it MUST throw exception for non-sequential models
                     X = X.to(self.device)
                     y = y.to(self.device)
-                    last_hidden, y_hat = self.forward(X)
+                    last_hidden, y_hat = self.forward(X, max_passed_messages)
                     y_hat = y_hat.reshape(-1)
                     all_preds.extend(torch.sigmoid(y_hat) if isinstance(self.loss_function, nn.BCEWithLogitsLoss) else y_hat)
                     all_targets.extend(y)
@@ -211,6 +215,7 @@ class BaseRnnModule(Baseline, nn.Module):
             all_preds = torch.tensor(all_preds)
             all_targets = torch.tensor(all_targets)
             base_path = "/".join(re.split("\\\|/", path)[:-1])
+            base_path = base_path + "/" + str(test_dataset) + (f"/n{max_passed_messages}" if max_passed_messages != -1 else "/full")
             with force_open(base_path + '/preds.pkl', 'wb') as file:
                 pickle.dump(all_preds, file)
                 logger.info(f'predictions are saved at: {file.name}')
