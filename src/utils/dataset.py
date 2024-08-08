@@ -24,9 +24,10 @@ logger = logging.getLogger()
 class BaseDataset(Dataset, RegisterableObject):
 
     
-    def __init__(self, data_path: str, output_path: str, load_from_pkl: bool, apply_record_filter: bool=True,
+    def __init__(self, data_path: str, dataset_config_name: str, output_path: str, load_from_pkl: bool, apply_record_filter: bool=True,
                  preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, device="cpu", vector_size=-1, *args, **kwargs):
         self.output_path = output_path
+        self.dataset_config_name = dataset_config_name
         self.parent_dataset = parent_dataset
         self.load_from_pkl = load_from_pkl
         self.preprocessings = preprocessings
@@ -95,7 +96,10 @@ class BaseDataset(Dataset, RegisterableObject):
         return vectors
 
     def __str__(self):
-        return self.short_name() +"/p" + ".".join([pp.short_name() for pp in self.preprocessings]) + "-v" + str(self.get_vector_size()) +("-filtered" if self.apply_filter else "-nofilter")
+        return (
+            self.short_name() + ("/" + self.dataset_config_name if self.dataset_config_name else "") +
+            "/p" + ".".join([pp.short_name() for pp in self.preprocessings]) + "-v" + str(self.get_vector_size()) +("-filtered" if self.apply_filter else "-nofilter")
+            )
     
     def filter_records(self, df):
         logger.info(f"no filter is applied to dataset: {self.short_name()}")
