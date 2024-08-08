@@ -24,8 +24,8 @@ logger = logging.getLogger()
 class BaseDataset(Dataset, RegisterableObject):
 
     
-    def __init__(self, data_path: str, dataset_config_name: str, output_path: str, load_from_pkl: bool, apply_record_filter: bool=True,
-                 preprocessings: list[BasePreprocessing] = [], persist_data=True, parent_dataset=None, device="cpu", vector_size=-1, *args, **kwargs):
+    def __init__(self, data_path: str, output_path: str, load_from_pkl: bool, apply_record_filter: bool=True, preprocessings: list[BasePreprocessing] = [],
+                 persist_data=True, parent_dataset=None, device="cpu", vector_size=-1, dataset_config_name: str=None, *args, **kwargs):
         self.output_path = output_path
         self.dataset_config_name = dataset_config_name
         self.parent_dataset = parent_dataset
