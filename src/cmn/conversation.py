@@ -1,18 +1,24 @@
-import os
 import csv
 
 from cmn.message import Message
 
 
-class Conversation(Object):
-    def __init__(self, id, messages, participants):
+class Conversation:
+    def __init__(self, id):
         self.id = id
-        self.messages = messages
-        self.participants = participants
+        self.messages = []
+        self.participants = set()
+        self.conv_size = 0
 
     @staticmethod
     def loader(path):
-        if path.endswith(".csv"): return Conversation.csv_loader(path)
+        if path.endswith(".csv"):
+            return Conversation.csv_loader(path)
+
+    def add_message(self, message_content, author_involved, size):
+        self.messages.append(message_content)
+        self.participants.add(author_involved)
+        self.conv_size = size
 
     @staticmethod
     def csv_loader(filepath):
@@ -26,7 +32,6 @@ class Conversation(Object):
                 # before we import, could be taken care here.
                 try:
                     # Assign the conversation id to Conversation Object
-                    # conversation.conversation_id = row['conv_id']
 
                     message = Message(
                         row["msg_line"],
@@ -34,15 +39,20 @@ class Conversation(Object):
                         row["time"],
                         row["msg_char_count"],
                         row["msg_word_count"],
-                        row["conv_size"],
-                        row["nauthor"],
                         row["text"],
                         row["tagged_predator"],
-                        row["predatory_conv"],
                     )
 
-                    if id not in convs: convs[id] = Conversation(row["conv_id"], None, None)
-                    convs[id].add_message(message)
+                    conv_id = row["conv_id"]
+                    author_involved = row["author_id"]
+                    conversation_size = row["conv_size"]
+
+                    if conv_id not in convs:
+                        convs[conv_id] = Conversation(conv_id)
+
+                    convs[conv_id].add_message(
+                        message, author_involved, conversation_size
+                    )
 
                 except KeyError as e:
                     print(f"Import Error: {e}")
@@ -50,10 +60,14 @@ class Conversation(Object):
         return convs
 
     def __repr__(self):
-        repr_string = f"Conversation ID: {self.id}\nNumber of messages: {len(self.messages)}\n"
+        authors_list = "\n".join(self.participants)
 
-        if not self.messages: repr_string += "No messages found for this conversation.\n"
+        repr_string = f"Conversation ID: {self.id}\nConversation Size: {self.conv_size}\nAuthors Involved: {len(list(self.participants))}\n{authors_list}\n"
+
+        if not self.messages:
+            repr_string += "No messages found for this conversation.\n"
         else:
-            for message in self.messages: repr_string += f"\n{message}"
+            for message in self.messages:
+                repr_string += f"\n{message}"
 
         return repr_string
