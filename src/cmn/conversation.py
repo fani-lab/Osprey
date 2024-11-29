@@ -1,5 +1,4 @@
 import csv
-
 from cmn.message import Message
 
 
