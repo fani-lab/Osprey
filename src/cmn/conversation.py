@@ -31,30 +31,23 @@ class Conversation:
                     )
 
                     conv_id = row["conv_id"]
-                    author_involved = row["author_id"]
-                    conversation_size = row["conv_size"]
-
                     if conv_id not in convs:
                         convs[conv_id] = Conversation(conv_id)
 
-                    convs[conv_id].add_message(
-                        message, author_involved, conversation_size
-                    )
+                    convs[conv_id].messages.append(message)
+                    convs[conv_id].participants.add(row["author_id"])
+                    convs[conv_id].conv_size = row["conv_size"]
 
                 except KeyError as e:
                     print(f"Import Error: {e}")
-
         return convs
-
+    
     def __repr__(self):
         authors_list = "\n".join(self.participants)
-
         repr_string = f"Conversation ID: {self.id}\nConversation Size: {self.conv_size}\nAuthors Involved: {len(list(self.participants))}\n{authors_list}\n"
-
         if not self.messages:
             repr_string += "No messages found for this conversation.\n"
         else:
             for message in self.messages:
                 repr_string += f"\n{message}"
-
         return repr_string
