@@ -166,20 +166,20 @@ mamba env export --from-history > new-environment.yaml
 4. Rename `environment.yaml` to `new-environment.yaml`
 
 ## 6. Citation:
+
 ```
-@inproceedings{DBLP:conf/coling/WaeziF25,
-  author       = {Hamed Waezi and
-                  Hossein Fani},
-  title        = {Enhancing Online Grooming Detection via Backtranslation Augmentation},
-  booktitle    = {Proceedings of the 31st International Conference on Computational Linguistics, {COLING} 2025, Abu Dhabi, UAE, January 19 – 24, 2025},
-  series       = {},
-  volume       = {},
-  pages        = {},
-  publisher    = {},
-  year         = {2025},
-  url          = {},
-  doi          = {},
-  biburl       = {https://dblp.org/rec/conf/coling/WaeziF25.bib},
+@inproceedings{DBLP:conf/cikm/WaeziB024,
+  author       = {Hamed Waezi and Reza Barzegar and Hossein Fani},
+  editor       = {Edoardo Serra and Francesca Spezzano},
+  title        = {Osprey {\unicode{129718}}: {A} Reference Framework for Online Grooming Detection via Neural Models and Conversation Features},
+  booktitle    = {Proceedings of the 33rd {ACM} International Conference on Information and Knowledge Management, {CIKM} 2024, Boise, ID, USA, October 21-25, 2024},
+  pages        = {4101--4106},
+  publisher    = {{ACM}},
+  year         = {2024},
+  url          = {https://doi.org/10.1145/3627673.3679974},
+  doi          = {10.1145/3627673.3679974},
+  timestamp    = {Thu, 14 Nov 2024 13:44:25 +0100},
+  biburl       = {https://dblp.org/rec/conf/cikm/WaeziB024.bib},
   bibsource    = {dblp computer science bibliography, https://dblp.org}
 }
 ```
