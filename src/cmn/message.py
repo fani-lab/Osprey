@@ -1,4 +1,4 @@
-class Message(Object):
+class Message:
     def __init__(
         self,
         idx: str,
