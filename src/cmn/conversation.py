@@ -44,10 +44,7 @@ class Conversation:
     def __repr__(self):
         authors_list = "\n".join(self.participants)
         repr_string = f"Conversation ID: {self.id}\nConversation Size: {self.conv_size}\nAuthors Involved: {len(list(self.participants))}\n{authors_list}\n"
-        if not self.messages:
-            repr_string += "No messages found for this conversation.\n"
+        if not self.messages: repr_string += "No messages found for this conversation.\n"
         else:
-            for message in self.messages:
-                repr_string += f"\n{message}"
             for message in self.messages: repr_string += f"\n{message}"
         return repr_string
