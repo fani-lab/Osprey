@@ -31,8 +31,7 @@ class Conversation:
                     )
 
                     conv_id = row["conv_id"]
-                    if conv_id not in convs:
-                        convs[conv_id] = Conversation(conv_id)
+                    if conv_id not in convs: convs[conv_id] = Conversation(conv_id)
 
                     convs[conv_id].messages.append(message)
                     convs[conv_id].participants.add(row["author_id"])
