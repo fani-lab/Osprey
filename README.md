@@ -1,4 +1,5 @@
 # Osprey <img alt="" src="figures/osprey-feather.png" width=40 hight=40>
+## Enhancing Online Grooming Detection via Backtranslation Augmentation ([pdf](https://hosseinfani.github.io/res/papers/2025_COLING_Enhancing_Online_Grooming_Detection_via_Backtranslation_Augmentation.pdf))
 With the prevalence of more technology, children access it way before they are of legal age and with little cognitive development. An alarming problem in this regard is children engaging with predators in online grooming conversations. Besides the deep web, which used to be a hub for illegal activities, including child pornography, mainstream digital platforms such as online videogames and chat rooms are currently the more common places where children are present and are easy prey for online sexual predators such as those who are diagnosed with pedophilia; an act of an adult having sexual involvement with a minor, through grooming where the sexual predator tries to form emotion relationship with a minor in order to get her trust and make her engage in sexual activities afterwards. 
 
 Around 60%-80% of female high school students have to face online sexual grooming incidents in their lives. In many of these instances, the predators try to mix explicit remarks in the conversation to get a sense of how they are going to proceed with the victim, which can be extracted by ``natural language processing`` (NLP) techniques and employed by ``machine learning`` methods to catch such predators. 
@@ -166,20 +167,19 @@ mamba env export --from-history > new-environment.yaml
 
 ## 6. Citation:
 ```
-@inproceedings{DBLP:conf/cikm/WaeziBF24,
+@inproceedings{DBLP:conf/coling/WaeziF25,
   author       = {Hamed Waezi and
-                  Reza Barzegar and
                   Hossein Fani},
-  title        = {Osprey🪶: A Reference Framework for Online Grooming Detection via Neural Models and Conversation Features},
-  booktitle    = {Proceedings of the 33rd ACM International Conference on Information and Knowledge Management (CIKM '24), October 21--25, 2024, Boise, ID, USA},
+  title        = {Enhancing Online Grooming Detection via Backtranslation Augmentation},
+  booktitle    = {Proceedings of the 31st International Conference on Computational Linguistics, {COLING} 2025, Abu Dhabi, UAE, January 19 – 24, 2025},
   series       = {},
   volume       = {},
   pages        = {},
-  publisher    = {Springer},
-  year         = {2024},
-  url          = {https://doi.org/10.1145/3627673.3679974},
-  doi          = {10.1145/3627673.3679974},
-  biburl       = {https://dblp.org/rec/conf/cikm/WaeziBF24.bib},
+  publisher    = {},
+  year         = {2025},
+  url          = {},
+  doi          = {},
+  biburl       = {https://dblp.org/rec/conf/coling/WaeziF25.bib},
   bibsource    = {dblp computer science bibliography, https://dblp.org}
 }
 ```
