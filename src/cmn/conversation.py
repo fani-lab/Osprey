@@ -49,4 +49,5 @@ class Conversation:
         else:
             for message in self.messages:
                 repr_string += f"\n{message}"
+            for message in self.messages: repr_string += f"\n{message}"
         return repr_string
