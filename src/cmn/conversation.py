@@ -11,27 +11,15 @@ class Conversation:
 
     @staticmethod
     def loader(path):
-        if path.endswith(".csv"):
-            return Conversation.csv_loader(path)
-
-    def add_message(self, message_content, author_involved, size):
-        self.messages.append(message_content)
-        self.participants.add(author_involved)
-        self.conv_size = size
+        if path.endswith(".csv"): return Conversation.csv_loader(path)
 
     @staticmethod
     def csv_loader(filepath):
         convs = {}
-
         with open(filepath, mode="r", newline="", encoding="utf-8") as csvfile:
             csv_reader = csv.DictReader(csvfile)
-            # conversation = Conversation()
             for row in csv_reader:
-                # In the future, if we are having data which needs to be tweaked
-                # before we import, could be taken care here.
                 try:
-                    # Assign the conversation id to Conversation Object
-
                     message = Message(
                         row["msg_line"],
                         row["author_id"],
