@@ -166,20 +166,18 @@ mamba env export --from-history > new-environment.yaml
 
 ## 6. Citation:
 ```
-@inproceedings{DBLP:conf/cikm/WaeziBF24,
-  author       = {Hamed Waezi and
-                  Reza Barzegar and
-                  Hossein Fani},
-  title        = {Osprey🪶: A Reference Framework for Online Grooming Detection via Neural Models and Conversation Features},
-  booktitle    = {Proceedings of the 33rd ACM International Conference on Information and Knowledge Management (CIKM '24), October 21--25, 2024, Boise, ID, USA},
-  series       = {},
-  volume       = {},
-  pages        = {},
-  publisher    = {Springer},
+@inproceedings{DBLP:conf/cikm/WaeziB024,
+  author       = {Hamed Waezi and Reza Barzegar and Hossein Fani},
+  editor       = {Edoardo Serra and Francesca Spezzano},
+  title        = {Osprey {\unicode{129718}}: {A} Reference Framework for Online Grooming Detection via Neural Models and Conversation Features},
+  booktitle    = {Proceedings of the 33rd {ACM} International Conference on Information and Knowledge Management, {CIKM} 2024, Boise, ID, USA, October 21-25, 2024},
+  pages        = {4101--4106},
+  publisher    = {{ACM}},
   year         = {2024},
   url          = {https://doi.org/10.1145/3627673.3679974},
   doi          = {10.1145/3627673.3679974},
-  biburl       = {https://dblp.org/rec/conf/cikm/WaeziBF24.bib},
+  timestamp    = {Thu, 14 Nov 2024 13:44:25 +0100},
+  biburl       = {https://dblp.org/rec/conf/cikm/WaeziB024.bib},
   bibsource    = {dblp computer science bibliography, https://dblp.org}
 }
 ```
