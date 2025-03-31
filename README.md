@@ -1,7 +1,8 @@
-# Osprey <img alt="table of metrics of experiments" src="figures/osprey-feather.png" width=40 hight=40>
-With the prevalence of more technology, children access it way before they are of legal age and with little cognitive development. An alarming problem in this regard is children engaging with predators in online grooming conversations. Besides deep web that used to be a hub forillegal activities including child pornography, main stream digital platforms such as online videogames and chat rooms are currently the more common places where children are present and are easy prey for online sexual predators such as those who are diagnosed with paedophilia; an act of an adult having sexual involvement with a minor, through grooming where the sexual predator tries to form emotion relationship with a minor in order to get her trust and make her engage in sexual activities afterwards. 
+# Osprey <img alt="" src="figures/osprey-feather.png" width=40 hight=40>
+## Enhancing Online Grooming Detection via Backtranslation Augmentation ([pdf](https://hosseinfani.github.io/res/papers/2025_COLING_Enhancing_Online_Grooming_Detection_via_Backtranslation_Augmentation.pdf))
+With the prevalence of more technology, children access it way before they are of legal age and with little cognitive development. An alarming problem in this regard is children engaging with predators in online grooming conversations. Besides the deep web, which used to be a hub for illegal activities, including child pornography, mainstream digital platforms such as online videogames and chat rooms are currently the more common places where children are present and are easy prey for online sexual predators such as those who are diagnosed with pedophilia; an act of an adult having sexual involvement with a minor, through grooming where the sexual predator tries to form emotion relationship with a minor in order to get her trust and make her engage in sexual activities afterwards. 
 
-Around 60%-80% of female high school students have to face online sexual grooming incidents in their life. In many of these instances, the predators try to mix explicit remarks in the conversation to get a sense of how they are going to proceed with the victim, which can be extracted by ``natural language processing`` (NLP) techniques and employed by ``machine learning`` methods to catch such predators. 
+Around 60%-80% of female high school students have to face online sexual grooming incidents in their lives. In many of these instances, the predators try to mix explicit remarks in the conversation to get a sense of how they are going to proceed with the victim, which can be extracted by ``natural language processing`` (NLP) techniques and employed by ``machine learning`` methods to catch such predators. 
 
 Table of content:
 1. [Setup](#1-setup)
@@ -165,21 +166,20 @@ mamba env export --from-history > new-environment.yaml
 4. Rename `environment.yaml` to `new-environment.yaml`
 
 ## 6. Citation:
+
 ```
-@inproceedings{DBLP:conf/cikm/WaeziBF24,
-  author       = {Hamed Waezi and
-                  Reza Barzegar and
-                  Hossein Fani},
-  title        = {Osprey🪶: A Reference Framework for Online Grooming Detection via Neural Models and Conversation Features},
-  booktitle    = {Proceedings of the 33rd ACM International Conference on Information and Knowledge Management (CIKM '24), October 21--25, 2024, Boise, ID, USA},
-  series       = {},
-  volume       = {},
-  pages        = {},
-  publisher    = {Springer},
+@inproceedings{DBLP:conf/cikm/WaeziB024,
+  author       = {Hamed Waezi and Reza Barzegar and Hossein Fani},
+  editor       = {Edoardo Serra and Francesca Spezzano},
+  title        = {Osprey {\unicode{129718}}: {A} Reference Framework for Online Grooming Detection via Neural Models and Conversation Features},
+  booktitle    = {Proceedings of the 33rd {ACM} International Conference on Information and Knowledge Management, {CIKM} 2024, Boise, ID, USA, October 21-25, 2024},
+  pages        = {4101--4106},
+  publisher    = {{ACM}},
   year         = {2024},
   url          = {https://doi.org/10.1145/3627673.3679974},
   doi          = {10.1145/3627673.3679974},
-  biburl       = {https://dblp.org/rec/conf/cikm/WaeziBF24.bib},
+  timestamp    = {Thu, 14 Nov 2024 13:44:25 +0100},
+  biburl       = {https://dblp.org/rec/conf/cikm/WaeziB024.bib},
   bibsource    = {dblp computer science bibliography, https://dblp.org}
 }
 ```
