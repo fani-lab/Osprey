@@ -19,10 +19,10 @@ class Conversation():
         convs = {}
         root = ET.parse(filepath).getroot()
 
-        for child in root:
-            conv_id = child.attrib.get("id")
+        for conv in root:
+            conv_id = conv.attrib.get("id")
             conv_messages = []
-            for message in child:
+            for message in conv:
                 text = message.findtext('text')
                 author = message.findtext('author')
                 time = message.findtext('time')
