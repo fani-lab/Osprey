@@ -1,19 +1,38 @@
-import os
 import csv
+import xml.etree.ElementTree as ET
 
 from cmn.message import Message
 
 
-class Conversation(Object):
-    def __init__(self, id, messages, participants):
+class Conversation():
+    def __init__(self, id, messages):
         self.id = id
         self.messages = messages
-        self.participants = participants
 
     @staticmethod
     def loader(path):
         if path.endswith(".csv"): return Conversation.csv_loader(path)
+        if path.endswith(".xml"): return Conversation.xml_loader(path)
 
+    @staticmethod
+    def xml_loader(filepath):
+        convs = {}
+        root = ET.parse(filepath).getroot()
+
+        for conv in root:
+            conv_id = conv.attrib.get("id")
+            conv_messages = []
+            for message in conv:
+                text = message.findtext('text')
+                author = message.findtext('author')
+                time = message.findtext('time')
+                msg_obj = Message(author, time, text)
+                conv_messages.append(msg_obj)
+            if conv_id not in convs: 
+                convs[conv_id] = Conversation(conv_id, conv_messages)
+        
+        return convs
+    
     @staticmethod
     def csv_loader(filepath):
         convs = {}
