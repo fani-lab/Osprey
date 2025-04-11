@@ -1,4 +1,4 @@
-from conversation import Conversation
+# from cmn.conversation import Conversation
 
 class Message():
     def __init__(
@@ -6,7 +6,7 @@ class Message():
         author_id: str,
         time: str,
         text: str,
-        conv: Conversation
+        conv
     ):
 
         self.author_id = author_id

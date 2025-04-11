@@ -22,14 +22,15 @@ class Conversation():
         for conv in root:
             conv_id = conv.attrib.get("id")
             conv_messages = []
+            conv_obj = Conversation(conv_id, conv_messages)
             for message in conv:
                 text = message.findtext('text')
                 author = message.findtext('author')
                 time = message.findtext('time')
-                msg_obj = Message(author, time, text)
+                msg_obj = Message(author, time, text, conv_obj)
                 conv_messages.append(msg_obj)
             if conv_id not in convs: 
-                convs[conv_id] = Conversation(conv_id, conv_messages)
+                convs[conv_id] = conv_obj
         
         return convs
     
@@ -67,12 +68,3 @@ class Conversation():
                     print(f"Import Error: {e}")
 
         return convs
-
-    def __repr__(self):
-        repr_string = f"Conversation ID: {self.id}\nNumber of messages: {len(self.messages)}\n"
-
-        if not self.messages: repr_string += "No messages found for this conversation.\n"
-        else:
-            for message in self.messages: repr_string += f"\n{message}"
-
-        return repr_string
