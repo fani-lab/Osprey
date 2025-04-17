@@ -19,18 +19,26 @@ class Conversation():
         convs = {}
         root = ET.parse(filepath).getroot()
 
-        for conv in root:
-            conv_id = conv.attrib.get("id")
-            conv_messages = []
-            conv_obj = Conversation(conv_id, conv_messages)
-            for message in conv:
-                text = message.findtext('text')
-                author = message.findtext('author')
-                time = message.findtext('time')
-                msg_obj = Message(author, time, text, conv_obj)
-                conv_messages.append(msg_obj)
-            if conv_id not in convs: 
-                convs[conv_id] = conv_obj
+        for conv_el in root:
+            conv_id = conv_el.attrib.get('id', 'unknown')
+            conv_obj = Conversation(conv_id)
+            messages = []
+
+            for msg_el in conv_el:
+                text = msg_el.findtext('text')
+                author = msg_el.findtext('author')
+                time = msg_el.findtext('time')
+                msg_obj = Message(author_id=author, time=time, text=text, conv=conv_obj)
+                messages.append(msg_obj)
+
+            for i, msg in enumerate(messages):
+                if i > 0:
+                    msg.prev = messages[i - 1]
+                if i < len(messages) - 1:
+                    msg.next = messages[i + 1]
+
+            conv_obj.messages = messages
+            convs[conv_id] = conv_obj
         
         return convs
     

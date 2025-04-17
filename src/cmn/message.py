@@ -6,10 +6,14 @@ class Message():
         author_id: str,
         time: str,
         text: str,
-        conv
+        prev: None,
+        next: None,
+        conv # Converaiton Instance 
     ):
 
         self.author_id = author_id
         self.time = time
         self.text = text
+        self.prev = prev
+        self.next = next
         self.conv = conv
