@@ -1,4 +1,4 @@
-from conversation import Conversation
+# from cmn.conversation import Conversation
 
 class Message():
     def __init__(
@@ -6,10 +6,14 @@ class Message():
         author_id: str,
         time: str,
         text: str,
-        conv: Conversation
+        prev: None,
+        next: None,
+        conv # Converaiton Instance 
     ):
 
         self.author_id = author_id
         self.time = time
         self.text = text
+        self.prev = prev
+        self.next = next
         self.conv = conv
